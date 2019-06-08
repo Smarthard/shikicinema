@@ -1,5 +1,4 @@
-.shikicinema-player {
-    display: none;
+#shikicinema-player {
     z-index: 5;
 
     padding: 5px;
@@ -21,6 +20,8 @@
     top: 0;
     left: 95%;
     font-size: 25pt;
+
+    z-index: 6;
 }
 
 iframe {

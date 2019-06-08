@@ -3,6 +3,7 @@
 console.log('shikicinema loaded');
 
 let player_button = document.createElement('button');
+let close_button = document.createElement('button');
 let div_player = document.createElement('div');
 let video = document.createElement('iframe');
 
@@ -11,7 +12,7 @@ function findAllAnimeEntriesInDB(name) {
         let rawFile = new XMLHttpRequest();
         let entries = [];
 
-        rawFile.open("GET", chrome.extension.getURL('videos.csv'), false);
+        rawFile.open("GET", chrome.extension.getURL('videos.csv'), true);
         rawFile.onreadystatechange = () => {
             if (rawFile.readyState === 4) {
                 if (rawFile.status === 200 || rawFile.status === 0) {
@@ -25,8 +26,12 @@ function findAllAnimeEntriesInDB(name) {
                             entries.push(entry);
                         }
                     });
-
-                    resolve(entries.sort((a, b) => a.episode - b.episode));
+                    
+                    if (entries.length > 0) {
+                        resolve(entries.sort((a, b) => a.episode - b.episode));
+                    } else {
+                        reject([]);
+                    }
                 } else {
                     reject([]);
                 }
@@ -58,12 +63,14 @@ function changeVideo(url) {
     }
 
     video.src = url;
+    video.id = 'shikicinema-video'
     console.warn(`changing video source to ${video.src}`);
 }
 
 window.addEventListener('load', () => {
 
     const div_info = document.body.getElementsByClassName('c-info-right')[0];
+    const videos_list = document.createElement('ul');
 
     let title = document.body.getElementsByTagName('h1')[0];
     if (title != null) {
@@ -76,18 +83,10 @@ window.addEventListener('load', () => {
     player_button.textContent = 'Смотреть';
     player_button.classList.add('b-link_button', 'dark');
     player_button.addEventListener('click', () => {
-        div_player.style.display = 'block';
+        div_player.hidden = false;
     });
 
-    div_player.classList.add('shikicinema-player');
-
-    let close_button = document.createElement('button');
-    close_button.innerHTML = '✕';
-    close_button.classList.add('shikimori-close-button');
-    close_button.addEventListener('click', () => {
-        div_player.style.display = 'none';
-    });
-
+    div_player.id = 'shikicinema-player';
     div_player.classList.add('shikicinema-player-content');
 
     if (div_info != null) {
@@ -95,13 +94,14 @@ window.addEventListener('load', () => {
         document.body.appendChild(div_player);
         div_player.appendChild(close_button);
         div_player.appendChild(video);
+        div_player.hidden = true;
 
         findAllAnimeEntriesInDB(title).then(values => {
             console.log("anime episodes found:");
             console.table(values);
             changeVideo(values[0].url);
 
-            div_player.innerHTML += '<ul>';
+            div_player.appendChild(videos_list);
             values.forEach(val => {
                 let li = document.createElement('li');
                 let no_episode = val.episode;
@@ -111,10 +111,16 @@ window.addEventListener('load', () => {
                 li.innerHTML = `#${no_episode} <a>${title} (${val.kind}: ${val.author || "unknown"}) ${quality}</a>`;
                 li.addEventListener('click', changeVideo(val.url));
 
-                div_player.appendChild(li);
+                videos_list.appendChild(li);
             });
-            div_player.innerHTML += '</ul>';
+        }).catch(err => {
+            player_button.enable = false;
+        });
 
+        close_button.textContent = '✕';
+        close_button.classList.add('b-link_button', 'dark', 'shikimori-close-button');
+        close_button.addEventListener('click', () => {
+            div_player.hidden = true;
         });
     }
 });
