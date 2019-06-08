@@ -1,14 +1,15 @@
 {
   "manifest_version": 2,
   "name": "shikicinema",
-  "version": "0.0.1",
+  "version": "0.0.2",
 
   "description": "Returns video player on Shikimori",
 
   "content_scripts": [
     {
       "matches": [
-        "*://shikimori.org/animes/*"
+        "*://shikimori.org/animes/*",
+        "*://shikimori.one/animes/*"
       ],
       "js": [
         "shikicinema.js"
@@ -17,5 +18,9 @@
         "shikicinema.css"
       ]
     }
+  ],
+
+  "web_accessible_resources": [
+    "videos.csv"
   ]
 }
