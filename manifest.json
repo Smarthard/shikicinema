@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "shikicinema",
-  "version": "0.0.2",
+  "version": "0.1.0",
 
   "description": "Returns video player on Shikimori",
 
