@@ -57,14 +57,14 @@ function parseCSVString(str) {
 
 function changeVideo(url) {
     if (url.includes('http://')) {
-        console.warn(`Forcing https connection for ${url}`);
+        console.log(`Forcing https connection for ${url}`);
 
         url = url.replace('http:', 'https:');
     }
 
     video.src = url;
     video.id = 'shikicinema-video'
-    console.warn(`changing video source to ${video.src}`);
+    console.log(`changing video source to ${video.src}`);
 }
 
 window.addEventListener('load', () => {
@@ -104,13 +104,19 @@ window.addEventListener('load', () => {
             div_player.appendChild(videos_list);
             values.forEach(val => {
                 let li = document.createElement('li');
+                let a = document.createElement('a');
                 let no_episode = val.episode;
                 let title = val.title_rus;
                 let quality = val.quality != 'unknown' ? val.quality.toLocaleUpperCase() : '';
 
-                li.innerHTML = `#${no_episode} <a>${title} (${val.kind}: ${val.author || "unknown"}) ${quality}</a>`;
-                li.addEventListener('click', changeVideo(val.url));
+                li.innerHTML = `#${no_episode}`;
+                a.innerHTML = `${title} (${val.kind}: ${val.author || "unknown"}) ${quality}`;
 
+                a.addEventListener('click', () => {
+                    changeVideo(val.url)
+                });
+
+                li.appendChild(a);
                 videos_list.appendChild(li);
             });
         }).catch(err => {
