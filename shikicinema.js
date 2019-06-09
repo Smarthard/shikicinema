@@ -127,7 +127,7 @@ function filter_animes(animes) {
         let quality = val.quality != 'неизвестное' ? val.quality.toLocaleUpperCase() : '';
 
         li.innerHTML = `#${no_episode} `;
-        a.innerHTML = `${title} (${val.kind}: ${val.author || "оригинальная озвучка"}) ${quality}`;
+        a.innerHTML = `${title} (${val.kind}: ${val.author || "неизвестно"}) ${quality}`;
 
         a.addEventListener('click', () => {
             changeVideo(val.url)
