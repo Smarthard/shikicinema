@@ -43,3 +43,7 @@ iframe {
 li a {
     cursor: pointer;
 }
+
+select {
+    max-width: 50%;
+}
