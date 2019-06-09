@@ -26,6 +26,14 @@
     height: calc(width);
 }
 
+.shc-author {
+    color: #FF974D;
+}
+
+.shc-source {
+    color: #4DA8FF;
+}
+
 iframe {
     padding: 5px;
     width: 100%;
