@@ -8,7 +8,9 @@
     position: absolute;
     top: 35%;
     left: 25%;
+    right: 25%;
     min-width: 50%;
+    max-width: 90%;
     min-height: 30%;
 
     background-color: #fff;
