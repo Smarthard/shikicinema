@@ -172,7 +172,7 @@ function fill_kind_selection(options) {
 }
 
 function fill_author_selection(options) {
-    let authors = new Set(['Студия']);
+    let authors = new Set();
 
     options.forEach(option => {
         if (option.author == '' || option.author == 'unknown') {
@@ -183,6 +183,7 @@ function fill_author_selection(options) {
     });
 
     authors = Array.from(authors).sort((a, b) => a.localeCompare(b));
+    authors.unshift('Студия');
 
     authors.forEach(author => {
         let opt = document.createElement('option');
