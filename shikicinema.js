@@ -19,7 +19,7 @@ function findAllAnimeEntriesInDB(name) {
                     let allText = rawFile.responseText;
 
                     allText.split("\n").forEach(str => {
-                        if (str.includes(name)) {
+                        if (str.includes(`;${name};`)) {
                             let entry = parseCSVString(str);
                             entry.src = entry.url.replace('http:', 'https:');
 
@@ -109,7 +109,7 @@ if (div_info != null) {
             let title = val.title_rus;
             let quality = val.quality != 'unknown' ? val.quality.toLocaleUpperCase() : '';
 
-            li.innerHTML = `#${no_episode}`;
+            li.innerHTML = `#${no_episode} `;
             a.innerHTML = `${title} (${val.kind}: ${val.author || "unknown"}) ${quality}`;
 
             a.addEventListener('click', () => {
