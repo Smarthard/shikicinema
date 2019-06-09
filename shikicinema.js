@@ -125,9 +125,19 @@ function filter_animes(animes) {
         let no_episode = val.episode;
         let title = val.title_rus;
         let quality = val.quality != 'неизвестное' ? val.quality.toLocaleUpperCase() : '';
+        let source;
+
+        switch (true) {
+
+            case /sibnet/.test(val.url): source = 'Sibnet'; break;
+            case /smotretanime/.test(val.url): source = 'SmotretAnime'; break;
+            case /vk.com/.test(val.url): source = 'Вкотакте'; break;
+
+            default: source = 'неизвестен';
+        }
 
         li.innerHTML = `#${no_episode} `;
-        a.innerHTML = `${title} (${val.kind}: ${val.author || "неизвестно"}) ${quality}`;
+        a.innerHTML = `${title} (${val.kind}: ${val.author || "неизвестно"}, проигрыватель: ${source}) ${quality}`;
 
         a.addEventListener('click', () => {
             changeVideo(val.url)
