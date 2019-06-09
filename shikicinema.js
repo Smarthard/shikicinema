@@ -129,9 +129,17 @@ function filter_animes(animes) {
 
         switch (true) {
 
-            case /sibnet/.test(val.url): source = 'Sibnet'; break;
-            case /smotretanime/.test(val.url): source = 'SmotretAnime'; break;
-            case /vk.com/.test(val.url): source = 'Вкотакте'; break;
+            case /animedia/.test(val.url):      source = 'Animedia';        break;
+            case /sibnet/.test(val.url):        source = 'Sibnet';          break;
+            case /smotretanime/.test(val.url):  source = 'SmotretAnime';    break;
+            case /sovetromanti/.test(val.url):  source = 'SovetRomantica';  break;
+            case /mail.ru/.test(val.url):       source = 'Mail.ru';         break;
+            case /mediafile/.test(val.url):     source = 'MediaFile';       break;
+            case /ok.ru/.test(val.url):         source = 'Одноклассники';   break;
+            case /vk.com/.test(val.url):        source = 'Вкотакте';        break;
+            case /myvi/.test(val.url):          source = 'Myvi';            break;
+            case /stormo/.test(val.url):        source = 'Stromo';          break;
+            case /youtu/.test(val.url):         source = 'YouTube';         break;
 
             default: source = 'неизвестен';
         }
