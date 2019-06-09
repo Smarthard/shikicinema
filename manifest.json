@@ -16,7 +16,8 @@
       ],
       "css": [
         "shikicinema.css"
-      ]
+      ],
+      "run_at": "document_idle"
     }
   ],
 
