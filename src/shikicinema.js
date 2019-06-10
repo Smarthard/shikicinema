@@ -5,6 +5,7 @@ console.log('shikicinema loaded');
 let player_button = document.createElement('button');
 let close_button = document.createElement('button');
 let div_player = document.createElement('div');
+let div_player_ratio = document.createElement('div');
 let video = document.createElement('iframe');
 
 let div_info = document.body.getElementsByClassName('c-info-right')[0];
@@ -249,12 +250,15 @@ player_button.addEventListener('click', () => {
 div_player.id = 'shikicinema-player';
 div_player.classList.add('shikicinema-player-content');
 
+div_player_ratio.id = 'shikicinema-player-ratio';
+
 if (div_info != null) {
 
     div_info.appendChild(player_button);
     document.body.appendChild(div_player);
     div_player.appendChild(close_button);
-    div_player.appendChild(video);
+    div_player.appendChild(div_player_ratio);
+    div_player_ratio.appendChild(video);
     div_player.hidden = true;
 
     div_player.appendChild(episode_selection);

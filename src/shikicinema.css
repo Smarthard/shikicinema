@@ -17,6 +17,11 @@
     opacity: 1;
 }
 
+#shikicinema-player-ratio {
+    position: relative;
+    padding-top: 56.25%;
+}
+
 .shikimori-close-button {
     position: relative;
     top: 0;
@@ -25,7 +30,6 @@
 
     z-index: 6;
     width: calc(5% - 5px);
-    height: calc(width);
 }
 
 .shc-author {
@@ -37,9 +41,11 @@
 }
 
 iframe {
-    padding: 5px;
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
-    height: 600px;
+    height: 100%;
 }
 
 li a {
