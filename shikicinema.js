@@ -145,7 +145,8 @@ function filter_animes(animes) {
         }
 
         li.innerHTML = `#${no_episode} `;
-        a.innerHTML = `${title} (${val.kind}: <span class="shc-author">${val.author || "неизвестно"}</span>, проигрыватель: <span class="shc-source">${source}</span>) ${quality}`;
+        a.innerHTML = `${title} (${val.kind}: <span class="shc-author">${val.author || "неизвестно"}</span>, 
+                        проигрыватель: <span class="shc-source">${source}</span>) ${quality}`;
 
         a.addEventListener('click', () => {
             changeVideo(val.url)
