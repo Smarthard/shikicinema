@@ -4,7 +4,7 @@
   "description": "Returns video player on Shikimori",
   "main": "src/shikicinema.js",
   "scripts": {
-    "bundle": "mkdir -p bin; browserify src/shikicinema.js > bin/shikicinema.js",
+    "bundle": "mkdir -p bin; browserify -p tinyify src/shikicinema.js > bin/shikicinema.min.js",
     "test": "echo 'no tests specified'"
   },
   "repository": {
@@ -23,6 +23,7 @@
   "homepage": "https://github.com/Smarthard/shikicinema",
   "dependencies": {
     "axios": "^0.19.0",
-    "browserify": "^16.2.3"
+    "browserify": "^16.2.3",
+    "tinyify": "^2.5.1"
   }
 }
