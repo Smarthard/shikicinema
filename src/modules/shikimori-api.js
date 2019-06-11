@@ -1,8 +1,5 @@
 
 const axios = require('axios');
-const shaxios = axios.create({
-    headers: {'User-Agent': 'shikicinema'}
-});
 
 let _DOMAIN = _getDomain();
 
@@ -16,7 +13,7 @@ function _getDomain() {
 
 module.exports.isLoggedIn = function isLoggedIn() {
     return new Promise(resolve => {
-        shaxios.get(`https://${_DOMAIN}/api/users/whoami`).then(value => {
+        axios.get(`https://${_DOMAIN}/api/users/whoami`).then(value => {
             resolve(value.data != null)
         }).catch(err => {
             console.error(err);
