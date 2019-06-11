@@ -56,6 +56,10 @@
     font-size: 8pt;
 }
 
+.green-filter {
+    filter: invert(56%) sepia(14%) saturate(1546%) hue-rotate(82deg) brightness(104%) contrast(94%);
+}
+
 iframe {
     position: absolute;
     top: 0;

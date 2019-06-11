@@ -101,8 +101,17 @@ function filter_animes(animes) {
     const kind = kind_selection.options[kind_selection.selectedIndex].value;
     const author = author_selection.options[author_selection.selectedIndex].value;
     const quality = quality_selection.options[quality_selection.selectedIndex].value;
+    const watched_button  = document.querySelector('button#watched-button');
 
     let filtered_animes = animes;
+
+    if (episode <= current_episodes && !watched_button.classList.contains('green-filter')) {
+        watched_button.classList.add('green-filter');
+        watched_button.disabled = true;
+    } else {
+        watched_button.classList.remove('green-filter');
+        watched_button.disabled = false;
+    }
 
     while (videos_list.firstChild) {
         videos_list.removeChild(videos_list.firstChild);
@@ -270,6 +279,8 @@ episode_selection.min = '1';
 prev_button.innerHTML = `<img height="25vh" src='${chrome.runtime.getURL("./assets/fastbackward.png")}' alt="previous">`;
 increment_button.innerHTML = `<img height="25vh" src='${chrome.runtime.getURL("./assets/check_mark.png")}' alt="watched">`;
 next_button.innerHTML = `<img height="25vh" src='${chrome.runtime.getURL("./assets/fastforward.png")}' alt="next">`;
+
+increment_button.id="watched-button";
 
 prev_button.classList.add('shikicinema-controls-button');
 increment_button.classList.add('shikicinema-controls-button');
