@@ -1,6 +1,6 @@
 'use strict';
 
-console.log('shikicinema loaded');
+const shikiapi = require('./modules/shikimori-api.js');
 
 let player_button = document.createElement('button');
 let close_button = document.createElement('button');
@@ -11,10 +11,27 @@ let video = document.createElement('iframe');
 let div_info = document.body.getElementsByClassName('c-info-right')[0];
 let videos_list = document.createElement('ul');
 
-let episode_selection = document.createElement('select');
+let episode_selection = document.createElement('input');
 let kind_selection = document.createElement('select');
 let author_selection = document.createElement('select');
 let quality_selection = document.createElement('select');
+
+let div_controls = document.createElement('div');
+let prev_button = document.createElement('button');
+let increment_button = document.createElement('button');
+let next_button = document.createElement('button');
+
+let control_box_prev = document.createElement('div');
+let control_box_episode = document.createElement('div');
+let control_box_next = document.createElement('div');
+let control_box_inc = document.createElement('div');
+
+let label_prev = document.createElement('div');
+let label_episode = document.createElement('span');
+let label_next = document.createElement('div');
+let label_inc = document.createElement('div');
+
+let title = document.body.getElementsByTagName('h1')[0];
 
 function findAllAnimeEntriesInDB(name) {
     return new Promise((resolve, reject) => {
@@ -72,12 +89,12 @@ function changeVideo(url) {
     }
 
     video.src = url;
-    video.id = 'shikicinema-video'
+    video.id = 'shikicinema-video';
     console.log(`changing video source to ${video.src}`);
 }
 
 function filter_animes(animes) {
-    const episode = parseInt(episode_selection.options[episode_selection.selectedIndex].value);
+    const episode = parseInt(episode_selection.value);
     const kind = kind_selection.options[kind_selection.selectedIndex].value;
     const author = author_selection.options[author_selection.selectedIndex].value;
     const quality = quality_selection.options[quality_selection.selectedIndex].value;
@@ -159,22 +176,6 @@ function filter_animes(animes) {
 
 }
 
-function fill_episode_selection(options) {
-    let episodes = new Set(['№ серии']);
-
-    options.forEach(option => {
-        episodes.add(option.episode);
-    });
-
-    episodes.forEach(episode => {
-        let opt = document.createElement('option');
-        opt.value = episode;
-        opt.innerHTML = episode;
-
-        episode_selection.appendChild(opt);
-    })
-}
-
 function fill_kind_selection(options) {
     let kinds = new Set(['Озвучка/Субтитры']);
 
@@ -232,8 +233,12 @@ function fill_quality_selection(options) {
 
 /* main */
 
+console.log(`shikicinema loaded`);
 
-let title = document.body.getElementsByTagName('h1')[0];
+shikiapi.isLoggedIn().then(value => {
+    increment_button.disabled = !value;
+});
+
 if (title != null) {
     title = title.innerHTML;
     title = title.substring(0, title.indexOf(' <span'));
@@ -252,6 +257,36 @@ div_player.classList.add('shikicinema-player-content');
 
 div_player_ratio.id = 'shikicinema-player-ratio';
 
+div_controls.id = 'shikicinema-controls';
+
+episode_selection.type = 'text';
+episode_selection.value = '1';
+episode_selection.pattern = '[0-9]+';
+episode_selection.min = '1';
+
+prev_button.innerHTML = `<img height="25vh" src='${chrome.runtime.getURL("./assets/fastbackward.png")}' alt="previous">`;
+increment_button.innerHTML = `<img height="25vh" src='${chrome.runtime.getURL("./assets/check_mark.png")}' alt="watched">`;
+next_button.innerHTML = `<img height="25vh" src='${chrome.runtime.getURL("./assets/fastforward.png")}' alt="next">`;
+
+prev_button.classList.add('shikicinema-controls-button');
+increment_button.classList.add('shikicinema-controls-button');
+next_button.classList.add('shikicinema-controls-button');
+
+control_box_prev.classList.add('control-box');
+control_box_episode.classList.add('control-box');
+control_box_next.classList.add('control-box');
+control_box_inc.classList.add('control-box');
+
+label_prev.classList.add('label');
+label_episode.classList.add('label');
+label_next.classList.add('label');
+label_inc.classList.add('label');
+
+label_prev.textContent = 'Предыдущий';
+label_episode.textContent = '#';
+label_next.textContent = 'Следующий';
+label_inc.textContent = 'Просмотрено';
+
 if (div_info != null) {
 
     div_info.appendChild(player_button);
@@ -261,22 +296,45 @@ if (div_info != null) {
     div_player_ratio.appendChild(video);
     div_player.hidden = true;
 
-    div_player.appendChild(episode_selection);
     div_player.appendChild(kind_selection);
     div_player.appendChild(author_selection);
     div_player.appendChild(quality_selection);
 
+    div_player.appendChild(div_controls);
+
+    div_controls.appendChild(control_box_prev);
+    div_controls.appendChild(control_box_episode);
+    div_controls.appendChild(control_box_next);
+    div_controls.appendChild(control_box_inc);
+
+    control_box_prev.appendChild(prev_button);
+    control_box_prev.appendChild(label_prev);
+
+    control_box_episode.appendChild(label_episode);
+    control_box_episode.appendChild(episode_selection);
+
+    control_box_next.appendChild(next_button);
+    control_box_next.appendChild(label_next);
+
+    control_box_inc.appendChild(increment_button);
+    control_box_inc.appendChild(label_inc);
+
     div_player.appendChild(videos_list);
 
     findAllAnimeEntriesInDB(title).then(values => {
+        let episodes = new Set();
+
         changeVideo(values[0].url);
 
-        fill_episode_selection(values);
+        values.forEach(value => {
+            episodes.add(value.episode);
+        });
+
         fill_kind_selection(values);
         fill_author_selection(values);
         fill_quality_selection(values);
 
-        episode_selection.addEventListener('change', () => {
+        episode_selection.addEventListener('input', () => {
             filter_animes(values);
         });
         kind_selection.addEventListener('change', () => {
@@ -287,6 +345,21 @@ if (div_info != null) {
         });
         quality_selection.addEventListener('change', () => {
             filter_animes(values);
+        });
+
+
+        next_button.addEventListener('click', () => {
+            if (episode_selection.value < episodes.size - 1) {
+                episode_selection.value++;
+                filter_animes(values);
+            }
+        });
+
+        prev_button.addEventListener('click', () => {
+            if (episode_selection.value > 1) {
+                episode_selection.value--;
+                filter_animes(values);
+            }
         });
 
         filter_animes(values);

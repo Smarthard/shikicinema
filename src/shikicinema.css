@@ -22,6 +22,12 @@
     padding-top: 56.25%;
 }
 
+#shikicinema-controls {
+    padding-bottom: 20px;
+    text-align: center;
+    vertical-align: middle;
+}
+
 .shikimori-close-button {
     position: relative;
     top: 0;
@@ -40,6 +46,16 @@
     color: #4DA8FF;
 }
 
+.control-box {
+    display: inline-block;
+    vertical-align: middle;
+    margin: 20px 1% 0 1%;
+}
+
+.label {
+    font-size: 8pt;
+}
+
 iframe {
     position: absolute;
     top: 0;
@@ -54,4 +70,11 @@ li a {
 
 select {
     max-width: 50%;
+}
+
+input {
+    font-size: 15pt;
+    margin-left: 3px;
+    width: 30px;
+    height: 3.7vh;
 }

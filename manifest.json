@@ -22,6 +22,9 @@
   ],
 
   "web_accessible_resources": [
+    "assets/fastforward.png",
+    "assets/fastbackward.png",
+    "assets/check_mark.png",
     "videos.csv"
   ]
 }
