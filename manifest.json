@@ -4,7 +4,8 @@
   "version": "0.2.3",
 
   "icons": {
-    "64": "assets/icon64.png"
+    "64": "assets/icon64.png",
+    "128": "assets/icon128.png"
   },
 
   "description": "Returns video player on Shikimori",
@@ -16,7 +17,7 @@
         "*://shikimori.one/animes/*"
       ],
       "js": [
-        "bin/shikicinema.js"
+        "bin/shikicinema.min.js"
       ],
       "css": [
         "src/shikicinema.css"
