@@ -2,8 +2,11 @@
 
 const shikiapi = require('./modules/shikimori-api.js');
 
-let current_episodes = parseInt(document.querySelector('span.current-episodes').textContent);
-let total_episodes = parseInt(document.querySelector('span.total-episodes').textContent);
+let span_current_episodes = document.querySelector('span.current-episodes');
+let span_total_episodes = document.querySelector('span.total-episodes');
+
+let current_episodes = parseInt(span_current_episodes != null ? span_current_episodes.textContent : '');
+let total_episodes = parseInt(span_total_episodes != null ? span_total_episodes.textContent : '');
 
 let player_button = document.createElement('button');
 let close_button = document.createElement('button');
@@ -105,12 +108,16 @@ function filter_animes(animes) {
 
     let filtered_animes = animes;
 
-    if (episode <= current_episodes && !watched_button.classList.contains('green-filter')) {
-        watched_button.classList.add('green-filter');
-        watched_button.disabled = true;
-    } else {
-        watched_button.classList.remove('green-filter');
-        watched_button.disabled = false;
+    try {
+        if (episode <= current_episodes && !watched_button.classList.contains('green-filter')) {
+            watched_button.classList.add('green-filter');
+            watched_button.disabled = true;
+        } else {
+            watched_button.classList.remove('green-filter');
+            watched_button.disabled = false;
+        }
+    } catch (e) {
+        console.error(e);
     }
 
     while (videos_list.firstChild) {
@@ -272,7 +279,7 @@ div_player_ratio.id = 'shikicinema-player-ratio';
 div_controls.id = 'shikicinema-controls';
 
 episode_selection.type = 'text';
-episode_selection.value = `${current_episodes + 1}`;
+episode_selection.value = `${isNaN(current_episodes) ? 1 : current_episodes + 1}`;
 episode_selection.pattern = '[0-9]+';
 episode_selection.min = '1';
 
@@ -338,6 +345,12 @@ if (div_info != null) {
     findAllAnimeEntriesInDB(title).then(values => {
 
         changeVideo(values[0].url);
+
+        if (!total_episodes) {
+            let episodes = values.map(value => value.episode);
+
+            total_episodes = Math.max.apply(null, episodes);
+        }
 
         fill_kind_selection(values);
         fill_author_selection(values);
