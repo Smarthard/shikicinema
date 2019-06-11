@@ -2,6 +2,9 @@
 
 const shikiapi = require('./modules/shikimori-api.js');
 
+let current_episodes = parseInt(document.querySelector('span.current-episodes').textContent);
+let total_episodes = parseInt(document.querySelector('span.total-episodes').textContent);
+
 let player_button = document.createElement('button');
 let close_button = document.createElement('button');
 let div_player = document.createElement('div');
@@ -260,7 +263,7 @@ div_player_ratio.id = 'shikicinema-player-ratio';
 div_controls.id = 'shikicinema-controls';
 
 episode_selection.type = 'text';
-episode_selection.value = '1';
+episode_selection.value = `${current_episodes > 0 ? current_episodes : 1}`;
 episode_selection.pattern = '[0-9]+';
 episode_selection.min = '1';
 
@@ -322,13 +325,8 @@ if (div_info != null) {
     div_player.appendChild(videos_list);
 
     findAllAnimeEntriesInDB(title).then(values => {
-        let episodes = new Set();
 
         changeVideo(values[0].url);
-
-        values.forEach(value => {
-            episodes.add(value.episode);
-        });
 
         fill_kind_selection(values);
         fill_author_selection(values);
@@ -349,9 +347,13 @@ if (div_info != null) {
 
 
         next_button.addEventListener('click', () => {
-            if (episode_selection.value < episodes.size - 1) {
-                episode_selection.value++;
-                filter_animes(values);
+            try {
+                if (episode_selection.value < total_episodes) {
+                    episode_selection.value++;
+                    filter_animes(values);
+                }
+            } catch (e) {
+                console.error(e);
             }
         });
 
