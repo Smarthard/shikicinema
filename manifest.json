@@ -3,6 +3,10 @@
   "name": "shikicinema",
   "version": "0.2.3",
 
+  "icons": {
+    "64": "assets/icon64.png"
+  },
+
   "description": "Returns video player on Shikimori",
 
   "content_scripts": [
