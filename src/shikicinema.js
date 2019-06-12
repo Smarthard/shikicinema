@@ -278,7 +278,7 @@ div_player_ratio.id = 'shikicinema-player-ratio';
 div_controls.id = 'shikicinema-controls';
 
 episode_selection.type = 'text';
-episode_selection.value = `${isNaN(current_episodes) ? 1 : current_episodes + 1}`;
+episode_selection.value = `${isNaN(current_episodes) ? 1 : Math.min(current_episodes + 1, total_episodes)}`;
 episode_selection.pattern = '[0-9]+';
 episode_selection.min = '1';
 
