@@ -111,7 +111,7 @@ function filter_animes(animes) {
         if (episode <= current_episodes && !watched_button.classList.contains('green-filter')) {
             watched_button.classList.add('green-filter');
             watched_button.disabled = true;
-        } else {
+        } else if (episode > current_episodes) {
             watched_button.classList.remove('green-filter');
             watched_button.disabled = false;
         }
