@@ -95,7 +95,6 @@ function changeVideo(url) {
     }
 
     video.src = url;
-    video.id = 'shikicinema-video';
     console.log(`changing video source to ${video.src}`);
 }
 
@@ -307,6 +306,9 @@ label_prev.textContent = 'Предыдущий';
 label_episode.textContent = '#';
 label_next.textContent = 'Следующий';
 label_inc.textContent = 'Просмотрено';
+
+video.id = 'shikicinema-video';
+video.setAttribute('allowFullScreen', '');
 
 if (div_info != null) {
 
