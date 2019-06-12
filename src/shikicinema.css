@@ -30,12 +30,14 @@
 
 .shikimori-close-button {
     position: relative;
-    top: 0;
-    left: 95%;
-    font-size: 25pt;
+
+    padding: 0;
+    margin-left: auto;
+    margin-bottom: 5px;
+    font-size: 20pt;
 
     z-index: 6;
-    width: calc(5% - 5px);
+    width: 1.7vw;
 }
 
 .shc-author {
