@@ -1,10 +1,11 @@
 {
   "name": "shikicinema",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "description": "Returns video player on Shikimori",
   "main": "src/shikicinema.js",
   "scripts": {
-    "bundle": "mkdir -p bin; browserify -p tinyify src/shikicinema.js > bin/shikicinema.min.js",
+    "bundle": "webpack --mode development",
+    "release": "webpack --mode production",
     "test": "echo 'no tests specified'"
   },
   "repository": {
@@ -22,8 +23,13 @@
   },
   "homepage": "https://github.com/Smarthard/shikicinema",
   "dependencies": {
+    "@babel/core": "^7.4.5",
     "axios": "^0.19.0",
-    "browserify": "^16.2.3",
-    "tinyify": "^2.5.1"
+    "babel-loader": "^8.0.6",
+    "webpack": "^4.34.0"
+  },
+  "devDependencies": {
+    "mini-css-extract-plugin": "^0.7.0",
+    "webpack-cli": "^3.3.4"
   }
 }

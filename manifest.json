@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "shikicinema",
-  "version": "0.2.5",
+  "version": "0.2.6",
 
   "icons": {
     "64": "assets/icon64.png",
@@ -17,10 +17,10 @@
         "*://shikimori.one/animes/*"
       ],
       "js": [
-        "bin/shikicinema.min.js"
+        "shikicinema.min.js"
       ],
       "css": [
-        "src/shikicinema.css"
+        "shikicinema.css"
       ],
       "run_at": "document_idle"
     }
@@ -31,5 +31,10 @@
     "assets/fastbackward.png",
     "assets/check_mark.png",
     "videos.csv"
+  ],
+
+  "permissions": [
+    "*://shikimori.org/*",
+    "*://shikimori.one/*"
   ]
 }
