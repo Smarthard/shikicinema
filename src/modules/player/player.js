@@ -9,6 +9,8 @@ import PlayerVideo from './player-video';
 import PlayerEdit from './player-edit';
 import DB from './db-functions';
 
+const storage = window.localStorage;
+
 export default class Player {
 
     constructor() {
@@ -77,7 +79,6 @@ export default class Player {
 
             this.isAnyVideoAvailable = true;
             this.player.setVideos(values);
-            this.player.changeVideo(values[0].url);
 
             if (this.episodes_watched) {
                 this.episodes_watched = this.episodes_watched.textContent;
@@ -94,34 +95,44 @@ export default class Player {
             this.fillQualitySelection(values);
 
             this.episode_edit.getEdit().addEventListener('input', () => {
-                this.filterAnimes(values);
+                this.filterAnimesAuto(values);
             });
             this.kind_selection.addEventListener('change', () => {
-                this.filterAnimes(values);
+                let kind = this.kind_selection;
+
+                this.filterAnimesAuto(values);
             });
             this.author_selection.addEventListener('change', () => {
-                this.filterAnimes(values);
+                let author = this.author_selection;
+
+                this.filterAnimesAuto(values);
             });
             this.quality_selection.addEventListener('change', () => {
-                this.filterAnimes(values);
+                let quality = this.quality_selection;
+
+                this.filterAnimesAuto(values);
             });
 
 
             this.next_button.element.addEventListener('click', () => {
+                storage.setItem('LastFav', JSON.stringify(this.player.current_video));
+
                 if (this.episode_edit.getEdit().value < this.player.videos_list.total_episodes) {
                     this.episode_edit.getEdit().value++;
-                    this.filterAnimes(values);
+                    this.changeVideoToLastFav(this.filterAnimesAuto(values));
                 }
             });
 
             this.prev_button.element.addEventListener('click', () => {
+                storage.setItem('LastFav', JSON.stringify(this.player.current_video));
+
                 if (this.episode_edit.getEdit().value > 1) {
                     this.episode_edit.getEdit().value--;
-                    this.filterAnimes(values);
+                    this.changeVideoToLastFav(this.filterAnimesAuto(values));
                 }
             });
 
-            this.filterAnimes(values);
+            this.changeVideoToLastFav(values);
 
         }).catch(err => {
             console.error(err);
@@ -129,11 +140,56 @@ export default class Player {
         });
     }
 
-    filterAnimes(animes) {
-        const episode = parseInt(this.episode_edit.getEdit().value);
-        const kind = this.kind_selection.options[this.kind_selection.selectedIndex].value;
-        const author = this.author_selection.options[this.author_selection.selectedIndex].value;
-        const quality = this.quality_selection.options[this.quality_selection.selectedIndex].value;
+    changeVideoToLastFav(options) {
+        try {
+            const video = JSON.parse(storage.getItem('LastFav'));
+            let available = options;
+
+            if (video.author) {
+                available = this.filterAnimes(available, {author: video.author});
+            }
+
+            if (video.url) {
+                available = this.filterAnimes(available, {url: video.url});
+            }
+
+            if (video.kind) {
+                available = this.filterAnimes(available, {kind: video.kind});
+            }
+
+            if (available.length > 0) {
+                this.player.changeVideo(available[0]);
+            } else throw new Error('не найдено рекомендованных источников')
+        } catch (e) {
+            console.error(e);
+            this.player.changeVideo(options[0]);
+        } finally {
+            this.filterAnimesAuto(options);
+        }
+    }
+
+    filterAnimesAuto(animes) {
+        let filters = {
+            episode: '',
+            kind: '',
+            author: '',
+            quality: ''
+        };
+
+        filters.episode = parseInt(this.episode_edit.getEdit().value);
+        filters.kind = this.kind_selection.options[this.kind_selection.selectedIndex].value;
+        filters.author = this.author_selection.options[this.author_selection.selectedIndex].value;
+        filters.quality = this.quality_selection.options[this.quality_selection.selectedIndex].value;
+
+        return this.filterAnimes(animes, filters);
+    }
+
+    filterAnimes(animes, filters) {
+        const episode = filters.episode;
+        const kind = filters.kind;
+        const author = filters.author;
+        const quality = filters.quality;
+        const url = filters.url;
         const watched_button = this.inc_button.element;
 
         let filtered_animes = animes;
@@ -154,37 +210,54 @@ export default class Player {
             this.videos_list.removeChild(this.videos_list.firstChild);
         }
 
-        filtered_animes = filtered_animes.filter(anime => {
-            if (!isNaN(episode)) {
-                return anime.episode == episode;
-            } else {
-                return true;
-            }
-        });
+        if (episode) {
+            filtered_animes = filtered_animes.filter(anime => {
+                if (!isNaN(episode)) {
+                    return anime.episode == episode;
+                } else {
+                    return true;
+                }
+            });
+        }
 
-        filtered_animes = filtered_animes.filter(anime => {
-            if (kind != 'Озвучка/Субтитры') {
-                return anime.kind == kind;
-            } else {
-                return true;
-            }
-        });
+        if (kind) {
+            filtered_animes = filtered_animes.filter(anime => {
+                if (kind != 'Озвучка/Субтитры') {
+                    return anime.kind == kind;
+                } else {
+                    return true;
+                }
+            });
+        }
 
-        filtered_animes = filtered_animes.filter(anime => {
-            if (author != 'Студия') {
-                return anime.author == author;
-            } else {
-                return true;
-            }
-        });
+        if (author) {
+            filtered_animes = filtered_animes.filter(anime => {
+                if (author != 'Студия') {
+                    return anime.author == author;
+                } else {
+                    return true;
+                }
+            });
+        }
 
-        filtered_animes = filtered_animes.filter(anime => {
-            if (quality != 'Качество') {
-                return anime.quality == quality;
-            } else {
-                return true;
-            }
-        });
+        if (quality) {
+            filtered_animes = filtered_animes.filter(anime => {
+                if (quality != 'Качество') {
+                    return anime.quality == quality;
+                } else {
+                    return true;
+                }
+            });
+        }
+
+        if (url) {
+            filtered_animes = filtered_animes.filter(anime => {
+                let anime_src = Player.identifyVideoSrc(anime.url);
+                let match_src = Player.identifyVideoSrc(url);
+
+                return anime_src == match_src;
+            });
+        }
 
         filtered_animes.forEach(val => {
             let li = document.createElement('li');
@@ -192,60 +265,67 @@ export default class Player {
             let no_episode = val.episode;
             let title = val.title_rus;
             let quality = val.quality != 'неизвестное' ? val.quality.toLocaleUpperCase() : '';
-            let source;
-
-            switch (true) {
-
-                case /animedia/.test(val.url):
-                    source = 'Animedia';
-                    break;
-                case /sibnet/.test(val.url):
-                    source = 'Sibnet';
-                    break;
-                case /smotretanime/.test(val.url):
-                    source = 'SmotretAnime';
-                    break;
-                case /sovetromanti/.test(val.url):
-                    source = 'SovetRomantica';
-                    break;
-                case /mail.ru/.test(val.url):
-                    source = 'Mail.ru';
-                    break;
-                case /mediafile/.test(val.url):
-                    source = 'MediaFile';
-                    break;
-                case /ok.ru/.test(val.url):
-                    source = 'Одноклассники';
-                    break;
-                case /vk.com/.test(val.url):
-                    source = 'Вкотакте';
-                    break;
-                case /myvi/.test(val.url):
-                    source = 'Myvi';
-                    break;
-                case /stormo/.test(val.url):
-                    source = 'Stromo';
-                    break;
-                case /youtu/.test(val.url):
-                    source = 'YouTube';
-                    break;
-
-                default:
-                    source = 'неизвестен';
-            }
+            let source = Player.identifyVideoSrc(val.url);
 
             li.innerHTML = `#${no_episode} `;
             a.innerHTML = `${title} (${val.kind}: <span class="shc-author">${val.author || "неизвестно"}</span>, 
                             проигрыватель: <span class="shc-source">${source}</span>) ${quality}`;
 
             a.addEventListener('click', () => {
-                this.player.changeVideo(val.url)
+                this.player.changeVideo(val)
             });
 
             li.appendChild(a);
             this.videos_list.appendChild(li);
         });
 
+        return filtered_animes;
+    }
+
+    static identifyVideoSrc(url) {
+        let source;
+
+        switch (true) {
+
+            case /animedia/.test(url):
+                source = 'Animedia';
+                break;
+            case /sibnet/.test(url):
+                source = 'Sibnet';
+                break;
+            case /smotretanime/.test(url):
+                source = 'SmotretAnime';
+                break;
+            case /sovetromanti/.test(url):
+                source = 'SovetRomantica';
+                break;
+            case /mail.ru/.test(url):
+                source = 'Mail.ru';
+                break;
+            case /mediafile/.test(url):
+                source = 'MediaFile';
+                break;
+            case /ok.ru/.test(url):
+                source = 'Одноклассники';
+                break;
+            case /vk.com/.test(url):
+                source = 'Вкотакте';
+                break;
+            case /myvi/.test(url):
+                source = 'Myvi';
+                break;
+            case /stormo/.test(url):
+                source = 'Stromo';
+                break;
+            case /youtu/.test(url):
+                source = 'YouTube';
+                break;
+
+            default:
+                source = 'неизвестен';
+        }
+
+        return source;
     }
 
     fillKindSelection(options) {

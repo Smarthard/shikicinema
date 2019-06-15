@@ -15,6 +15,7 @@ export default class PlayerVideo {
 
         this.video.id = 'shikicinema-video';
         this.video.setAttribute('allowFullScreen', '');
+        this.current_video = null;
         this.element.appendChild(this.video);
     }
 
@@ -26,7 +27,9 @@ export default class PlayerVideo {
         this.videos_list = new VideosList(videos);
     }
 
-    changeVideo(url) {
+    changeVideo(video) {
+        let url = video.url;
+        this.current_video = video;
 
         if (url.includes('http://')) {
             console.log(`Forcing https connection for ${url}`);
