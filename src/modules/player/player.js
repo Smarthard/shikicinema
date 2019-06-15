@@ -384,6 +384,7 @@ export default class Player {
     }
 
     hide() {
+        this.player.stopVideo();
         this.div_player.hidden = true;
     }
 

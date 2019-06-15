@@ -39,4 +39,8 @@ export default class PlayerVideo {
 
         this.video.src = url;
     }
+
+    stopVideo() {
+        this.video.src = this.video.src;
+    }
 }
