@@ -1,9 +1,4 @@
 
-// const pbutton = require('./player-button');
-// const pedit = require('./player-edit');
-// const pvideo = require('./player-video');
-// const db = require('./db-functions');
-
 import PlayerButton from './player-button';
 import PlayerVideo from './player-video';
 import PlayerEdit from './player-edit';

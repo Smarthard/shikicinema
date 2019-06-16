@@ -1,6 +1,4 @@
 
-// const pvideos_list = require('./videos-list');
-
 import VideosList from './videos-list';
 
 export default class PlayerVideo {
