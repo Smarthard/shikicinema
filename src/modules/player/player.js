@@ -16,7 +16,6 @@ export default class Player {
     constructor() {
 
         this.isAnyVideoAvailable = true;
-        this.current_episode = undefined;
         this.episodes_watched = document.querySelector('span.current-episodes');
 
         this.close_button = document.createElement('button');
@@ -81,10 +80,7 @@ export default class Player {
             this.player.setVideos(values);
 
             if (this.episodes_watched) {
-                this.episodes_watched = this.episodes_watched.textContent;
-            }
-
-            if (!isNaN(this.current_episode)) {
+                this.episodes_watched = parseInt(this.episodes_watched.textContent);
                 this.episode_edit.getEdit().value = Math.min(this.episodes_watched + 1, this.player.getVideos().total_episodes);
             } else {
                 this.episode_edit.getEdit().value = 1;
