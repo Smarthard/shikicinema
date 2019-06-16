@@ -3,6 +3,7 @@ import PlayerButton from './player-button';
 import PlayerVideo from './player-video';
 import PlayerEdit from './player-edit';
 import DB from './db-functions';
+import ShikiAPI from "../shikimori-api";
 
 const storage = window.localStorage;
 
@@ -33,6 +34,10 @@ export default class Player {
     }
 
     init() {
+
+        ShikiAPI.isLoggedIn().then(value => {
+            this.inc_button.disabled = !value;
+        });
 
         this.div_player.id = 'shikicinema-player';
         this.div_player.classList.add('shikicinema-player-content');
