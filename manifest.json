@@ -13,8 +13,8 @@
   "content_scripts": [
     {
       "matches": [
-        "*://shikimori.org/animes/*",
-        "*://shikimori.one/animes/*"
+        "*://shikimori.org/*",
+        "*://shikimori.one/*"
       ],
       "js": [
         "shikicinema.min.js"
