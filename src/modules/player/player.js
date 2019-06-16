@@ -111,7 +111,7 @@ export default class Player {
 
 
             this.next_button.element.addEventListener('click', () => {
-                storage.setItem('LastFav', JSON.stringify(this.player.current_video));
+                this.setStorageItem(this.player.current_video);
 
                 if (this.episode_edit.getEdit().value < this.player.videos_list.total_episodes) {
                     this.episode_edit.getEdit().value++;
@@ -120,7 +120,7 @@ export default class Player {
             });
 
             this.prev_button.element.addEventListener('click', () => {
-                storage.setItem('LastFav', JSON.stringify(this.player.current_video));
+                this.setStorageItem(this.player.current_video);
 
                 if (this.episode_edit.getEdit().value > 1) {
                     this.episode_edit.getEdit().value--;
@@ -128,7 +128,7 @@ export default class Player {
                 }
             });
 
-            this.changeVideoToLastFav(values);
+            this.changeVideoToLastFav(this.filterAnimesAuto(values));
 
         }).catch(err => {
             console.error(err);
@@ -138,7 +138,7 @@ export default class Player {
 
     changeVideoToLastFav(options) {
         try {
-            const video = JSON.parse(storage.getItem('LastFav'));
+            const video = this.getStorageItem();
             let available = options;
 
             if (video.author) {
@@ -322,6 +322,18 @@ export default class Player {
         }
 
         return source;
+    }
+
+    getURL() {
+        return window.location.toString().split('animes/')[1];
+    }
+
+    getStorageItem() {
+        return JSON.parse(storage.getItem(this.getURL()));
+    }
+
+    setStorageItem(item) {
+        storage.setItem(this.getURL(), JSON.stringify(item));
     }
 
     fillKindSelection(options) {
