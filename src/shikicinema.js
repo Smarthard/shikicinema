@@ -29,7 +29,7 @@ async function main() {
 
             shikicinema_player.find(title);
 
-            if (shikicinema_player.isAnyVideoAvailable) {
+            if (shikicinema_player.hasVideos) {
                 player_button.textContent = 'Смотреть';
             } else {
                 player_button.textContent = 'Видео не найдено';

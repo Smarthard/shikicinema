@@ -11,7 +11,7 @@ export default class Player {
 
     constructor() {
 
-        this.isAnyVideoAvailable = true;
+        this.hasVideos = true;
         this.episodes_watched = document.querySelector('span.current-episodes');
 
         this.close_button = document.createElement('button');
@@ -76,7 +76,7 @@ export default class Player {
     find(title) {
         DB.findAllByTitle(title).then(values => {
 
-            this.isAnyVideoAvailable = true;
+            this.hasVideos = true;
             this.player.setVideos(values);
 
             if (this.episodes_watched) {
@@ -132,7 +132,7 @@ export default class Player {
 
         }).catch(err => {
             console.error(err);
-            this.isAnyVideoAvailable = false;
+            this.hasVideos = false;
         });
     }
 
