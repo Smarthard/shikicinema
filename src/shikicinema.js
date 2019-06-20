@@ -1,6 +1,6 @@
 'use strict';
 
-import Player from './modules/player/player';
+import Player from './modules/player';
 
 
 let player_button = document.createElement('button');

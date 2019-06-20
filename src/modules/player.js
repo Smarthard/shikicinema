@@ -1,9 +1,9 @@
 
-import PlayerButton from './player-button';
-import PlayerVideo from './player-video';
-import PlayerEdit from './player-edit';
-import DB from './db-functions';
-import ShikiAPI from "../shikimori-api";
+import PlayerButton from './player/player-button';
+import PlayerVideo from './player/player-video';
+import PlayerEdit from './player/player-edit';
+import DB from './player/db-functions';
+import ShikiAPI from "./shikimori-api";
 
 const storage = window.localStorage;
 
