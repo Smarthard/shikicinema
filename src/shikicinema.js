@@ -16,7 +16,7 @@ async function main() {
     let div_info = document.querySelector('div.c-info-right');
     let title = document.body.getElementsByTagName('h1')[0];
 
-    if (!div_info) return ;
+    if (!div_info || !window.location.toString().includes('/animes/')) return ;
 
     if (div_info && !div_info.contains(player_button)) {
 
