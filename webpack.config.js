@@ -1,7 +1,10 @@
+const path = require('path');
+
 module.exports = {
-    "entry": ["./src/shikicinema.js"],
+    context: path.resolve(__dirname, 'src'),
+    "entry": "./shikicinema.js",
     "output": {
-        "path": __dirname + "/bin/",
+        "path": path.resolve(__dirname, 'bin'),
         "filename": "shikicinema.min.js",
         "libraryTarget": "umd"
     },
@@ -17,5 +20,5 @@ module.exports = {
             }
         ]
     },
-    devtool: "hidden-source-map"
+    devtool: process.env.NODE_ENV === 'production' ? 'hidden-source-map' : 'source-map'
 };
