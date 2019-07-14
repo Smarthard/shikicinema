@@ -1,51 +1,34 @@
+import axios from "axios";
+
 export default class DB {
 
-    static findAllByTitle(name) {
-        return new Promise((resolve, reject) => {
-            let rawFile = new XMLHttpRequest();
-            let entries = [];
+    static findAllByTitle(name, episode) {
+        return axios.get(new URL(`https://smarthard.net/api/shikivideos/search?title=${name}&episode=${episode}&limit=all`).toString())
+            .then(response => {
+                let data = response.data;
 
-            rawFile.open("GET", chrome.extension.getURL('videos.csv'), true);
-            rawFile.onreadystatechange = () => {
-                if (rawFile.readyState === 4) {
-                    if (rawFile.status === 200 || rawFile.status === 0) {
-                        let allText = rawFile.responseText;
+                if (data.length > 0) {
+                    data = data.sort((a, b) => {
+                        let compare = 0;
 
-                        allText.split("\n").forEach(str => {
-                            if (str.includes(`;${name};`)) {
-                                let entry = DB.parseCSVString(str);
-                                entry.src = entry.url.replace('http:', 'https:');
-
-                                entries.push(entry);
-                            }
-                        });
-
-                        if (entries.length > 0) {
-                            resolve(entries.sort((a, b) => a.episode - b.episode));
-                        } else {
-                            reject([]);
+                        try {
+                            compare = a.episode - b.episode;
+                        } catch (e) {
+                            compare = 0;
                         }
-                    } else {
-                        reject([]);
-                    }
+
+                        return compare;
+                    });
                 }
-            };
 
-            rawFile.send(null);
-        });
+                return data;
+            });
     }
 
-    static parseCSVString(str) {
-        const fields = ['id', 'url', 'anime_id', 'title_eng', 'title_rus', 'episode', 'kind', 'language', 'quality', 'author'];
-
-        let parsedString = {};
-        let values = str.split(";");
-
-        for (let i = 0; i < 10; i++) {
-            parsedString[fields[i]] = values[i]
-        }
-
-        return parsedString;
+    static getAnimeLength(anime_id) {
+        return axios.get(new URL(`https://smarthard.net/api/shikivideos/${anime_id}/length`).toString())
+            .then(response => {
+                return response.data.length;
+            })
     }
-
 }

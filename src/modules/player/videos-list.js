@@ -1,16 +1,10 @@
 export default class VideosList {
 
     constructor(videos) {
-        this.videos = [];
-        this.total_episodes = 0;
+        this.videos = new Set([]);
 
-        if (videos) {
-            if (videos.length > 0) {
-                let episodes = videos.map(video => video.episode);
-
-                this.videos = videos;
-                this.total_episodes = Math.max.apply(null, episodes);
-            }
+        if (videos && videos.length > 0) {
+                this.videos = new Set(videos);
         }
     }
 }

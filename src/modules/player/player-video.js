@@ -17,6 +17,10 @@ export default class PlayerVideo {
         this.element.appendChild(this.video);
     }
 
+    addVideos(videos) {
+        videos.forEach(vid => this.videos_list.videos.add(vid));
+    }
+
     getVideos() {
         return this.videos_list;
     }

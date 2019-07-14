@@ -33,7 +33,7 @@ export default class Player {
         this.init();
     }
 
-    init() {
+    async init() {
 
         ShikiAPI.isLoggedIn().then(value => {
             this.inc_button.disabled = !value;
@@ -73,25 +73,31 @@ export default class Player {
 
     }
 
-    find(title) {
-        DB.findAllByTitle(title).then(values => {
+    async find(title) {
+
+        if (this.episodes_watched) {
+            let max_episodes = await DB.getAnimeLength(`${window.location}`.match(/\d+/));
+            this.episodes_watched = parseInt(this.episodes_watched.textContent);
+
+            this.episode_edit.getEdit().value = Math.min(this.episodes_watched + 1, max_episodes);
+        } else {
+            this.episode_edit.getEdit().value = 1;
+        }
+
+        DB.findAllByTitle(title, this.episode_edit.getEdit().value).then(values => {
 
             this.hasVideos = true;
             this.player.setVideos(values);
-
-            if (this.episodes_watched) {
-                this.episodes_watched = parseInt(this.episodes_watched.textContent);
-                this.episode_edit.getEdit().value = Math.min(this.episodes_watched + 1, this.player.getVideos().total_episodes);
-            } else {
-                this.episode_edit.getEdit().value = 1;
-            }
 
             this.fillKindSelection(values);
             this.fillAuthorSelection(values);
             this.fillQualitySelection(values);
 
-            this.episode_edit.getEdit().addEventListener('input', () => {
-                this.filterAnimesAuto(values);
+            this.episode_edit.getEdit().addEventListener('input', async () => {
+                const episode = this.episode_edit.getEdit().value;
+                let new_episodes = await DB.findAllByTitle(title, episode);
+
+                this.filterAnimesAuto(new_episodes);
             });
             this.kind_selection.addEventListener('change', () => {
                 let kind = this.kind_selection;
@@ -110,21 +116,28 @@ export default class Player {
             });
 
 
-            this.next_button.element.addEventListener('click', () => {
+            this.next_button.element.addEventListener('click', async () => {
+                let max_episodes = await DB.getAnimeLength(`${window.location}`.match(/\d+/));
                 this.setStorageItem(this.player.current_video);
 
-                if (this.episode_edit.getEdit().value < this.player.videos_list.total_episodes) {
+                if (this.episode_edit.getEdit().value < max_episodes) {
                     this.episode_edit.getEdit().value++;
-                    this.changeVideoToLastFav(this.filterAnimesAuto(values));
+                    let new_episodes = await DB.findAllByTitle(title, this.episode_edit.getEdit().value);
+
+                    this.addVideos(new_episodes);
+                    this.changeVideoToLastFav(this.filterAnimesAuto(new_episodes));
                 }
             });
 
-            this.prev_button.element.addEventListener('click', () => {
+            this.prev_button.element.addEventListener('click', async () => {
                 this.setStorageItem(this.player.current_video);
 
                 if (this.episode_edit.getEdit().value > 1) {
                     this.episode_edit.getEdit().value--;
-                    this.changeVideoToLastFav(this.filterAnimesAuto(values));
+                    let new_episodes = await DB.findAllByTitle(title, this.episode_edit.getEdit().value);
+
+                    this.addVideos(new_episodes);
+                    this.changeVideoToLastFav(this.filterAnimesAuto(new_episodes));
                 }
             });
 
@@ -202,10 +215,6 @@ export default class Player {
             console.error(e);
         }
 
-        while (this.videos_list.firstChild) {
-            this.videos_list.removeChild(this.videos_list.firstChild);
-        }
-
         if (episode) {
             filtered_animes = filtered_animes.filter(anime => {
                 if (!isNaN(episode)) {
@@ -255,25 +264,7 @@ export default class Player {
             });
         }
 
-        filtered_animes.forEach(val => {
-            let li = document.createElement('li');
-            let a = document.createElement('a');
-            let no_episode = val.episode;
-            let title = val.title_rus;
-            let quality = val.quality != 'неизвестное' ? val.quality.toLocaleUpperCase() : '';
-            let source = Player.identifyVideoSrc(val.url);
-
-            li.innerHTML = `#${no_episode} `;
-            a.innerHTML = `${title} (${val.kind}: <span class="shc-author">${val.author || "неизвестно"}</span>, 
-                            проигрыватель: <span class="shc-source">${source}</span>) ${quality}`;
-
-            a.addEventListener('click', () => {
-                this.player.changeVideo(val)
-            });
-
-            li.appendChild(a);
-            this.videos_list.appendChild(li);
-        });
+        this.addVideos(filtered_animes);
 
         return filtered_animes;
     }
@@ -363,7 +354,17 @@ export default class Player {
             }
         });
 
-        authors = Array.from(authors).sort((a, b) => a.localeCompare(b));
+        authors = Array.from(authors).sort((a, b) => {
+            let compare;
+
+            try {
+                compare = a.localeCompare(b)
+            } catch (e) {
+                compare = 0;
+            }
+
+            return compare;
+        });
         authors.unshift('Студия');
 
         authors.forEach(author => {
@@ -388,6 +389,35 @@ export default class Player {
             opt.innerHTML = qual;
 
             this.quality_selection.appendChild(opt);
+        })
+    }
+
+    addVideos(videos) {
+        this.player.addVideos(videos);
+
+
+        while (this.videos_list.firstChild) {
+            this.videos_list.removeChild(this.videos_list.firstChild);
+        }
+
+        videos.forEach(val => {
+            let li = document.createElement('li');
+            let a = document.createElement('a');
+            let no_episode = val.episode;
+            let title = val.anime_russian;
+            let quality = val.quality && val.quality.toLocaleUpperCase() != 'UNKNOWN' ? val.quality.toLocaleUpperCase() : '';
+            let source = Player.identifyVideoSrc(val.url);
+
+            li.innerHTML = `#${no_episode} `;
+            a.innerHTML = `${title} (${val.kind}: <span class="shc-author">${val.author || "неизвестно"}</span>, 
+                            проигрыватель: <span class="shc-source">${source}</span>) ${quality}`;
+
+            a.addEventListener('click', () => {
+                this.player.changeVideo(val)
+            });
+
+            li.appendChild(a);
+            this.videos_list.appendChild(li);
         })
     }
 
