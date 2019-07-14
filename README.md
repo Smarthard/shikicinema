@@ -9,14 +9,12 @@
 Для тестирования из исходников же понадобятся следующие программы и компонеты:
 
  - [Node.js & npm](https://nodejs.org/)
- - [videos.csv](https://drive.google.com/open?id=1p5ZrqKchgjv5BOdP67pwhlrfBhnTnbg9)
  - Ваш браузер
  
 ### Подготовка к запуску
 
 1. `npm i`;
 2. `npm run bundle`;
-3. Скачанный файл `videos.csv` нужно переместить в директорию `shikicinema`;
 
 ### Загрузка временного плагина в Firefox
 
