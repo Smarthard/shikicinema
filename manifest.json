@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "shikicinema",
-  "version": "0.2.11",
+  "version": "0.3.0",
 
   "icons": {
     "64": "assets/icon64.png",
@@ -29,12 +29,12 @@
   "web_accessible_resources": [
     "assets/fastforward.png",
     "assets/fastbackward.png",
-    "assets/check_mark.png",
-    "videos.csv"
+    "assets/check_mark.png"
   ],
 
   "permissions": [
     "*://shikimori.org/*",
-    "*://shikimori.one/*"
+    "*://shikimori.one/*",
+    "*://smarthard.net/*"
   ]
 }
