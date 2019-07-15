@@ -21,7 +21,7 @@ async function main() {
     if (div_info && !div_info.contains(player_button)) {
 
         shikicinema_player = new Player();
-        player_button.classList.add('b-link_button', 'dark');
+        player_button.classList.add('b-link_button', 'dark', 'watch-online');
 
         if (title != null) {
             title = title.innerHTML;
@@ -30,7 +30,7 @@ async function main() {
             shikicinema_player.find(title);
 
             if (shikicinema_player.hasVideos) {
-                player_button.textContent = 'Смотреть';
+                player_button.textContent = 'Смотреть онлайн';
             } else {
                 player_button.textContent = 'Видео не найдено';
                 player_button.disabled = true;
