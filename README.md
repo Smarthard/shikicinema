@@ -4,7 +4,7 @@
 
 ## Установка
 
-[Chrome Web Store](https://chrome.google.com/webstore/detail/shikicinema/hmbjohbggdnlpmokjbholpgegcdbehjp)
+[Firefox AMO](https://addons.mozilla.org/en-US/firefox/addon/shikicinema/) | [Chrome Web Store](https://chrome.google.com/webstore/detail/shikicinema/hmbjohbggdnlpmokjbholpgegcdbehjp)
 
 Для тестирования из исходников же понадобятся следующие программы и компонеты:
 
