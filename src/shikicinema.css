@@ -1,20 +1,121 @@
-#shikicinema-player {
-    z-index: 5;
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', 'sans-serif';
 
-    padding: 5px;
-    border: solid 1px #777;
-    border-radius: 5px;
-    
-    position: absolute;
-    top: 8%;
-    left: 25%;
-    right: 25%;
-    min-width: 50%;
-    max-width: 90%;
-    min-height: 30%;
+    --mdc-theme-primary: #333;
+    --mdc-theme-secondary: #999;
+    --mdc-theme-on-primary: #555;
+    --mdc-theme-on-secondary: #fff;
+}
 
-    background-color: #fff;
-    opacity: 1;
+iframe {
+    border: #fff none 0;
+}
+
+@media (orientation: landscape) {
+    footer {
+        position: relative !important;
+    }
+}
+
+@media (max-width: 1024px) {
+    #shikicinema-player {
+        margin: 0;
+        width: 100%;
+    }
+
+    label {
+        font-size: 11pt;
+    }
+
+    .shc-button-img {
+        height: 20px;
+    }
+
+    .control-box {
+        display: inline-block;
+        vertical-align: middle;
+        margin: 30px 0 0 0;
+    }
+
+    .flex {
+        display: flex;
+        flex-flow: row;
+        justify-content: center;
+    }
+
+    .flex select {
+        margin: 0 5px 0 5px;
+        font-size: 8pt !important;
+        max-width: 30%;
+    }
+
+    #shikicinema-upload-form div div {
+        flex-flow: column;
+    }
+
+    #shikicinema-upload-form div div label {
+        margin: 10px 0;
+    }
+
+    #shikicinema-upload-form div div.flex select {
+        max-width: 100%;
+    }
+
+    footer {
+        font-size: 9pt;
+    }
+}
+@media (min-width: 1025px) {
+    #shikicinema-player {
+        margin: 0;
+        padding: 0 10% 0 10%;
+        width: 80%;
+    }
+
+    label {
+        font-size: 14pt;
+    }
+
+    .shc-button-img {
+        height: 25px;
+    }
+
+    .control-box {
+        display: inline-block;
+        vertical-align: middle;
+        margin: 20px 1% 0 1%;
+    }
+
+    .flex {
+        display: flex;
+        flex-flow: row;
+        justify-content: center;
+    }
+    .flex label {
+        margin: 0 5px 0 5px;
+        font-size: 10pt !important;
+        max-width: 32%;
+    }
+
+    .flex select {
+        margin: 0 5px
+    }
+
+    #shikicinema-upload-form div span.flex select {
+        max-width: 10%;
+    }
+}
+
+#container {
+    min-height:100%;
+    position:relative;
+}
+
+#shikicinema-filters {
+    display: flex;
+    justify-content: center;
 }
 
 #shikicinema-player-ratio {
@@ -26,6 +127,42 @@
     padding-bottom: 20px;
     text-align: center;
     vertical-align: middle;
+}
+
+#shikicinema-upload-div {
+    display: none;
+    background-color: whitesmoke;
+    padding: 20px;
+}
+
+#shikicinema-upload-controls {
+    display: flex;
+    justify-content: flex-end;
+}
+
+#shikicinema-check-button {
+    margin-right: 5px;
+}
+
+#shikicinema-notifier {
+    display: none;
+    position: fixed;
+    margin: 5px;
+    right: 0;
+    top: 0;
+    border-radius: 5px;
+    padding: 10px;
+    color: white;
+    text-align: center;
+    background-color: green;
+}
+
+#shikicinema-notifier:hover {
+    cursor: pointer;
+}
+
+.shc-notify-error {
+    background-color: crimson !important;
 }
 
 .shikimori-close-button {
@@ -53,10 +190,9 @@
     color: #4DA8FF;
 }
 
-.control-box {
-    display: inline-block;
-    vertical-align: middle;
-    margin: 20px 1% 0 1%;
+.shc-upload {
+    width: 100%;
+    margin: 5px;
 }
 
 .label {
@@ -69,18 +205,30 @@
 
 iframe {
     position: absolute;
+    overflow: hidden;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
 }
 
-li a {
-    cursor: pointer;
+ul {
+    font-size: 11pt;
+    padding-left: 1%;
+    list-style-type: none;
 }
 
-select {
-    max-width: 50%;
+li {
+    padding-bottom: 10px;
+    color: #176093;
+}
+
+li:hover {
+    color: #DD5202;
+}
+
+li a {
+    cursor: pointer;
 }
 
 input {
@@ -88,4 +236,12 @@ input {
     margin-left: 3px;
     width: 30px;
     height: 3.7vh;
+}
+
+footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    height: 14px;
+    text-align: center;
 }

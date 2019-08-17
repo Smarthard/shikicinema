@@ -1,0 +1,127 @@
+<!DOCTYPE HTML>
+<html lang="ru">
+<head>
+    <link rel="stylesheet" href="shikicinema.css">
+    <title>Shikicinema Player</title>
+    <meta charset="UTF-8" content="application/html">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" type="text/css">
+    <link rel="stylesheet" href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css">
+    <link rel="icon" href="assets/icon128.png">
+</head>
+<body>
+    <div id="shikicinema-player" class="shikicinema-player-content">
+
+        <div id="shikicinema-player-ratio">
+            <iframe id="shikicinema-video" allowfullscreen scrolling="no"></iframe>
+        </div>
+
+        <div class="flex">
+            <select id="shikicinema-videos-kind" class="mdc-select__native-control"></select>
+            <select id="shikicinema-videos-author" class="mdc-select__native-control"></select>
+            <select id="shikicinema-videos-quality" class="mdc-select__native-control"></select>
+        </div>
+
+        <div id="shikicinema-controls">
+            <div class="control-box">
+                <button class="shikicinema-controls-button mdc-button" id="shikicinema-prev-button">
+                    <img class="shc-button-img" alt="Предыдущий" src="assets/fastbackward.png">
+                </button>
+                <div class="label">Предыдущий</div>
+            </div>
+            <div class="control-box">
+                <input id="shikicinema-videos-episode" class="mdc-text-field__input"
+                       style="width: 70px; margin-top: -18px; text-align: center" type="text" pattern="[0-9]+">
+                <div class="label">Эпизод</div>
+            </div>
+            <div class="control-box">
+                <button class="shikicinema-controls-button mdc-button" id="shikicinema-next-button">
+                    <img class="shc-button-img" alt="Следующий" src="assets/fastforward.png">
+                </button>
+                <div class="label">Следующий</div>
+            </div>
+            <div class="control-box">
+                <button class="shikicinema-controls-button mdc-button" id="shikicinema-watched-button">
+                    <img class="shc-button-img" alt="Просмотрено" id="shikicinema-watched-img" src="assets/sync.png">
+                </button>
+                <div class="label" id="shikicinema-watched-label">Шикимори</div>
+            </div>
+            <div class="control-box">
+                <button class="shikicinema-controls-button mdc-button" id="shikicinema-upload-button">
+                    <img class="shc-button-img" alt="Загрузить новое видео" src="assets/upload.png">
+                </button>
+                <div class="label">Загрузить</div>
+            </div>
+        </div>
+
+        <div id="shikicinema-upload-div">
+            <form id="shikicinema-upload-form">
+                <div>
+                    <p>Пожалуйста, проверяйте видео перед загрузкой!</p>
+                    <br>
+                    <label>URL проигрывателя:<br>
+                        <input id="upload_url" class="shc-upload mdc-text-field__input" name="url"
+                               placeholder="http://domain.com/video/123456" required type="url">
+                    </label><br>
+                    <label>Автор (озвучки, субтитров):<br>
+                        <input class="shc-upload mdc-text-field__input" name="author" placeholder="Автор" required>
+                    </label><br>
+                    <label>Эпизод:
+                        <input class="mdc-text-field__input" style="width: 100px" type="number" name="episode"
+                               placeholder="Эпизод" value="1" min="1">
+                    </label>
+
+                    <div class="flex">
+                        <label>Тип:
+                        <select name="kind" class="mdc-select__native-control">
+                            <option>озвучка</option>
+                            <option>субтитры</option>
+                            <option>оригинал</option>
+                        </select>
+                        </label>
+                        <label>Качество:
+                            <select name="quality" class="mdc-select__native-control">
+                                <option value="TV">TV</option>
+                                <option value="DVD">DVD</option>
+                                <option value="BD">BD</option>
+                                <option value="WEB">WEB</option>
+                                <option value="unknown">неизвестное</option>
+                            </select>
+                        </label>
+                        <label>Язык озвучки:
+                            <select name="language" class="mdc-select__native-control">
+                                <option value="russian">русский</option>
+                                <option value="english">английский</option>
+                                <option value="original">оригинальный</option>
+                                <option value="unknown">неизвестный</option>
+                            </select>
+                        </label>
+                    </div>
+
+                    <input hidden name="anime_id" value="anime_id">
+                    <input hidden name="anime_russian" value="russian">
+                    <input hidden name="anime_english" value="english">
+                    <input hidden name="uploader" value="uploader">
+                </div>
+
+                <div id="shikicinema-upload-controls">
+                    <button id="shikicinema-check-button" class="mdc-button"
+                            style="border: #555 solid 1px" type="button">Проверить</button>
+                    <button id="shikicinema-submit-button" class="mdc-button"
+                            style="border: #555 solid 1px" type="submit">Загрузить</button>
+                </div>
+            </form>
+        </div>
+
+        <ul id="shikicinema-videos-list"></ul>
+
+    </div>
+
+    <footer>
+        При обнаружении проблем:
+        <a href="https://github.com/Smarthard/shikicinema/issues">Github</a> проекта |
+        <a href="mailto:th3smartchan@gmail.com">связь с разработчиком</a>
+    </footer>
+    <div id="shikicinema-notifier"></div>
+    <script src="player-ui.js" type="application/javascript"></script>
+</body>
+</html>
