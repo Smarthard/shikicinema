@@ -26,9 +26,6 @@
       "js": [
         "shikicinema.js"
       ],
-      "css": [
-        "shikicinema.css"
-      ],
       "run_at": "document_idle"
     }
   ],
@@ -40,8 +37,9 @@
 
   "web_accessible_resources": [
     "assets/*.png",
-    "src/views/*.html",
-    "src/player-ui.js"
+    "player.html",
+    "player-ui.js",
+    "shikicinema.css"
   ],
 
   "permissions": [
