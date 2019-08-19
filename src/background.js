@@ -80,7 +80,6 @@ function shikimoriGetToken() {
 
 async function run() {
     try {
-        // await chrome.storage.local.remove('token', ok => ok);
         let videos_token = null;
         let shikimori_token = await shikimoriGetToken();
 
@@ -102,7 +101,7 @@ async function run() {
                 if (details.url.includes('shikimori')) {
                     for (let i = 0; i < details.requestHeaders.length; i++) {
                         if (details.requestHeaders[i].name === 'User-Agent') {
-                            details.requestHeaders[i].value = 'Shikicinema';
+                            details.requestHeaders[i].value += ' (with Shikicinema)';
                             break;
                         }
                     }
