@@ -166,10 +166,13 @@ async function main() {
 
         let url = new URL('https://smarthard.net/api/shikivideos');
         let form_data = new FormData(upload_form);
+        let title_eng = await getAnimeEnglishTitle(anime_id);
+
         form_data.forEach((k, v) => {
             switch (v) {
                 case 'anime_id': k = anime_id; break;
                 case 'anime_russian': k = title; break;
+                case 'anime_english': k = title_eng; break;
                 case 'uploader': k = user_id; break;
                 default: break;
             }
@@ -728,4 +731,18 @@ function fillSelection(videos) {
     fillKindSelection(videos);
     fillAuthorSelection(videos);
     fillQualitySelection(videos);
+}
+
+async function getAnimeEnglishTitle(anime_id) {
+    return new Promise(resolve => {
+        fetch(`https://shikimori.one/api/animes/${anime_id}`)
+            .then(response => response.json())
+            .then(anime => {
+                resolve(anime.english[0]);
+            })
+            .catch(err => {
+                console.warn(`Не удалось узнать англоязычное название для аниме: ${anime_id}`);
+                resolve(null);
+            })
+    })
 }
