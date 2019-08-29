@@ -37,6 +37,7 @@ async function main() {
     let episode;
     let user_id = await shikimoriGetUserId();
     let videos = [];
+    let synced = await shikimoriSynced();
 
     try {
         if (!query.get('episode')) {
@@ -79,7 +80,7 @@ async function main() {
     fillSelection(videos);
     await changeVideoToLastFav(title, await filterAnimesAuto(videos));
 
-    if (await shikimoriSynced()) {
+    if (synced) {
         console.log('sync ok');
         watched_label.innerText = 'Просмотрено';
         watched_img.src = 'assets/check_mark.png';
@@ -156,7 +157,6 @@ async function main() {
             upload_div.style.display !== 'block'
                 ? upload_div.style.display = 'block'
                 : upload_div.style.display = 'none';
-
         } else {
             notify('Не синхронизировано с Шикимори', { type: 'error' });
         }
@@ -202,29 +202,43 @@ async function main() {
                 });
             } else {
                 chrome.runtime.sendMessage({ videos_token: true });
-                notify("Токен доступа заменен\nПопробуйте еще раз", { type: 'error' });
+                notify("Токен доступа заменен\nПопробуйте еще раз", { type: 'warning' });
             }
         });
     });
     watched_button.addEventListener('click', async () => {
-        if (await shikimoriSynced()) {
+        if (synced) {
             await shikimoriIncEpisode(anime_id)
                 .then(async res => {
                     if (res.status === 200 || res.status === 201) {
                         notify('Просмотрено', {type: 'ok'});
                     }
                     else {
-                        notify('Проблема при синхронизации', {type: 'err'});
+                        notify('Проблема при синхронизации\nподробности в консоли', {type: 'error'});
                         console.error(res);
                     }
                 })
                 .catch(err => console.error(err));
         } else {
-            notify('Не синхронизировано', {type: 'ok'});
-            await _shikimoriGetToken()
-                .catch(err => {
-                    console.error(err);
-                    notify('Не удалось синхронизироваться с Shikimori :(', { type: 'error' })
+            /* retry with refreshed token */
+            await _shikimoriRefreshToken()
+                .then(() => {
+                    shikimoriIncEpisode(anime_id)
+                        .then(async res => {
+                            if (res.status === 200 || res.status === 201) {
+                                notify('Просмотрено', {type: 'ok'});
+                            }
+                        });
+                })
+                .catch(() => {
+                    _shikimoriGetToken()
+                        .then(() => {
+                            setTimeout(() => document.location.reload(), 700);
+                        })
+                        .catch(err => {
+                            console.error(err);
+                            notify('Не удалось синхронизироваться с Shikimori :(', { type: 'error' })
+                        });
                 });
         }
     });
@@ -532,8 +546,9 @@ function notify(msg, opt) {
 
     if (opt.type) {
         switch (opt.type) {
-            case 'error':   type = 'shc-notify-error'; break;
-            case 'ok':      type = 'shc-notify-ok'; break;
+            case 'error':       type = 'shc-notify-error';      break;
+            case 'warning':     type = 'shc-notify-warning';    break;
+            case 'ok':          type = 'shc-notify-ok';         break;
         }
     }
 
@@ -573,7 +588,7 @@ async function _shikimoriRefreshToken() {
         chrome.storage.sync.get('shikimori_token', async storage_token => {
             let refresh_url = new URL('https://shikimori.one/oauth/token');
 
-            if (!storage_token)
+            if (!storage_token || !storage_token.refresh_token)
                 reject(new Error('Refresh Token not found'));
 
             refresh_url.searchParams.set('grant_type', 'refresh_token');
@@ -651,8 +666,12 @@ async function shikimoriIncEpisode(anime_id) {
                 episodes: 1
             };
 
-            fetch(`https://shikimori.one/api/v2/user_rates/`, {
+            fetch(`https://shikimori.one/api/v2/user_rates`, {
                 method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
                 body: JSON.stringify(rate_data)
             })
                 .then(res => resolve(res))

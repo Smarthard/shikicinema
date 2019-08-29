@@ -165,6 +165,10 @@ iframe {
     background-color: crimson !important;
 }
 
+.shc-notify-warning {
+    background-color: gold !important;
+}
+
 .shikimori-close-button {
     position: relative;
 
