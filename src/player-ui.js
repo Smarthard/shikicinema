@@ -84,7 +84,7 @@ async function main() {
         console.log('sync ok');
         watched_label.innerText = 'Просмотрено';
         watched_img.src = 'assets/check_mark.png';
-        await _watchedIndicate(user_id, anime_id, episode)
+        await _watchedIndicate(user_id, anime_id, episode);
     } else console.log('no sync');
 
     kind_filter.addEventListener('change', async () => reloadVideos(await filterAnimesAuto(videos)));
@@ -208,17 +208,22 @@ async function main() {
     });
     watched_button.addEventListener('click', async () => {
         if (synced) {
-            await shikimoriIncEpisode(anime_id)
-                .then(async res => {
-                    if (res.status === 200 || res.status === 201) {
-                        notify('Просмотрено', {type: 'ok'});
-                    }
-                    else {
-                        notify('Проблема при синхронизации\nподробности в консоли', {type: 'error'});
-                        console.error(res);
-                    }
-                })
-                .catch(err => console.error(err));
+            if (!watched_button.classList.contains('green-filter')) {
+                await shikimoriIncEpisode(anime_id)
+                    .then(async res => {
+                        if (res.status === 200 || res.status === 201) {
+                            notify('Просмотрено', {type: 'ok'});
+                            await _watchedIndicate(user_id, anime_id, episode);
+                        }
+                        else {
+                            notify('Проблема при синхронизации\nподробности в консоли', {type: 'error'});
+                            console.error(res);
+                        }
+                    })
+                    .catch(err => console.error(err));
+            } else {
+                next_button.click();
+            }
         } else {
             /* retry with refreshed token */
             await _shikimoriRefreshToken()
@@ -687,10 +692,8 @@ async function _watchedIndicate(user_id, anime_id, episode) {
         if (anime_rate) {
             if (episode <= anime_rate.episodes && !watched_button.classList.contains('green-filter')) {
                 watched_button.classList.add('green-filter');
-                watched_button.disabled = true;
             } else if (episode > anime_rate.episodes) {
                 watched_button.classList.remove('green-filter');
-                watched_button.disabled = false;
             }
         }
     } catch (e) {
