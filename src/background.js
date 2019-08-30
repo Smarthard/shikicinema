@@ -81,7 +81,6 @@ function shikimoriGetToken() {
 async function run() {
     try {
         let videos_token = null;
-        let shikimori_token = await shikimoriGetToken();
 
         chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
            if (request.open_url) {
@@ -96,7 +95,8 @@ async function run() {
         });
 
         chrome.webRequest.onBeforeSendHeaders.addListener(
-            (details) => {
+            async (details) => {
+                let shikimori_token = await shikimoriGetToken();
 
                 if (details.url.includes('shikimori')) {
                     for (let i = 0; i < details.requestHeaders.length; i++) {

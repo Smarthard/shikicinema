@@ -214,36 +214,39 @@ async function main() {
                         if (res.status === 200 || res.status === 201) {
                             notify('Просмотрено', {type: 'ok'});
                             await _watchedIndicate(user_id, anime_id, episode);
-                        }
-                        else {
+                            next_button.click();
+                        } else if (res.status === 401) {
+                            /* retry with refreshed token */
+                            await _shikimoriRefreshToken()
+                                .then(() => {
+                                    shikimoriIncEpisode(anime_id)
+                                        .then(async res => {
+                                            if (res.status === 200 || res.status === 201) {
+                                                notify('Просмотрено', {type: 'ok'});
+                                                await _watchedIndicate(user_id, anime_id, episode);
+                                                next_button.click();
+                                            }
+                                        });
+                                })
+                                .catch(err => {
+                                    notify('Не удалось получить доступ к Шикимори\nподробности в консоли', {type: 'error'});
+                                    console.error(err);
+                                })
+                        } else {
                             notify('Проблема при синхронизации\nподробности в консоли', {type: 'error'});
                             console.error(res);
                         }
                     })
                     .catch(err => console.error(err));
-            } else {
-                next_button.click();
             }
         } else {
-            /* retry with refreshed token */
-            await _shikimoriRefreshToken()
+            _shikimoriGetToken()
                 .then(() => {
-                    shikimoriIncEpisode(anime_id)
-                        .then(async res => {
-                            if (res.status === 200 || res.status === 201) {
-                                notify('Просмотрено', {type: 'ok'});
-                            }
-                        });
+                    setTimeout(() => document.location.reload(), 700);
                 })
-                .catch(() => {
-                    _shikimoriGetToken()
-                        .then(() => {
-                            setTimeout(() => document.location.reload(), 700);
-                        })
-                        .catch(err => {
-                            console.error(err);
-                            notify('Не удалось синхронизироваться с Shikimori :(', { type: 'error' })
-                        });
+                .catch(err => {
+                    console.error(err);
+                    notify('Не удалось синхронизироваться с Shikimori :(', { type: 'error' })
                 });
         }
     });
@@ -631,7 +634,7 @@ function shikimoriSynced() {
 }
 
 async function shikimoriGetUserId() {
-    return await fetch('https://shikimori.one/api/users/whoami')
+    return await fetch('https://shikimori.one/api/users/whoami', { cache: "no-store" })
         .then(res => res.json())
         .then(user => user ? user.id : null)
         .catch(err => {
