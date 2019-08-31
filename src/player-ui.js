@@ -792,7 +792,7 @@ async function getAnimeEnglishTitle(anime_id) {
         fetch(`https://shikimori.one/api/animes/${anime_id}`)
             .then(response => response.json())
             .then(anime => {
-                resolve(anime.english[0]);
+                resolve(anime.name);
             })
             .catch(err => {
                 console.warn(`Не удалось узнать англоязычное название для аниме: ${anime_id}`);
