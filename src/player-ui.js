@@ -20,10 +20,12 @@ const check_new_video_button = document.querySelector('#shikicinema-check-button
 
 const upload_div = document.querySelector('#shikicinema-upload-div');
 const upload_form = document.querySelector('#shikicinema-upload-form');
+const author_input = document.querySelector('#shikicinema-input-author');
 
 const upload_url = document.querySelector('#upload_url');
 
 const notifier = document.querySelector('#shikicinema-notifier');
+const authors_datalist = document.querySelector('#shikicinema-authors');
 
 let current_video = {};
 
@@ -248,6 +250,33 @@ async function main() {
                     console.error(err);
                     notify('Не удалось синхронизироваться с Shikimori :(', { type: 'error' })
                 });
+        }
+    });
+    author_input.addEventListener('input', async () => {
+        let user_input = author_input.value;
+        let url_count = new URL(`${SHIKIVIDEOS_API}/unique/count?column=author&anime_id=${anime_id}`);
+        let url_with_filter = new URL(`${SHIKIVIDEOS_API}/unique?column=author&filter=${user_input}`);
+        let url_with_id = new URL(`${SHIKIVIDEOS_API}/unique?column=author&anime_id=${anime_id}&filter=${user_input}`);
+
+        if (user_input.length > 2) {
+            let count = await fetch(url_count.toString())
+                .then(response => response.json())
+                .then(json => json.length)
+                .catch(() => []);
+            let authors = [];
+
+            /* search for all variants if too few authors found */
+            if (count > 10) {
+                authors = await fetch(url_with_id.toString())
+                    .then(response => response.json())
+                    .catch(() => []);
+            } else {
+                authors = await fetch(url_with_filter.toString())
+                    .then(response => response.json())
+                    .catch(() => []);
+            }
+
+            updateAuthorsDatalist(authors);
         }
     });
     notifier.addEventListener('click', () => notifier.style.display = 'none');
@@ -770,4 +799,16 @@ async function getAnimeEnglishTitle(anime_id) {
                 resolve(null);
             })
     })
+}
+
+function updateAuthorsDatalist(authors) {
+    while (authors_datalist.firstChild)
+        authors_datalist.removeChild(authors_datalist.firstChild);
+
+    authors.forEach(author => {
+        let opt = document.createElement('option');
+        opt.value = author;
+
+        authors_datalist.appendChild(opt);
+    });
 }
