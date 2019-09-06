@@ -5,26 +5,8 @@ const SHIKIVIDEOS_CLIENT_SECRET = process.env.SHIKIVIDEOS_CLIENT_SECRET;
 const SHIKIVIDEOS_API = "https://smarthard.net";
 const EXTENSION_URL = chrome.runtime.getURL('player.html').replace('/player.html', '');
 
-class ShikivideosApi {
-
-    constructor() {}
-
-    async _getToken() {
-        return new Promise(async (resolve, reject) =>  {
-            chrome.storage.local.get('token', (result) => {
-                let storage_token = result.token;
-
-                if (storage_token && !ShikivideosApi.expired(storage_token))
-                    resolve(storage_token);
-                else
-                    this.obtainToken()
-                        .then(token => resolve(token))
-                        .catch(err => reject(err));
-            });
-        });
-    };
-
-    obtainToken() {
+function obtainVideosToken() {
+    const _generateNewToken = () => {
         return new Promise((resolve, reject) => {
             let query = buildQueryString({
                 grant_type: 'client_credentials',
@@ -43,25 +25,18 @@ class ShikivideosApi {
                 })
                 .catch(err => reject(err));
         });
-    }
+    };
 
-    async getToken() {
-        let token = null;
+    return new Promise((resolve, reject) => {
+        chrome.storage.local.get('token', async (videos_token) => {
+            let token = videos_token.token;
 
-        try {
-            token = this.access_token && !ShikivideosApi.expired(this.access_token)
-                ? this.access_token
-                : await this._getToken();
-        } catch (err) {
-            console.error(err);
-        }
+            if (!token || !token.access_token || Date.now() > new Date(token.expires))
+                token = await _generateNewToken().catch(err => reject(err));
 
-        return token;
-    }
-
-    static expired(token) {
-        return Date.now() > new Date(token.expires);
-    }
+            resolve(token);
+        })
+    });
 }
 
 function buildQueryString(params) {
@@ -88,7 +63,7 @@ async function run() {
            }
 
            if (request.videos_token) {
-                videos_token = await shikivideos_api.obtainToken();
+                videos_token = await obtainVideosToken();
            }
 
            return false;
@@ -121,8 +96,6 @@ async function run() {
         console.log(err);
     }
 }
-
-let shikivideos_api = new ShikivideosApi();
 
 run()
     .catch(err => console.error(err));
