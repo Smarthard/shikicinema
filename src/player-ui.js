@@ -89,8 +89,12 @@ async function main() {
         console.log('sync ok');
         watched_label.innerText = 'Просмотрено';
         watched_img.src = 'assets/check_mark.png';
+        watched_button.title = 'Отметить серию, как просмотренную';
         await _watchedIndicate(user_id, anime_id, episode);
-    } else console.log('no sync');
+    } else {
+        upload_button.disabled = true;
+        console.log('no sync');
+    }
 
     kind_filter.addEventListener('change', async () => reloadVideos(await filterAnimesAuto(videos)));
     author_filter.addEventListener('change', async () => reloadVideos(await filterAnimesAuto(videos)));

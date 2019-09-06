@@ -16,14 +16,14 @@
         </div>
 
         <div class="flex">
-            <select id="shikicinema-videos-kind" class="mdc-select__native-control"></select>
-            <select id="shikicinema-videos-author" class="mdc-select__native-control"></select>
-            <select id="shikicinema-videos-quality" class="mdc-select__native-control"></select>
+            <select id="shikicinema-videos-kind" class="mdc-select__native-control" title="Фильтровать по типу: озвучке, субтитрам или оригиналу"></select>
+            <select id="shikicinema-videos-author" class="mdc-select__native-control" title="Фильтровать по авторам озвучки/субтитров"></select>
+            <select id="shikicinema-videos-quality" class="mdc-select__native-control" title="Фильтровать по качеству"></select>
         </div>
 
         <div id="shikicinema-controls">
             <div class="control-box">
-                <button class="shikicinema-controls-button mdc-button" id="shikicinema-prev-button">
+                <button class="shikicinema-controls-button mdc-button" id="shikicinema-prev-button" title="Предыдущая серия">
                     <img class="shc-button-img" alt="Предыдущий" src="assets/fastbackward.png">
                 </button>
                 <div class="label">Предыдущий</div>
@@ -34,19 +34,19 @@
                 <div class="label">Эпизод</div>
             </div>
             <div class="control-box">
-                <button class="shikicinema-controls-button mdc-button" id="shikicinema-next-button">
+                <button class="shikicinema-controls-button mdc-button" id="shikicinema-next-button" title="Следующая серия">
                     <img class="shc-button-img" alt="Следующий" src="assets/fastforward.png">
                 </button>
                 <div class="label">Следующий</div>
             </div>
             <div class="control-box">
-                <button class="shikicinema-controls-button mdc-button" id="shikicinema-watched-button">
+                <button class="shikicinema-controls-button mdc-button" id="shikicinema-watched-button" title="Подключить синхронизацию просмотров с Шикимори">
                     <img class="shc-button-img" alt="Просмотрено" id="shikicinema-watched-img" src="assets/sync.png">
                 </button>
                 <div class="label" id="shikicinema-watched-label">Шикимори</div>
             </div>
-            <div class="control-box">
-                <button class="shikicinema-controls-button mdc-button" id="shikicinema-upload-button">
+            <div class="control-box" title="Для загрузки новых видео необходимо синхронизироваться с Шикимори">
+                <button class="shikicinema-controls-button mdc-button" id="shikicinema-upload-button" title="Загрузка видео">
                     <img class="shc-button-img" alt="Загрузить новое видео" src="assets/upload.png">
                 </button>
                 <div class="label">Загрузить</div>
