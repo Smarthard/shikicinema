@@ -3,7 +3,7 @@ const SHIKIVIDEOS_CLIENT_ID = process.env.SHIKIVIDEOS_CLIENT_ID;
 const SHIKIVIDEOS_CLIENT_SECRET = process.env.SHIKIVIDEOS_CLIENT_SECRET;
 
 const SHIKIVIDEOS_API = "https://smarthard.net";
-const EXTENSION_URL = chrome.runtime.getURL('player.html').replace('/player.html', '');
+const EXTENSION_VERSION = chrome.runtime.getManifest().version;
 
 function obtainVideosToken() {
     const _generateNewToken = () => {
@@ -73,14 +73,14 @@ async function run() {
             async (details) => {
                 let shikimori_token = await shikimoriGetToken();
 
-                if (details.url.includes('shikimori')) {
-                    for (let i = 0; i < details.requestHeaders.length; i++) {
-                        if (details.requestHeaders[i].name === 'User-Agent') {
-                            details.requestHeaders[i].value += ' (with Shikicinema)';
-                            break;
-                        }
+                for (let i = 0; i < details.requestHeaders.length; i++) {
+                    if (details.requestHeaders[i].name === 'User-Agent') {
+                        details.requestHeaders[i].value += ` (with Shikicinema ${EXTENSION_VERSION})`;
+                        break;
                     }
+                }
 
+                if (details.url.includes('shikimori')) {
                     details.requestHeaders.push({
                         name: 'Authorization',
                         value: `Bearer ${shikimori_token.access_token}`
@@ -89,7 +89,7 @@ async function run() {
 
                 return { requestHeaders: details.requestHeaders };
             },
-            { urls: ['https://shikimori.one/*', 'https://shikimori.org/*'] },
+            { urls: ['https://shikimori.one/*', 'https://shikimori.org/*', 'https://smarthard.net/*'] },
             ['requestHeaders', 'blocking']
         );
     } catch (err) {
