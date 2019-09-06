@@ -27,6 +27,8 @@ const upload_url = document.querySelector('#upload_url');
 const notifier = document.querySelector('#shikicinema-notifier');
 const authors_datalist = document.querySelector('#shikicinema-authors');
 
+const server_status = document.querySelector('#shikicinema-status');
+
 let current_video = {};
 
 main();
@@ -78,6 +80,7 @@ async function main() {
         episode_filter.value = 1;
     }
 
+    await checkServerStatus();
     reloadVideos(videos);
     fillSelection(videos);
     await changeVideoToLastFav(title, await filterAnimesAuto(videos));
@@ -280,6 +283,7 @@ async function main() {
         }
     });
     notifier.addEventListener('click', () => notifier.style.display = 'none');
+    server_status.addEventListener('mouseover', checkServerStatus);
 }
 
 function reloadVideos(new_videos) {
@@ -814,4 +818,24 @@ function updateAuthorsDatalist(authors) {
 
         authors_datalist.appendChild(opt);
     });
+}
+
+async function checkServerStatus() {
+    let status = await fetch('https://smarthard.net/api/status')
+        .then(res => res.json())
+        .catch(() => { return { api: 'offline' } });
+    let uptime = await fetch(`https://smarthard.net/api/status/uptime`)
+        .then(res => res.json())
+        .catch(() => { return {} });
+
+    server_status.title = `Статус сервера: ${status.api}`;
+    if (status.api && status.api === 'online') {
+        server_status.title += `\nuptime: ${uptime.api}`;
+        server_status.classList.remove('shc-offline');
+        server_status.classList.add('shc-online');
+    } else {
+        server_status.title += `\nсервер скоро будет доступен`;
+        server_status.classList.remove('shc-online');
+        server_status.classList.add('shc-offline');
+    }
 }

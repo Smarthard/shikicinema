@@ -163,6 +163,23 @@ iframe {
     cursor: pointer;
 }
 
+#shikicinema-status {
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    padding: 7px;
+    border-radius: 7px;
+    background-color: darkblue;
+}
+
+.shc-online {
+    background-color: limegreen !important;
+}
+
+.shc-offline {
+    background-color: darkred !important;
+}
+
 .shc-notify-error {
     background-color: crimson !important;
 }
