@@ -18,7 +18,7 @@ async function main() {
 
     if (!div_info || !window.location.toString().includes('/animes/')) return ;
 
-    if (div_info && !document.querySelector('#watch_button')) {
+    if (!document.querySelector('#watch_button')) {
 
         player_button.id = 'watch_button';
         player_button.classList.add('b-link_button', 'dark', 'watch-online');

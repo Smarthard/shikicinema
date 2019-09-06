@@ -52,7 +52,7 @@ async function main() {
                 episode = next_ep;
             }
         } else {
-            episode = query.get('episode')
+            episode = query.get('episode');
         }
     } catch (e) {
         episode = 1;
@@ -65,7 +65,7 @@ async function main() {
             videos = new Set(await fetch(url).then(response => response.json()));
         } catch (err) {
             console.error(err);
-            alert(`Не удалось загрузить список для аниме ${title}!`)
+            alert(`Не удалось загрузить список для аниме ${title}!`);
         }
     } else {
         console.error('Название аниме не указано');
@@ -133,7 +133,7 @@ async function main() {
     });
     upload_url.addEventListener('paste', (evt) => {
         let paste = (evt.clipboardData || window.clipboardData).getData('text');
-        let url_regex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/;
+        let url_regex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_.~#?&/=]*)/;
         let url = paste.match(url_regex)[0];
 
         if (url_regex.test(paste)) {
@@ -178,7 +178,7 @@ async function main() {
                 case 'uploader': k = user_id; break;
                 default: break;
             }
-            url.searchParams.append(v, k)
+            url.searchParams.append(v, k);
         });
 
         chrome.storage.local.get('token', (videos_token) => {
@@ -559,7 +559,10 @@ async function changeVideoToLastFav(title, options) {
 
         if (available.length > 0) {
             changeVideo(available[0]);
-        } else throw new Error('не найдено рекомендованных источников')
+        } else {
+            console.warn('не найдено рекомендованных источников');
+            changeVideo(options[0]);
+        }
     } catch (e) {
         console.warn(e);
         changeVideo(options[0]);
@@ -593,7 +596,7 @@ function notify(msg, opt) {
     notifier.classList.add(type);
     setTimeout(() => {
         notifier.style.display = 'none';
-    }, 5000)
+    }, 5000);
 }
 
 async function _shikimoriGetToken() {
@@ -654,7 +657,7 @@ function shikimoriSynced() {
 
             let expiration_date = new Date((token.created_at + token.expires_in) * 1000);
             if (Date.now() > expiration_date) {
-                token = await _shikimoriRefreshToken();
+                await _shikimoriRefreshToken();
             }
 
             resolve(true);
@@ -794,7 +797,7 @@ async function getAnimeEnglishTitle(anime_id) {
             .then(anime => {
                 resolve(anime.name);
             })
-            .catch(err => {
+            .catch(() => {
                 console.warn(`Не удалось узнать англоязычное название для аниме: ${anime_id}`);
                 resolve(null);
             })
