@@ -43,6 +43,7 @@ async function main() {
     let videos = [];
     let synced = await shikimoriSynced();
 
+    chrome.storage.sync.get('shikimori_token', token => console.log('From sync storage', token));
     try {
         if (!query.get('episode')) {
             let anime_rate = await shikimoriGetAnimeRate(user_id, anime_id);
@@ -621,11 +622,9 @@ async function _shikimoriGetToken() {
         fetch(token_url.toString(), {
             method: 'POST'
         })
-            .then(async response => {
-                let token = await response.json();
-
-                await chrome.storage.sync.set({'shikimori_token': token});
-                resolve(token);
+            .then(response => response.json())
+            .then(shikimori_token => {
+                chrome.storage.sync.set({ shikimori_token }, () => resolve(shikimori_token));
             })
             .catch(err => reject(err));
     });
@@ -647,9 +646,8 @@ async function _shikimoriRefreshToken() {
             fetch(refresh_url.toString(), {
                 method: 'POST'
             })
-                .then(async new_token => {
-                    await chrome.storage.sync.set({'shikimori_token': new_token});
-                    resolve(new_token);
+                .then(shikimori_token => {
+                    chrome.storage.sync.set({ shikimori_token }, () => resolve(shikimori_token));
                 })
                 .catch(err => reject(err));
         })
