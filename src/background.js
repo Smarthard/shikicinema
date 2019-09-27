@@ -89,7 +89,7 @@ async function run() {
 
                 return { requestHeaders: details.requestHeaders };
             },
-            { urls: ['https://shikimori.one/*', 'https://shikimori.org/*', 'https://smarthard.net/*'] },
+            { urls: ['https://shikimori.one/api/*', 'https://shikimori.org/api/*', 'https://smarthard.net/*'] },
             ['requestHeaders', 'blocking']
         );
     } catch (err) {
