@@ -4,6 +4,7 @@ const SHIKIVIDEOS_CLIENT_SECRET = process.env.SHIKIVIDEOS_CLIENT_SECRET;
 
 const SHIKIVIDEOS_API = "https://smarthard.net";
 const EXTENSION_VERSION = chrome.runtime.getManifest().version;
+const EXTENSION_ID = chrome.runtime.getURL('player.html').replace('/player.html', '');
 
 function obtainVideosToken() {
     const _generateNewToken = () => {
@@ -53,6 +54,12 @@ function shikimoriGetToken() {
     });
 }
 
+async function getInitiator(tabId) {
+    return new Promise((resolve) => {
+        chrome.tabs.get(tabId, tab => resolve(tab.url))
+    });
+}
+
 async function run() {
     try {
         let videos_token = null;
@@ -72,6 +79,7 @@ async function run() {
         chrome.webRequest.onBeforeSendHeaders.addListener(
             async (details) => {
                 let shikimori_token = await shikimoriGetToken();
+                let initiator = await getInitiator(details.tabId);
 
                 for (let i = 0; i < details.requestHeaders.length; i++) {
                     if (details.requestHeaders[i].name === 'User-Agent') {
@@ -80,7 +88,7 @@ async function run() {
                     }
                 }
 
-                if (details.url.includes('shikimori')) {
+                if (initiator.includes(EXTENSION_ID) && details.url.includes('shikimori')) {
                     details.requestHeaders.push({
                         name: 'Authorization',
                         value: `Bearer ${shikimori_token.access_token}`
