@@ -148,6 +148,7 @@ iframe {
 
 #shikicinema-notifier {
     display: none;
+    z-index: 10;
     position: fixed;
     margin: 5px;
     right: 0;
