@@ -428,7 +428,7 @@ function fillKindSelection(options) {
     kinds.forEach(kind => {
         let opt = document.createElement('option');
         opt.value = kind;
-        opt.innerHTML = kind;
+        opt.innerText = kind;
 
         kind_filter.appendChild(opt);
     })
@@ -465,7 +465,7 @@ function fillAuthorSelection(options) {
     authors.forEach(author => {
         let opt = document.createElement('option');
         opt.value = author;
-        opt.innerHTML = author;
+        opt.innerText = author;
 
         author_filter.appendChild(opt);
     })
@@ -484,7 +484,7 @@ function fillQualitySelection(options) {
     qualities.forEach(qual => {
         let opt = document.createElement('option');
         opt.value = qual;
-        opt.innerHTML = qual;
+        opt.innerText = qual;
 
         quality_filter.appendChild(opt);
     })
