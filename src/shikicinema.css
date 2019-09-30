@@ -176,6 +176,26 @@ iframe {
     border: none !important;
 }
 
+#shikicinema-uploader {
+    background-color: white;
+    padding: 10px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    display: none;
+    align-items: center;
+}
+
+#shikicinema-uploader-img {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+}
+
+#shikicinema-uploader-info {
+    padding-left: 5px;
+}
+
 .shc-online {
     background-color: limegreen !important;
 }

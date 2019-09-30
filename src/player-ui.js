@@ -29,6 +29,9 @@ const authors_datalist = document.querySelector('#shikicinema-authors');
 
 const server_status = document.querySelector('#shikicinema-status');
 const direct_link = document.querySelector('#shikicinema-direct-link');
+const uploader_info_div = document.querySelector('#shikicinema-uploader');
+const uploader_img = document.querySelector('#shikicinema-uploader-img');
+const uploader_info = document.querySelector('#shikicinema-uploader-info');
 
 let current_video = {};
 
@@ -368,7 +371,16 @@ function identifyVideoSrc(url) {
     return source;
 }
 
-function changeVideo(video) {
+async function getUploaderInfo(uploader) {
+    return new Promise((resolve, reject) => {
+        uploader = uploader.match(/\d+/) ? uploader : `${uploader}?is_nickname=1`;
+        fetch(`https://shikimori.one/api/users/${uploader}`)
+            .then(response => resolve(response.json()))
+            .catch(err => reject(err));
+    });
+}
+
+async function changeVideo(video) {
     try {
         let url = video.url;
 
@@ -381,6 +393,21 @@ function changeVideo(video) {
         current_video = video;
         video_iframe.src = url;
         direct_link.href = url;
+
+        getUploaderInfo(video.uploader)
+            .then(uploader => {
+                if (uploader.nickname) {
+                    uploader_img.src = uploader.image.x32;
+                    uploader_info_div.title=`Видео загружено пользователем ${uploader.nickname}`;
+                    uploader_info.innerText = uploader.nickname;
+                    uploader_info.href = `https://shikimori.one/${uploader.nickname}`;
+                    uploader_info_div.style.display = 'flex';
+                }
+            })
+            .catch(err => {
+                uploader_info_div.style.display = 'none';
+                console.error(err);
+            });
     } catch (err) {
         video_iframe.src = 'https://cloudanimator.reallusion.com/content/Images/video-not-found.jpg';
         direct_link.href = '#';
