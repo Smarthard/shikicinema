@@ -28,6 +28,7 @@ const notifier = document.querySelector('#shikicinema-notifier');
 const authors_datalist = document.querySelector('#shikicinema-authors');
 
 const server_status = document.querySelector('#shikicinema-status');
+const direct_link = document.querySelector('#shikicinema-direct-link');
 
 let current_video = {};
 
@@ -379,8 +380,10 @@ function changeVideo(video) {
 
         current_video = video;
         video_iframe.src = url;
+        direct_link.href = url;
     } catch (err) {
         video_iframe.src = 'https://cloudanimator.reallusion.com/content/Images/video-not-found.jpg';
+        direct_link.href = '#';
     }
 }
 

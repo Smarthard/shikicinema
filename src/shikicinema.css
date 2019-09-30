@@ -172,6 +172,10 @@ iframe {
     background-color: darkblue;
 }
 
+#shikicinema-videos-episode {
+    border: none !important;
+}
+
 .shc-online {
     background-color: limegreen !important;
 }
