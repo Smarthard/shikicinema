@@ -314,6 +314,7 @@ function reloadVideos(new_videos) {
         let kind = video.kind;
         let author = video.author;
 
+        li.classList.add('shc-links');
         li.innerText = `#${no_episode} `;
         a.innerHTML = `${title} (${kind}: <span class="shc-author">${author || "неизвестно"}</span>, 
                             проигрыватель: <span class="shc-source">${source}</span>) ${quality}`;

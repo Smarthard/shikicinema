@@ -242,6 +242,15 @@ iframe {
     margin: 5px;
 }
 
+.shc-links, .shc-links:link, .shc-links:active, .shc-links:visited {
+    color: #176093;
+    text-decoration-line: none;
+}
+
+.shc-links:hover {
+    color: #DD5202;
+}
+
 .label {
     font-size: 8pt;
 }
@@ -267,11 +276,6 @@ ul {
 
 li {
     padding-bottom: 10px;
-    color: #176093;
-}
-
-li:hover {
-    color: #DD5202;
 }
 
 li a {
