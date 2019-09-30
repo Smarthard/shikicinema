@@ -88,7 +88,7 @@ async function run() {
                     }
                 }
 
-                if (initiator.includes(EXTENSION_ID) && details.url.includes('shikimori')) {
+                if (initiator.includes(EXTENSION_ID) && details.url.includes('shikimori') && !!shikimori_token) {
                     details.requestHeaders.push({
                         name: 'Authorization',
                         value: `Bearer ${shikimori_token.access_token}`
