@@ -667,7 +667,14 @@ async function _shikimoriGetToken() {
         })
             .then(response => response.json())
             .then(shikimori_token => {
-                chrome.storage.sync.set({ shikimori_token }, () => resolve(shikimori_token));
+                chrome.storage.sync.set({ shikimori_token }, () => {
+                    const err = chrome.runtime.lastError;
+
+                    if (err)
+                        reject(err);
+                    else
+                        resolve(shikimori_token);
+                });
             })
             .catch(err => reject(err));
     });
@@ -690,7 +697,14 @@ async function _shikimoriRefreshToken() {
                 method: 'POST'
             })
                 .then(shikimori_token => {
-                    chrome.storage.sync.set({ shikimori_token }, () => resolve(shikimori_token));
+                    chrome.storage.sync.set({ shikimori_token }, () => {
+                        const err = chrome.runtime.lastError;
+
+                        if (err)
+                            reject(err);
+                        else
+                            resolve(shikimori_token);
+                    });
                 })
                 .catch(err => reject(err));
         })
@@ -706,7 +720,12 @@ function shikimoriSynced() {
 
             let expiration_date = new Date((token.created_at + token.expires_in) * 1000);
             if (Date.now() > expiration_date) {
-                await _shikimoriRefreshToken();
+                await _shikimoriRefreshToken()
+                    .catch(err => {
+                        console.error(err);
+                        notify('Не удалось получить доступ к Шикимори\nподробности в консоли', {type: 'error'});
+                        resolve(false);
+                    });
             }
 
             resolve(true);
