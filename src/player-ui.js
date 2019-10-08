@@ -270,6 +270,16 @@ async function main() {
         let url_with_filter = new URL(`${SHIKIVIDEOS_API}/unique?column=author&filter=${user_input}`);
         let url_with_id = new URL(`${SHIKIVIDEOS_API}/unique?column=author&anime_id=${anime_id}&filter=${user_input}`);
 
+        const getAuthors = (unique_by_ep) => {
+            let authors = new Set();
+
+            Object.keys(unique_by_ep).forEach(ep => {
+                unique_by_ep[ep].author.forEach(author => authors.add(author));
+            });
+
+            return [...authors];
+        };
+
         if (user_input.length > 2) {
             let count = await fetch(url_count.toString())
                 .then(response => response.json())
@@ -281,10 +291,12 @@ async function main() {
             if (count > 10) {
                 authors = await fetch(url_with_id.toString())
                     .then(response => response.json())
+                    .then(res => getAuthors(res))
                     .catch(() => []);
             } else {
                 authors = await fetch(url_with_filter.toString())
                     .then(response => response.json())
+                    .then(res => getAuthors(res))
                     .catch(() => []);
             }
 
