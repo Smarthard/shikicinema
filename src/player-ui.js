@@ -684,14 +684,15 @@ async function _shikimoriRefreshToken() {
     return new Promise((resolve, reject) => {
         chrome.storage.sync.get('shikimori_token', async storage_token => {
             let refresh_url = new URL('https://shikimori.one/oauth/token');
+            let token = storage_token.shikimori_token;
 
-            if (!storage_token || !storage_token.refresh_token)
+            if (!token || !token.refresh_token)
                 reject(new Error('Refresh Token not found'));
 
             refresh_url.searchParams.set('grant_type', 'refresh_token');
             refresh_url.searchParams.set('client_id', SHIKIMORI_CLIENT_ID);
             refresh_url.searchParams.set('client_secret', SHIKIMORI_CLIENT_SECRET);
-            refresh_url.searchParams.set('refresh_token', storage_token.refresh_token);
+            refresh_url.searchParams.set('refresh_token', token.refresh_token);
 
             fetch(refresh_url.toString(), {
                 method: 'POST'
