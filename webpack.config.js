@@ -51,9 +51,8 @@ module.exports = {
         }),
         new CopyPlugin([
             { from: 'manifest.json' },
-            { from: 'src/shikicinema.css' },
             { from: 'assets/*.png' },
-            { from: 'src/views/player.html'},
+            { from: '*', context: 'src/ui/dist/ui/'},
         ])
     ],
     optimization: {

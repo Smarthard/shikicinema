@@ -1,6 +1,6 @@
 'use strict';
 
-const PLAYER_URL = chrome.runtime.getURL('player.html');
+const PLAYER_URL = chrome.runtime.getURL('/index.html');
 
 let player_button = document.createElement('a');
 let info = document.createElement('div');
@@ -42,7 +42,7 @@ async function main() {
             div_info.appendChild(info);
 
             player_button.onclick = () => {
-                chrome.runtime.sendMessage({open_url: `${PLAYER_URL}?title=${title}&anime_id=${anime_id}`});
+                chrome.runtime.sendMessage({open_url: `${PLAYER_URL}#/${anime_id}`});
             };
         } else {
             console.error('Не удалось узнать название аниме!');
