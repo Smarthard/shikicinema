@@ -1,0 +1,40 @@
+<div id="player">
+  <app-video-player [videoUrl]="currentVideo.url | safeVideoUrl"></app-video-player>
+
+  <div id="controls">
+    <div class="control-box">
+      <button class="mdc-button">
+        <i class="material-icons md-24">fast_rewind</i>
+      </button>
+      <div class="control-box-subtext">Предыдущий</div>
+    </div>
+    <div>
+      <input id="shikicinema-episode" class="mdc-text-field__input" value="1">
+      <div class="control-box-subtext">(<a href="//" class="shc-links">прямая ссылка</a>)</div>
+    </div>
+    <div class="control-box">
+      <button class="mdc-button">
+        <i class="material-icons md-24">fast_forward</i>
+      </button>
+      <div class="control-box-subtext">Следующий</div>
+    </div>
+    <div class="control-box">
+      <button class="mdc-button">
+        <i class="material-icons md-24">done</i>
+      </button>
+      <div class="control-box-subtext">Просмотрено</div>
+    </div>
+    <div class="control-box">
+      <button class="mdc-button">
+        <i class="material-icons md-24">add</i>
+      </button>
+      <div class="control-box-subtext">Загрузить</div>
+    </div>
+  </div>
+
+  <div *ngIf="videos.length > 0">
+    <ul *ngFor="let video of videos">
+      <li>{{ '#' + video.episode + ' ' + video.author }}</li>
+    </ul>
+  </div>
+</div>

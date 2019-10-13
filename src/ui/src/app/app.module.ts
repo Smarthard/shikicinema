@@ -1,20 +1,34 @@
-import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import {NgModule} from '@angular/core';
+import {CommonModule, HashLocationStrategy, LocationStrategy} from "@angular/common";
+import {HttpClientModule} from "@angular/common/http";
+import {NgxResponsiveEmbedModule} from "ngx-responsive-embed";
 
-import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
-import { PlayerComponent } from './player/player.component';
+import {AppRoutingModule} from './app-routing.module';
+import {AppComponent} from './app.component';
+import {PlayerComponent} from './routes/player/player.component';
+import {VideoPlayerComponent} from './shared/components/video-player/video-player.component';
+import {SafeVideoUrlPipe} from './shared/pipes/safe-video-url-pipe/safe-video-url.pipe';
+import {ShikivideosService} from "./services/shikivideos-api/shikivideos.service";
+import {BrowserModule} from "@angular/platform-browser";
 
 @NgModule({
   declarations: [
     AppComponent,
-    PlayerComponent
+    PlayerComponent,
+    VideoPlayerComponent,
+    SafeVideoUrlPipe
   ],
   imports: [
+    AppRoutingModule,
     BrowserModule,
-    AppRoutingModule
+    HttpClientModule,
+    NgxResponsiveEmbedModule,
+    CommonModule
   ],
-  providers: [],
+  providers: [
+    { provide: LocationStrategy, useClass: HashLocationStrategy },
+    ShikivideosService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
