@@ -7,7 +7,8 @@ export class ShikivideosFindParams {
       limit?: string,
       offset?: number,
       uploader?: string,
-      quality?: string
+      quality?: string,
+      title?: string
   }) {}
 
   public isEmptyParam(param: string): boolean {

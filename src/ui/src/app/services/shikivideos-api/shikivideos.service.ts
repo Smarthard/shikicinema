@@ -22,4 +22,15 @@ export class ShikivideosService {
         });
     });
   }
+
+  public findByTitle(options: ShikivideosFindParams): Promise<Shikivideo[]> {
+    return new Promise<Shikivideo[]>(resolve => {
+      let query: string = `${this.SHIKIVIDEOS_API}/search${options.getSearchParams()}`;
+
+      this.http.get(query)
+        .subscribe((videos: Array<Shikivideo>) => {
+          resolve(videos);
+        });
+    });
+  }
 }
