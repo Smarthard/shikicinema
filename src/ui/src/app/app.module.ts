@@ -10,6 +10,7 @@ import {VideoPlayerComponent} from './shared/components/video-player/video-playe
 import {SafeVideoUrlPipe} from './shared/pipes/safe-video-url-pipe/safe-video-url.pipe';
 import {ShikivideosService} from "./services/shikivideos-api/shikivideos.service";
 import {BrowserModule} from "@angular/platform-browser";
+import {FormsModule} from "@angular/forms";
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import {BrowserModule} from "@angular/platform-browser";
     BrowserModule,
     HttpClientModule,
     NgxResponsiveEmbedModule,
-    CommonModule
+    CommonModule,
+    FormsModule
   ],
   providers: [
     { provide: LocationStrategy, useClass: HashLocationStrategy },

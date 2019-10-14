@@ -3,17 +3,17 @@
 
   <div id="controls">
     <div class="control-box">
-      <button class="mdc-button">
+      <button class="mdc-button" (click)="changeEpisode(+episode - 1)">
         <i class="material-icons md-24">fast_rewind</i>
       </button>
       <div class="control-box-subtext">Предыдущий</div>
     </div>
     <div>
-      <input id="shikicinema-episode" class="mdc-text-field__input" value="1">
+      <input id="shikicinema-episode" class="mdc-text-field__input" [(ngModel)]="episode" (ngModelChange)="changeEpisode(episode)" value="1">
       <div class="control-box-subtext">(<a href="//" class="shc-links">прямая ссылка</a>)</div>
     </div>
     <div class="control-box">
-      <button class="mdc-button">
+      <button class="mdc-button" (click)="changeEpisode(+episode + 1)">
         <i class="material-icons md-24">fast_forward</i>
       </button>
       <div class="control-box-subtext">Следующий</div>
