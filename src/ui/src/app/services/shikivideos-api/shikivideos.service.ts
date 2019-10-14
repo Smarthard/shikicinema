@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
 import { ShikivideosFindParams } from "../../types/shikivideos-find-params";
-import {Shikivideo} from "../../types/shikivideo";
+import { Shikivideo } from "../../types/shikivideo";
 
 @Injectable({
   providedIn: 'root'
@@ -32,5 +32,14 @@ export class ShikivideosService {
           resolve(videos);
         });
     });
+  }
+
+  public getAnimeMaxLoadedEp(animeId: number): Promise<number> {
+    return new Promise<number>(resolve => {
+      this.http.get(`${this.SHIKIVIDEOS_API}/${animeId}/length`)
+        .subscribe((response: { length: number }) => {
+          resolve(response.length)
+        });
+    })
   }
 }
