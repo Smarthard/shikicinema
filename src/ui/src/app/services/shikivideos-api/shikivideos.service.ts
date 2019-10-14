@@ -1,7 +1,8 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from "@angular/common/http";
-import { ShikivideosFindParams } from "../../types/shikivideos-find-params";
-import { Shikivideo } from "../../types/shikivideo";
+import {Injectable} from '@angular/core';
+import {HttpClient} from "@angular/common/http";
+import {ShikivideosFindParams} from "../../types/shikivideos-find-params";
+import {Shikivideo} from "../../types/shikivideo";
+import {Observable} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -12,34 +13,19 @@ export class ShikivideosService {
 
   constructor(private http: HttpClient) { }
 
-  public findById(animeId: number, options: ShikivideosFindParams): Promise<Shikivideo[]> {
-    return new Promise<Shikivideo[]>((resolve) => {
-      let query: string = `${this.SHIKIVIDEOS_API}/${animeId}${options.getSearchParams()}`;
+  public findById(animeId: number, options: ShikivideosFindParams): Observable<Shikivideo[]> {
+    let query: string = `${this.SHIKIVIDEOS_API}/${animeId}${options.getSearchParams()}`;
 
-      this.http.get(query)
-        .subscribe((videos: Array<Shikivideo>) => {
-          resolve(videos);
-        });
-    });
+    return this.http.get<Shikivideo[]>(query);
   }
 
-  public findByTitle(options: ShikivideosFindParams): Promise<Shikivideo[]> {
-    return new Promise<Shikivideo[]>(resolve => {
+  public findByTitle(options: ShikivideosFindParams): Observable<Shikivideo[]> {
       let query: string = `${this.SHIKIVIDEOS_API}/search${options.getSearchParams()}`;
 
-      this.http.get(query)
-        .subscribe((videos: Array<Shikivideo>) => {
-          resolve(videos);
-        });
-    });
+      return this.http.get<Shikivideo[]>(query)
   }
 
-  public getAnimeMaxLoadedEp(animeId: number): Promise<number> {
-    return new Promise<number>(resolve => {
-      this.http.get(`${this.SHIKIVIDEOS_API}/${animeId}/length`)
-        .subscribe((response: { length: number }) => {
-          resolve(response.length)
-        });
-    })
+  public getAnimeMaxLoadedEp(animeId: number): Observable<{length: number}> {
+    return this.http.get<{length: number}>(`${this.SHIKIVIDEOS_API}/${animeId}/length`);
   }
 }

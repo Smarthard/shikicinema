@@ -37,15 +37,19 @@ export class PlayerComponent implements OnInit {
       if (!params['animeId']) return;
 
       this.videosApi.findById(this.animeId, queryParams)
-        .then(videos => {
-          this.videos = videos;
-          this.currentVideo = videos[0];
-        })
-        .catch(err => console.error(err)); // TODO: print network error message
+        .subscribe(
+          videos => {
+          this.videos = videos.map(v => new Shikivideo(v));
+          this.currentVideo = this.videos[0];
+        },
+          err => console.error(err) // TODO: print network error message
+        );
 
       this.videosApi.getAnimeMaxLoadedEp(this.animeId)
-        .then(length => this.maxEpisode = length)
-        .catch(err => console.error(err)); // TODO: same here
+        .subscribe(
+          series => this.maxEpisode = series.length,
+          err => console.error(err) // TODO: same here
+        )
     });
   }
 
