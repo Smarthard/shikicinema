@@ -11,13 +11,15 @@ import {SafeVideoUrlPipe} from './shared/pipes/safe-video-url-pipe/safe-video-ur
 import {ShikivideosService} from "./services/shikivideos-api/shikivideos.service";
 import {BrowserModule} from "@angular/platform-browser";
 import {FormsModule} from "@angular/forms";
+import {VideoListComponent} from './shared/components/video-list/video-list.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     PlayerComponent,
     VideoPlayerComponent,
-    SafeVideoUrlPipe
+    SafeVideoUrlPipe,
+    VideoListComponent
   ],
   imports: [
     AppRoutingModule,

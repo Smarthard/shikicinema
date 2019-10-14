@@ -1,0 +1,14 @@
+<ul>
+  <li class="shc-links" *ngFor="let video of videos" (click)="change.emit(video)">
+    <span class="hostname">({{ video.getSecondLvlDomain() }})</span>
+
+    {{ !video.hasUnknownAttribute('author') ? video.author : 'неизвестно' }}
+
+    <span *ngIf="!video.hasHighQuality() && !video.hasUnknownAttribute('quality')">
+      {{ video.quality | uppercase }}
+    </span>
+
+    <img *ngIf="video.hasHighQuality()" height="16px"
+         src="assets/{{video.quality | lowercase }}.png" alt="{{ video.quality }}">
+  </li>
+</ul>
