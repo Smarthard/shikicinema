@@ -51,8 +51,7 @@ module.exports = {
         }),
         new CopyPlugin([
             { from: 'manifest.json' },
-            { from: 'assets/*.png' },
-            { from: '*', context: 'src/ui/dist/ui/'},
+            { from: '**', context: 'src/ui/dist/ui/'},
         ])
     ],
     optimization: {
