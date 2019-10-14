@@ -19,4 +19,18 @@ export class Shikivideo {
   public getUrlHostname(): string {
     return (new URL(this.url)).hostname;
   }
+
+  public getSecondLvlDomain() {
+    let domains = this.getUrlHostname().split('.');
+
+    return domains.slice(-2).join('.');
+  }
+
+  public hasHighQuality() {
+    return /(DVD|BD)/i.test(this.quality);
+  }
+
+  public hasUnknownAttribute(attr: string) {
+    return !this[attr] || /unknown/i.test(this[attr]);
+  }
 }
