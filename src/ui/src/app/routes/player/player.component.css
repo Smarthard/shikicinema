@@ -77,3 +77,9 @@ app-uploader {
   right: 0;
   top: 0;
 }
+
+app-server-status {
+  position: absolute;
+  left: 0;
+  top: 0;
+}

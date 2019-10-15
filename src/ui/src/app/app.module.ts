@@ -15,6 +15,7 @@ import {VideoListComponent} from './shared/components/video-list/video-list.comp
 import {EpisodesListComponent} from './shared/components/episodes-list/episodes-list.component';
 import { KindRemoteComponent } from './shared/components/kind-remote/kind-remote.component';
 import { UploaderComponent } from './shared/components/uploader/uploader.component';
+import { ServerStatusComponent } from './shared/components/server-status/server-status.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { UploaderComponent } from './shared/components/uploader/uploader.compone
     VideoListComponent,
     EpisodesListComponent,
     KindRemoteComponent,
-    UploaderComponent
+    UploaderComponent,
+    ServerStatusComponent
   ],
   imports: [
     AppRoutingModule,
