@@ -14,6 +14,7 @@ import {FormsModule} from "@angular/forms";
 import {VideoListComponent} from './shared/components/video-list/video-list.component';
 import {EpisodesListComponent} from './shared/components/episodes-list/episodes-list.component';
 import { KindRemoteComponent } from './shared/components/kind-remote/kind-remote.component';
+import { UploaderComponent } from './shared/components/uploader/uploader.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import { KindRemoteComponent } from './shared/components/kind-remote/kind-remote
     SafeVideoUrlPipe,
     VideoListComponent,
     EpisodesListComponent,
-    KindRemoteComponent
+    KindRemoteComponent,
+    UploaderComponent
   ],
   imports: [
     AppRoutingModule,

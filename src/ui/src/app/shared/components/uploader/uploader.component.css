@@ -1,0 +1,13 @@
+div {
+  padding: 5px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+}
+
+div img {
+  margin-right: 5px;
+  border-radius: 5px;
+}

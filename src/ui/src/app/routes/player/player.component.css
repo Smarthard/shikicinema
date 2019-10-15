@@ -71,3 +71,9 @@
   color: #333333;
   background-color: white;
 }
+
+app-uploader {
+  position: absolute;
+  right: 0;
+  top: 0;
+}
