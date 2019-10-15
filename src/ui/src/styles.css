@@ -18,3 +18,12 @@ body {
   color: #DD5202;
   cursor: pointer;
 }
+
+.text {
+  color: #333333;
+}
+
+.hostname {
+  font-size: 10pt;
+  color: #999999;
+}

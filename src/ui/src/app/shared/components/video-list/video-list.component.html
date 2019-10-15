@@ -4,7 +4,7 @@
 
     {{ !video.hasUnknownAttribute('author') ? video.author : 'неизвестно' }}
 
-    <span *ngIf="!video.hasHighQuality() && !video.hasUnknownAttribute('quality')">
+    <span class="text" *ngIf="!video.hasHighQuality() && !video.hasUnknownAttribute('quality')">
       {{ video.quality | uppercase }}
     </span>
 
