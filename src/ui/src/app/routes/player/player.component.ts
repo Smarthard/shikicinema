@@ -3,6 +3,7 @@ import {Shikivideo} from "../../types/shikivideo";
 import {ShikivideosService} from "../../services/shikivideos-api/shikivideos.service";
 import {ShikivideosFindParams} from "../../types/shikivideos-find-params";
 import {ActivatedRoute, Router} from "@angular/router";
+import {Title} from "@angular/platform-browser";
 
 @Component({
   selector: 'app-player',
@@ -21,7 +22,8 @@ export class PlayerComponent implements OnInit {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private videosApi: ShikivideosService
+    private videosApi: ShikivideosService,
+    private title: Title
   ) {}
 
   ngOnInit() {
@@ -40,7 +42,11 @@ export class PlayerComponent implements OnInit {
         .subscribe(
           videos => {
           this.videos = videos.map(v => new Shikivideo(v));
-          this.currentVideo = this.videos[0];
+          this.changeVideo(this.videos[0]);
+          this.title.setTitle(`
+            ${this.currentVideo.anime_russian || this.currentVideo.anime_english}
+             - эпизод ${this.episode}
+          `);
         },
           err => console.error(err) // TODO: print network error message
         );
@@ -59,4 +65,7 @@ export class PlayerComponent implements OnInit {
     }
   }
 
+  changeVideo(video: Shikivideo) {
+    this.currentVideo = video;
+  }
 }

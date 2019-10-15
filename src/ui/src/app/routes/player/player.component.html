@@ -9,8 +9,11 @@
       <div class="control-box-subtext">Предыдущий</div>
     </div>
     <div>
-      <input id="shikicinema-episode" class="mdc-text-field__input" [(ngModel)]="episode" (ngModelChange)="changeEpisode(episode)" value="1">
-      <div class="control-box-subtext">(<a href="//" class="shc-links">прямая ссылка</a>)</div>
+      <input id="shikicinema-episode" class="mdc-text-field__input" [(ngModel)]="episode"
+             (ngModelChange)="changeEpisode(episode)" value="1">
+      <div class="control-box-subtext">
+        (<a [href]="currentVideo.url" target="_blank" class="shc-links">прямая ссылка</a>)
+      </div>
     </div>
     <div class="control-box">
       <button class="mdc-button" (click)="changeEpisode(+episode + 1)">
@@ -32,9 +35,8 @@
     </div>
   </div>
 
-  <div *ngIf="videos.length > 0">
-    <ul *ngFor="let video of videos">
-      <li>{{ '#' + video.episode + ' ' + video.author }}</li>
-    </ul>
+  <div id="series">
+    <app-episodes-list [animeId]="animeId" (change)="changeEpisode($event)"></app-episodes-list>
+    <app-video-list [videos]="videos" (change)="changeVideo($event)"></app-video-list>
   </div>
 </div>
