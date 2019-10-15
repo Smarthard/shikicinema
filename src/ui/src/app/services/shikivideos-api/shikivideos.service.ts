@@ -3,6 +3,8 @@ import {HttpClient} from "@angular/common/http";
 import {ShikivideosFindParams} from "../../types/shikivideos-find-params";
 import {Shikivideo} from "../../types/shikivideo";
 import {Observable} from "rxjs";
+import {ShikivideosUniqueParams} from "../../types/shikivideos-unique-params";
+import {ShikivideosUnique} from "../../types/shikivideos-unique";
 
 @Injectable({
   providedIn: 'root'
@@ -27,5 +29,9 @@ export class ShikivideosService {
 
   public getAnimeMaxLoadedEp(animeId: number): Observable<{length: number}> {
     return this.http.get<{length: number}>(`${this.SHIKIVIDEOS_API}/${animeId}/length`);
+  }
+
+  public getUniqueValues(options: ShikivideosUniqueParams): Observable<ShikivideosUnique> {
+    return this.http.get<ShikivideosUnique>(`${this.SHIKIVIDEOS_API}/unique${options.getSearchParams()}`);
   }
 }
