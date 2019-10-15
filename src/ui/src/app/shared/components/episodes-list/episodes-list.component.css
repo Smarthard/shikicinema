@@ -1,3 +1,7 @@
 li {
   list-style-type: none;
 }
+
+b {
+  font-size: 11pt;
+}
