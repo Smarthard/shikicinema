@@ -1,0 +1,15 @@
+<div>
+  <ul *ngFor="let episode of episodes">
+    <li class="shc-links" (click)="change.emit(+episode)">
+      <span class="text">
+        #{{ episode }}
+      </span>
+
+      {{ unique[episode].kind.join(', ') }}
+
+      <span class="hostname">
+        ({{ getUrlsSecondLvlDomain(unique[episode].url).join(', ') }})
+      </span>
+    </li>
+  </ul>
+</div>

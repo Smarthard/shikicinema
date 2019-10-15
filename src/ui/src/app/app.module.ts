@@ -12,6 +12,7 @@ import {ShikivideosService} from "./services/shikivideos-api/shikivideos.service
 import {BrowserModule} from "@angular/platform-browser";
 import {FormsModule} from "@angular/forms";
 import {VideoListComponent} from './shared/components/video-list/video-list.component';
+import {EpisodesListComponent} from './shared/components/episodes-list/episodes-list.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import {VideoListComponent} from './shared/components/video-list/video-list.comp
     PlayerComponent,
     VideoPlayerComponent,
     SafeVideoUrlPipe,
-    VideoListComponent
+    VideoListComponent,
+    EpisodesListComponent
   ],
   imports: [
     AppRoutingModule,
