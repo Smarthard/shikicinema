@@ -1,0 +1,21 @@
+b {
+  font-size: 11pt;
+}
+
+ul {
+  list-style-type: none;
+  display: inline;
+  margin: 0;
+  padding: 0;
+}
+
+li {
+  display: inline;
+  margin-right: 5px;
+}
+
+.chosen {
+  color: red;
+  font-weight: bold;
+  text-decoration-line: none;
+}

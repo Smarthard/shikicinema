@@ -13,6 +13,7 @@ import {BrowserModule} from "@angular/platform-browser";
 import {FormsModule} from "@angular/forms";
 import {VideoListComponent} from './shared/components/video-list/video-list.component';
 import {EpisodesListComponent} from './shared/components/episodes-list/episodes-list.component';
+import { KindRemoteComponent } from './shared/components/kind-remote/kind-remote.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import {EpisodesListComponent} from './shared/components/episodes-list/episodes-
     VideoPlayerComponent,
     SafeVideoUrlPipe,
     VideoListComponent,
-    EpisodesListComponent
+    EpisodesListComponent,
+    KindRemoteComponent
   ],
   imports: [
     AppRoutingModule,

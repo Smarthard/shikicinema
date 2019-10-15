@@ -1,0 +1,17 @@
+<div>
+  <b>Варианты видео: </b>
+  <ul>
+    <li class="shc-links" [class.chosen]="isChosen(KINDS.Dub)" (click)="switchKindSelection(KINDS.Dub)">
+      озвучка
+    </li>
+    <li class="shc-links" [class.chosen]="isChosen(KINDS.Sub)" (click)="switchKindSelection(KINDS.Sub)">
+      субтитры
+    </li>
+    <li class="shc-links" [class.chosen]="isChosen(KINDS.Raw)" (click)="switchKindSelection(KINDS.Raw)">
+      оригинал
+    </li>
+    <li class="shc-links" [class.chosen]="isChosen(KINDS.Unknown)" (click)="switchKindSelection(KINDS.Unknown)">
+      все
+    </li>
+  </ul>
+</div>

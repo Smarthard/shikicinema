@@ -1,5 +1,7 @@
+<app-kind-remote (kind)="chosenKind = $event"></app-kind-remote>
+
 <ul>
-  <li class="shc-links" *ngFor="let video of videos" (click)="change.emit(video)"
+  <li class="shc-links" *ngFor="let video of filteredByKind()" (click)="change.emit(video)"
     title="{{ video.author }} - {{ video.url }}"
   >
     <span class="hostname">({{ video.getSecondLvlDomain() }})</span>
