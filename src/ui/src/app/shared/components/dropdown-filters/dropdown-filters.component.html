@@ -1,0 +1,5 @@
+<select class="mdc-select__native-control">
+  <option [value]="value" *ngFor="let value of values" (click)="change.emit(value)">
+    {{ value }}
+  </option>
+</select>

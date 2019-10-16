@@ -1,6 +1,15 @@
 <div id="player">
   <app-video-player [videoUrl]="currentVideo.url | safeVideoUrl"></app-video-player>
 
+  <div id="filters">
+    <app-dropdown-filters [animeId]="animeId" [episode]="episode" column="language" placeholder="Язык"
+                          (change)="filter.language = ($event !== 'Язык' ?  $event :  null)"></app-dropdown-filters>
+    <app-dropdown-filters [animeId]="animeId" [episode]="episode" column="author" placeholder="Студия"
+                          (change)="filter.author = ($event !== 'Студия' ?  $event :  null)"></app-dropdown-filters>
+    <app-dropdown-filters [animeId]="animeId" [episode]="episode" column="quality" placeholder="Качество"
+                          (change)="filter.quality = ($event !== 'Качество' ?  $event :  null)"></app-dropdown-filters>
+  </div>
+
   <div id="controls">
     <div class="control-box">
       <button class="mdc-button" (click)="changeEpisode(+episode - 1)">
@@ -37,7 +46,11 @@
 
   <div id="series">
     <app-episodes-list [animeId]="animeId" (change)="changeEpisode($event)"></app-episodes-list>
-    <app-video-list [videos]="videos" (change)="changeVideo($event)"></app-video-list>
+    <app-video-list [videos]="videos
+                                    | filterBy:['language']:filter.language
+                                    | filterBy:['author']:filter.author
+                                    | filterBy:['quality']:filter.quality"
+            (change)="changeVideo($event)"></app-video-list>
   </div>
 </div>
 

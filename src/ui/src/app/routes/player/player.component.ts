@@ -4,6 +4,7 @@ import {ShikivideosService} from "../../services/shikivideos-api/shikivideos.ser
 import {ShikivideosFindParams} from "../../types/shikivideos-find-params";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Title} from "@angular/platform-browser";
+import {VideoFilter} from "../../types/video-filter";
 
 @Component({
   selector: 'app-player',
@@ -18,6 +19,7 @@ export class PlayerComponent implements OnInit {
   public animeId: number;
   public episode: number = 1;
   public maxEpisode: number = Number.POSITIVE_INFINITY;
+  public filter: VideoFilter = new VideoFilter();
 
   constructor(
     private router: Router,

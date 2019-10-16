@@ -13,9 +13,11 @@ import {BrowserModule} from "@angular/platform-browser";
 import {FormsModule} from "@angular/forms";
 import {VideoListComponent} from './shared/components/video-list/video-list.component';
 import {EpisodesListComponent} from './shared/components/episodes-list/episodes-list.component';
-import { KindRemoteComponent } from './shared/components/kind-remote/kind-remote.component';
-import { UploaderComponent } from './shared/components/uploader/uploader.component';
-import { ServerStatusComponent } from './shared/components/server-status/server-status.component';
+import {KindRemoteComponent} from './shared/components/kind-remote/kind-remote.component';
+import {UploaderComponent} from './shared/components/uploader/uploader.component';
+import {ServerStatusComponent} from './shared/components/server-status/server-status.component';
+import {DropdownFiltersComponent} from './shared/components/dropdown-filters/dropdown-filters.component';
+import {NgPipesModule} from "ngx-pipes";
 
 @NgModule({
   declarations: [
@@ -27,7 +29,8 @@ import { ServerStatusComponent } from './shared/components/server-status/server-
     EpisodesListComponent,
     KindRemoteComponent,
     UploaderComponent,
-    ServerStatusComponent
+    ServerStatusComponent,
+    DropdownFiltersComponent
   ],
   imports: [
     AppRoutingModule,
@@ -35,7 +38,8 @@ import { ServerStatusComponent } from './shared/components/server-status/server-
     HttpClientModule,
     NgxResponsiveEmbedModule,
     CommonModule,
-    FormsModule
+    FormsModule,
+    NgPipesModule
   ],
   providers: [
     { provide: LocationStrategy, useClass: HashLocationStrategy },

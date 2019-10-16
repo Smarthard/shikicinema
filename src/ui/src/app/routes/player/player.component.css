@@ -34,6 +34,18 @@
   }
 }
 
+#filters {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: center;
+}
+
+#filters * {
+  min-width: 32.5%;
+  margin: 0 5px;
+}
+
 #controls {
   margin: 5px;
   display: flex;
