@@ -18,6 +18,7 @@ export class EpisodesListComponent implements OnInit, OnChanges {
 
   public unique: ShikivideosUnique;
   public episodes: string[];
+  public limit: number = 30;
 
   constructor(
     private videosApi: ShikivideosService

@@ -1,16 +1,19 @@
 <div>
   <b>Эпизоды</b>
-  <ul *ngFor="let episode of episodes">
+  <ul *ngFor="let episode of (episodes | slice: 0:limit)">
     <li class="shc-links" (click)="change.emit(+episode)">
       <span class="text">
         #{{ episode }}
       </span>
 
-      {{ unique[episode].kind.join(', ') }}
+      {{ unique[episode].kind.sort().join(', ') }}
 
       <span class="hostname">
         ({{ getUrlsSecondLvlDomain(unique[episode].url).join(', ') }})
       </span>
     </li>
   </ul>
+  <button *ngIf="limit < episodes.length" class="mdc-button" (click)="limit = limit + 30" title="Следующие эпизоды">
+    <i class="material-icons">keyboard_arrow_down</i>
+  </button>
 </div>
