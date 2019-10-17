@@ -6,7 +6,7 @@
 
   .material-icons.md-24 {
     font-size: 36px;
-    font-weight: 700;
+    font-weight: 500;
   }
   .control-box-subtext {
     font-size: 8pt;
@@ -24,7 +24,7 @@
 
   .material-icons.md-24 {
     font-size: 24px;
-    font-weight: 700;
+    font-weight: 500;
   }
   .control-box-subtext {
     font-size: 7pt;
@@ -82,6 +82,10 @@
 .mdc-button {
   color: #333333;
   background-color: white;
+}
+
+.mdc-button:disabled {
+  color: #999;
 }
 
 app-uploader {
