@@ -1,10 +1,8 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from "@angular/common/http";
-import {ShikivideosFindParams} from "../../types/shikivideos-find-params";
-import {Shikivideo} from "../../types/shikivideo";
-import {Observable} from "rxjs";
-import {ShikivideosUniqueParams} from "../../types/shikivideos-unique-params";
-import {ShikivideosUnique} from "../../types/shikivideos-unique";
+import {HttpClient, HttpParams} from '@angular/common/http';
+import {Shikivideo} from '../../types/shikivideo';
+import {Observable} from 'rxjs';
+import {ShikivideosUnique} from '../../types/shikivideos-unique';
 
 @Injectable({
   providedIn: 'root'
@@ -15,23 +13,19 @@ export class ShikivideosService {
 
   constructor(private http: HttpClient) { }
 
-  public findById(animeId: number, options: ShikivideosFindParams): Observable<Shikivideo[]> {
-    let query: string = `${this.SHIKIVIDEOS_API}/${animeId}${options.getSearchParams()}`;
-
-    return this.http.get<Shikivideo[]>(query);
+  public findById(animeId: number, params: HttpParams): Observable<Shikivideo[]> {
+    return this.http.get<Shikivideo[]>(`${this.SHIKIVIDEOS_API}/${animeId}`, { params });
   }
 
-  public findByTitle(options: ShikivideosFindParams): Observable<Shikivideo[]> {
-      let query: string = `${this.SHIKIVIDEOS_API}/search${options.getSearchParams()}`;
-
-      return this.http.get<Shikivideo[]>(query)
+  public findByTitle(params: HttpParams): Observable<Shikivideo[]> {
+      return this.http.get<Shikivideo[]>(`${this.SHIKIVIDEOS_API}/search`, { params })
   }
 
   public getAnimeMaxLoadedEp(animeId: number): Observable<{length: number}> {
     return this.http.get<{length: number}>(`${this.SHIKIVIDEOS_API}/${animeId}/length`);
   }
 
-  public getUniqueValues(options: ShikivideosUniqueParams): Observable<ShikivideosUnique> {
-    return this.http.get<ShikivideosUnique>(`${this.SHIKIVIDEOS_API}/unique${options.getSearchParams()}`);
+  public getUniqueValues(params: HttpParams): Observable<ShikivideosUnique> {
+    return this.http.get<ShikivideosUnique>(`${this.SHIKIVIDEOS_API}/unique`, { params });
   }
 }

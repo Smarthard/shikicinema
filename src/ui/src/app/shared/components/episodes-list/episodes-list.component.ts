@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange, SimpleChanges} from '@angular/core';
-import {ShikivideosService} from "../../../services/shikivideos-api/shikivideos.service";
-import {ShikivideosUniqueParams} from "../../../types/shikivideos-unique-params";
-import {ShikivideosUnique} from "../../../types/shikivideos-unique";
+import {ShikivideosService} from '../../../services/shikivideos-api/shikivideos.service';
+import {ShikivideosUnique} from '../../../types/shikivideos-unique';
+import {HttpParams} from '@angular/common/http';
 
 @Component({
   selector: 'app-episodes-list',
@@ -28,11 +28,10 @@ export class EpisodesListComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     const animeId: SimpleChange = changes.animeId;
-    let params = new ShikivideosUniqueParams({
-      anime_id: animeId.currentValue,
-      column: 'url+kind',
-      limit: 'all'
-    });
+    const params = new HttpParams()
+      .set('anime_id', animeId.currentValue)
+      .set('column', 'url+kind')
+      .set('limit', 'all');
 
     this.videosApi.getUniqueValues(params)
       .subscribe((values: ShikivideosUnique[]) => {

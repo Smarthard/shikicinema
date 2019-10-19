@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
-import {ShikivideosService} from "../../../services/shikivideos-api/shikivideos.service";
-import {ShikivideosUniqueParams} from "../../../types/shikivideos-unique-params";
+import {ShikivideosService} from '../../../services/shikivideos-api/shikivideos.service';
+import {HttpParams} from '@angular/common/http';
 
 @Component({
   selector: 'app-dropdown-filters',
@@ -33,14 +33,13 @@ export class DropdownFiltersComponent implements OnInit, OnChanges {
   ngOnInit() {}
 
   ngOnChanges(changes: SimpleChanges): void {
-    const options = new ShikivideosUniqueParams({
-      anime_id: this.animeId,
-      column: this.column,
-      episode: this.episode,
-      limit: 'all'
-    });
+    const params = new HttpParams()
+      .set('anime_id', `${this.animeId}`)
+      .set('column', this.column)
+      .set('episode', `${this.episode}`)
+      .set('limit', 'all');
 
-    this.videosApi.getUniqueValues(options)
+    this.videosApi.getUniqueValues(params)
       .subscribe(
         (values: any) => {
           this.values = new Set([this.placeholder, ...values[this.column].sort()]);
