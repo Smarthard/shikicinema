@@ -1,10 +1,13 @@
+/// <reference types="@types/chrome" />
 import {Component, OnInit} from '@angular/core';
-import {Shikivideo} from "../../types/shikivideo";
-import {ShikivideosService} from "../../services/shikivideos-api/shikivideos.service";
-import {ShikivideosFindParams} from "../../types/shikivideos-find-params";
-import {ActivatedRoute, Router} from "@angular/router";
-import {Title} from "@angular/platform-browser";
-import {VideoFilter} from "../../types/video-filter";
+import {Shikivideo} from '../../types/shikivideo';
+import {ShikivideosService} from '../../services/shikivideos-api/shikivideos.service';
+import {ShikimoriService} from '../../services/shikimori-api/shikimori.service';
+import {ActivatedRoute, Router} from '@angular/router';
+import {Title} from '@angular/platform-browser';
+import {VideoFilter} from '../../types/video-filter';
+import {ShikimoriUser} from '../../types/ShikimoriUser';
+import {HttpParams} from '@angular/common/http';
 
 @Component({
   selector: 'app-player',
@@ -18,13 +21,18 @@ export class PlayerComponent implements OnInit {
 
   public animeId: number;
   public episode: number = 1;
+  public userRate: any;
   public maxEpisode: number = Number.POSITIVE_INFINITY;
   public filter: VideoFilter = new VideoFilter();
+
+  public isSynced: boolean = false;
+  private user: ShikimoriUser;
 
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private videosApi: ShikivideosService,
+    private shikimori: ShikimoriService,
     private title: Title
   ) {}
 
@@ -33,14 +41,12 @@ export class PlayerComponent implements OnInit {
       this.animeId = params['animeId'];
       this.episode = params['episode'];
 
-      let queryParams = new ShikivideosFindParams({
-        limit: 'all',
-        episode: params['episode'] ? params['episode'] : this.episode
-      });
-
       if (!params['animeId']) return;
 
-      this.videosApi.findById(this.animeId, queryParams)
+      this.videosApi.findById(this.animeId, new HttpParams()
+        .set('limit', 'all')
+        .set('episode', params['episode'] ? params['episode'] : this.episode)
+      )
         .subscribe(
           videos => {
           this.videos = videos.map(v => new Shikivideo(v));
@@ -57,7 +63,24 @@ export class PlayerComponent implements OnInit {
         .subscribe(
           series => this.maxEpisode = series.length,
           err => console.error(err) // TODO: same here
-        )
+        );
+
+      this.shikimori.whoAmI()
+        .subscribe(
+          user => {
+            this.user = new ShikimoriUser(user);
+            this.isSynced = user != null;
+
+            this.shikimori.getUserRates(new HttpParams()
+              .set('user_id', `${this.user.id}`)
+              .set('target_type', 'Anime')
+              .set('target_id', `${this.animeId}`)
+            )
+              .subscribe(
+                userRate => this.userRate = userRate[0]
+              );
+          }
+        );
     });
   }
 
@@ -69,5 +92,18 @@ export class PlayerComponent implements OnInit {
 
   changeVideo(video: Shikivideo) {
     this.currentVideo = video;
+  }
+
+  synchronize() {
+    chrome.runtime.sendMessage({ shikimori_sync: true });
+    setTimeout(() => window.location.reload(), 700);
+  }
+
+  watched(episode: number): boolean {
+    return this.userRate && this.userRate.episodes >= episode;
+  }
+
+  markAsWatched(episode: number) {
+    this.userRate.episodes++;
   }
 }

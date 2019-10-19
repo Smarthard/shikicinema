@@ -88,6 +88,10 @@
   color: #999;
 }
 
+.watched {
+  color: green;
+}
+
 app-uploader {
   position: absolute;
   right: 0;

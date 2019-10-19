@@ -30,14 +30,16 @@
       </button>
       <div class="control-box-subtext">Следующий</div>
     </div>
-    <div class="control-box">
-      <button class="mdc-button">
-        <i class="material-icons md-24">done</i>
+    <div class="control-box"
+          [title]="isSynced ? 'Отметить как просмотренную' : 'Синхронизироваться с Шикимори'"
+          (click)="isSynced ? markAsWatched(episode) : synchronize() ">
+      <button class="mdc-button" [class.watched]="watched(episode)">
+        <i class="material-icons md-24">{{ isSynced ? 'done' : 'sync' }}</i>
       </button>
-      <div class="control-box-subtext">Просмотрено</div>
+      <div class="control-box-subtext">{{ isSynced ? 'Просмотрено' : 'Шикимори' }}</div>
     </div>
-    <div class="control-box">
-      <button class="mdc-button">
+    <div class="control-box" [title]="isSynced ? 'Загрузить видео' : 'Требуется авторизация на Шикимори'">
+      <button class="mdc-button" [disabled]="!isSynced">
         <i class="material-icons md-24">add</i>
       </button>
       <div class="control-box-subtext">Загрузить</div>
