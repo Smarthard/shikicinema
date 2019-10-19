@@ -2,9 +2,12 @@
 const SHIKIVIDEOS_CLIENT_ID = process.env.SHIKIVIDEOS_CLIENT_ID;
 const SHIKIVIDEOS_CLIENT_SECRET = process.env.SHIKIVIDEOS_CLIENT_SECRET;
 
+const SHIKIMORI_CLIENT_ID = process.env.SHIKIMORI_CLIENT_ID;
+const SHIKIMORI_CLIENT_SECRET = process.env.SHIKIMORI_CLIENT_SECRET;
+
 const SHIKIVIDEOS_API = "https://smarthard.net";
 const EXTENSION_VERSION = chrome.runtime.getManifest().version;
-const EXTENSION_ID = chrome.runtime.getURL('player.html').replace('/player.html', '');
+const EXTENSION_ID = chrome.runtime.getURL('index.html').replace('/index.html', '');
 
 function obtainVideosToken() {
     const _generateNewToken = () => {
@@ -46,23 +49,135 @@ function buildQueryString(params) {
         .join('&').replace(/%20/g, '+');
 }
 
-function shikimoriGetToken() {
-    return new Promise((resolve) => {
-        chrome.storage.sync.get('shikimori_token', (storage_token) => {
-            resolve(storage_token ? storage_token.shikimori_token : null);
-        })
-    });
-}
-
 async function getInitiator(tabId) {
     return new Promise((resolve) => {
         chrome.tabs.get(tabId, tab => resolve(tab.url))
     });
 }
 
+function _authorize() {
+    return new Promise(async (resolve, reject) => {
+        let code_url = new URL('https://shikimori.one/oauth/authorize?');
+        code_url.searchParams.set('client_id', SHIKIMORI_CLIENT_ID);
+        code_url.searchParams.set('redirect_uri', 'urn:ietf:wg:oauth:2.0:oob');
+        code_url.searchParams.set('response_type', 'code');
+
+        chrome.tabs.query({active: true}, ([selectedTab]) =>
+            chrome.tabs.create({active: true, url: code_url.toString()}, new_tab => {
+
+                const onRemove = (tabId) => {
+                    if (tabId === new_tab.id) {
+                        reject({error: 'tab-removed'});
+                        remove_listeners();
+                    }
+                };
+
+                const onUpdate = (tabId, changeInfo) => {
+                    const tabUrl = new URL(changeInfo.url);
+                    const error = tabUrl.searchParams.get('error');
+                    const error_description = tabUrl.searchParams.get('error_description');
+                    const code = tabUrl.toString().split('authorize/')[1];
+
+                    if (tabId !== new_tab.id || !changeInfo.url || tabUrl.toString().includes('response_type'))
+                        return;
+
+                    if (error || error_description) {
+                        reject({error, error_description});
+                    } else {
+                        resolve(code);
+                    }
+
+                    remove_listeners();
+                    chrome.tabs.update(
+                        selectedTab.id,
+                        { active: true },
+                        () => chrome.tabs.remove(new_tab.id)
+                    );
+                };
+
+                const remove_listeners = () => {
+                    chrome.tabs.onRemoved.removeListener(onRemove);
+                    chrome.tabs.onUpdated.removeListener(onUpdate);
+                };
+
+                chrome.tabs.onRemoved.addListener(onRemove);
+                chrome.tabs.onUpdated.addListener(onUpdate);
+            })
+        );
+    });
+}
+
+async function obtainShikiToken(code) {
+    return new Promise(async (resolve, reject) => {
+        let token_url = new URL('https://shikimori.one/oauth/token');
+
+        token_url.searchParams.set('grant_type', 'authorization_code');
+        token_url.searchParams.set('client_id', SHIKIMORI_CLIENT_ID);
+        token_url.searchParams.set('client_secret', SHIKIMORI_CLIENT_SECRET);
+        token_url.searchParams.set('code', code);
+        token_url.searchParams.set('redirect_uri', 'urn:ietf:wg:oauth:2.0:oob');
+
+        fetch(token_url.toString(), {
+            method: 'POST'
+        })
+            .then(response => resolve(response.json()))
+            .catch(err => reject(err));
+    });
+}
+
+async function _shikimoriRefreshToken() {
+    return new Promise((resolve, reject) => {
+        chrome.storage.sync.get('shikimori_token', async storage_token => {
+            let refresh_url = new URL('https://shikimori.one/oauth/token');
+            let token = storage_token.shikimori_token;
+
+            if (!token || !token.refresh_token)
+                reject(new Error('Refresh Token not found'));
+
+            refresh_url.searchParams.set('grant_type', 'refresh_token');
+            refresh_url.searchParams.set('client_id', SHIKIMORI_CLIENT_ID);
+            refresh_url.searchParams.set('client_secret', SHIKIMORI_CLIENT_SECRET);
+            refresh_url.searchParams.set('refresh_token', token.refresh_token);
+
+            fetch(refresh_url.toString(), {
+                method: 'POST'
+            })
+                .then(response => resolve(response.json()))
+                .catch(err => reject(err));
+        })
+    });
+}
+
+async function syncStorageSet(obj) {
+    return new Promise((resolve, reject) => {
+        chrome.storage.sync.set({ obj }, () => {
+            const err = chrome.runtime.lastError;
+
+            if (err)
+                reject(err);
+            else
+                resolve(obj);
+        });
+    });
+}
+
+async function syncStorageGet(obj) {
+    return new Promise((resolve, reject) => {
+        chrome.storage.sync.get({ obj }, (items) => {
+            const err = chrome.runtime.lastError;
+
+            if (err)
+                reject(err);
+            else
+                resolve(items.obj);
+        });
+    });
+}
+
 async function run() {
     try {
         let videos_token = null;
+        let shikimori_token = await syncStorageGet('shikimori_token') || null;
 
         chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
            if (request.open_url) {
@@ -73,12 +188,21 @@ async function run() {
                 videos_token = await obtainVideosToken();
            }
 
+           if (request.shikimori_sync) {
+               const code = await _authorize()
+                   .catch(err => console.error(err)) || null;
+
+               if (code) {
+                   shikimori_token = await obtainShikiToken(code);
+                   await syncStorageSet(shikimori_token);
+               }
+           }
+
            return false;
         });
 
         chrome.webRequest.onBeforeSendHeaders.addListener(
             async (details) => {
-                let shikimori_token = await shikimoriGetToken();
                 let initiator = await getInitiator(details.tabId);
 
                 for (let i = 0; i < details.requestHeaders.length; i++) {
@@ -88,7 +212,10 @@ async function run() {
                     }
                 }
 
-                if (initiator.includes(EXTENSION_ID) && details.url.includes('shikimori') && !!shikimori_token) {
+                if (initiator.includes(EXTENSION_ID) &&
+                    details.url.includes('shikimori') &&
+                    !!shikimori_token.access_token
+                ) {
                     details.requestHeaders.push({
                         name: 'Authorization',
                         value: `Bearer ${shikimori_token.access_token}`
