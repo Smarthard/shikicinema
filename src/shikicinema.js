@@ -15,7 +15,7 @@ async function main() {
     let div_info = document.querySelector('div.c-info-right');
     let span_episode = document.querySelector('span.current-episodes');
 
-    let episode = Math.max(span_episode ? span_episode.innerText : 1, 1);
+    let episode = span_episode ? +span_episode.innerText + 1 : 1;
     let anime_id = `${window.location}`.match(/\d+/);
 
     if (!div_info || !window.location.toString().includes('/animes/')) return ;
@@ -27,10 +27,13 @@ async function main() {
         player_button.textContent = 'Смотреть онлайн';
 
         if (anime_id) {
-            fetch(`https://smarthard.net/api/shikivideos/${anime_id}`)
+            fetch(`https://smarthard.net/api/shikivideos/${anime_id}/length`)
                 .then(response => response.json())
-                .then(videos => {
-                    if (videos.length === 0) {
+                .then(res => {
+                    let length = res.length || 0;
+                    episode = Math.max(Math.min(episode, length), 1);
+
+                    if (length === 0) {
                         player_button.textContent = 'Видео не найдено';
                         player_button.classList.remove('watch-online');
                     }
