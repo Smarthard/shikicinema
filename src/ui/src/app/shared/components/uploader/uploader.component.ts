@@ -1,5 +1,5 @@
 import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
-import {ShikimoriUser} from "../../../types/ShikimoriUser";
+import {Shikimori} from "../../../types/shikimori";
 import {HttpClient} from "@angular/common/http";
 
 @Component({
@@ -11,7 +11,7 @@ export class UploaderComponent implements OnInit, OnChanges {
 
   @Input()
   public uploadedByUser: string | number;
-  public uploader: ShikimoriUser = null;
+  public uploader: Shikimori.User = null;
 
   constructor(
     private http: HttpClient
@@ -26,7 +26,7 @@ export class UploaderComponent implements OnInit, OnChanges {
     this.http.get(`https://shikimori.one/api/users/${ isUserId ? uploader : uploader + '?is_nickname=1' }`)
       .subscribe(
         user => {
-          this.uploader = new ShikimoriUser(user);
+          this.uploader = new Shikimori.User(user);
         }
       );
   }

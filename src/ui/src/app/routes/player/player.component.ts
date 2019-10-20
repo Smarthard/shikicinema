@@ -6,7 +6,7 @@ import {ShikimoriService} from '../../services/shikimori-api/shikimori.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Title} from '@angular/platform-browser';
 import {VideoFilter} from '../../types/video-filter';
-import {ShikimoriUser} from '../../types/ShikimoriUser';
+import {Shikimori} from '../../types/shikimori';
 import {HttpParams} from '@angular/common/http';
 
 @Component({
@@ -26,7 +26,7 @@ export class PlayerComponent implements OnInit {
   public filter: VideoFilter = new VideoFilter();
 
   public isSynced: boolean = false;
-  private user: ShikimoriUser;
+  private user: Shikimori.User;
 
   constructor(
     private router: Router,
@@ -68,7 +68,7 @@ export class PlayerComponent implements OnInit {
       this.shikimori.whoAmI()
         .subscribe(
           user => {
-            this.user = new ShikimoriUser(user);
+            this.user = new Shikimori.User(user);
             this.isSynced = user != null;
 
             this.shikimori.getUserRates(new HttpParams()
