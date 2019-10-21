@@ -37,17 +37,17 @@
 
   "web_accessible_resources": [
     "assets/*.png",
-    "player.html",
-    "player-ui.js",
-    "shikicinema.css"
+    "index.html",
+    "styles.css",
+    "*.js"
   ],
 
   "permissions": [
     "*://shikimori.org/*",
     "*://shikimori.one/*",
     "*://smarthard.net/*",
-    "identity",
     "storage",
+    "unlimitedStorage",
     "webRequest",
     "webRequestBlocking",
     "tabs"
