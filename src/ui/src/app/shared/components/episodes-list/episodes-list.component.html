@@ -9,7 +9,7 @@
       {{ unique[episode].kind.sort().join(', ') }}
 
       <span class="hostname">
-        ({{ getUrlsSecondLvlDomain(unique[episode].url).join(', ') }})
+        ({{ getUrlsSecondLvlDomain(unique[episode].url).sort().join(', ') }})
       </span>
     </li>
   </ul>
