@@ -13,6 +13,9 @@ export class EpisodesListComponent implements OnInit, OnChanges {
   @Input()
   public animeId: number;
 
+  @Input()
+  public chosenEp: number;
+
   @Output()
   public change: EventEmitter<number> = new EventEmitter<number>();
 
