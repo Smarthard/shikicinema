@@ -2,7 +2,7 @@
 
 <ul>
   <li class="shc-links" *ngFor="let video of filteredByKind()" (click)="change.emit(video)"
-    title="{{ video.author }} - {{ video.url }}"
+    title="{{ video.author }} - {{ video.url }}" [class.selected]="video.id === chosenId"
   >
     <span class="hostname">({{ video.getSecondLvlDomain() }})</span>
 

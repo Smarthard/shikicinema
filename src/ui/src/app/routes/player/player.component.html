@@ -52,7 +52,7 @@
                                     | filterBy:['language']:filter.language
                                     | filterBy:['author']:filter.author
                                     | filterBy:['quality']:filter.quality"
-            (change)="changeVideo($event)"></app-video-list>
+            (change)="changeVideo($event)" [chosenId]="currentVideo.id"></app-video-list>
   </div>
 </div>
 

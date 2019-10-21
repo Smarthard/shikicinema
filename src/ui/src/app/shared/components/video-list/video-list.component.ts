@@ -12,6 +12,9 @@ export class VideoListComponent implements OnInit {
   @Input()
   public videos: Shikivideo[] = [];
 
+  @Input()
+  public chosenId: number;
+
   @Output()
   public change: EventEmitter<Shikivideo> = new EventEmitter<Shikivideo>();
 
