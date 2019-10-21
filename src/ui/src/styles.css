@@ -15,8 +15,12 @@ body {
 }
 
 .shc-links:hover {
-  color: #DD5202;
+  color: #DD5202 !important;
   cursor: pointer;
+}
+
+.selected {
+  color: #B34100;
 }
 
 .text {
