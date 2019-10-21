@@ -125,26 +125,24 @@ async function obtainShikiToken(code) {
     });
 }
 
-async function _shikimoriRefreshToken() {
-    return new Promise((resolve, reject) => {
-        chrome.storage.sync.get('shikimori_token', async storage_token => {
-            let refresh_url = new URL('https://shikimori.one/oauth/token');
-            let token = storage_token.shikimori_token;
+async function refreshShikiToken() {
+    return new Promise(async (resolve, reject) => {
+        let token = await syncStorageGet('shikimori_token') || null;
+        let refresh_url = new URL('https://shikimori.one/oauth/token');
 
-            if (!token || !token.refresh_token)
-                reject(new Error('Refresh Token not found'));
+        if (!token || !token.refresh_token)
+            reject(new Error('Refresh Token not found'));
 
-            refresh_url.searchParams.set('grant_type', 'refresh_token');
-            refresh_url.searchParams.set('client_id', SHIKIMORI_CLIENT_ID);
-            refresh_url.searchParams.set('client_secret', SHIKIMORI_CLIENT_SECRET);
-            refresh_url.searchParams.set('refresh_token', token.refresh_token);
+        refresh_url.searchParams.set('grant_type', 'refresh_token');
+        refresh_url.searchParams.set('client_id', SHIKIMORI_CLIENT_ID);
+        refresh_url.searchParams.set('client_secret', SHIKIMORI_CLIENT_SECRET);
+        refresh_url.searchParams.set('refresh_token', token.refresh_token);
 
-            fetch(refresh_url.toString(), {
-                method: 'POST'
-            })
-                .then(response => resolve(response.json()))
-                .catch(err => reject(err));
+        fetch(refresh_url.toString(), {
+            method: 'POST'
         })
+            .then(response => resolve(response.json()))
+            .catch(err => reject(err));
     });
 }
 
@@ -172,6 +170,10 @@ async function syncStorageGet(obj) {
                 resolve(items.obj);
         });
     });
+}
+
+function up2date(expires) {
+    return Date.now() < expires;
 }
 
 async function run() {
@@ -216,6 +218,12 @@ async function run() {
                     details.url.includes('shikimori') &&
                     !!shikimori_token.access_token
                 ) {
+                    const expires = new Date((shikimori_token.created_at + shikimori_token.expires_in) * 1000);
+                    if (!up2date(expires)) {
+                        shikimori_token = await refreshShikiToken() || null;
+                        await syncStorageSet(shikimori_token);
+                    }
+
                     details.requestHeaders.push({
                         name: 'Authorization',
                         value: `Bearer ${shikimori_token.access_token}`
