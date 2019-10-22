@@ -7,7 +7,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {Title} from '@angular/platform-browser';
 import {VideoFilter} from '../../types/video-filter';
 import {Shikimori} from '../../types/shikimori';
-import {HttpParams} from '@angular/common/http';
+import {HttpHeaders, HttpParams} from '@angular/common/http';
 
 @Component({
   selector: 'app-player',
@@ -21,7 +21,7 @@ export class PlayerComponent implements OnInit {
 
   public animeId: number;
   public episode: number = 1;
-  public userRate: any;
+  public userRate: Shikimori.UserRate;
   public maxEpisode: number = Number.POSITIVE_INFINITY;
   public filter: VideoFilter = new VideoFilter();
 
@@ -65,7 +65,10 @@ export class PlayerComponent implements OnInit {
           err => console.error(err) // TODO: same here
         );
 
-      this.shikimori.whoAmI()
+      this.shikimori.whoAmI(new HttpHeaders()
+        .set('Cache-Control', 'no-cache, no-store, must-revalidate')
+        .set('Pragma', 'no-cache')
+      )
         .subscribe(
           user => {
             this.user = new Shikimori.User(user);
@@ -77,7 +80,7 @@ export class PlayerComponent implements OnInit {
               .set('target_id', `${this.animeId}`)
             )
               .subscribe(
-                userRate => this.userRate = userRate[0]
+                userRate => this.userRate = new Shikimori.UserRate(userRate[0])
               );
           }
         );
@@ -103,7 +106,22 @@ export class PlayerComponent implements OnInit {
     return this.userRate && this.userRate.episodes >= episode;
   }
 
-  markAsWatched(episode: number) {
-    this.userRate.episodes++;
+  async markAsWatched(episode: number) {
+    if (this.userRate.id) {
+      if (this.userRate.episodes < episode) {
+        const userRate = await this.shikimori.incUserRates(this.userRate).toPromise();
+        this.userRate = new Shikimori.UserRate(userRate)
+      }
+    } else {
+      this.userRate = new Shikimori.UserRate({
+        user_id: this.user.id,
+        target_id: this.animeId,
+        target_type: 'Anime',
+        episodes: episode
+      });
+
+      await this.shikimori.createUserRates(this.userRate).toPromise();
+    }
+    this.changeEpisode(+episode + 1);
   }
 }

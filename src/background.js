@@ -179,7 +179,8 @@ function up2date(expires) {
 async function run() {
     try {
         let videos_token = null;
-        let shikimori_token = await syncStorageGet('shikimori_token') || null;
+        let shikimori_token = await syncStorageGet('shikimori_token')
+            .catch(err => console.error('shikimori_token error:', err)) || null;
 
         chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
            if (request.open_url) {
@@ -205,7 +206,7 @@ async function run() {
 
         chrome.webRequest.onBeforeSendHeaders.addListener(
             async (details) => {
-                let initiator = await getInitiator(details.tabId);
+                // let initiator = await getInitiator(details.tabId);
 
                 for (let i = 0; i < details.requestHeaders.length; i++) {
                     if (details.requestHeaders[i].name === 'User-Agent') {
@@ -214,7 +215,8 @@ async function run() {
                     }
                 }
 
-                if (initiator.includes(EXTENSION_ID) &&
+                // TODO: solve the issue with angular's HttpClient and cookies
+                /* if (initiator.includes(EXTENSION_ID) &&
                     details.url.includes('shikimori') &&
                     !!shikimori_token.access_token
                 ) {
@@ -228,7 +230,7 @@ async function run() {
                         name: 'Authorization',
                         value: `Bearer ${shikimori_token.access_token}`
                     });
-                }
+                 } */
 
                 return { requestHeaders: details.requestHeaders };
             },
