@@ -1,3 +1,5 @@
+import {AbstractToken} from './abstract-token';
+
 export namespace Shikimori {
 
   export class User {
@@ -29,4 +31,23 @@ export namespace Shikimori {
 
   }
 
+  export class Token extends AbstractToken {
+    private access_token: string;
+    private refresh_token: string;
+    private created_at: number;
+    private expires_in: number;
+
+    public get expired(): boolean {
+      return new Date() > new Date((this.created_at + this.expires_in) * 1000);
+    }
+
+    public get token(): string {
+      return this.access_token;
+    }
+
+    public get resfresh(): string {
+      return this.refresh_token;
+    }
+
+  }
 }

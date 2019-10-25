@@ -1,6 +1,6 @@
 import {NgModule} from '@angular/core';
 import {CommonModule, HashLocationStrategy, LocationStrategy} from '@angular/common';
-import {HttpClientModule} from '@angular/common/http';
+import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {NgxResponsiveEmbedModule} from 'ngx-responsive-embed';
 
 import {AppRoutingModule} from './app-routing.module';
@@ -20,6 +20,7 @@ import {DropdownFiltersComponent} from './shared/components/dropdown-filters/dro
 import {NgPipesModule} from 'ngx-pipes';
 import {ShikimoriService} from './services/shikimori-api/shikimori.service';
 import {UploadVideoComponent} from './shared/components/upload-video/upload-video.component';
+import {HttpRequestsInterceptor} from './shared/interceptors/requests.interceptor';
 
 @NgModule({
   declarations: [
@@ -46,6 +47,7 @@ import {UploadVideoComponent} from './shared/components/upload-video/upload-vide
   ],
   providers: [
     { provide: LocationStrategy, useClass: HashLocationStrategy },
+    { provide: HTTP_INTERCEPTORS, useClass: HttpRequestsInterceptor, multi: true },
     ShikivideosService,
     ShikimoriService
   ],

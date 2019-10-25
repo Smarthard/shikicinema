@@ -7,6 +7,7 @@ import {Title} from '@angular/platform-browser';
 import {Shikimori} from '../../types/shikimori';
 import {HttpHeaders, HttpParams} from '@angular/common/http';
 import {SmarthardNet} from '../../types/smarthard-net';
+import {AuthService} from '../../services/auth/auth.service';
 
 @Component({
   selector: 'app-player',
@@ -30,6 +31,7 @@ export class PlayerComponent implements OnInit {
 
   constructor(
     private router: Router,
+    private auth: AuthService,
     private route: ActivatedRoute,
     private videosApi: ShikivideosService,
     private shikimori: ShikimoriService,
@@ -126,6 +128,7 @@ export class PlayerComponent implements OnInit {
   }
 
   openUploadForm() {
+    this.auth.shikivideosSync();
     this.isUploadOpened = !this.isUploadOpened;
   }
 }

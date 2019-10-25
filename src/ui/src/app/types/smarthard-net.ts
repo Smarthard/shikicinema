@@ -1,3 +1,5 @@
+import {AbstractToken} from './abstract-token';
+
 export namespace SmarthardNet {
 
   export class Shikivideo {
@@ -86,5 +88,16 @@ export namespace SmarthardNet {
     Unknown = 'UNKNOWN'
   }
 
+  export class Token extends AbstractToken {
+    private access_token: string;
+    private expires: any;
 
+    public get token(): string {
+      return this.access_token;
+    }
+
+    public get expired(): boolean {
+      return new Date() > new Date(this.expires);
+    }
+  }
 }
