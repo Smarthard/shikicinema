@@ -13,6 +13,10 @@ export class ShikivideosService {
 
   constructor(private http: HttpClient) { }
 
+  public uploadVideo(params: HttpParams): Observable<Shikivideo> {
+    return this.http.post<Shikivideo>(`${this.SHIKIVIDEOS_API}`, {}, { params });
+  }
+
   public findById(animeId: number, params: HttpParams): Observable<Shikivideo[]> {
     return this.http.get<Shikivideo[]>(`${this.SHIKIVIDEOS_API}/${animeId}`, { params });
   }

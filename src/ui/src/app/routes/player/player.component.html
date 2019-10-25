@@ -39,11 +39,17 @@
       <div class="control-box-subtext">{{ isSynced ? 'Просмотрено' : 'Шикимори' }}</div>
     </div>
     <div class="control-box" [title]="isSynced ? 'Загрузить видео' : 'Требуется авторизация на Шикимори'">
-      <button class="mdc-button" [disabled]="!isSynced">
+      <button class="mdc-button" [disabled]="!isSynced" (click)="openUploadForm()">
         <i class="material-icons md-24">add</i>
       </button>
       <div class="control-box-subtext">Загрузить</div>
     </div>
+  </div>
+
+  <div id="upload-form" *ngIf="isSynced && isUploadOpened">
+    <app-upload-video (check)="changeVideo($event)"
+                      [uploaderId]="user.id" [animeId]="animeId" [episode]="episode">
+    </app-upload-video>
   </div>
 
   <div id="series">

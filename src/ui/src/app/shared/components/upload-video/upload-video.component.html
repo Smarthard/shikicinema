@@ -1,0 +1,72 @@
+<form id="video-upload-form" novalidate (ngSubmit)="onSubmit(videoForm)" #videoForm="ngForm">
+  <div>
+    <p>Пожалуйста, проверяйте видео перед загрузкой!</p>
+    <label>URL проигрывателя*:
+      <input class="mdc-text-field__input" name="url" type="url"
+             [(ngModel)]="video.url" (paste)="video.url = trimUrl($event)"
+             pattern="https?:\/\/.*" required>
+    </label>
+    <div class="form-error" *ngIf="videoForm.invalid && videoForm.touched">
+      Это поле должно быть адресом web-страницы
+    </div>
+
+    <label>Автор (озвучки, субтитров):
+      <input class="mdc-text-field__input" name="author" type="text"
+             [(ngModel)]="video.author" (input)="search4Authors()"
+             autocomplete="off" list="authors">
+    </label>
+
+    <div class="flex">
+      <label>Эпизод*:
+        <input class="mdc-text-field__input" id="episode-input" type="number" name="episode"
+               placeholder="Эпизод" value="1" min="1" [(ngModel)]="video.episode" required>
+      </label>
+      <label>Тип:
+        <select name="kind" class="mdc-select__native-control" [(ngModel)]="video.kind">
+          <option>озвучка</option>
+          <option>субтитры</option>
+          <option>оригинал</option>
+        </select>
+      </label>
+      <label>Качество:
+        <select name="quality" class="mdc-select__native-control" [(ngModel)]="video.quality">
+          <option value="TV">TV</option>
+          <option value="DVD">DVD</option>
+          <option value="BD">BD</option>
+          <option value="WEB">WEB</option>
+          <option value="unknown">неизвестное</option>
+        </select>
+      </label>
+      <label>Язык озвучки:
+        <select name="language" class="mdc-select__native-control" [(ngModel)]="video.language">
+          <option value="russian">русский</option>
+          <option value="english">английский</option>
+          <option value="original">оригинальный</option>
+          <option value="unknown">неизвестный</option>
+        </select>
+      </label>
+    </div>
+
+    <input hidden name="anime_id" [value]="animeId" [(ngModel)]="video.anime_id">
+    <input hidden name="uploader" [value]="uploaderId" [(ngModel)]="video.uploader">
+    <input hidden name="anime_russian" value="russian" [(ngModel)]="video.anime_russian">
+    <input hidden name="anime_english" value="english" [(ngModel)]="video.anime_english">
+    <datalist id="authors">
+      <option *ngFor="let source of sources">{{ source }}</option>
+    </datalist>
+
+  </div>
+
+  <div id="upload-controls">
+    <button class="mdc-button" type="button"
+            title="Проверить видео в плеере"
+            (click)="check.emit(video)">
+      Проверить
+    </button>
+    <button class="mdc-button" type="submit"
+            [title]="videoForm.invalid ? 'Перед загрузкой, введите корректные данные' : 'Загрузить видео в архив'"
+            [disabled]="videoForm.invalid">
+      Загрузить
+    </button>
+  </div>
+</form>

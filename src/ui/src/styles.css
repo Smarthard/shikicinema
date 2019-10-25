@@ -31,3 +31,9 @@ body {
   font-size: 10pt;
   color: #999999;
 }
+
+.flex {
+  display: flex;
+  flex-flow: row;
+  justify-content: center;
+}

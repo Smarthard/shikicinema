@@ -75,6 +75,10 @@
   text-align: center;
 }
 
+#upload-form {
+  margin: 20px 0;
+}
+
 .control-box-subtext {
   text-align: center;
 }

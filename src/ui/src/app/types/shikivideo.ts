@@ -1,16 +1,16 @@
 export class Shikivideo {
-  readonly id: number;
-  readonly url: string;
-  readonly anime_id: string;
-  readonly anime_russian: string;
-  readonly anime_english: string;
-  readonly episode: number;
-  readonly kind: string;
-  readonly language: string;
-  readonly quality: string;
-  readonly author: string;
-  readonly watches_count: string;
-  readonly uploader: string;
+  public id: number;
+  public url: string;
+  public anime_id: string;
+  public anime_russian: string;
+  public anime_english: string;
+  public episode: number;
+  public kind: string;
+  public language: string;
+  public quality: string;
+  public author: string;
+  public watches_count: string;
+  public uploader: string;
 
   constructor(obj?: any) {
     Object.assign(this, obj);

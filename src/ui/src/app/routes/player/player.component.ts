@@ -26,7 +26,8 @@ export class PlayerComponent implements OnInit {
   public filter: VideoFilter = new VideoFilter();
 
   public isSynced: boolean = false;
-  private user: Shikimori.User;
+  public isUploadOpened: boolean = false;
+  public user: Shikimori.User;
 
   constructor(
     private router: Router,
@@ -123,5 +124,9 @@ export class PlayerComponent implements OnInit {
       await this.shikimori.createUserRates(this.userRate).toPromise();
     }
     this.changeEpisode(+episode + 1);
+  }
+
+  openUploadForm() {
+    this.isUploadOpened = !this.isUploadOpened;
   }
 }

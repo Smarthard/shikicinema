@@ -19,6 +19,7 @@ import {ServerStatusComponent} from './shared/components/server-status/server-st
 import {DropdownFiltersComponent} from './shared/components/dropdown-filters/dropdown-filters.component';
 import {NgPipesModule} from 'ngx-pipes';
 import {ShikimoriService} from './services/shikimori-api/shikimori.service';
+import {UploadVideoComponent} from './shared/components/upload-video/upload-video.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import {ShikimoriService} from './services/shikimori-api/shikimori.service';
     KindRemoteComponent,
     UploaderComponent,
     ServerStatusComponent,
-    DropdownFiltersComponent
+    DropdownFiltersComponent,
+    UploadVideoComponent
   ],
   imports: [
     AppRoutingModule,
