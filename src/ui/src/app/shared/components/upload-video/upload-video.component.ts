@@ -1,8 +1,7 @@
 import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
-import {Shikivideo} from '../../../types/shikivideo';
 import {HttpParams} from '@angular/common/http';
 import {ShikivideosService} from '../../../services/shikivideos-api/shikivideos.service';
-import {ShikivideosUnique} from '../../../types/shikivideos-unique';
+import {SmarthardNet} from '../../../types/smarthard-net';
 import {NgForm} from '@angular/forms';
 import {ShikimoriService} from '../../../services/shikimori-api/shikimori.service';
 
@@ -23,9 +22,9 @@ export class UploadVideoComponent implements OnInit, OnChanges {
   public episode: number;
 
   @Output()
-  public check: EventEmitter<Shikivideo> = new EventEmitter<Shikivideo>();
+  public check: EventEmitter<SmarthardNet.Shikivideo> = new EventEmitter<SmarthardNet.Shikivideo>();
 
-  public video: Shikivideo;
+  public video: SmarthardNet.Shikivideo;
   public sources: string[];
 
   constructor(
@@ -40,7 +39,7 @@ export class UploadVideoComponent implements OnInit, OnChanges {
       .subscribe(
         (anime: any) => {
           console.log('anime', anime);
-          this.video = new Shikivideo({
+          this.video = new SmarthardNet.Shikivideo({
             anime_id: this.animeId,
             uploader: this.uploaderId,
             episode: this.episode || 1,
@@ -71,7 +70,7 @@ export class UploadVideoComponent implements OnInit, OnChanges {
     if (this.video.author.length > 2) {
       this.videoApi.getUniqueValues(params)
         .subscribe(
-          (sources: ShikivideosUnique[]) => {
+          (sources: SmarthardNet.Unique[]) => {
             const authorsSet = new Set<string>();
 
             Object.keys(sources).forEach((ep: string) => {
@@ -85,7 +84,7 @@ export class UploadVideoComponent implements OnInit, OnChanges {
   }
 
   onSubmit(videoForm: NgForm) {
-    const video = new Shikivideo(videoForm.value);
+    const video = new SmarthardNet.Shikivideo(videoForm.value);
     const params = new HttpParams()
       .set('anime_id', video.anime_id)
       .set('anime_english', JSON.stringify(video.anime_english))

@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
-import {ServerStatus} from "../../../types/ServerStatus";
 import {HttpClient} from "@angular/common/http";
+import {SmarthardNet} from '../../../types/smarthard-net';
 
 @Component({
   selector: 'app-server-status',
@@ -9,8 +9,8 @@ import {HttpClient} from "@angular/common/http";
 })
 export class ServerStatusComponent implements OnInit {
 
-  public status: ServerStatus = new ServerStatus();
-  public uptime: ServerStatus = new ServerStatus();
+  public status = new SmarthardNet.ServerStatus();
+  public uptime = new SmarthardNet.ServerStatus();
 
   constructor(
     private http: HttpClient
@@ -23,12 +23,12 @@ export class ServerStatusComponent implements OnInit {
   public refresh() {
     this.http.get('https://smarthard.net/api/status')
       .subscribe(
-        status => this.status = new ServerStatus(status)
+        status => this.status = new SmarthardNet.ServerStatus(status)
       );
 
     this.http.get('https://smarthard.net/api/status/uptime')
       .subscribe(
-        uptime => this.uptime = new ServerStatus(uptime)
+        uptime => this.uptime = new SmarthardNet.ServerStatus(uptime)
       )
   }
 

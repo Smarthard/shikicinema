@@ -1,13 +1,12 @@
 /// <reference types="@types/chrome" />
 import {Component, OnInit} from '@angular/core';
-import {Shikivideo} from '../../types/shikivideo';
 import {ShikivideosService} from '../../services/shikivideos-api/shikivideos.service';
 import {ShikimoriService} from '../../services/shikimori-api/shikimori.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Title} from '@angular/platform-browser';
-import {VideoFilter} from '../../types/video-filter';
 import {Shikimori} from '../../types/shikimori';
 import {HttpHeaders, HttpParams} from '@angular/common/http';
+import {SmarthardNet} from '../../types/smarthard-net';
 
 @Component({
   selector: 'app-player',
@@ -16,14 +15,14 @@ import {HttpHeaders, HttpParams} from '@angular/common/http';
 })
 export class PlayerComponent implements OnInit {
 
-  public currentVideo: Shikivideo;
-  public videos: Array<Shikivideo>;
+  public currentVideo: SmarthardNet.Shikivideo;
+  public videos: Array<SmarthardNet.Shikivideo>;
 
   public animeId: number;
   public episode: number = 1;
   public userRate: Shikimori.UserRate;
   public maxEpisode: number = Number.POSITIVE_INFINITY;
-  public filter: VideoFilter = new VideoFilter();
+  public filter = new SmarthardNet.VideoFilter();
 
   public isSynced: boolean = false;
   public isUploadOpened: boolean = false;
@@ -50,7 +49,7 @@ export class PlayerComponent implements OnInit {
       )
         .subscribe(
           videos => {
-          this.videos = videos.map(v => new Shikivideo(v));
+          this.videos = videos.map(v => new SmarthardNet.Shikivideo(v));
           this.changeVideo(this.videos[0]);
           this.title.setTitle(`
             ${this.currentVideo.anime_russian || this.currentVideo.anime_english}
@@ -94,7 +93,7 @@ export class PlayerComponent implements OnInit {
     }
   }
 
-  changeVideo(video: Shikivideo) {
+  changeVideo(video: SmarthardNet.Shikivideo) {
     this.currentVideo = video;
   }
 

@@ -1,6 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {Shikivideo} from "../../../types/shikivideo";
-import {Kind} from "../../../types/kind";
+import {SmarthardNet} from '../../../types/smarthard-net';
 
 @Component({
   selector: 'app-video-list',
@@ -10,31 +9,31 @@ import {Kind} from "../../../types/kind";
 export class VideoListComponent implements OnInit {
 
   @Input()
-  public videos: Shikivideo[] = [];
+  public videos: SmarthardNet.Shikivideo[] = [];
 
   @Input()
   public chosenId: number;
 
   @Output()
-  public change: EventEmitter<Shikivideo> = new EventEmitter<Shikivideo>();
+  public change: EventEmitter<SmarthardNet.Shikivideo> = new EventEmitter<SmarthardNet.Shikivideo>();
 
-  public chosenKind: Kind = Kind.Unknown;
+  public chosenKind: SmarthardNet.Kind = SmarthardNet.Kind.Unknown;
 
   constructor() { }
 
   ngOnInit() {
   }
 
-  public filteredByKind(): Shikivideo[] {
-    let filtered: Shikivideo[] = this.videos;
+  public filteredByKind(): SmarthardNet.Shikivideo[] {
+    let filtered: SmarthardNet.Shikivideo[] = this.videos;
 
     switch (this.chosenKind) {
-      case Kind.Dub:
-      case Kind.Raw:
-      case Kind.Sub:
+      case SmarthardNet.Kind.Dub:
+      case SmarthardNet.Kind.Raw:
+      case SmarthardNet.Kind.Sub:
         filtered = filtered.filter(value => this.chosenKind == value.kind.toLocaleUpperCase());
         break;
-      case Kind.Unknown:
+      case SmarthardNet.Kind.Unknown:
       default:
         break;
     }

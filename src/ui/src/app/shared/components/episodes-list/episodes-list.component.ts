@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange, SimpleChanges} from '@angular/core';
 import {ShikivideosService} from '../../../services/shikivideos-api/shikivideos.service';
-import {ShikivideosUnique} from '../../../types/shikivideos-unique';
+import {SmarthardNet} from '../../../types/smarthard-net';
 import {HttpParams} from '@angular/common/http';
 
 @Component({
@@ -19,7 +19,7 @@ export class EpisodesListComponent implements OnInit, OnChanges {
   @Output()
   public change: EventEmitter<number> = new EventEmitter<number>();
 
-  public unique: ShikivideosUnique;
+  public unique: SmarthardNet.Unique;
   public episodes: string[];
   public limit: number = 30;
 
@@ -37,7 +37,7 @@ export class EpisodesListComponent implements OnInit, OnChanges {
       .set('limit', 'all');
 
     this.videosApi.getUniqueValues(params)
-      .subscribe((values: ShikivideosUnique[]) => {
+      .subscribe((values: SmarthardNet.Unique[]) => {
         this.unique = values;
         this.episodes = Object.keys(this.unique);
       });

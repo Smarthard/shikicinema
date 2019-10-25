@@ -1,5 +1,5 @@
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
-import {Kind} from "../../../types/kind";
+import {SmarthardNet} from '../../../types/smarthard-net';
 
 @Component({
   selector: 'app-kind-remote',
@@ -8,23 +8,23 @@ import {Kind} from "../../../types/kind";
 })
 export class KindRemoteComponent implements OnInit {
 
-  readonly KINDS = Kind;
+  readonly KINDS = SmarthardNet.Kind;
 
   @Output()
-  public kind: EventEmitter<Kind> = new EventEmitter<Kind>();
-  public chosenKind: Kind = Kind.Unknown;
+  public kind: EventEmitter<SmarthardNet.Kind> = new EventEmitter<SmarthardNet.Kind>();
+  public chosenKind: SmarthardNet.Kind = this.KINDS.Unknown;
 
   constructor() { }
 
   ngOnInit() {
   }
 
-  public switchKindSelection(kind: Kind) {
+  public switchKindSelection(kind: SmarthardNet.Kind) {
     this.kind.emit(kind);
     this.chosenKind = kind;
   }
 
-  public isChosen(kind: Kind) {
+  public isChosen(kind: SmarthardNet.Kind) {
     return this.chosenKind === kind;
   }
 
