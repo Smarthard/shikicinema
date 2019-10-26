@@ -48,8 +48,6 @@
     "*://smarthard.net/*",
     "storage",
     "unlimitedStorage",
-    "webRequest",
-    "webRequestBlocking",
     "tabs"
   ]
 }
