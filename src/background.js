@@ -2,8 +2,8 @@
 function run() {
     try {
         chrome.runtime.onMessage.addListener((request) => {
-           if (request.open_url) {
-               chrome.tabs.create({url: request.open_url, active: true});
+           if (request.openUrl) {
+               chrome.tabs.create({url: request.openUrl, active: true});
            }
 
            return false;
