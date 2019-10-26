@@ -2,13 +2,16 @@ import {HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest}
 import {Observable, throwError} from 'rxjs';
 import {AuthService} from '../../services/auth/auth.service';
 import {catchError} from 'rxjs/operators';
+import {NotificationsService} from '../../services/notifications/notifications.service';
+import {Notification, NotificationType} from '../../types/notification';
 
 export class HttpRequestsInterceptor implements HttpInterceptor {
 
   private EXTENSION_VERSION = chrome.runtime.getManifest().version;
 
   constructor(
-    private auth: AuthService
+    private auth: AuthService,
+    private notify: NotificationsService
   ) {}
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
@@ -31,6 +34,12 @@ export class HttpRequestsInterceptor implements HttpInterceptor {
       .pipe(
         catchError((err: HttpErrorResponse) => {
           if (err.status === 401 || err.status === 500) {
+            this.notify.add(
+              new Notification(
+                NotificationType.WARNING,
+                `Предыдущий запрос был неавторизован, мы обновили токен\nПожалуйста, попробуйте снова`
+              )
+            );
             this.auth.resfresh(/smarthard/i.test(req.url) ? this.auth.shikivideos : this.auth.shikimori);
           }
 
