@@ -1,0 +1,12 @@
+<div *ngIf="alive" (click)="alive = false"
+     class="notification"
+     [class.err]="notification.type === TYPES.ERROR"
+     [class.warning]="notification.type === TYPES.WARNING"
+     [class.ok]="notification.type === TYPES.OK">
+  <div>
+    {{ notification.message }}
+  </div>
+  <div *ngIf="notification.err">
+    {{ notification.err }}
+  </div>
+</div>

@@ -21,6 +21,8 @@ import {NgPipesModule} from 'ngx-pipes';
 import {ShikimoriService} from './services/shikimori-api/shikimori.service';
 import {UploadVideoComponent} from './shared/components/upload-video/upload-video.component';
 import {HttpRequestsInterceptor} from './shared/interceptors/requests.interceptor';
+import {NotifyComponent} from './shared/components/notify/notify.component';
+import {NitificationComponent} from './shared/components/nitification/nitification.component';
 
 @NgModule({
   declarations: [
@@ -34,7 +36,9 @@ import {HttpRequestsInterceptor} from './shared/interceptors/requests.intercepto
     UploaderComponent,
     ServerStatusComponent,
     DropdownFiltersComponent,
-    UploadVideoComponent
+    UploadVideoComponent,
+    NotifyComponent,
+    NitificationComponent
   ],
   imports: [
     AppRoutingModule,
