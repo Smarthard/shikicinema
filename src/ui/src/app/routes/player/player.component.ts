@@ -8,6 +8,8 @@ import {Shikimori} from '../../types/shikimori';
 import {HttpHeaders, HttpParams} from '@angular/common/http';
 import {SmarthardNet} from '../../types/smarthard-net';
 import {AuthService} from '../../services/auth/auth.service';
+import {NotificationsService} from '../../services/notifications/notifications.service';
+import {Notification, NotificationType} from '../../types/notification';
 
 @Component({
   selector: 'app-player',
@@ -33,6 +35,7 @@ export class PlayerComponent implements OnInit {
     private router: Router,
     private auth: AuthService,
     private route: ActivatedRoute,
+    private notify: NotificationsService,
     private videosApi: ShikivideosService,
     private shikimori: ShikimoriService,
     private title: Title
@@ -58,13 +61,19 @@ export class PlayerComponent implements OnInit {
              - эпизод ${this.episode}
           `);
         },
-          err => console.error(err) // TODO: print network error message
+          err => {
+            console.error(err);
+            this.notify.add(new Notification(NotificationType.ERROR, 'Не удалось загрузить видео!', err));
+          }
         );
 
       this.videosApi.getAnimeMaxLoadedEp(this.animeId)
         .subscribe(
           series => this.maxEpisode = series.length,
-          err => console.error(err) // TODO: same here
+          err => {
+            console.error(err);
+            this.notify.add(new Notification(NotificationType.ERROR, 'Не удалось загрузить видео!', err));
+          }
         );
 
       this.shikimori.whoAmI(new HttpHeaders()
@@ -125,6 +134,7 @@ export class PlayerComponent implements OnInit {
       await this.shikimori.createUserRates(this.userRate).toPromise();
     }
     this.changeEpisode(+episode + 1);
+    this.notify.add(new Notification(NotificationType.OK, 'Просмотрено'));
   }
 
   openUploadForm() {
