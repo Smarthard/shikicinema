@@ -6,7 +6,7 @@ let playerButton = document.createElement('a');
 let info = document.createElement('div');
 let observer = new MutationObserver(main);
 
-console.log(`shikicinema loaded`);
+console.log('shikicinema loaded');
 
 observer.observe(document, {childList: true, subtree: true});
 

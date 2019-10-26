@@ -9,33 +9,29 @@ const IS_PRODUCTION = process.env.NODE_ENV === 'production';
 module.exports = {
     context: path.resolve(__dirname, ''),
     entry: {
-        'shikicinema': './src/shikicinema.js',
-        'background': './src/background.js'
+        shikicinema: './src/shikicinema.js',
+        background: './src/background.js'
     },
     output: {
         path: path.resolve(__dirname, 'bin'),
         filename: '[name].js',
-        libraryTarget: "umd"
+        libraryTarget: 'umd'
     },
     module: {
         rules: [
             {
-                "test": /\.js$/,
-                "exclude": "/node_modules/",
-                "loader": "babel-loader"
+                enforce: 'pre',
+                test: /\.js$/,
+                exclude: /node_modules/,
+                loader: 'eslint-loader',
+                options: {
+                    failOnError: true
+                }
             },
             {
-                "test": /\.css$/,
-                "loader": 'style!css!'
-            },
-            {
-                "test": /\.json$/,
-                "exclude": /node_modules/,
-                "loader": 'json'
-            },
-            {
-                "test": /\.html$/,
-                "loader": 'html-loader'
+                test: /\.js$/,
+                exclude: '/node_modules/',
+                loader: 'babel-loader'
             }
         ]
     },
