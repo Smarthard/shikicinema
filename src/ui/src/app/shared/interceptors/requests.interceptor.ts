@@ -40,7 +40,11 @@ export class HttpRequestsInterceptor implements HttpInterceptor {
                 `Предыдущий запрос был неавторизован, мы обновили токен\nПожалуйста, попробуйте снова`
               )
             );
-            this.auth.resfresh(/smarthard/i.test(req.url) ? this.auth.shikivideos : this.auth.shikimori);
+            if (/smarthard/i.test(req.url)) {
+              this.auth.shikivideosSync();
+            } else {
+              this.auth.shikimoriSync();
+            }
           }
 
           return throwError(err);

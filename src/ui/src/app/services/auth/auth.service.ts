@@ -37,7 +37,7 @@ export class AuthService {
     return this.shikimoriToken;
   }
 
-  public resfresh(token: AbstractToken) {
+  private _resfresh(token: AbstractToken) {
     if (token instanceof SmarthardNet.Token) {
       const params = new HttpParams()
         .set('grant_type', 'client_credentials')
@@ -88,10 +88,18 @@ export class AuthService {
     }
   }
 
+  public shikimoriDrop() {
+    this.shikimoriToken = new Shikimori.Token();
+  }
+
   public shikivideosSync() {
     if (!this.shikivideos.token || this.shikivideos.expired) {
-      this.resfresh(new SmarthardNet.Token());
+      this._resfresh(new SmarthardNet.Token());
     }
+  }
+
+  public shikivideosDrop() {
+    this.videoToken = new SmarthardNet.Token();
   }
 
   private _getShikimoriAuthCode(): Promise<any> {
