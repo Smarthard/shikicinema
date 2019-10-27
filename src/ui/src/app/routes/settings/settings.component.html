@@ -1,0 +1,62 @@
+
+<div class="setting-group-header">Настройки внешнего вида</div>
+<div class="setting-group">
+  <label>
+    Список серий как в старом плеере Шикимори
+    <input type="checkbox" [(ngModel)]="settings.oldFagApproves" (ngModelChange)="update()">
+  </label>
+</div>
+
+<div class="setting-group-header">Настройки авторизации</div>
+<div class="setting-group">
+  <div>
+    Доступ к Видео-Архиву:
+    <span [class.notok]="!auth.shikivideos.token || auth.shikivideos.expired"
+          [class.ok]="auth.shikivideos.token && !auth.shikivideos.expired">
+      {{ auth.shikivideos.token && !auth.shikivideos.expired ? 'Да' : 'Нет'}}
+    </span>
+    <i class="material-icons help"
+       [title]="'Необходимо иметь актуальный токен доступа для загрузок видео.' + TOKEN_HELP_TEXT"
+    >help</i>
+  </div>
+  <div *ngIf="auth.shikivideos.token">
+    Токен: "{{ auth.shikivideos.token }}", {{ auth.shikivideos.expired ? 'просрочен' : 'актуален'}}
+  </div>
+  <div class="flex flex-end">
+    <button class="mdc-button reset" title="Сбросить токен доступа" (click)="auth.shikivideosDrop()">
+      Сбросить
+    </button>
+    <button class="mdc-button green" title="Обновить токен доступа" (click)="auth.shikivideosSync()">
+      Обновить
+    </button>
+  </div>
+
+  <div>
+    Синхронизация с Шикимори:
+    <span [class.notok]="!auth.shikimori.token || auth.shikimori.expired"
+          [class.ok]="auth.shikimori.token && !auth.shikimori.expired">
+      {{ auth.shikimori.token && !auth.shikimori.expired ? 'Да' : 'Нет'}}
+    </span>
+    <i class="material-icons help"
+       [title]="'Необходимо иметь актуальный токен доступа для синхронизации просмотра с Шикимори.' + TOKEN_HELP_TEXT"
+    >help</i>
+  </div>
+  <div *ngIf="auth.shikimori.token">
+    Токен: "{{ auth.shikimori.token }}", {{ auth.shikimori.expired ? 'просрочен' : 'актуален'}}
+  </div>
+  <div class="flex flex-end">
+    <button class="mdc-button reset" title="Сбросить токен доступа" (click)="auth.shikimoriDrop()">
+      Сбросить
+    </button>
+    <button class="mdc-button green" title="Обновить токен доступа" (click)="auth.shikimoriSync()">
+      Обновить
+    </button>
+  </div>
+</div>
+
+<div class="flex flex-end">
+  <button class="mdc-button reset" title="Сбросить в настройки по-умолчанию" (click)="reset()">Сбросить</button>
+  <button class="mdc-button green" title="Вернуться к просмотру" (click)="back()">Вернуться</button>
+</div>
+
+<app-notify></app-notify>

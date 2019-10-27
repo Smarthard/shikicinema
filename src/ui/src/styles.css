@@ -37,3 +37,7 @@ body {
   flex-flow: row;
   justify-content: center;
 }
+
+.flex-end {
+ justify-content: flex-end;
+}

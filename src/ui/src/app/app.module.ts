@@ -23,6 +23,7 @@ import {UploadVideoComponent} from './shared/components/upload-video/upload-vide
 import {HttpRequestsInterceptor} from './shared/interceptors/requests.interceptor';
 import {NotifyComponent} from './shared/components/notify/notify.component';
 import {NitificationComponent} from './shared/components/nitification/nitification.component';
+import {SettingsComponent} from './routes/settings/settings.component';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,8 @@ import {NitificationComponent} from './shared/components/nitification/nitificati
     DropdownFiltersComponent,
     UploadVideoComponent,
     NotifyComponent,
-    NitificationComponent
+    NitificationComponent,
+    SettingsComponent
   ],
   imports: [
     AppRoutingModule,
