@@ -10,6 +10,8 @@ import {SmarthardNet} from '../../types/smarthard-net';
 import {AuthService} from '../../services/auth/auth.service';
 import {NotificationsService} from '../../services/notifications/notifications.service';
 import {Notification, NotificationType} from '../../types/notification';
+import {ShikicinemaSettings} from '../../types/ShikicinemaSettings';
+import {SettingsService} from '../../services/settings/settings.service';
 
 @Component({
   selector: 'app-player',
@@ -19,6 +21,7 @@ import {Notification, NotificationType} from '../../types/notification';
 export class PlayerComponent implements OnInit {
 
   public currentVideo = new SmarthardNet.Shikivideo();
+  public settings = new ShikicinemaSettings();
   public videos: Array<SmarthardNet.Shikivideo>;
 
   public animeId: number;
@@ -38,10 +41,16 @@ export class PlayerComponent implements OnInit {
     private notify: NotificationsService,
     private videosApi: ShikivideosService,
     private shikimori: ShikimoriService,
+    private settingsService: SettingsService,
     private title: Title
   ) {}
 
   ngOnInit() {
+    this.settingsService.get()
+      .subscribe(
+        settings => this.settings = new ShikicinemaSettings(settings)
+      );
+
     this.route.params.subscribe(params => {
       this.animeId = params['animeId'];
       this.episode = params['episode'];

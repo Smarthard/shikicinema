@@ -1,0 +1,19 @@
+<ul>
+  <li class="shc-links" *ngFor="let video of videos" (click)="change.emit(video)"
+      title="{{ video.author }} - {{ video.url }}" [class.selected]="video.id === chosenId"
+  >
+    <span class="text" [innerText]="'#' + video.episode"></span>
+    <span> {{ video.anime_russian || video.anime_english }} </span>
+    (<span>{{ video.kind | lowercase }}: </span>
+    <span class="author">{{ !video.hasUnknownAttribute('author') ? video.author : 'неизвестно' }}</span>
+    <span>, проигрыватель: </span>
+    <span class="hostname">{{ video.getSecondLvlDomain() }}</span>)
+
+    <span class="text" *ngIf="!video.hasHighQuality() && !video.hasUnknownAttribute('quality')">
+      {{ video.quality | uppercase }}
+    </span>
+
+    <img *ngIf="video.hasHighQuality()" height="16px"
+         src="assets/{{video.quality | lowercase }}.png" alt="{{ video.quality }}">
+  </li>
+</ul>

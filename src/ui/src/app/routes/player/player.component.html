@@ -44,6 +44,12 @@
       </button>
       <div class="control-box-subtext">Загрузить</div>
     </div>
+    <div class="control-box" title="Настойки плагина">
+      <button class="mdc-button" routerLink="/settings">
+        <i class="material-icons md-24">settings_applications</i>
+      </button>
+      <div class="control-box-subtext">Настройки</div>
+    </div>
   </div>
 
   <div id="upload-form" *ngIf="isSynced && isUploadOpened">
@@ -52,13 +58,20 @@
     </app-upload-video>
   </div>
 
-  <div id="series">
+  <div id="series" *ngIf="settings.oldFagApproves">
     <app-episodes-list [animeId]="animeId" (change)="changeEpisode($event)" [chosenEp]="episode"></app-episodes-list>
     <app-video-list [videos]="videos
                                     | filterBy:['language']:filter.language
                                     | filterBy:['author']:filter.author
                                     | filterBy:['quality']:filter.quality"
             (change)="changeVideo($event)" [chosenId]="currentVideo.id"></app-video-list>
+  </div>
+  <div *ngIf="!settings.oldFagApproves">
+    <app-compact-video-list [videos]="videos
+                                    | filterBy:['language']:filter.language
+                                    | filterBy:['author']:filter.author
+                                    | filterBy:['quality']:filter.quality"
+            (change)="changeVideo($event)" [chosenId]="currentVideo.id"></app-compact-video-list>
   </div>
 </div>
 

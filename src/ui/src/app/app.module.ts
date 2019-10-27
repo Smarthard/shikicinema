@@ -24,6 +24,7 @@ import {HttpRequestsInterceptor} from './shared/interceptors/requests.intercepto
 import {NotifyComponent} from './shared/components/notify/notify.component';
 import {NitificationComponent} from './shared/components/nitification/nitification.component';
 import {SettingsComponent} from './routes/settings/settings.component';
+import {CompactVideoListComponent} from './shared/components/compact-video-list/compact-video-list.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +41,8 @@ import {SettingsComponent} from './routes/settings/settings.component';
     UploadVideoComponent,
     NotifyComponent,
     NitificationComponent,
-    SettingsComponent
+    SettingsComponent,
+    CompactVideoListComponent
   ],
   imports: [
     AppRoutingModule,
