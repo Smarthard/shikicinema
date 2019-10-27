@@ -22,10 +22,10 @@ export class AuthService {
   constructor(
     private http: HttpClient
   ) {
-    StorageService.get<SmarthardNet.Token>('sync', 'video_token')
+    StorageService.get<SmarthardNet.Token>('sync', 'videoToken')
       .subscribe(token => this.videoToken = new SmarthardNet.Token(token));
 
-    StorageService.get<Shikimori.Token>('sync', 'shikimori_token')
+    StorageService.get<Shikimori.Token>('sync', 'shikimoriToken')
       .subscribe(token => this.shikimoriToken = new Shikimori.Token(token));
   }
 
@@ -47,7 +47,10 @@ export class AuthService {
 
       this.http.get('https://smarthard.net/oauth/token', {params})
         .subscribe(
-          token => this.videoToken = new SmarthardNet.Token(token)
+          async (token) => {
+            this.videoToken = new SmarthardNet.Token(token);
+            await StorageService.set('sync', { videoToken: this.videoToken }).toPromise();
+          }
         );
     }
 
@@ -60,7 +63,10 @@ export class AuthService {
 
       this.http.get('https://shikimori.one/oauth/token', { params })
         .subscribe(
-          token => this.shikimoriToken = new Shikimori.Token(token)
+          async (token) => {
+            this.shikimoriToken = new Shikimori.Token(token);
+            await StorageService.set('sync', { shikimoriToken: this.shikimoriToken }).toPromise();
+          }
         );
     }
   }
@@ -83,7 +89,7 @@ export class AuthService {
   }
 
   public shikivideosSync() {
-    if (this.shikivideos.expired) {
+    if (!this.shikivideos.token || this.shikivideos.expired) {
       this.resfresh(new SmarthardNet.Token());
     }
   }
