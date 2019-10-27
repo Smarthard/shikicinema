@@ -1,9 +1,7 @@
 const path = require('path');
-const dotenv = require('dotenv');
 const CopyPlugin = require('copy-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 
-dotenv.config();
 const IS_PRODUCTION = process.env.NODE_ENV === 'production';
 
 module.exports = {
