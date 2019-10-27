@@ -96,7 +96,13 @@
   color: green;
 }
 
-app-uploader, app-notify {
+app-notify {
+  position: fixed;
+  right: 0;
+  top: 0;
+}
+
+app-uploader {
   position: absolute;
   right: 0;
   top: 0;
