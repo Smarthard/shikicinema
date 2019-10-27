@@ -18,7 +18,7 @@ import {Notification, NotificationType} from '../../types/notification';
 })
 export class PlayerComponent implements OnInit {
 
-  public currentVideo: SmarthardNet.Shikivideo;
+  public currentVideo = new SmarthardNet.Shikivideo();
   public videos: Array<SmarthardNet.Shikivideo>;
 
   public animeId: number;

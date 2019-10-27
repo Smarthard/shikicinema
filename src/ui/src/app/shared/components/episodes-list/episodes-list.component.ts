@@ -20,7 +20,7 @@ export class EpisodesListComponent implements OnInit, OnChanges {
   public change: EventEmitter<number> = new EventEmitter<number>();
 
   public unique: SmarthardNet.Unique;
-  public episodes: string[];
+  public episodes: string[] = [];
   public limit: number = 30;
 
   constructor(
