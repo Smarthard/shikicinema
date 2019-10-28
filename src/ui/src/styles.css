@@ -10,6 +10,12 @@ body {
   --mdc-theme-on-secondary: #fff;
 }
 
+footer {
+  margin-top: 20px;
+  width: 100%;
+  text-align: center;
+}
+
 .shc-links, .shc-links:link, .shc-links:active, .shc-links:visited {
   color: #176093;
   text-decoration-line: none;
