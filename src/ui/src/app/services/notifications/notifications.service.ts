@@ -12,6 +12,7 @@ export class NotificationsService {
 
   public add(notification: Notification) {
     this.queue.push(notification);
+    setTimeout(() => this.queue.pop(), 3000);
   }
 
   get all(): Notification[] {

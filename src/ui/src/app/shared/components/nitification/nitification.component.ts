@@ -11,17 +11,12 @@ export class NitificationComponent implements OnInit {
   public TYPES = NotificationType;
 
   @Input()
-  public timeout: number = 5000;
-
-  @Input()
   public notification: Notification;
 
   public alive: boolean = true;
 
   constructor() { }
 
-  ngOnInit() {
-    setTimeout(() => this.alive = false, this.timeout);
-  }
+  ngOnInit() { }
 
 }
