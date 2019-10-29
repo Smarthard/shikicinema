@@ -12,6 +12,7 @@ import {NotificationsService} from '../../services/notifications/notifications.s
 import {Notification, NotificationType} from '../../types/notification';
 import {ShikicinemaSettings} from '../../types/ShikicinemaSettings';
 import {SettingsService} from '../../services/settings/settings.service';
+import {UserPreferencesService} from '../../services/user-preferences/user-preferences.service';
 
 @Component({
   selector: 'app-player',
@@ -39,6 +40,7 @@ export class PlayerComponent implements OnInit {
     private auth: AuthService,
     private route: ActivatedRoute,
     private notify: NotificationsService,
+    private preferenses: UserPreferencesService,
     private videosApi: ShikivideosService,
     private shikimori: ShikimoriService,
     private settingsService: SettingsService,
@@ -64,7 +66,7 @@ export class PlayerComponent implements OnInit {
         .subscribe(
           videos => {
           this.videos = videos.map(v => new SmarthardNet.Shikivideo(v));
-          this.changeVideo(this.videos[0]);
+          this.changeVideo(this._chooseFavourite(this.videos)[0]);
           this.title.setTitle(`
             ${this.currentVideo.anime_russian || this.currentVideo.anime_english}
              - эпизод ${this.episode}
@@ -107,7 +109,18 @@ export class PlayerComponent implements OnInit {
     });
   }
 
-  public async changeEpisode(episode: number) {
+  public async changeEpisode(episode: number, saveAsFav?: boolean) {
+    if (saveAsFav) {
+      const animeId = this.animeId;
+      const fav = new SmarthardNet.VideoFilter({
+        author: this.currentVideo.author,
+        player: this.currentVideo.getSecondLvlDomain(),
+        quality: this.currentVideo.quality
+      });
+
+      this.preferenses.set(animeId, fav);
+    }
+
     if (episode && episode > 0 && episode <= this.maxEpisode) {
       await this.router.navigate([`/${this.animeId}/${episode}`]);
     }
@@ -142,12 +155,29 @@ export class PlayerComponent implements OnInit {
 
       await this.shikimori.createUserRates(this.userRate).toPromise();
     }
-    this.changeEpisode(+episode + 1);
+    this.changeEpisode(+episode + 1, true);
     this.notify.add(new Notification(NotificationType.OK, 'Просмотрено'));
   }
 
   openUploadForm() {
     this.auth.shikivideosSync();
     this.isUploadOpened = !this.isUploadOpened;
+  }
+
+  private _chooseFavourite(videos: SmarthardNet.Shikivideo[]): SmarthardNet.Shikivideo[] {
+    const preferences = this.preferenses.get(this.animeId);
+    const byAuthor = videos.filter(value => value.author === preferences.author);
+    const byPlayer = byAuthor.filter(value => value.getSecondLvlDomain() === preferences.player);
+    const byQuality = byPlayer.filter(value => value.quality === preferences.quality);
+
+    if (byQuality.length > 0) {
+      return byQuality;
+    } else if (byPlayer.length > 0) {
+      return byPlayer;
+    } else if (byAuthor.length > 0) {
+      return byAuthor;
+    } else {
+      return videos;
+    }
   }
 }

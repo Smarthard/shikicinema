@@ -12,7 +12,7 @@
 
   <div id="controls">
     <div class="control-box">
-      <button class="mdc-button" (click)="changeEpisode(+episode - 1)">
+      <button class="mdc-button" (click)="changeEpisode(+episode - 1, true)">
         <i class="material-icons md-24">fast_rewind</i>
       </button>
       <div class="control-box-subtext">Предыдущий</div>
@@ -25,7 +25,7 @@
       </div>
     </div>
     <div class="control-box">
-      <button class="mdc-button" (click)="changeEpisode(+episode + 1)">
+      <button class="mdc-button" (click)="changeEpisode(+episode + 1, true)">
         <i class="material-icons md-24">fast_forward</i>
       </button>
       <div class="control-box-subtext">Следующий</div>

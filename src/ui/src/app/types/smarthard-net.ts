@@ -46,7 +46,9 @@ export namespace SmarthardNet {
     public player: string;
     public quality: string;
 
-    constructor() {}
+    constructor(obj?: any) {
+      Object.assign(this, obj);
+    }
   }
 
   export class Unique {
