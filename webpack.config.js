@@ -1,59 +1,42 @@
 const path = require('path');
-const dotenv = require('dotenv');
-const webpack = require('webpack');
 const CopyPlugin = require('copy-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 
-dotenv.config();
 const IS_PRODUCTION = process.env.NODE_ENV === 'production';
 
 module.exports = {
     context: path.resolve(__dirname, ''),
     entry: {
-        'shikicinema': './src/shikicinema.js',
-        'background': './src/background.js',
-        'player-ui': './src/player-ui.js'
+        shikicinema: './src/shikicinema.js',
+        background: './src/background.js'
     },
     output: {
         path: path.resolve(__dirname, 'bin'),
         filename: '[name].js',
-        libraryTarget: "umd"
+        libraryTarget: 'umd'
     },
     module: {
         rules: [
             {
-                "test": /\.js$/,
-                "exclude": "/node_modules/",
-                "loader": "babel-loader"
+                enforce: 'pre',
+                test: /\.js$/,
+                exclude: /node_modules/,
+                loader: 'eslint-loader',
+                options: {
+                    failOnError: true
+                }
             },
             {
-                "test": /\.css$/,
-                "loader": 'style!css!'
-            },
-            {
-                "test": /\.json$/,
-                "exclude": /node_modules/,
-                "loader": 'json'
-            },
-            {
-                "test": /\.html$/,
-                "loader": 'html-loader'
+                test: /\.js$/,
+                exclude: '/node_modules/',
+                loader: 'babel-loader'
             }
         ]
     },
     plugins: [
-        new webpack.DefinePlugin({
-            'process.env.NODE_ENV':                     JSON.stringify(process.env.NODE_ENV || 'development'),
-            'process.env.SHIKIVIDEOS_CLIENT_ID':        JSON.stringify(process.env.SHIKIVIDEOS_CLIENT_ID),
-            'process.env.SHIKIVIDEOS_CLIENT_SECRET':    JSON.stringify(process.env.SHIKIVIDEOS_CLIENT_SECRET),
-            'process.env.SHIKIMORI_CLIENT_ID':          JSON.stringify(process.env.SHIKIMORI_CLIENT_ID),
-            'process.env.SHIKICINEMA_CLIENT_SECRET':    JSON.stringify(process.env.SHIKIMORI_CLIENT_SECRET)
-        }),
         new CopyPlugin([
             { from: 'manifest.json' },
-            { from: 'src/shikicinema.css' },
-            { from: 'assets/*.png' },
-            { from: 'src/views/player.html'},
+            { from: '**', context: 'src/ui/dist/ui/'},
         ])
     ],
     optimization: {

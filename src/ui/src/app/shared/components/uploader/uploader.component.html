@@ -1,0 +1,6 @@
+<div *ngIf="!!uploader" [title]="'Видео загружено пользователем ' + uploader.nickname">
+  <img [src]="uploader.avatar" width="20" [alt]="uploader.nickname">
+  <a class="shc-links" [href]="'https://shikimori.one/' + uploader.nickname" target="_blank">
+    {{ uploader.nickname }}
+  </a>
+</div>

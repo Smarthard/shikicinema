@@ -1,0 +1,13 @@
+#server-status {
+  margin: 5px;
+  padding: 8px;
+  border-radius: 8px;
+}
+
+.online {
+  background-color: limegreen;
+}
+
+.offline {
+  background-color: darkred;
+}

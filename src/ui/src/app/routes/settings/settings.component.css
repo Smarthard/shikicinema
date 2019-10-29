@@ -1,0 +1,62 @@
+:host {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+@media (min-width: 1025px) {
+  :host {
+    padding: 10px 30% 10px 30%;
+  }
+}
+
+button {
+  margin: 0 5px;
+}
+
+button.reset {
+  background-color: #FF03;
+}
+
+button.green {
+  background-color: #0F03;
+}
+
+div button {
+  margin: 10px 5px;
+}
+
+app-notify {
+  position: fixed;
+  right: 0;
+  top: 0;
+}
+
+.setting-group-header {
+  text-align: left;
+}
+
+.setting-group {
+  margin: 0 0 10px;
+  padding: 10px;
+  border: 1px dashed #333333;
+  border-radius: 10px;
+  width: 80%;
+}
+
+.help {
+  cursor: help;
+  font-size: medium;
+}
+
+.ok {
+  font-weight: bold;
+  color: forestgreen;
+}
+
+.notok {
+  font-weight: bold;
+  color: red;
+}

@@ -1,0 +1,19 @@
+.notification {
+  color: white;
+  padding: 10px;
+  margin: 5px 10px;
+  border-radius: 5px;
+  background-color: #999999;
+}
+
+.err {
+  background-color: red;
+}
+
+.warning {
+  background-color: orange;
+}
+
+.ok {
+  background-color: darkgreen;
+}

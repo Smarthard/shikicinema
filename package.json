@@ -1,11 +1,11 @@
 {
   "name": "shikicinema",
-  "version": "0.4.11",
+  "version": "0.5.0",
   "description": "Returns video player on Shikimori",
   "main": "src/shikicinema.js",
   "scripts": {
-    "bundle": "webpack --mode development",
-    "release": "rm -rf bin/ && webpack --mode production",
+    "bundle": "cd src/ui && ng b && cd ../.. && webpack --mode development",
+    "release": "rm -rf bin/ && cd src/ui && ng b --prod --output-hashing none && cd ../.. && webpack --mode production",
     "test": "echo 'no tests specified'"
   },
   "repository": {
@@ -25,12 +25,14 @@
   "dependencies": {},
   "devDependencies": {
     "@babel/core": "^7.5.4",
+    "babel-eslint": "^10.0.3",
     "babel-loader": "^8.0.6",
-    "webpack": "^4.35.3",
     "copy-webpack-plugin": "^5.0.3",
-    "dotenv": "^8.0.0",
+    "eslint": "^6.6.0",
+    "eslint-loader": "^3.0.2",
     "mini-css-extract-plugin": "^0.7.0",
     "terser-webpack-plugin": "^1.4.1",
+    "webpack": "^4.35.3",
     "webpack-cli": "^3.3.5"
   }
 }

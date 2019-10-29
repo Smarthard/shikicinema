@@ -1,0 +1,13 @@
+li {
+  list-style-type: none;
+}
+
+b {
+  font-size: 11pt;
+}
+
+button.mdc-button {
+  margin: 5px;
+  width: 95%;
+  background-color: #9993;
+}

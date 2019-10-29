@@ -1,48 +1,51 @@
 'use strict';
 
-const PLAYER_URL = chrome.runtime.getURL('player.html');
+const PLAYER_URL = chrome.runtime.getURL('/index.html');
 
-let player_button = document.createElement('a');
+let playerButton = document.createElement('a');
 let info = document.createElement('div');
 let observer = new MutationObserver(main);
 
-console.log(`shikicinema loaded`);
+console.log('shikicinema loaded');
 
 observer.observe(document, {childList: true, subtree: true});
 
 async function main() {
 
-    let div_info = document.querySelector('div.c-info-right');
-    let anime_id = `${window.location}`.match(/\d+/);
-    let title = document.body.getElementsByTagName('h1')[0];
+    let divInfo = document.querySelector('div.c-info-right');
+    let spanEpisode = document.querySelector('span.current-episodes');
 
-    if (!div_info || !window.location.toString().includes('/animes/')) return ;
+    let episode = spanEpisode ? +spanEpisode.innerText + 1 : 1;
+    let animeId = `${window.location}`.match(/\d+/);
+
+    if (!divInfo || !window.location.toString().includes('/animes/')) {
+        return;
+    }
 
     if (!document.querySelector('#watch_button')) {
 
-        player_button.id = 'watch_button';
-        player_button.classList.add('b-link_button', 'dark', 'watch-online');
+        playerButton.id = 'watch_button';
+        playerButton.classList.add('b-link_button', 'dark', 'watch-online');
+        playerButton.textContent = 'Смотреть онлайн';
 
-        if (title != null) {
-            title = title.innerHTML;
-            title = title.substring(0, title.indexOf(' <span'));
-
-            fetch(`https://smarthard.net/api/shikivideos/search?title=${title}`)
+        if (animeId) {
+            fetch(`https://smarthard.net/api/shikivideos/${animeId}/length`)
                 .then(response => response.json())
-                .then(videos => {
-                    if (videos.length > 0) {
-                        player_button.textContent = 'Смотреть онлайн';
-                    } else {
-                        player_button.textContent = 'Видео не найдено';
-                        player_button.classList.remove('watch-online');
+                .then((res) => {
+                    let length = res.length || 0;
+                    episode = Math.max(Math.min(episode, length), 1);
+
+                    if (length === 0) {
+                        playerButton.textContent = 'Видео не найдено';
+                        playerButton.classList.remove('watch-online');
                     }
                 });
 
-            div_info.appendChild(player_button);
-            div_info.appendChild(info);
+            divInfo.appendChild(playerButton);
+            divInfo.appendChild(info);
 
-            player_button.onclick = () => {
-                chrome.runtime.sendMessage({open_url: `${PLAYER_URL}?title=${title}&anime_id=${anime_id}`});
+            playerButton.onclick = () => {
+                chrome.runtime.sendMessage({ openUrl: `${PLAYER_URL}#/${animeId}/${episode}` });
             };
         } else {
             console.error('Не удалось узнать название аниме!');

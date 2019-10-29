@@ -1,0 +1,80 @@
+<div id="player">
+  <app-video-player [videoUrl]="currentVideo.url | safeVideoUrl"></app-video-player>
+
+  <div id="filters">
+    <app-dropdown-filters [animeId]="animeId" [episode]="episode" column="language" placeholder="Язык"
+                          (change)="filter.language = ($event !== 'Язык' ?  $event :  null)"></app-dropdown-filters>
+    <app-dropdown-filters [animeId]="animeId" [episode]="episode" column="author" placeholder="Студия"
+                          (change)="filter.author = ($event !== 'Студия' ?  $event :  null)"></app-dropdown-filters>
+    <app-dropdown-filters [animeId]="animeId" [episode]="episode" column="quality" placeholder="Качество"
+                          (change)="filter.quality = ($event !== 'Качество' ?  $event :  null)"></app-dropdown-filters>
+  </div>
+
+  <div id="controls">
+    <div class="control-box">
+      <button class="mdc-button" (click)="changeEpisode(+episode - 1, true)">
+        <i class="material-icons md-24">fast_rewind</i>
+      </button>
+      <div class="control-box-subtext">Предыдущий</div>
+    </div>
+    <div>
+      <input id="shikicinema-episode" class="mdc-text-field__input" [(ngModel)]="episode"
+             (ngModelChange)="changeEpisode(episode)" value="1">
+      <div class="control-box-subtext">
+        (<a [href]="currentVideo.url" target="_blank" class="shc-links">прямая ссылка</a>)
+      </div>
+    </div>
+    <div class="control-box">
+      <button class="mdc-button" (click)="changeEpisode(+episode + 1, true)">
+        <i class="material-icons md-24">fast_forward</i>
+      </button>
+      <div class="control-box-subtext">Следующий</div>
+    </div>
+    <div class="control-box"
+          [title]="isSynced ? 'Отметить как просмотренную' : 'Синхронизироваться с Шикимори'"
+          (click)="isSynced ? markAsWatched(episode) : synchronize() ">
+      <button class="mdc-button" [class.watched]="watched(episode)">
+        <i class="material-icons md-24">{{ isSynced ? 'done' : 'sync' }}</i>
+      </button>
+      <div class="control-box-subtext">{{ isSynced ? 'Просмотрено' : 'Шикимори' }}</div>
+    </div>
+    <div class="control-box" [title]="isSynced ? 'Загрузить видео' : 'Требуется авторизация на Шикимори'">
+      <button class="mdc-button" [disabled]="!isSynced" (click)="openUploadForm()">
+        <i class="material-icons md-24">add</i>
+      </button>
+      <div class="control-box-subtext">Загрузить</div>
+    </div>
+    <div class="control-box" title="Настойки плагина">
+      <button class="mdc-button" routerLink="/settings">
+        <i class="material-icons md-24">settings_applications</i>
+      </button>
+      <div class="control-box-subtext">Настройки</div>
+    </div>
+  </div>
+
+  <div id="upload-form" *ngIf="isSynced && isUploadOpened">
+    <app-upload-video (check)="changeVideo($event)"
+                      [uploaderId]="user.id" [animeId]="animeId" [episode]="episode">
+    </app-upload-video>
+  </div>
+
+  <div id="series" *ngIf="settings.oldFagApproves">
+    <app-episodes-list [animeId]="animeId" (change)="changeEpisode($event)" [chosenEp]="episode"></app-episodes-list>
+    <app-video-list [videos]="videos
+                                    | filterBy:['language']:filter.language
+                                    | filterBy:['author']:filter.author
+                                    | filterBy:['quality']:filter.quality"
+            (change)="changeVideo($event)" [chosenId]="currentVideo.id"></app-video-list>
+  </div>
+  <div *ngIf="!settings.oldFagApproves">
+    <app-compact-video-list [videos]="videos
+                                    | filterBy:['language']:filter.language
+                                    | filterBy:['author']:filter.author
+                                    | filterBy:['quality']:filter.quality"
+            (change)="changeVideo($event)" [chosenId]="currentVideo.id"></app-compact-video-list>
+  </div>
+</div>
+
+<app-notify></app-notify>
+<app-server-status></app-server-status>
+<app-uploader [uploadedByUser]="currentVideo.uploader"></app-uploader>

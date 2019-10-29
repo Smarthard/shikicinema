@@ -1,0 +1,50 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Roboto', sans-serif;
+  font-size: medium;
+
+  --mdc-theme-primary: #333;
+  --mdc-theme-secondary: #999;
+  --mdc-theme-on-primary: #555;
+  --mdc-theme-on-secondary: #fff;
+}
+
+footer {
+  margin-top: 20px;
+  width: 100%;
+  text-align: center;
+}
+
+.shc-links, .shc-links:link, .shc-links:active, .shc-links:visited {
+  color: #176093;
+  text-decoration-line: none;
+}
+
+.shc-links:hover {
+  color: #DD5202;
+  cursor: pointer;
+}
+
+.selected {
+  color: #B34100;
+}
+
+.text {
+  color: #333333;
+}
+
+.hostname {
+  font-size: 10pt;
+  color: #999999;
+}
+
+.flex {
+  display: flex;
+  flex-flow: row;
+  justify-content: center;
+}
+
+.flex-end {
+ justify-content: flex-end;
+}
