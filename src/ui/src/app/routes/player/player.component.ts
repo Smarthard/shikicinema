@@ -21,6 +21,8 @@ import {UserPreferencesService} from '../../services/user-preferences/user-prefe
 })
 export class PlayerComponent implements OnInit {
 
+  public EMPTY_VIDEO_URL = '/assets/dvd.png'; // black on black
+
   public currentVideo = new SmarthardNet.Shikivideo();
   public settings = new ShikicinemaSettings();
   public videos: Array<SmarthardNet.Shikivideo>;
