@@ -9,48 +9,52 @@
 
 <div class="setting-group-header">Настройки авторизации</div>
 <div class="setting-group">
-  <div>
-    Доступ к Видео-Архиву:
-    <span [class.notok]="!auth.shikivideos.token || auth.shikivideos.expired"
-          [class.ok]="auth.shikivideos.token && !auth.shikivideos.expired">
-      {{ auth.shikivideos.token && !auth.shikivideos.expired ? 'Да' : 'Нет'}}
-    </span>
-    <i class="material-icons help"
-       [title]="'Необходимо иметь актуальный токен доступа для загрузок видео.' + TOKEN_HELP_TEXT"
-    >help</i>
-  </div>
-  <div *ngIf="auth.shikivideos.token">
-    Токен: "{{ auth.shikivideos.token }}", {{ auth.shikivideos.expired ? 'просрочен' : 'актуален'}}
-  </div>
-  <div class="flex flex-end">
-    <button class="mdc-button reset" title="Сбросить токен доступа" (click)="auth.shikivideosDrop()">
-      Сбросить
-    </button>
-    <button class="mdc-button green" title="Обновить токен доступа" (click)="auth.shikivideosSync()">
-      Обновить
-    </button>
+  <div *ngIf="shikivideos">
+    <div>
+      Доступ к Видео-Архиву:
+      <span [class.notok]="!shikivideos.token || shikivideos.expired"
+            [class.ok]="shikivideos.token && !shikivideos.expired">
+        {{ shikivideos.token && !shikivideos.expired ? 'Да' : 'Нет'}}
+      </span>
+      <i class="material-icons help"
+         [title]="'Необходимо иметь актуальный токен доступа для загрузок видео.' + TOKEN_HELP_TEXT"
+      >help</i>
+    </div>
+    <div *ngIf="shikivideos.token">
+      Токен: "{{ shikivideos.token }}", {{ shikivideos.expired ? 'просрочен' : 'актуален'}}
+    </div>
+    <div class="flex flex-end">
+      <button class="mdc-button reset" title="Сбросить токен доступа" (click)="drop(shikivideos)">
+        Сбросить
+      </button>
+      <button class="mdc-button green" title="Обновить токен доступа" (click)="sync(shikivideos)">
+        Обновить
+      </button>
+    </div>
   </div>
 
-  <div>
-    Синхронизация с Шикимори:
-    <span [class.notok]="!auth.shikimori.token || auth.shikimori.expired"
-          [class.ok]="auth.shikimori.token && !auth.shikimori.expired">
-      {{ auth.shikimori.token && !auth.shikimori.expired ? 'Да' : 'Нет'}}
-    </span>
-    <i class="material-icons help"
-       [title]="'Необходимо иметь актуальный токен доступа для синхронизации просмотра с Шикимори.' + TOKEN_HELP_TEXT"
-    >help</i>
-  </div>
-  <div *ngIf="auth.shikimori.token">
-    Токен: "{{ auth.shikimori.token }}", {{ auth.shikimori.expired ? 'просрочен' : 'актуален'}}
-  </div>
-  <div class="flex flex-end">
-    <button class="mdc-button reset" title="Сбросить токен доступа" (click)="auth.shikimoriDrop()">
-      Сбросить
-    </button>
-    <button class="mdc-button green" title="Обновить токен доступа" (click)="auth.shikimoriSync()">
-      Обновить
-    </button>
+  <div *ngIf="shikimori">
+    <div>
+      Синхронизация с Шикимори:
+      <span [class.notok]="!shikimori.token || shikimori.expired"
+            [class.ok]="shikimori.token && !shikimori.expired">
+        {{ shikimori.token && !shikimori.expired ? 'Да' : 'Нет'}}
+      </span>
+      <i class="material-icons help"
+         [title]="'Необходимо иметь актуальный токен доступа для синхронизации просмотра с Шикимори.' + TOKEN_HELP_TEXT"
+      >help</i>
+    </div>
+    <div *ngIf="shikimori.token">
+      Токен: "{{ shikimori.token }}", {{ shikimori.expired ? 'просрочен' : 'актуален'}}
+    </div>
+    <div class="flex flex-end">
+      <button class="mdc-button reset" title="Сбросить токен доступа" (click)="drop(shikimori)">
+        Сбросить
+      </button>
+      <button class="mdc-button green" title="Обновить токен доступа" (click)="sync(shikimori)">
+        Обновить
+      </button>
+    </div>
   </div>
 </div>
 

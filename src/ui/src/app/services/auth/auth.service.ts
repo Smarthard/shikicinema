@@ -16,28 +16,33 @@ export class AuthService {
   private static SHIKIMORI_CLIENT_ID: string = environment.SHIKIMORI_CLIENT_ID;
   private static SHIKIMORI_CLIENT_SECRET: string = environment.SHIKIMORI_CLIENT_SECRET;
 
-  private videoToken: SmarthardNet.Token = new SmarthardNet.Token();
-  private shikimoriToken: Shikimori.Token = new Shikimori.Token();
+  private videoToken: Promise<SmarthardNet.Token>;
+  private shikimoriToken: Promise<Shikimori.Token>;
 
   constructor(
     private http: HttpClient
   ) {
-    StorageService.get<SmarthardNet.Token>('sync', 'videoToken')
-      .subscribe(token => this.videoToken = new SmarthardNet.Token(token));
-
-    StorageService.get<Shikimori.Token>('sync', 'shikimoriToken')
-      .subscribe(token => this.shikimoriToken = new Shikimori.Token(token));
+    this.videoToken = StorageService.get<SmarthardNet.Token>('sync', 'videoToken')
+      .toPromise()
+      .then(token => new Promise<SmarthardNet.Token>(
+       resolve => resolve(new SmarthardNet.Token(token))
+      ));
+    this.shikimoriToken = StorageService.get<Shikimori.Token>('sync', 'shikimoriToken')
+      .toPromise()
+      .then(token => new Promise<Shikimori.Token>(
+        resolve => resolve(new Shikimori.Token(token))
+      ));
   }
 
-  public get shikivideos(): SmarthardNet.Token {
+  public get shikivideos(): Promise<SmarthardNet.Token> {
     return this.videoToken;
   }
 
-  public get shikimori(): Shikimori.Token {
+  public get shikimori(): Promise<Shikimori.Token> {
     return this.shikimoriToken;
   }
 
-  private _resfresh(token: AbstractToken) {
+  private async _resfresh(token: AbstractToken) {
     if (token instanceof SmarthardNet.Token) {
       const params = new HttpParams()
         .set('grant_type', 'client_credentials')
@@ -48,58 +53,85 @@ export class AuthService {
       this.http.get('https://smarthard.net/oauth/token', {params})
         .subscribe(
           async (token) => {
-            this.videoToken = new SmarthardNet.Token(token);
-            await StorageService.set('sync', { videoToken: this.videoToken }).toPromise();
+            this.videoToken = new Promise<SmarthardNet.Token>(
+             resolve => resolve(new SmarthardNet.Token(token))
+            );
+            await StorageService.set('sync', { videoToken: token }).toPromise();
           }
         );
     }
 
     if (token instanceof Shikimori.Token) {
+      const refresh = await this.shikimori;
       const params = new HttpParams()
         .set('grant_type', 'refresh_token')
         .set('client_id', AuthService.SHIKIMORI_CLIENT_ID)
         .set('client_secret', AuthService.SHIKIMORI_CLIENT_SECRET)
-        .set('refresh_token', this.shikimori.resfresh);
+        .set('refresh_token', refresh.resfresh);
 
       this.http.get('https://shikimori.one/oauth/token', { params })
         .subscribe(
           async (token) => {
-            this.shikimoriToken = new Shikimori.Token(token);
-            await StorageService.set('sync', { shikimoriToken: this.shikimoriToken }).toPromise();
+            this.shikimoriToken = new Promise<Shikimori.Token>(
+             resolve => resolve(new Shikimori.Token(token))
+            );
+            await StorageService.set('sync', { shikimoriToken: token }).toPromise();
           }
         );
     }
   }
 
-  public async shikimoriSync() {
-    const code = await this._getShikimoriAuthCode() || null;
-    const params = new HttpParams()
-      .set('grant_type', 'authorization_code')
-      .set('client_id', AuthService.SHIKIMORI_CLIENT_ID)
-      .set('client_secret', AuthService.SHIKIMORI_CLIENT_SECRET)
-      .set('code', code)
-      .set('redirect_uri', 'urn:ietf:wg:oauth:2.0:oob');
+  public shikimoriSync(): Promise<Shikimori.Token> {
+    return new Promise(async resolve => {
+      const code = await this._getShikimoriAuthCode() || null;
+      const params = new HttpParams()
+        .set('grant_type', 'authorization_code')
+        .set('client_id', AuthService.SHIKIMORI_CLIENT_ID)
+        .set('client_secret', AuthService.SHIKIMORI_CLIENT_SECRET)
+        .set('code', code)
+        .set('redirect_uri', 'urn:ietf:wg:oauth:2.0:oob');
 
-    if (code) {
-      this.http.get('https://shikimori.one/oauth/token', { params })
-        .subscribe(
-          token => this.shikimoriToken = new Shikimori.Token(token)
-        );
-    }
+      if (code) {
+        this.http.post('https://shikimori.one/oauth/token', null, { params })
+          .subscribe(
+            async token => {
+              this.shikimoriToken = new Promise<Shikimori.Token>(
+                resolve => resolve(new Shikimori.Token(token))
+              );
+              await StorageService.set('sync', { shikimoriToken: token }).toPromise();
+              resolve(await this.shikimoriToken);
+            }
+          );
+      } else {
+        resolve(new Shikimori.Token())
+      }
+    });
   }
 
-  public shikimoriDrop() {
-    this.shikimoriToken = new Shikimori.Token();
+  public async shikimoriDrop() {
+    this.shikimoriToken = new Promise<Shikimori.Token>(
+     resolve => resolve(new Shikimori.Token())
+    );
+    await StorageService.set('sync', { shikimoriToken: {} }).toPromise();
   }
 
-  public shikivideosSync() {
-    if (!this.shikivideos.token || this.shikivideos.expired) {
-      this._resfresh(new SmarthardNet.Token());
-    }
+  public shikivideosSync(): Promise<SmarthardNet.Token> {
+    return new Promise(async resolve => {
+      const shikivideos = await this.shikivideos;
+
+      if (!shikivideos.token || shikivideos.expired) {
+        await this._resfresh(new SmarthardNet.Token());
+      }
+
+      resolve(await this.videoToken)
+    });
   }
 
-  public shikivideosDrop() {
-    this.videoToken = new SmarthardNet.Token();
+  public async shikivideosDrop() {
+    this.videoToken = new Promise<SmarthardNet.Token>(
+     resolve => resolve(new SmarthardNet.Token())
+    );
+    await StorageService.set('sync', { videoToken: {} }).toPromise();
   }
 
   private _getShikimoriAuthCode(): Promise<any> {
