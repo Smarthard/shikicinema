@@ -81,6 +81,14 @@ export class AuthService {
     }
   }
 
+  public async refreshShikimoriToken() {
+    const shikimori = await this.shikimori;
+
+    if (shikimori && shikimori.resfresh) {
+      this._resfresh(shikimori);
+    }
+  }
+
   public shikimoriSync(): Promise<Shikimori.Token> {
     return new Promise(async resolve => {
       const code = await this._getShikimoriAuthCode() || null;
