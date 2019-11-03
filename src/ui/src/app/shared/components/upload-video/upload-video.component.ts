@@ -4,6 +4,8 @@ import {ShikivideosService} from '../../../services/shikivideos-api/shikivideos.
 import {SmarthardNet} from '../../../types/smarthard-net';
 import {NgForm} from '@angular/forms';
 import {ShikimoriService} from '../../../services/shikimori-api/shikimori.service';
+import {NotificationsService} from '../../../services/notifications/notifications.service';
+import {Notification, NotificationType} from '../../../types/notification';
 
 @Component({
   selector: 'app-upload-video',
@@ -28,6 +30,7 @@ export class UploadVideoComponent implements OnInit, OnChanges {
   public sources: string[];
 
   constructor(
+    private notify: NotificationsService,
     private videoApi: ShikivideosService,
     private shikimori: ShikimoriService
   ) {}
@@ -94,10 +97,21 @@ export class UploadVideoComponent implements OnInit, OnChanges {
       .set('kind', video.kind)
       .set('language', video.language)
       .set('uploader', JSON.stringify(video.uploader))
-      .set('url', JSON.stringify(video.url))
+      .set('url', video.url)
       .set('quality', video.quality);
 
-    this.videoApi.uploadVideo(params).toPromise();
+    this.videoApi.uploadVideo(params)
+      .subscribe(
+        res => {
+          if (res.status === 201) {
+            this.notify.add(new Notification(NotificationType.OK, 'Видео успешно загружено!'));
+          } else if (res.status === 400) {
+            this.notify.add(new Notification(NotificationType.ERROR, `Произошла ошибка: ${res.body.message}`));
+          } else {
+            this.notify.add(new Notification(NotificationType.WARNING, 'Не удалось загрузить видео, подробности в консоли (F12)'));
+          }
+        }
+      );
   }
 
 }

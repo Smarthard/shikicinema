@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpParams} from '@angular/common/http';
+import {HttpClient, HttpParams, HttpResponse} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {SmarthardNet} from '../../types/smarthard-net';
 
@@ -12,8 +12,8 @@ export class ShikivideosService {
 
   constructor(private http: HttpClient) { }
 
-  public uploadVideo(params: HttpParams): Observable<SmarthardNet.Shikivideo> {
-    return this.http.post<SmarthardNet.Shikivideo>(`${this.SHIKIVIDEOS_API}`, {}, { params });
+  public uploadVideo(params: HttpParams): Observable<HttpResponse<SmarthardNet.Shikivideo | any>> {
+    return this.http.post<SmarthardNet.Shikivideo>(`${this.SHIKIVIDEOS_API}`, {}, { params, observe: 'response' });
   }
 
   public findById(animeId: number, params: HttpParams): Observable<SmarthardNet.Shikivideo[]> {
