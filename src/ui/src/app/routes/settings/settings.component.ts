@@ -17,8 +17,8 @@ import {AbstractToken} from '../../types/abstract-token';
 })
 export class SettingsComponent implements OnInit {
 
-  public TOKEN_HELP_TEXT = `\n\nShikicinema следит за актуальностью токенов доступа самостоятельно,
-   но, если Вы испытываете трудности при загрузке нового видео, можете попробовать обновить токен доступа вручную`;
+  public TOKEN_HELP_TEXT = '\n\nShikicinema следит за актуальностью токенов доступа самостоятельно,'
+    + ' но, если Вы испытываете трудности при загрузке нового видео, можете попробовать обновить токен доступа вручную';
   public settings = new ShikicinemaSettings();
   public shikivideos: SmarthardNet.Token;
   public shikimori: Shikimori.Token;
