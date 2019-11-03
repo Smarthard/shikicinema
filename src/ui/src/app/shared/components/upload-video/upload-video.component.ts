@@ -105,11 +105,12 @@ export class UploadVideoComponent implements OnInit, OnChanges {
         res => {
           if (res.status === 201) {
             this.notify.add(new Notification(NotificationType.OK, 'Видео успешно загружено!'));
-          } else if (res.status === 400) {
-            this.notify.add(new Notification(NotificationType.ERROR, `Произошла ошибка: ${res.body.message}`));
-          } else {
-            this.notify.add(new Notification(NotificationType.WARNING, 'Не удалось загрузить видео, подробности в консоли (F12)'));
           }
+        },
+        err => {
+            this.notify.add(new Notification(
+              NotificationType.WARNING, `Произошла ошибка, подробнее в консоли (F12)`, err.error)
+            );
         }
       );
   }

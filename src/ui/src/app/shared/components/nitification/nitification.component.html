@@ -6,7 +6,7 @@
   <div>
     {{ notification.message }}
   </div>
-  <div *ngIf="notification.err">
-    {{ notification.err }}
+  <div *ngIf="notification.err && notification.err.message">
+    {{ notification.err.message }}
   </div>
 </div>

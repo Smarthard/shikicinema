@@ -11,8 +11,11 @@ export class NotificationsService {
   constructor() {}
 
   public add(notification: Notification) {
+    if (notification.err) {
+      console.error(notification.err);
+    }
     this.queue.push(notification);
-    setTimeout(() => this.queue.pop(), 3000);
+    setTimeout(() => this.queue.pop(), 5000);
   }
 
   get all(): Notification[] {
