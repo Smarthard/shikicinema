@@ -37,7 +37,7 @@ export class HttpRequestsInterceptor implements HttpInterceptor {
     return next.handle(req)
       .pipe(
         catchError((err: HttpErrorResponse) => {
-          if (err.status === 401 || err.status === 500) {
+          if (err.status === 401) {
             this.notify.add(
               new Notification(
                 NotificationType.WARNING,
