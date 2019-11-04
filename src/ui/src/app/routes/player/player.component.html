@@ -1,5 +1,5 @@
 <div id="player">
-  <app-video-player [videoUrl]="currentVideo.url | safeVideoUrl"></app-video-player>
+  <app-video-player [videoUrl]="currentVideo.url || EMPTY_VIDEO_URL | safeVideoUrl"></app-video-player>
 
   <div id="filters">
     <app-dropdown-filters [animeId]="animeId" [episode]="episode" column="language" placeholder="Язык"

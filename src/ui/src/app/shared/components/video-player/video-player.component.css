@@ -1,3 +1,7 @@
 iframe {
   overflow: hidden;
 }
+
+iframe {
+  background-color: #000;
+}
