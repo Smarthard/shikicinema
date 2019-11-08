@@ -47,7 +47,7 @@ export class HttpRequestsInterceptor implements HttpInterceptor {
             if (/smarthard/i.test(req.url)) {
               this.auth.shikivideosSync();
             } else {
-              this.auth.refreshShikimoriToken();
+              this.auth.shikimoriSync();
             }
           }
 
