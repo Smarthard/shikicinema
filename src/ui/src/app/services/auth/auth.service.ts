@@ -69,7 +69,7 @@ export class AuthService {
         .set('client_secret', AuthService.SHIKIMORI_CLIENT_SECRET)
         .set('refresh_token', refresh.resfresh);
 
-      this.http.get('https://shikimori.one/oauth/token', { params })
+      this.http.post('https://shikimori.one/oauth/token', null,{ params })
         .subscribe(
           async (token) => {
             this.shikimoriToken = new Promise<Shikimori.Token>(
@@ -81,37 +81,35 @@ export class AuthService {
     }
   }
 
-  public async refreshShikimoriToken() {
-    const shikimori = await this.shikimori;
-
-    if (shikimori && shikimori.resfresh) {
-      this._resfresh(shikimori);
-    }
-  }
-
   public shikimoriSync(): Promise<Shikimori.Token> {
     return new Promise(async resolve => {
-      const code = await this._getShikimoriAuthCode() || null;
-      const params = new HttpParams()
-        .set('grant_type', 'authorization_code')
-        .set('client_id', AuthService.SHIKIMORI_CLIENT_ID)
-        .set('client_secret', AuthService.SHIKIMORI_CLIENT_SECRET)
-        .set('code', code)
-        .set('redirect_uri', 'urn:ietf:wg:oauth:2.0:oob');
+      const shikimoriToken = await this.shikimori;
 
-      if (code) {
-        this.http.post('https://shikimori.one/oauth/token', null, { params })
-          .subscribe(
-            async token => {
-              this.shikimoriToken = new Promise<Shikimori.Token>(
-                resolve => resolve(new Shikimori.Token(token))
-              );
-              await StorageService.set('sync', { shikimoriToken: token }).toPromise();
-              resolve(await this.shikimoriToken);
-            }
-          );
+      if (!shikimoriToken || !shikimoriToken.resfresh) {
+        const code = await this._getShikimoriAuthCode() || null;
+        const params = new HttpParams()
+          .set('grant_type', 'authorization_code')
+          .set('client_id', AuthService.SHIKIMORI_CLIENT_ID)
+          .set('client_secret', AuthService.SHIKIMORI_CLIENT_SECRET)
+          .set('code', code)
+          .set('redirect_uri', 'urn:ietf:wg:oauth:2.0:oob');
+
+        if (code) {
+          this.http.post('https://shikimori.one/oauth/token', null, { params })
+            .subscribe(
+              async token => {
+                this.shikimoriToken = new Promise<Shikimori.Token>(
+                  resolve => resolve(new Shikimori.Token(token))
+                );
+                await StorageService.set('sync', { shikimoriToken: token }).toPromise();
+                resolve(await this.shikimoriToken);
+              }
+            );
+        } else {
+          resolve(new Shikimori.Token())
+        }
       } else {
-        resolve(new Shikimori.Token())
+        this._resfresh(shikimoriToken);
       }
     });
   }

@@ -90,13 +90,13 @@ export class UploadVideoComponent implements OnInit, OnChanges {
     const video = new SmarthardNet.Shikivideo(videoForm.value);
     const params = new HttpParams()
       .set('anime_id', video.anime_id)
-      .set('anime_english', JSON.stringify(video.anime_english))
-      .set('anime_russian', JSON.stringify(video.anime_russian))
-      .set('author', JSON.stringify(video.author))
+      .set('anime_english', video.anime_english)
+      .set('anime_russian', video.anime_russian)
+      .set('author', video.author)
       .set('episode', `${video.episode}`)
       .set('kind', video.kind)
       .set('language', video.language)
-      .set('uploader', JSON.stringify(video.uploader))
+      .set('uploader', video.uploader)
       .set('url', video.url)
       .set('quality', video.quality);
 
