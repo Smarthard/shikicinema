@@ -132,8 +132,8 @@ export class PlayerComponent implements OnInit {
     this.currentVideo = video;
   }
 
-  synchronize() {
-    chrome.runtime.sendMessage({ shikimori_sync: true });
+  async synchronize() {
+    await this.auth.shikimoriSync();
     setTimeout(() => window.location.reload(), 700);
   }
 
