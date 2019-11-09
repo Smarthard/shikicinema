@@ -1,7 +1,7 @@
 <div id="player">
-  <app-video-player [videoUrl]="currentVideo.url || EMPTY_VIDEO_URL | safeVideoUrl"></app-video-player>
+  <app-video-player [videoUrl]="(currentVideo ? currentVideo.url : EMPTY_VIDEO_URL) | safeVideoUrl"></app-video-player>
 
-  <div id="filters">
+  <div id="filters" *ngIf="videos && videos.length > 0">
     <app-dropdown-filters [animeId]="animeId" [episode]="episode" column="language" placeholder="Язык"
                           (change)="filter.language = ($event !== 'Язык' ?  $event :  null)"></app-dropdown-filters>
     <app-dropdown-filters [animeId]="animeId" [episode]="episode" column="author" placeholder="Студия"
@@ -21,7 +21,8 @@
       <input id="shikicinema-episode" class="mdc-text-field__input" [(ngModel)]="episode"
              (ngModelChange)="changeEpisode(episode)" value="1">
       <div class="control-box-subtext">
-        (<a [href]="currentVideo.url" target="_blank" class="shc-links">прямая ссылка</a>)
+        (<a [href]="currentVideo ? currentVideo.url : '/index.html#' + animeId + '/' + 1"
+            target="_blank" class="shc-links">прямая ссылка</a>)
       </div>
     </div>
     <div class="control-box">
@@ -58,23 +59,29 @@
     </app-upload-video>
   </div>
 
-  <div id="series" *ngIf="settings.oldFagApproves">
-    <app-episodes-list [animeId]="animeId" (change)="changeEpisode($event)" [chosenEp]="episode"></app-episodes-list>
-    <app-video-list [videos]="videos
+  <div *ngIf="videos && videos.length > 0 else videosEmpty">
+    <div id="series" *ngIf="settings.oldFagApproves">
+      <app-episodes-list [animeId]="animeId" (change)="changeEpisode($event)" [chosenEp]="episode"></app-episodes-list>
+      <app-video-list [videos]="videos
                                     | filterBy:['language']:filter.language
                                     | filterBy:['author']:filter.author
                                     | filterBy:['quality']:filter.quality"
-            (change)="changeVideo($event)" [chosenId]="currentVideo.id"></app-video-list>
-  </div>
-  <div *ngIf="!settings.oldFagApproves">
-    <app-compact-video-list [videos]="videos
+                      (change)="changeVideo($event)" [chosenId]="currentVideo ? currentVideo.id : null"></app-video-list>
+    </div>
+    <div *ngIf="!settings.oldFagApproves">
+      <app-compact-video-list [videos]="videos
                                     | filterBy:['language']:filter.language
                                     | filterBy:['author']:filter.author
                                     | filterBy:['quality']:filter.quality"
-            (change)="changeVideo($event)" [chosenId]="currentVideo.id"></app-compact-video-list>
+                              (change)="changeVideo($event)" [chosenId]="currentVideo ? currentVideo.id : null"></app-compact-video-list>
+    </div>
   </div>
+
+  <ng-template #videosEmpty>
+    <div class="centered note">В нашем архиве не нашлось ни одного видео T_T</div>
+  </ng-template>
 </div>
 
 <app-notify></app-notify>
 <app-server-status></app-server-status>
-<app-uploader [uploadedByUser]="currentVideo.uploader"></app-uploader>
+<app-uploader [uploadedByUser]="currentVideo ? currentVideo.uploader : null"></app-uploader>

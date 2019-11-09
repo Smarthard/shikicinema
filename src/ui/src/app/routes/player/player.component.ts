@@ -67,12 +67,12 @@ export class PlayerComponent implements OnInit {
       )
         .subscribe(
           videos => {
+          let title = 'Shikicinema';
           this.videos = videos.map(v => new SmarthardNet.Shikivideo(v));
           this.changeVideo(this._chooseFavourite(this.videos)[0]);
-          this.title.setTitle(`
-            ${this.currentVideo.anime_russian || this.currentVideo.anime_english}
-             - эпизод ${this.episode}
-          `);
+
+          title = this.videos.length > 0 ? this.currentVideo.anime_russian || this.currentVideo.anime_english : title;
+          this.title.setTitle(this.currentVideo ? `${title} - эпизод ${this.episode}` : title);
         },
           err => {
             console.error(err);

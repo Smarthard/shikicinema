@@ -23,12 +23,14 @@ export class UploaderComponent implements OnInit, OnChanges {
     const uploader: string = changes.uploadedByUser.currentValue;
     const isUserId: boolean = /\d+/.test(uploader);
 
-    this.http.get(`https://shikimori.one/api/users/${ isUserId ? uploader : uploader + '?is_nickname=1' }`)
-      .subscribe(
-        user => {
-          this.uploader = new Shikimori.User(user);
-        }
-      );
+    if (uploader) {
+      this.http.get(`https://shikimori.one/api/users/${ isUserId ? uploader : uploader + '?is_nickname=1' }`)
+        .subscribe(
+          user => {
+            this.uploader = new Shikimori.User(user);
+          }
+        );
+    }
   }
 
 }
