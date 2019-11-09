@@ -145,3 +145,13 @@ app-server-status {
   left: 0;
   top: 0;
 }
+
+.centered {
+  text-align: center;
+}
+
+.note {
+  padding: 20vh 0;
+  font-size: xx-large;
+  color: #999999;
+}
