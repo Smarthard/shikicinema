@@ -69,10 +69,12 @@ export class PlayerComponent implements OnInit {
           videos => {
           this.videos = videos.map(v => new SmarthardNet.Shikivideo(v));
           this.changeVideo(this._chooseFavourite(this.videos)[0]);
-          this.title.setTitle(`
+          if (this.currentVideo) {
+            this.title.setTitle(`
             ${this.currentVideo.anime_russian || this.currentVideo.anime_english}
              - эпизод ${this.episode}
           `);
+          }
         },
           err => {
             console.error(err);
