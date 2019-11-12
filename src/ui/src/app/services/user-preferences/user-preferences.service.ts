@@ -10,12 +10,11 @@ export class UserPreferencesService {
   private prefMap = new Map<number, SmarthardNet.VideoFilter>();
 
   constructor() {
-    StorageService.get('local', 'preferences')
+    StorageService.get<string|any>('local', 'preferences')
       .subscribe(
         pref => {
-          Object.keys(pref).forEach((key: string) => {
-            this.prefMap.set(+key, new SmarthardNet.VideoFilter(pref[key]))
-          })
+          // keep it to be checking for typeof 'string' because of older versions compatibility
+          this.prefMap = pref && typeof pref === 'string' ? new Map(JSON.parse(pref)) : this.prefMap;
         }
       )
   }
@@ -26,7 +25,7 @@ export class UserPreferencesService {
 
   public set(animeId: number, filter: SmarthardNet.VideoFilter) {
     this.prefMap.set(animeId, filter);
-    StorageService.set('local', { preferences: this.prefMap });
+    StorageService.set('local', { preferences: JSON.stringify([...this.prefMap]) });
   }
 
 }
