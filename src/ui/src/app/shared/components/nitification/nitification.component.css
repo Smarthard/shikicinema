@@ -4,6 +4,7 @@
   margin: 5px 10px;
   border-radius: 5px;
   background-color: #999999;
+  display: inline-block;
 }
 
 .err {

@@ -12,12 +12,14 @@
 
   <div id="controls">
     <div class="control-box">
-      <button class="mdc-button" (click)="changeEpisode(+episode - 1, true)">
+      <button class="mdc-button" [disabled]="+episode - 1 < 1"
+              (click)="changeEpisode(+episode - 1, true)">
         <i class="material-icons md-24">fast_rewind</i>
       </button>
       <div class="control-box-subtext">Предыдущий</div>
     </div>
     <div>
+      <label for="shikicinema-episode"></label>
       <input id="shikicinema-episode" class="mdc-text-field__input" [(ngModel)]="episode"
              (ngModelChange)="changeEpisode(episode)" value="1">
       <div class="control-box-subtext">
@@ -26,7 +28,8 @@
       </div>
     </div>
     <div class="control-box">
-      <button class="mdc-button" (click)="changeEpisode(+episode + 1, true)">
+      <button class="mdc-button" [disabled]="+episode + 1 > maxEpisode"
+              (click)="changeEpisode(+episode + 1, true)">
         <i class="material-icons md-24">fast_forward</i>
       </button>
       <div class="control-box-subtext">Следующий</div>
@@ -61,19 +64,22 @@
 
   <div *ngIf="videos && videos.length > 0 else videosEmpty">
     <div id="series" *ngIf="settings.oldFagApproves">
-      <app-episodes-list [animeId]="animeId" (change)="changeEpisode($event)" [chosenEp]="episode"></app-episodes-list>
+      <app-episodes-list [animeId]="animeId" (change)="changeEpisode($event)" [chosenEp]="episode">
+      </app-episodes-list>
       <app-video-list [videos]="videos
                                     | filterBy:['language']:filter.language
                                     | filterBy:['author']:filter.author
                                     | filterBy:['quality']:filter.quality"
-                      (change)="changeVideo($event)" [chosenId]="currentVideo ? currentVideo.id : null"></app-video-list>
+                      (change)="changeVideo($event)" [chosenId]="currentVideo ? currentVideo.id : null">
+      </app-video-list>
     </div>
     <div *ngIf="!settings.oldFagApproves">
       <app-compact-video-list [videos]="videos
                                     | filterBy:['language']:filter.language
                                     | filterBy:['author']:filter.author
                                     | filterBy:['quality']:filter.quality"
-                              (change)="changeVideo($event)" [chosenId]="currentVideo ? currentVideo.id : null"></app-compact-video-list>
+                              (change)="changeVideo($event)" [chosenId]="currentVideo ? currentVideo.id : null">
+      </app-compact-video-list>
     </div>
   </div>
 

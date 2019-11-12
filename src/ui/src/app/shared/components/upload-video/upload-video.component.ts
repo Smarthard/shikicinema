@@ -41,7 +41,6 @@ export class UploadVideoComponent implements OnInit, OnChanges {
     this.shikimori.getAnime(this.animeId)
       .subscribe(
         (anime: any) => {
-          console.log('anime', anime);
           this.video = new SmarthardNet.Shikivideo({
             anime_id: this.animeId,
             uploader: this.uploaderId,
