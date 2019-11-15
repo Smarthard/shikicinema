@@ -10,7 +10,7 @@ import {HttpClient} from "@angular/common/http";
 export class UploaderComponent implements OnInit, OnChanges {
 
   @Input()
-  public uploadedByUser: string | number;
+  public uploadedByUser: string | number | Shikimori.User;
   public uploader: Shikimori.User = null;
 
   constructor(
@@ -20,16 +20,20 @@ export class UploaderComponent implements OnInit, OnChanges {
   ngOnInit() {}
 
   ngOnChanges(changes: SimpleChanges): void {
-    const uploader: string = changes.uploadedByUser.currentValue;
-    const isUserId: boolean = /\d+/.test(uploader);
+    const uploader: string | number | Shikimori.User = changes.uploadedByUser.currentValue;
 
     if (uploader) {
-      this.http.get(`https://shikimori.one/api/users/${ isUserId ? uploader : uploader + '?is_nickname=1' }`)
-        .subscribe(
-          user => {
-            this.uploader = new Shikimori.User(user);
-          }
-        );
+      if (uploader instanceof Shikimori.User) {
+        this.uploader = uploader;
+      } else {
+        const isUserId: boolean = /\d+/.test(`${uploader}`);
+        this.http.get(`https://shikimori.one/api/users/${ isUserId ? uploader : uploader + '?is_nickname=1' }`)
+          .subscribe(
+            user => {
+              this.uploader = new Shikimori.User(user);
+            }
+          );
+      }
     }
   }
 
