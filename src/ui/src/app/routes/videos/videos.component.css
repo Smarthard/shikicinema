@@ -1,0 +1,44 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100%;
+}
+
+@media (max-width: 1024px) {
+  * {
+    font-size: small;
+  }
+}
+
+table {
+    width: 100%;
+    overflow: auto;
+}
+
+.uploaders-list {
+    margin: 30px 0 10px 0;
+    font-size: medium;
+}
+
+.mat-cell:not(.mat-column-author):not(.mat-column-anime_id) {
+  text-align: center;
+}
+
+.mat-header-cell {
+  text-align: center;
+}
+
+:first-of-type, :last-of-type {
+  padding: 0;
+}
+
+.mat-cell {
+  padding: 0 10px;
+}
+
+div.note {
+  display: inline-block;
+  padding: 20%;
+}
