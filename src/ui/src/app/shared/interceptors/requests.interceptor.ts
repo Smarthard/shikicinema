@@ -27,7 +27,7 @@ export class HttpRequestsInterceptor implements HttpInterceptor {
       case /smarthard/i.test(req.url) && req.method === 'POST':
         headers['Authorization'] = `Bearer ${shikivideos.token}`;
         break;
-      case /shikimori/i.test(req.url) && !req.url.match(/oauth/i):
+      case /shikimori/i.test(req.url) && !req.url.match(/oauth/i) && !!shikimori && !!shikimori.token:
         headers['Authorization'] = `Bearer ${shikimori.token}`;
         break;
     }
@@ -46,7 +46,7 @@ export class HttpRequestsInterceptor implements HttpInterceptor {
             );
             if (/smarthard/i.test(req.url)) {
               this.auth.shikivideosSync();
-            } else {
+            } else if (shikimori && shikimori.token) {
               this.auth.shikimoriSync();
             }
           }
