@@ -67,9 +67,12 @@ export class PlayerComponent implements OnInit {
       )
         .subscribe(
           videos => {
+          let query = this.route.snapshot.queryParams;
           let title = 'Shikicinema';
           this.videos = videos.map(v => new SmarthardNet.Shikivideo(v));
-          this.changeVideo(this._chooseFavourite(this.videos)[0]);
+          let videoById = this.videos.filter(vid => query && query.id && vid.id == query.id)[0];
+
+          this.changeVideo( query && query.id && videoById ? videoById : this._chooseFavourite(this.videos)[0]);
 
           title = this.videos.length > 0 ? this.currentVideo.anime_russian || this.currentVideo.anime_english : title;
           this.title.setTitle(this.currentVideo ? `${title} - эпизод ${this.episode}` : title);
