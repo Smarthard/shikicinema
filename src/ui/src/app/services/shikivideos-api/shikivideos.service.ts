@@ -20,8 +20,12 @@ export class ShikivideosService {
     return this.http.get<SmarthardNet.Shikivideo[]>(`${this.SHIKIVIDEOS_API}/${animeId}`, { params });
   }
 
-  public findByTitle(params: HttpParams): Observable<SmarthardNet.Shikivideo[]> {
-      return this.http.get<SmarthardNet.Shikivideo[]>(`${this.SHIKIVIDEOS_API}/search`, { params })
+  public search(params: HttpParams): Observable<SmarthardNet.Shikivideo[]> {
+    return this.http.get<SmarthardNet.Shikivideo[]>(`${this.SHIKIVIDEOS_API}/search`, { params })
+  }
+
+  public contributions(params: HttpParams): Observable<{ count: number }> {
+    return this.http.get<{ count: number }>(`${this.SHIKIVIDEOS_API}/contributions`, { params });
   }
 
   public getAnimeMaxLoadedEp(animeId: number): Observable<{length: number}> {

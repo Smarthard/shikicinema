@@ -48,3 +48,9 @@ footer {
 .flex-end {
  justify-content: flex-end;
 }
+
+.note {
+  padding: 20vh 0;
+  font-size: xx-large;
+  color: #999999;
+}

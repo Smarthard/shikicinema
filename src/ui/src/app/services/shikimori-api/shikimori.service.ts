@@ -41,6 +41,10 @@ export class ShikimoriService {
     return this.http.get<Shikimori.User>(`${this.SHIKIMORI_URL}/api/users/whoami`, { headers, withCredentials: true });
   }
 
+  public getUserInfo(user: string, params: HttpParams): Observable<Shikimori.User> {
+    return this.http.get<Shikimori.User>(`${this.SHIKIMORI_URL}/api/users/${user}`, { params });
+  }
+
   public getAnime(animeId: number) {
     return this.http.get(`${this.SHIKIMORI_URL}/api/animes/${animeId}`);
   }
