@@ -27,6 +27,7 @@ import {SettingsComponent} from './routes/settings/settings.component';
 import {CompactVideoListComponent} from './shared/components/compact-video-list/compact-video-list.component';
 import {VideosComponent} from './routes/videos/videos.component';
 import {MatPaginatorModule, MatTableModule} from '@angular/material';
+import {ControlBoxComponent} from './shared/components/control-box/control-box.component';
 
 @NgModule({
   declarations: [
@@ -45,7 +46,8 @@ import {MatPaginatorModule, MatTableModule} from '@angular/material';
     NitificationComponent,
     SettingsComponent,
     CompactVideoListComponent,
-    VideosComponent
+    VideosComponent,
+    ControlBoxComponent
   ],
   imports: [
     AppRoutingModule,
