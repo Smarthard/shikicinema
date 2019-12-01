@@ -1,7 +1,42 @@
-iframe {
-  overflow: hidden;
+@media (max-width: 1025px) {
+  :host {
+    --font-size: 20px
+  }
+}
+
+@media (min-width: 1025px) {
+  :host {
+    --font-size: 40px
+  }
+}
+
+lib-ngx-responsive-embed {
+  display: flex;
+  justify-content: center;
+  justify-items: center;
+  color: white;
 }
 
 iframe {
+  overflow: hidden;
   background-color: #000;
+}
+
+lib-ngx-responsive-embed div {
+  position: absolute;
+  top: calc(50% - var(--font-size) / 2);
+  left: calc(50% - 250px);
+}
+
+.text-container {
+  width: 1000px;
+  text-align: center;
+}
+
+.larger {
+  font-size: var(--font-size);
+}
+
+.smaller {
+  font-size: calc(var(--font-size) / 2);
 }
