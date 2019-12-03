@@ -6,6 +6,8 @@ import {NgForm} from '@angular/forms';
 import {ShikimoriService} from '../../../services/shikimori-api/shikimori.service';
 import {NotificationsService} from '../../../services/notifications/notifications.service';
 import {Notification, NotificationType} from '../../../types/notification';
+import {debounceTime, distinctUntilChanged, switchMap} from 'rxjs/operators';
+import {Subject} from 'rxjs';
 
 @Component({
   selector: 'app-upload-video',
@@ -27,7 +29,18 @@ export class UploadVideoComponent implements OnInit, OnChanges {
   public check: EventEmitter<SmarthardNet.Shikivideo> = new EventEmitter<SmarthardNet.Shikivideo>();
 
   public video: SmarthardNet.Shikivideo;
-  public sources: string[];
+
+  private authorSubject = new Subject<Event>();
+
+  readonly sources$ = this.authorSubject.pipe(
+    debounceTime(400),
+    distinctUntilChanged(),
+    switchMap((author) => this.videoApi.getUniqueValues(
+      new HttpParams()
+        .set('column', 'author')
+        .set('filter', `${author}`)
+    ))
+  );
 
   constructor(
     private notify: NotificationsService,
@@ -63,26 +76,8 @@ export class UploadVideoComponent implements OnInit, OnChanges {
     return clipboardData.match(embedUrlRegex)[0] || clipboardData;
   }
 
-  search4Authors() {
-    let params = new HttpParams()
-      .set('column', 'author')
-      .set('filter', `${this.video.author}`);
-
-
-    if (this.video.author.length > 2) {
-      this.videoApi.getUniqueValues(params)
-        .subscribe(
-          (sources: SmarthardNet.Unique[]) => {
-            const authorsSet = new Set<string>();
-
-            Object.keys(sources).forEach((ep: string) => {
-              sources[ep].author.forEach(author => authorsSet.add(author));
-            });
-
-            this.sources = [...authorsSet];
-          }
-        );
-    }
+  search4Authors($event: any) {
+    this.authorSubject.next($event.target.value);
   }
 
   onSubmit(videoForm: NgForm) {

@@ -1,3 +1,11 @@
-<lib-ngx-responsive-embed class="ratio-16by9">
-  <iframe allowfullscreen *ngIf="videoUrl"  [src]="videoUrl"></iframe>
+<lib-ngx-responsive-embed class="ratio-16by9" [ngSwitch]="true">
+  <iframe allowfullscreen *ngSwitchCase="!!videoUrl" [src]="videoUrl"></iframe>
+  <iframe allowfullscreen *ngSwitchCase="!!video && !!video.url" [src]="video.url | safeVideoUrl"></iframe>
+  <div *ngSwitchDefault>
+    <div class="text-container">
+      <span class="larger">Здесь пока ничего нет (╯ ° □ °) ╯ ┻━┻</span>
+      <br>
+      <span class="smaller">пожалуйста, воспользуйтесь кнопкой загрузки</span>
+    </div>
+  </div>
 </lib-ngx-responsive-embed>

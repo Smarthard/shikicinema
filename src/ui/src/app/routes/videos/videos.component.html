@@ -1,49 +1,60 @@
-<mat-paginator [pageSize]="pageSize" [length]="count" (page)="changePage($event)"
-               *ngIf="count > 0 && count / pageSize > 0">
-</mat-paginator>
+<ng-container *ngIf="(count$ | async)?.count > 0 && (count$ | async)?.count as count else noContributions">
 
-<table mat-table [dataSource]="contributions" *ngIf="count > 0">
-    <ng-container matColumnDef="id">
+  <ng-container *ngIf="count > 0 && (uploader$ | async) as uploader">
+    <mat-paginator [pageSize]="pageSize" [length]="count" (page)="changePage($event)"
+                   *ngIf="count / pageSize > 0">
+    </mat-paginator>
+
+    <table mat-table [dataSource]="contributions" *ngIf="(contributions$ | async) as contributions">
+      <ng-container matColumnDef="id">
         <th mat-header-cell *matHeaderCellDef> ID </th>
         <td mat-cell *matCellDef="let element">
           <a class="shc-links" [routerLink]="['/', element.anime_id, element.episode]" [queryParams]="{id: element.id}">
             {{element.id}}
           </a>
         </td>
-    </ng-container>
+      </ng-container>
 
-    <ng-container matColumnDef="anime_id">
+      <ng-container matColumnDef="anime_id">
         <th mat-header-cell *matHeaderCellDef> Anime </th>
         <td mat-cell *matCellDef="let element">
-            <a class="shc-links" href="https://shikimori.one/animes/{{element.anime_id}}">
-              {{element.anime_russian || element.anime_english}}
-            </a>
+          <a class="shc-links" href="https://shikimori.one/animes/{{element.anime_id}}">
+            {{element.anime_russian || element.anime_english}}
+          </a>
         </td>
-    </ng-container>
+      </ng-container>
 
-    <ng-container matColumnDef="episode">
+      <ng-container matColumnDef="episode">
         <th mat-header-cell *matHeaderCellDef> Episode </th>
         <td mat-cell *matCellDef="let element"> {{element.episode}} </td>
-    </ng-container>
+      </ng-container>
 
-    <ng-container matColumnDef="author">
+      <ng-container matColumnDef="author">
         <th mat-header-cell *matHeaderCellDef> Author </th>
         <td mat-cell *matCellDef="let element"> {{element.author}} </td>
-    </ng-container>
+      </ng-container>
 
-    <ng-container matColumnDef="uploader">
+      <ng-container matColumnDef="uploader">
         <th mat-header-cell *matHeaderCellDef> Uploader </th>
         <td mat-cell *matCellDef="let element">
-            <app-uploader *ngIf="uploader" [uploadedByUser]="uploader"></app-uploader>
+          <app-uploader *ngIf="uploader" [uploadedByUser]="uploader"></app-uploader>
         </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </ng-container>
+
+</ng-container>
+
+<ng-template #noContributions>
+  <div class="note">
+    Загрузок
+    <ng-container *ngIf="(uploader$ | async) as uploader">
+      от
+      <a class="shc-links" href="https://shikimori.one/{{ uploader.nickname }}">{{ uploader.nickname }}</a>
     </ng-container>
-
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-</table>
-
-<div *ngIf="count === 0 && uploader" class="note">
-  Загрузок от
-  <a class="shc-links" href="https://shikimori.one/{{ uploader.nickname }}">{{ uploader.nickname }}</a>
-  не найдено ¯\_(ツ)_/¯
-</div>
+    не найдено ¯\_(ツ)_/¯
+  </div>
+</ng-template>

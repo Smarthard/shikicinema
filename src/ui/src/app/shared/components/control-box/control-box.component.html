@@ -1,0 +1,7 @@
+<div class="control-box">
+  <ng-content></ng-content>
+  <div [ngSwitch]="!!href" class="control-box-subtext">
+    <a *ngSwitchDefault>{{ subtext }}</a>
+    <a *ngSwitchCase="true" [href]="href">{{ subtext }}</a>
+  </div>
+</div>

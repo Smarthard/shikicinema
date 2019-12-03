@@ -41,7 +41,15 @@ export class ShikimoriService {
     return this.http.get<Shikimori.User>(`${this.SHIKIMORI_URL}/api/users/whoami`, { headers, withCredentials: true });
   }
 
-  public getUserInfo(user: string, params: HttpParams): Observable<Shikimori.User> {
+  public getUserInfo(user: string | number, params?: HttpParams): Observable<Shikimori.User> {
+    const isNickname = !/^\d+$/.test(`${user}`);
+
+    if (params && isNickname) {
+      params.set('is_nickname', '1');
+    } else if (isNickname) {
+      params = new HttpParams().set('is_nickname', '1');
+    }
+
     return this.http.get<Shikimori.User>(`${this.SHIKIMORI_URL}/api/users/${user}`, { params });
   }
 
