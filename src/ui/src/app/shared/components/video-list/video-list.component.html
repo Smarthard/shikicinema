@@ -1,9 +1,11 @@
 <app-kind-remote (kind)="chosenKind = $event"></app-kind-remote>
 
 <ul>
-  <li class="shc-links" *ngFor="let video of filteredByKind()" (click)="change.emit(video)"
-    title="{{ video.author }} - {{ video.url }}" [class.selected]="video.id === chosenId"
-  >
+  <li *ngFor="let video of filteredByKind()"
+      class="shc-links"
+      (click)="change.emit(video)"
+      title="{{ video.author }} - {{ video.url }}"
+      [class.selected]="video.id === chosen.id">
     <span class="hostname">({{ video.getSecondLvlDomain() }})</span>
 
     {{ !video.hasUnknownAttribute('author') ? video.author : 'неизвестно' }}
@@ -12,7 +14,9 @@
       {{ video.quality | uppercase }}
     </span>
 
-    <img *ngIf="video.hasHighQuality()" height="16px"
-         src="assets/{{video.quality | lowercase }}.png" alt="{{ video.quality }}">
+    <img *ngIf="video.hasHighQuality()"
+         height="16px"
+         src="assets/{{video.quality | lowercase }}.png"
+         alt="{{ video.quality }}">
   </li>
 </ul>

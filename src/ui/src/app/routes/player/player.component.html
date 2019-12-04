@@ -109,7 +109,7 @@
               | filterBy:['author']:filter.author
               | filterBy:['quality']:filter.quality"
             (change)="changeVideo($event)"
-            [chosenId]="currentVideo.id"></app-video-list>
+            [chosen]="currentVideo"></app-video-list>
         </div>
         <div *ngIf="!settings.oldFagApproves">
           <app-compact-video-list

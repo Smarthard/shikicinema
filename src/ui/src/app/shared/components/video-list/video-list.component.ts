@@ -12,7 +12,7 @@ export class VideoListComponent implements OnInit {
   public videos: SmarthardNet.Shikivideo[] = [];
 
   @Input()
-  public chosenId: number;
+  public chosen: SmarthardNet.Shikivideo;
 
   @Output()
   public change: EventEmitter<SmarthardNet.Shikivideo> = new EventEmitter<SmarthardNet.Shikivideo>();
@@ -21,8 +21,7 @@ export class VideoListComponent implements OnInit {
 
   constructor() { }
 
-  ngOnInit() {
-  }
+  ngOnInit() { }
 
   public filteredByKind(): SmarthardNet.Shikivideo[] {
     let filtered: SmarthardNet.Shikivideo[] = this.videos;
