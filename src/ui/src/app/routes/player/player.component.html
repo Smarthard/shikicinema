@@ -99,7 +99,7 @@
 
       <ng-container *ngIf="videos.length > 0 && settings else videosEmpty">
         <div id="series">
-          <app-episodes-list *ngIf="urlParams && urlParams.animeId"
+          <app-episodes-list *ngIf="urlParams?.animeId"
             [animeId]="urlParams.animeId"
             (change)="changeEpisode($event)"
             [chosenEp]="urlParams.episode"></app-episodes-list>

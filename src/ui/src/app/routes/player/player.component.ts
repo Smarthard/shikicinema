@@ -145,7 +145,7 @@ export class PlayerComponent implements OnInit, OnDestroy {
 
         title = video ? video.anime_russian || video.anime_english : title;
         this.title.setTitle(video ? `${title} - эпизод ${video.episode}` : title);
-        this.changeVideo(videoById ? videoById : this._chooseFavourite(videos)[0] || this.EMPTY_VIDEO);
+        this.changeVideo(videos.length === 0 ? this.EMPTY_VIDEO : videoById ? videoById : this._chooseFavourite(videos)[0]);
       }
     );
 
