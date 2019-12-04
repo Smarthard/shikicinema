@@ -78,7 +78,7 @@ async function main() {
                     episode = Math.max(Math.min(episode, length), 1);
 
                     if (length === 0) {
-                        playerButton.textContent = 'Видео не найдено';
+                        playerButton.textContent = 'Загрузить видео';
                         playerButton.classList.remove('watch-online');
                     }
                 });
