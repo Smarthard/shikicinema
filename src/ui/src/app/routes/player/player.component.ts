@@ -185,7 +185,7 @@ export class PlayerComponent implements OnInit, OnDestroy {
   public async changeEpisode(episode: number | string, fromVideo?: SmarthardNet.Shikivideo) {
     if (episode != '') {
 
-      if (fromVideo) {
+      if (fromVideo && fromVideo.id !== this.EMPTY_VIDEO.id) {
         const fav = new SmarthardNet.VideoFilter({
           author: fromVideo.author,
           player: fromVideo.getSecondLvlDomain(),
