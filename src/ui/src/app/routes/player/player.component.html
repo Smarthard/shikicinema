@@ -2,22 +2,22 @@
   <app-video-player [video]="currentVideo"></app-video-player>
 
   <ng-container *ngIf="(videos$ | async) as videos">
-    <div id="filters" *ngIf="videos.length > 0">
-      <app-dropdown-filters [animeId]="urlParams.animeId"
-                            [episode]="urlParams.episode"
+    <div id="filters" *ngIf="videos.length > 0 && unique$ | async as unique">
+      <app-dropdown-filters [unique]="unique"
+                            [episode]="episode$ | async"
+                            (change)="filter.language = ($event !== 'Язык' ?  $event :  null)"
                             column="language"
-                            placeholder="Язык"
-                            (change)="filter.language = ($event !== 'Язык' ?  $event :  null)"></app-dropdown-filters>
-      <app-dropdown-filters [animeId]="urlParams.animeId"
-                            [episode]="urlParams.episode"
+                            placeholder="Язык"></app-dropdown-filters>
+      <app-dropdown-filters [unique]="unique"
+                            [episode]="episode$ | async"
+                            (change)="filter.author = ($event !== 'Студия' ?  $event :  null)"
                             column="author"
-                            placeholder="Студия"
-                            (change)="filter.author = ($event !== 'Студия' ?  $event :  null)"></app-dropdown-filters>
-      <app-dropdown-filters [animeId]="urlParams.animeId"
-                            [episode]="urlParams.episode"
+                            placeholder="Студия"></app-dropdown-filters>
+      <app-dropdown-filters [unique]="unique"
+                            [episode]="episode$ | async"
+                            (change)="filter.quality = ($event !== 'Качество' ?  $event :  null)"
                             column="quality"
-                            placeholder="Качество"
-                            (change)="filter.quality = ($event !== 'Качество' ?  $event :  null)"></app-dropdown-filters>
+                            placeholder="Качество"></app-dropdown-filters>
     </div>
 
     <div id="controls">
@@ -97,26 +97,25 @@
                           [episode]="urlParams.episode"></app-upload-video>
       </div>
 
-      <ng-container *ngIf="videos.length > 0 && settings else videosEmpty">
-        <div id="series">
-          <app-episodes-list *ngIf="urlParams?.animeId"
-            [animeId]="urlParams.animeId"
-            (change)="changeEpisode($event)"
-            [chosenEp]="urlParams.episode"></app-episodes-list>
-          <app-video-list
-            [videos]="videos
+      <ng-container *ngIf="videos.length > 0 && settings && videos
               | filterBy:['language']:filter.language
               | filterBy:['author']:filter.author
-              | filterBy:['quality']:filter.quality"
+              | filterBy:['quality']:filter.quality
+             as filteredVideos
+             else videosEmpty">
+        <div id="series" *ngIf="settings.oldFagApproves">
+          <app-episodes-list *ngIf="unique$ | async as unique"
+            [unique]="unique"
+            (change)="changeEpisode($event)"
+            [chosen]="currentVideo"></app-episodes-list>
+          <app-video-list
+            [videos]="filteredVideos"
             (change)="changeVideo($event)"
             [chosen]="currentVideo"></app-video-list>
         </div>
         <div *ngIf="!settings.oldFagApproves">
           <app-compact-video-list
-            [videos]="videos
-              | filterBy:['language']:filter.language
-              | filterBy:['author']:filter.author
-              | filterBy:['quality']:filter.quality"
+            [videos]="filteredVideos"
             (change)="changeVideo($event)"
             [chosenId]="currentVideo.id"></app-compact-video-list>
         </div>

@@ -70,6 +70,16 @@ export class PlayerComponent implements OnInit, OnDestroy {
     refCount()
   );
 
+  readonly unique$: Observable<SmarthardNet.Unique> = this.animeId$.pipe(
+    switchMap(animeId => this.videosApi.getUniqueValues(new HttpParams()
+      .set('anime_id', `${animeId}`)
+      .set('column', 'author+kind+language+url+quality')
+      .set('limit', 'all')
+    )),
+    publishReplay(1),
+    refCount()
+  );
+
   readonly whoami$ = this.shikimori.whoAmI(new HttpHeaders()
     .set('Cache-Control', 'no-cache, no-store, must-revalidate')
     .set('Pragma', 'no-cache')
@@ -174,7 +184,6 @@ export class PlayerComponent implements OnInit, OnDestroy {
 
   public async changeEpisode(episode: number | string, fromVideo?: SmarthardNet.Shikivideo) {
     if (episode != '') {
-      const animeId = this.urlParams.animeId;
 
       if (fromVideo) {
         const fav = new SmarthardNet.VideoFilter({
@@ -185,7 +194,7 @@ export class PlayerComponent implements OnInit, OnDestroy {
         this.preferenses.set(+fromVideo.anime_id, fav);
       }
 
-      await this.router.navigate([`/${animeId}/${episode}`]);
+      await this.router.navigate([`../${episode}`], { relativeTo:  this.route });
     }
   }
 
