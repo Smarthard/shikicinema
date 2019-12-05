@@ -1,7 +1,7 @@
 <div>
   <b>Эпизоды</b>
-  <ul *ngFor="let episode of (episodes | slice: 0:limit)">
-    <li class="shc-links" [class.selected]="episode == chosenEp" (click)="change.emit(+episode)">
+  <ul *ngFor="let episode of (getEpisodes() | slice: 0:limit)">
+    <li class="shc-links" [class.selected]="episode == chosen.episode" (click)="change.emit(+episode)">
       <span class="text">
         #{{ episode }}
       </span>
@@ -13,7 +13,7 @@
       </span>
     </li>
   </ul>
-  <button *ngIf="limit < episodes.length" class="mdc-button" (click)="limit = limit + 30" title="Следующие эпизоды">
+  <button *ngIf="limit < getEpisodes().length" class="mdc-button" (click)="limit = limit + 30" title="Следующие эпизоды">
     <i class="material-icons">keyboard_arrow_down</i>
   </button>
 </div>
