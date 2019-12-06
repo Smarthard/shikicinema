@@ -28,7 +28,7 @@ export class UploadVideoComponent implements OnInit, OnChanges {
   @Output()
   public check: EventEmitter<SmarthardNet.Shikivideo> = new EventEmitter<SmarthardNet.Shikivideo>();
 
-  public video: SmarthardNet.Shikivideo;
+  public video = new SmarthardNet.Shikivideo();
 
   private authorSubject = new Subject<Event>();
 
@@ -69,11 +69,17 @@ export class UploadVideoComponent implements OnInit, OnChanges {
   }
 
   trimUrl(evt: ClipboardEvent): string {
-    const embedUrlRegex = /https?:\/\/(www\.)?[-a-z0-9@:%._~#=]{1,256}\.[a-z0-9()]{1,6}\b([-a-z0-9()@:%_.~#?&/=]*)/i;
+    const embedUrlRegex = /(https?:)?\/\/(www\.)?[-a-z0-9@:%._~#=]{1,256}\.[a-z0-9()]{1,6}\b([-a-z0-9()@:%_.~#?&/=]*)/i;
     const clipboardData = evt.clipboardData.getData('text');
+    let link = clipboardData.match(embedUrlRegex)[0];
 
     evt.preventDefault();
-    return clipboardData.match(embedUrlRegex)[0] || clipboardData;
+
+    if (link.startsWith('//')) {
+      link = link.replace(/^\/\//, 'https://');
+    }
+
+    return embedUrlRegex.test(clipboardData) ? link : clipboardData;
   }
 
   search4Authors($event: any) {
