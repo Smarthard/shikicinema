@@ -26,36 +26,39 @@ async function main() {
         let nickname = LOCATION.split('/').slice(-1)[0];
         let user = await fetch(`https://shikimori.one/api/users/${nickname}?is_nickname=1`)
           .then(res => res.json());
-        let contributions = await fetch(`${SHIKIVIDEOS_API}/contributions?uploader=${user.id}+${user.nickname}`)
-          .then(res => res.json());
-        let upload = `загруз${contributions.count === 1 ? 'ка' : contributions.count < 5 ? 'ки' : 'ок'}`;
 
-        uploads.classList.add('uploader_contributions');
-        uploads.innerHTML = `<span><a href="#">${contributions.count} ${upload} видео</a></span>`;
-        uploads.onclick = () => {
-            chrome.runtime.sendMessage({ openUrl: `${PLAYER_URL}#/videos?uploader=${user.nickname}` });
-        };
+        if (user && user.id) {
+            let contributions = await fetch(`${SHIKIVIDEOS_API}/contributions?uploader=${user.id}+${user.nickname}`)
+              .then(res => res.json());
+            let upload = `загруз${contributions.count === 1 ? 'ка' : contributions.count < 5 ? 'ки' : 'ок'}`;
 
-        if (
-          contributions.count > 0 &&
-          !activityDiv &&
-          !cInfoDiv.classList.contains('uploader_contributions')
-        ) {
-            cInfoDiv.classList.add('uploader_contributions');
-            activityDiv = document.createElement('div');
-            activityDiv.classList.add('c-additionals');
-            activityDiv.innerHTML = '<b>Активность:</b>';
-            cInfoDiv.appendChild(activityDiv);
-        }
+            uploads.classList.add('uploader_contributions');
+            uploads.innerHTML = `<span><a href="#">${contributions.count} ${upload} видео</a></span>`;
+            uploads.onclick = () => {
+                chrome.runtime.sendMessage({ openUrl: `${PLAYER_URL}#/videos?uploader=${user.nickname}` });
+            };
 
-        if (
-          contributions.count > 0 &&
-          !uploads.hasAttribute('data-type') &&
-          !activityDiv.classList.contains('uploader_contributions')
-        ) {
-            activityDiv.classList.add('uploader_contributions');
-            uploads.setAttribute('data-type', 'video_uploads');
-            activityDiv.appendChild(uploads);
+            if (
+              contributions.count > 0 &&
+              !activityDiv &&
+              !cInfoDiv.classList.contains('uploader_contributions')
+            ) {
+                cInfoDiv.classList.add('uploader_contributions');
+                activityDiv = document.createElement('div');
+                activityDiv.classList.add('c-additionals');
+                activityDiv.innerHTML = '<b>Активность:</b>';
+                cInfoDiv.appendChild(activityDiv);
+            }
+
+            if (
+              contributions.count > 0 &&
+              !uploads.hasAttribute('data-type') &&
+              !activityDiv.classList.contains('uploader_contributions')
+            ) {
+                activityDiv.classList.add('uploader_contributions');
+                uploads.setAttribute('data-type', 'video_uploads');
+                activityDiv.appendChild(uploads);
+            }
         }
     }
 
