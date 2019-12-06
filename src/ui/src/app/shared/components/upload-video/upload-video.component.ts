@@ -105,6 +105,7 @@ export class UploadVideoComponent implements OnInit, OnChanges {
         res => {
           if (res.status === 201) {
             this.notify.add(new Notification(NotificationType.OK, 'Видео успешно загружено!'));
+            this.video.episode++;
           }
         },
         err => {
