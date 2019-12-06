@@ -15,14 +15,6 @@
     margin: 20px;
   }
 
-  #shikicinema-episode {
-    /* remove *magic* values */
-    border: none;
-    padding: 55px 0 0 15px;
-    margin-top: -33px;
-    width: 70px;
-    text-align: center;
-  }
 }
 
 @media (max-width: 1024px) and (orientation: landscape) {
@@ -42,14 +34,6 @@
     margin: 5px;
   }
 
-  #shikicinema-episode {
-    /* remove *magic* values */
-    border: none;
-    padding: 45px 0 0 15px;
-    margin-top: -28px;
-    width: 60px;
-    text-align: center;
-  }
 }
 
 @media (max-width: 1024px) and (orientation: portrait) {
@@ -65,14 +49,6 @@
     margin: 0;
   }
 
-  #shikicinema-episode {
-    /* remove *magic* values */
-    border: none;
-    padding: 38px 0 7px 2px;
-    margin-top: -25px;
-    width: 80px;
-    text-align: center;
-  }
 }
 
 #filters {
@@ -109,6 +85,15 @@
 
 #upload-form {
   margin: 20px 0;
+}
+
+#shikicinema-episode {
+  border: none;
+  padding: 0;
+  margin: 0;
+  width: 87px;
+  height: 36px;
+  text-align: center;
 }
 
 .control-box-subtext {

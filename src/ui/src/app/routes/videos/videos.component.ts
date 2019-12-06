@@ -1,11 +1,12 @@
 import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute} from "@angular/router";
-import {HttpParams} from "@angular/common/http";
-import {PageEvent} from "@angular/material/paginator";
+import {ActivatedRoute} from '@angular/router';
+import {HttpParams} from '@angular/common/http';
+import {PageEvent} from '@angular/material/paginator';
 import {ShikimoriService} from '../../services/shikimori-api/shikimori.service';
 import {ShikivideosService} from '../../services/shikivideos-api/shikivideos.service';
-import {Shikimori} from '../../types/shikimori';
 import {Title} from '@angular/platform-browser';
+import {debounceTime, mergeMap, publishReplay, refCount, switchMap} from 'rxjs/operators';
+import {BehaviorSubject} from 'rxjs';
 
 @Component({
   selector: 'app-videos',
@@ -14,15 +15,35 @@ import {Title} from '@angular/platform-browser';
 })
 export class VideosComponent implements OnInit {
 
+
+  private pageIndexSubject = new BehaviorSubject<number>(0);
+
+  public offset = 0;
+  public pageSize = 20;
+
   public displayedColumns: string[] = ['id', 'anime_id', 'episode', 'author', 'uploader'];
 
-  public count: number = 0;
-  public pageSize = 20;
-  public contributions;
-
-  public uploader: Shikimori.User;
-
-  private prevPageEvent: PageEvent;
+  readonly uploader$ = this.route.queryParams.pipe(
+    switchMap(query => this.shikimori.getUserInfo(query.uploader, new HttpParams().set('is_nickname', '1'))),
+    publishReplay(1),
+    refCount()
+  );
+  readonly count$ = this.uploader$.pipe(
+    switchMap(uploader => this.videosApi.contributions(new HttpParams()
+      .set('uploader', `${uploader.nickname}+${uploader.id}`))
+    ),
+    publishReplay(1),
+    refCount()
+  );
+  readonly contributions$ = this.pageIndexSubject.pipe(
+    debounceTime(100),
+    mergeMap(() => this.uploader$),
+    switchMap(uploader => this.videosApi.search(new HttpParams()
+      .set('offset', `${this.offset}`)
+      .set('limit', `${this.pageSize}`)
+      .set('uploader', `${uploader.nickname}+${uploader.id}`))
+    )
+  );
 
   constructor(
       private title: Title,
@@ -32,49 +53,14 @@ export class VideosComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.route.queryParams
-        .subscribe(
-            query => {
-              const uploader = query.uploader;
-
-              this.loadContributions(uploader);
-            }
-        )
-  }
-
-  loadContributions(uploader: string, page: number = 0, size: number = 20) {
-    const userParams = new HttpParams();
-
-    this.shikimori.getUserInfo(uploader, userParams)
-      .subscribe(
-        user => {
-          const contribParams = new HttpParams()
-            .set('offset', `${page * size}`)
-            .set('limit', `${size}`)
-            .set('uploader', `${user.nickname} ${user.id}`);
-
-          if (!/^\d+$/.test(uploader)) {
-            userParams.set('is_nickname', '1');
-          }
-
-          this.videosApi.search(contribParams)
-            .subscribe(
-              value => this.contributions = value
-            );
-
-          this.videosApi.contributions(contribParams)
-            .subscribe(
-              value => this.count = value.count
-            );
-          this.uploader = new Shikimori.User(user);
-          this.title.setTitle(`Загрузки ${this.uploader.nickname}`);
-        }
-      );
+    this.uploader$.subscribe(uploader => this.title.setTitle(`Загрузки ${uploader.nickname}`));
   }
 
   changePage(event: PageEvent) {
-    this.prevPageEvent = event;
-    this.loadContributions(this.uploader.nickname, event.pageIndex, event.pageSize);
+    const pageIndex = event.pageIndex;
+
+    this.pageIndexSubject.next(pageIndex);
+    this.offset = pageIndex * this.pageSize;
   }
 
 }

@@ -1,7 +1,56 @@
-iframe {
-  overflow: hidden;
+@media (max-width: 1025px) {
+
+  @media (orientation: landscape) {
+    .shrug {
+      width: 300px;
+    }
+    :host {
+      --font-size: 20px
+    }
+  }
+
+  @media (orientation: portrait) {
+    .shrug {
+      width: 150px;
+    }
+    :host {
+      --font-size: 15px
+    }
+  }
+}
+
+@media (min-width: 1025px) {
+  :host {
+    --font-size: 40px
+  }
+
+  .shrug {
+    width: 400px;
+  }
+}
+
+lib-ngx-responsive-embed {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: white;
 }
 
 iframe {
+  overflow: hidden;
   background-color: #000;
+}
+
+.larger {
+  font-size: var(--font-size);
+  margin-top: 10px;
+}
+
+.smaller {
+  font-size: calc(var(--font-size) / 2);
+}
+
+.shrug {
+  position: absolute;
+  bottom: 0;
 }

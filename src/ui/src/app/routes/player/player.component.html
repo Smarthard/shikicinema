@@ -1,87 +1,128 @@
 <div id="player">
-  <app-video-player [videoUrl]="(currentVideo ? currentVideo.url : EMPTY_VIDEO_URL) | safeVideoUrl"></app-video-player>
+  <app-video-player [video]="currentVideo"></app-video-player>
 
-  <div id="filters" *ngIf="videos && videos.length > 0">
-    <app-dropdown-filters [animeId]="animeId" [episode]="episode" column="language" placeholder="Язык"
-                          (change)="filter.language = ($event !== 'Язык' ?  $event :  null)"></app-dropdown-filters>
-    <app-dropdown-filters [animeId]="animeId" [episode]="episode" column="author" placeholder="Студия"
-                          (change)="filter.author = ($event !== 'Студия' ?  $event :  null)"></app-dropdown-filters>
-    <app-dropdown-filters [animeId]="animeId" [episode]="episode" column="quality" placeholder="Качество"
-                          (change)="filter.quality = ($event !== 'Качество' ?  $event :  null)"></app-dropdown-filters>
-  </div>
-
-  <div id="controls">
-    <div class="control-box">
-      <button class="mdc-button" [disabled]="+episode - 1 < 1"
-              (click)="changeEpisode(+episode - 1, true)">
-        <i class="material-icons md-24">fast_rewind</i>
-      </button>
-      <div class="control-box-subtext">Предыдущий</div>
+  <ng-container *ngIf="(videos$ | async) as videos">
+    <div id="filters" *ngIf="videos.length > 0 && unique$ | async as unique">
+      <app-dropdown-filters [unique]="unique"
+                            [episode]="episode$ | async"
+                            (change)="filter.language = ($event !== 'Язык' ?  $event :  null)"
+                            column="language"
+                            placeholder="Язык"></app-dropdown-filters>
+      <app-dropdown-filters [unique]="unique"
+                            [episode]="episode$ | async"
+                            (change)="filter.author = ($event !== 'Студия' ?  $event :  null)"
+                            column="author"
+                            placeholder="Студия"></app-dropdown-filters>
+      <app-dropdown-filters [unique]="unique"
+                            [episode]="episode$ | async"
+                            (change)="filter.quality = ($event !== 'Качество' ?  $event :  null)"
+                            column="quality"
+                            placeholder="Качество"></app-dropdown-filters>
     </div>
+
+    <div id="controls">
+      <app-control-box subtext="Предыдущий">
+        <button class="mdc-button"
+                [disabled]="+urlParams.episode - 1 < 1"
+                (click)="changeEpisode(+urlParams.episode - 1, currentVideo)">
+          <i class="material-icons md-24">fast_rewind</i>
+        </button>
+      </app-control-box>
+      <app-control-box subtext="прямая ссылка"
+                       [href]="(currentVideo)?.url || '#'">
+        <label for="shikicinema-episode"></label>
+        <input id="shikicinema-episode"
+               class="mdc-text-field__input"
+               [(ngModel)]="urlParams.episode"
+               (ngModelChange)="changeEpisode($event)"
+               value="1">
+      </app-control-box>
+      <app-control-box subtext="Следующий"
+                       *ngIf="(maxEpisode$ | async) as max">
+        <button class="mdc-button"
+                [disabled]="+urlParams.episode + 1 > max.length"
+                (click)="changeEpisode(+urlParams.episode + 1, currentVideo)">
+          <i class="material-icons md-24">fast_forward</i>
+        </button>
+      </app-control-box>
+      <app-control-box subtext="Просмотрено"
+                       *ngIf="(whoami$ | async) as user else sync"
+                       title="Отметить как просмотренную"
+                       (click)="markAsWatched(currentVideo, user)">
+        <button class="mdc-button"
+                [class.watched]="watched(urlParams.episode)">
+          <i class="material-icons md-24">done</i>
+        </button>
+      </app-control-box>
+      <ng-template #sync>
+        <app-control-box subtext="Шикимори"
+                         title="Синхронизироваться с Шикимори"
+                         (click)="synchronize()">
+          <button class="mdc-button">
+            <i class="material-icons md-24">sync</i>
+          </button>
+        </app-control-box>
+      </ng-template>
+      <app-control-box subtext="Загрузить"
+                       *ngIf="(whoami$ | async) else lockedUpload"
+                       title="Загрузить видео">
+        <button class="mdc-button"
+                (click)="openUploadForm()">
+          <i class="material-icons md-24">add</i>
+        </button>
+      </app-control-box>
+      <ng-template #lockedUpload>
+        <app-control-box subtext="Загрузить"
+                         title="Требуется авторизация на Шикимори">
+          <button class="mdc-button"
+                  disabled>
+            <i class="material-icons md-24">add</i>
+          </button>
+        </app-control-box>
+      </ng-template>
+      <app-control-box subtext="Настройки"
+                       title="Настойки плагина">
+        <button class="mdc-button" routerLink="/settings">
+          <i class="material-icons md-24">settings_applications</i>
+        </button>
+      </app-control-box>
+    </div>
+
     <div>
-      <label for="shikicinema-episode"></label>
-      <input id="shikicinema-episode" class="mdc-text-field__input" [(ngModel)]="episode"
-             (ngModelChange)="changeEpisode(episode)" value="1">
-      <div class="control-box-subtext">
-        (<a [href]="currentVideo ? currentVideo.url : '/index.html#' + animeId + '/' + 1"
-            target="_blank" class="shc-links">прямая ссылка</a>)
+      <div id="upload-form" *ngIf="isUploadOpened && (whoami$ | async) as user">
+        <app-upload-video *ngIf="user && user.id"
+                          (check)="changeVideo($event)"
+                          [uploaderId]="user.id"
+                          [animeId]="urlParams.animeId"
+                          [episode]="urlParams.episode"></app-upload-video>
       </div>
-    </div>
-    <div class="control-box">
-      <button class="mdc-button" [disabled]="+episode + 1 > maxEpisode"
-              (click)="changeEpisode(+episode + 1, true)">
-        <i class="material-icons md-24">fast_forward</i>
-      </button>
-      <div class="control-box-subtext">Следующий</div>
-    </div>
-    <div class="control-box"
-          [title]="isSynced ? 'Отметить как просмотренную' : 'Синхронизироваться с Шикимори'"
-          (click)="isSynced ? markAsWatched(episode) : synchronize() ">
-      <button class="mdc-button" [class.watched]="watched(episode)">
-        <i class="material-icons md-24">{{ isSynced ? 'done' : 'sync' }}</i>
-      </button>
-      <div class="control-box-subtext">{{ isSynced ? 'Просмотрено' : 'Шикимори' }}</div>
-    </div>
-    <div class="control-box" [title]="isSynced ? 'Загрузить видео' : 'Требуется авторизация на Шикимори'">
-      <button class="mdc-button" [disabled]="!isSynced" (click)="openUploadForm()">
-        <i class="material-icons md-24">add</i>
-      </button>
-      <div class="control-box-subtext">Загрузить</div>
-    </div>
-    <div class="control-box" title="Настойки плагина">
-      <button class="mdc-button" routerLink="/settings">
-        <i class="material-icons md-24">settings_applications</i>
-      </button>
-      <div class="control-box-subtext">Настройки</div>
-    </div>
-  </div>
 
-  <div id="upload-form" *ngIf="isSynced && isUploadOpened">
-    <app-upload-video (check)="changeVideo($event)"
-                      [uploaderId]="user.id" [animeId]="animeId" [episode]="episode">
-    </app-upload-video>
-  </div>
+      <ng-container *ngIf="videos.length > 0 && settings && videos
+              | filterBy:['language']:filter.language
+              | filterBy:['author']:filter.author
+              | filterBy:['quality']:filter.quality
+             as filteredVideos
+             else videosEmpty">
+        <div id="series" *ngIf="settings.oldFagApproves">
+          <app-episodes-list *ngIf="unique$ | async as unique"
+            [unique]="unique"
+            (change)="changeEpisode($event)"
+            [chosen]="currentVideo"></app-episodes-list>
+          <app-video-list
+            [videos]="filteredVideos"
+            (change)="changeVideo($event)"
+            [chosen]="currentVideo"></app-video-list>
+        </div>
+        <div *ngIf="!settings.oldFagApproves">
+          <app-compact-video-list
+            [videos]="filteredVideos"
+            (change)="changeVideo($event)"
+            [chosenId]="currentVideo.id"></app-compact-video-list>
+        </div>
+      </ng-container>
+    </div>
 
-  <div *ngIf="videos && videos.length > 0 else videosEmpty">
-    <div id="series" *ngIf="settings.oldFagApproves">
-      <app-episodes-list [animeId]="animeId" (change)="changeEpisode($event)" [chosenEp]="episode">
-      </app-episodes-list>
-      <app-video-list [videos]="videos
-                                    | filterBy:['language']:filter.language
-                                    | filterBy:['author']:filter.author
-                                    | filterBy:['quality']:filter.quality"
-                      (change)="changeVideo($event)" [chosenId]="currentVideo ? currentVideo.id : null">
-      </app-video-list>
-    </div>
-    <div *ngIf="!settings.oldFagApproves">
-      <app-compact-video-list [videos]="videos
-                                    | filterBy:['language']:filter.language
-                                    | filterBy:['author']:filter.author
-                                    | filterBy:['quality']:filter.quality"
-                              (change)="changeVideo($event)" [chosenId]="currentVideo ? currentVideo.id : null">
-      </app-compact-video-list>
-    </div>
-  </div>
+  </ng-container>
 
   <ng-template #videosEmpty>
     <div class="centered note">В нашем архиве не нашлось ни одного видео T_T</div>
@@ -90,4 +131,4 @@
 
 <app-notify></app-notify>
 <app-server-status></app-server-status>
-<app-uploader [uploadedByUser]="currentVideo ? currentVideo.uploader : null"></app-uploader>
+<app-uploader *ngIf="uploader" [uploadedByUser]="uploader"></app-uploader>

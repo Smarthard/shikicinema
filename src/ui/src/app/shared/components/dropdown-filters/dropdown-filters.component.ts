@@ -1,16 +1,15 @@
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
-import {ShikivideosService} from '../../../services/shikivideos-api/shikivideos.service';
-import {HttpParams} from '@angular/common/http';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {SmarthardNet} from '../../../types/smarthard-net';
 
 @Component({
   selector: 'app-dropdown-filters',
   templateUrl: './dropdown-filters.component.html',
   styleUrls: ['./dropdown-filters.component.css']
 })
-export class DropdownFiltersComponent implements OnInit, OnChanges {
+export class DropdownFiltersComponent implements OnInit {
 
   @Input()
-  public animeId: number;
+  public unique: SmarthardNet.Unique;
 
   @Input()
   public column: string;
@@ -24,28 +23,14 @@ export class DropdownFiltersComponent implements OnInit, OnChanges {
   @Output()
   public change: EventEmitter<string> = new EventEmitter<string>();
 
-  public values: Set<string>;
-
-  constructor(
-    private videosApi: ShikivideosService
-  ) { }
-
   ngOnInit() {}
 
-  ngOnChanges(changes: SimpleChanges): void {
-    const params = new HttpParams()
-      .set('anime_id', `${this.animeId}`)
-      .set('column', this.column)
-      .set('episode', `${this.episode}`)
-      .set('limit', 'all');
+  getColumns() {
+    const episode = this.episode;
+    const column = this.column;
+    const values = new Set<string>([this.placeholder, ...this.unique[episode][column].sort()]);
 
-    this.videosApi.getUniqueValues(params)
-      .subscribe(
-        (values: any) => {
-          this.values = new Set([this.placeholder, ...values[this.column].sort()]);
-          this.values.delete(null);
-        }
-      );
+    values.delete(null);
+    return values;
   }
-
 }

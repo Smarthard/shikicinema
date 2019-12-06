@@ -1,5 +1,5 @@
 /// <reference types="@types/chrome" />
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ShikivideosService} from '../../services/shikivideos-api/shikivideos.service';
 import {ShikimoriService} from '../../services/shikimori-api/shikimori.service';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -9,33 +9,104 @@ import {HttpHeaders, HttpParams} from '@angular/common/http';
 import {SmarthardNet} from '../../types/smarthard-net';
 import {AuthService} from '../../services/auth/auth.service';
 import {NotificationsService} from '../../services/notifications/notifications.service';
-import {Notification, NotificationType} from '../../types/notification';
 import {ShikicinemaSettings} from '../../types/ShikicinemaSettings';
 import {SettingsService} from '../../services/settings/settings.service';
 import {UserPreferencesService} from '../../services/user-preferences/user-preferences.service';
+import {catchError, debounceTime, map, publishReplay, refCount, switchMap, takeWhile} from 'rxjs/operators';
+import {BehaviorSubject, iif, Observable, of} from 'rxjs';
+import {Notification, NotificationType} from '../../types/notification';
 
 @Component({
   selector: 'app-player',
   templateUrl: './player.component.html',
   styleUrls: ['./player.component.css']
 })
-export class PlayerComponent implements OnInit {
+export class PlayerComponent implements OnInit, OnDestroy {
 
-  public EMPTY_VIDEO_URL = '/assets/dvd.png'; // black on black
+  private isAlive = true;
+  private _httpErrorHandler = (err) => {
+    console.error(err);
+    this.notify.add(new Notification(NotificationType.ERROR, 'Не удалось загрузить видео!', err));
+    return of(<SmarthardNet.Shikivideo[]> []);
+  };
 
-  public currentVideo = new SmarthardNet.Shikivideo();
-  public settings = new ShikicinemaSettings();
-  public videos: Array<SmarthardNet.Shikivideo>;
-
-  public animeId: number;
-  public episode: number = 1;
-  public userRate: Shikimori.UserRate;
-  public maxEpisode: number = Number.POSITIVE_INFINITY;
+  public readonly EMPTY_VIDEO = new SmarthardNet.Shikivideo({ id: -666 });
   public filter = new SmarthardNet.VideoFilter();
-
-  public isSynced: boolean = false;
   public isUploadOpened: boolean = false;
-  public user: Shikimori.User;
+  public settings: ShikicinemaSettings;
+  public urlParams: { animeId?: number, episode?: number } = {};
+  public userRate: Shikimori.UserRate;
+  public uploader: Shikimori.User;
+  public currentVideo: SmarthardNet.Shikivideo;
+
+  readonly episodeSubject = new BehaviorSubject<number>(1);
+  readonly uploaderSubject = new BehaviorSubject<string>(null);
+
+  readonly animeId$ = this.route.params.pipe(
+    map(params => <number> +params.animeId)
+  );
+
+  readonly episode$ = this.episodeSubject.pipe(
+    switchMap(episode => {
+      return episode !== 1 ? of(episode) : this.route.params.pipe(map(params => <number> params.episode || 1));
+    })
+  );
+
+  readonly videos$: Observable<SmarthardNet.Shikivideo[]> = this.route.params.pipe(
+    switchMap(params => this.videosApi.findById(params.animeId, new HttpParams()
+      .set('limit', 'all')
+      .set('episode', params.episode ? params.episode : 1)
+    )),
+    map(videos => videos.map(video => new SmarthardNet.Shikivideo(video))),
+    catchError(err => this._httpErrorHandler(err)),
+    publishReplay(1),
+    refCount()
+  );
+
+  readonly maxEpisode$: Observable<{ length: number }> = this.animeId$.pipe(
+    switchMap(animeId => this.videosApi.getAnimeMaxLoadedEp(animeId)),
+    catchError(() => of({ length: 0 })),
+    publishReplay(1),
+    refCount()
+  );
+
+  readonly unique$: Observable<SmarthardNet.Unique> = this.animeId$.pipe(
+    switchMap(animeId => this.videosApi.getUniqueValues(new HttpParams()
+      .set('anime_id', `${animeId}`)
+      .set('column', 'author+kind+language+url+quality')
+      .set('limit', 'all')
+    )),
+    publishReplay(1),
+    refCount()
+  );
+
+  readonly whoami$ = this.shikimori.whoAmI(new HttpHeaders()
+    .set('Cache-Control', 'no-cache, no-store, must-revalidate')
+    .set('Pragma', 'no-cache')
+  ).pipe(
+    publishReplay(1),
+    refCount()
+  );
+
+  readonly userRates$ = this.animeId$.pipe(
+    switchMap(animeId => {
+      return this.whoami$.pipe(
+        map(user => { return {user, animeId} })
+      );
+    }),
+    switchMap(query => this.shikimori.getUserRates(
+      new HttpParams()
+        .set('user_id', `${query.user.id}`)
+        .set('target_type', 'Anime')
+        .set('target_id', `${query.animeId}`)
+    )),
+    catchError(() => {
+      console.warn('Вы не авторизованы');
+      return of(<Shikimori.UserRate[]> [])
+    }),
+    publishReplay(1),
+    refCount()
+  );
 
   constructor(
     private router: Router,
@@ -49,90 +120,87 @@ export class PlayerComponent implements OnInit {
     private title: Title
   ) {}
 
+  ngOnDestroy(): void {
+    this.isAlive = false;
+  }
+
   ngOnInit() {
     this.settingsService.get()
       .subscribe(
-        settings => this.settings = new ShikicinemaSettings(settings)
-      );
+      data => this.settings = new ShikicinemaSettings(data)
+    );
 
-    this.route.params.subscribe(params => {
-      this.animeId = params['animeId'];
-      this.episode = params['episode'];
-
-      if (!params['animeId']) return;
-
-      this.videosApi.findById(this.animeId, new HttpParams()
-        .set('limit', 'all')
-        .set('episode', params['episode'] ? params['episode'] : this.episode)
+    this.route.params
+      .pipe(
+        takeWhile(() => this.isAlive)
       )
-        .subscribe(
-          videos => {
-          let query = this.route.snapshot.queryParams;
-          let title = 'Shikicinema';
-          this.videos = videos.map(v => new SmarthardNet.Shikivideo(v));
-          let videoById = this.videos.filter(vid => query && query.id && vid.id == query.id)[0];
+      .subscribe(
+      params => this.urlParams = {
+        animeId: params['animeId'],
+        episode: params['episode']
+      }
+    );
 
-          this.changeVideo( query && query.id && videoById ? videoById : this._chooseFavourite(this.videos)[0]);
-
-          title = this.videos.length > 0 ? this.currentVideo.anime_russian || this.currentVideo.anime_english : title;
-          this.title.setTitle(this.currentVideo ? `${title} - эпизод ${this.episode}` : title);
-        },
-          err => {
-            console.error(err);
-            this.notify.add(new Notification(NotificationType.ERROR, 'Не удалось загрузить видео!', err));
-          }
-        );
-
-      this.videosApi.getAnimeMaxLoadedEp(this.animeId)
-        .subscribe(
-          series => this.maxEpisode = series.length,
-          err => {
-            console.error(err);
-            this.notify.add(new Notification(NotificationType.ERROR, 'Не удалось загрузить видео!', err));
-          }
-        );
-
-      this.shikimori.whoAmI(new HttpHeaders()
-        .set('Cache-Control', 'no-cache, no-store, must-revalidate')
-        .set('Pragma', 'no-cache')
+    this.videos$
+      .pipe(
+        takeWhile(() => this.isAlive),
+        map(videos => videos.map(v => new SmarthardNet.Shikivideo(v)))
       )
-        .subscribe(
-          user => {
-            this.user = new Shikimori.User(user);
-            this.isSynced = user != null;
+      .subscribe(
+        videos => {
+        const query = this.route.snapshot.queryParams;
+        const videoById = videos.filter(vid => query && query.id && vid.id == query.id)[0];
+        const video = videos[0];
+        let title = 'Shikicinema';
 
-            this.shikimori.getUserRates(new HttpParams()
-              .set('user_id', `${this.user.id}`)
-              .set('target_type', 'Anime')
-              .set('target_id', `${this.animeId}`)
-            )
-              .subscribe(
-                userRate => this.userRate = new Shikimori.UserRate(userRate[0])
-              );
-          }
-        );
-    });
+        title = video ? video.anime_russian || video.anime_english : title;
+        this.title.setTitle(video ? `${title} - эпизод ${video.episode}` : title);
+        this.changeVideo(videos.length === 0 ? this.EMPTY_VIDEO : videoById ? videoById : this._chooseFavourite(videos)[0]);
+      }
+    );
+
+    this.userRates$
+      .pipe(
+        takeWhile(() => this.isAlive)
+      )
+      .subscribe(
+        userRates => this.userRate = new Shikimori.UserRate(userRates[0] ? userRates[0] : {})
+    );
+
+    this.uploaderSubject
+      .pipe(
+        takeWhile(() => this.isAlive),
+        debounceTime(250),
+        switchMap(uploader => iif(
+          () => !!uploader,
+          this.shikimori.getUserInfo(uploader),
+          of(null)
+        ))
+      )
+      .subscribe(
+      uploader => this.uploader = uploader
+    );
   }
 
-  public async changeEpisode(episode: number, saveAsFav?: boolean) {
-    if (saveAsFav) {
-      const animeId = this.animeId;
-      const fav = new SmarthardNet.VideoFilter({
-        author: this.currentVideo.author,
-        player: this.currentVideo.getSecondLvlDomain(),
-        quality: this.currentVideo.quality
-      });
+  public async changeEpisode(episode: number | string, fromVideo?: SmarthardNet.Shikivideo) {
+    if (episode != '') {
 
-      this.preferenses.set(animeId, fav);
-    }
+      if (fromVideo && fromVideo.id !== this.EMPTY_VIDEO.id) {
+        const fav = new SmarthardNet.VideoFilter({
+          author: fromVideo.author,
+          player: fromVideo.getSecondLvlDomain(),
+          quality: fromVideo.quality
+        });
+        this.preferenses.set(+fromVideo.anime_id, fav);
+      }
 
-    if (episode && episode > 0 && episode <= this.maxEpisode) {
-      await this.router.navigate([`/${this.animeId}/${episode}`]);
+      await this.router.navigate([`../${episode}`], { relativeTo:  this.route });
     }
   }
 
   changeVideo(video: SmarthardNet.Shikivideo) {
     this.currentVideo = video;
+    this.uploaderSubject.next(video.uploader);
   }
 
   async synchronize() {
@@ -144,23 +212,23 @@ export class PlayerComponent implements OnInit {
     return this.userRate && this.userRate.episodes >= episode;
   }
 
-  async markAsWatched(episode: number) {
+  async markAsWatched(video: SmarthardNet.Shikivideo, user: Shikimori.User) {
     if (this.userRate.id) {
-      if (this.userRate.episodes < episode) {
+      if (this.userRate.episodes < video.episode) {
         const userRate = await this.shikimori.incUserRates(this.userRate).toPromise();
         this.userRate = new Shikimori.UserRate(userRate)
       }
     } else {
       this.userRate = new Shikimori.UserRate({
-        user_id: this.user.id,
-        target_id: this.animeId,
+        user_id: user.id,
+        target_id: video.anime_id,
         target_type: 'Anime',
-        episodes: episode
+        episodes: video.episode
       });
 
       await this.shikimori.createUserRates(this.userRate).toPromise();
     }
-    this.changeEpisode(+episode + 1, true);
+    this.changeEpisode(+video.episode + 1, video);
     this.notify.add(new Notification(NotificationType.OK, 'Просмотрено'));
   }
 
@@ -170,7 +238,7 @@ export class PlayerComponent implements OnInit {
   }
 
   private _chooseFavourite(videos: SmarthardNet.Shikivideo[]): SmarthardNet.Shikivideo[] {
-    const preferences = this.preferenses.get(this.animeId);
+    const preferences = this.preferenses.get(+videos[0].anime_id);
     const byAuthor = videos.filter(value => value.author === preferences.author);
     const byPlayer = byAuthor.filter(value => value.getSecondLvlDomain() === preferences.player);
     const byQuality = byPlayer.filter(value => value.quality === preferences.quality);

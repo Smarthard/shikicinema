@@ -6,6 +6,8 @@ import {NgForm} from '@angular/forms';
 import {ShikimoriService} from '../../../services/shikimori-api/shikimori.service';
 import {NotificationsService} from '../../../services/notifications/notifications.service';
 import {Notification, NotificationType} from '../../../types/notification';
+import {debounceTime, distinctUntilChanged, switchMap} from 'rxjs/operators';
+import {Subject} from 'rxjs';
 
 @Component({
   selector: 'app-upload-video',
@@ -26,8 +28,19 @@ export class UploadVideoComponent implements OnInit, OnChanges {
   @Output()
   public check: EventEmitter<SmarthardNet.Shikivideo> = new EventEmitter<SmarthardNet.Shikivideo>();
 
-  public video: SmarthardNet.Shikivideo;
-  public sources: string[];
+  public video = new SmarthardNet.Shikivideo();
+
+  private authorSubject = new Subject<Event>();
+
+  readonly sources$ = this.authorSubject.pipe(
+    debounceTime(400),
+    distinctUntilChanged(),
+    switchMap((author) => this.videoApi.getUniqueValues(
+      new HttpParams()
+        .set('column', 'author')
+        .set('filter', `${author}`)
+    ))
+  );
 
   constructor(
     private notify: NotificationsService,
@@ -56,33 +69,21 @@ export class UploadVideoComponent implements OnInit, OnChanges {
   }
 
   trimUrl(evt: ClipboardEvent): string {
-    const embedUrlRegex = /https?:\/\/(www\.)?[-a-z0-9@:%._~#=]{1,256}\.[a-z0-9()]{1,6}\b([-a-z0-9()@:%_.~#?&/=]*)/i;
+    const embedUrlRegex = /(https?:)?\/\/(www\.)?[-a-z0-9@:%._~#=]{1,256}\.[a-z0-9()]{1,6}\b([-a-z0-9()@:%_.~#?&/=]*)/i;
     const clipboardData = evt.clipboardData.getData('text');
+    let link = clipboardData.match(embedUrlRegex)[0];
 
     evt.preventDefault();
-    return clipboardData.match(embedUrlRegex)[0] || clipboardData;
+
+    if (link.startsWith('//')) {
+      link = link.replace(/^\/\//, 'https://');
+    }
+
+    return embedUrlRegex.test(clipboardData) ? link : clipboardData;
   }
 
-  search4Authors() {
-    let params = new HttpParams()
-      .set('column', 'author')
-      .set('filter', `${this.video.author}`);
-
-
-    if (this.video.author.length > 2) {
-      this.videoApi.getUniqueValues(params)
-        .subscribe(
-          (sources: SmarthardNet.Unique[]) => {
-            const authorsSet = new Set<string>();
-
-            Object.keys(sources).forEach((ep: string) => {
-              sources[ep].author.forEach(author => authorsSet.add(author));
-            });
-
-            this.sources = [...authorsSet];
-          }
-        );
-    }
+  search4Authors($event: any) {
+    this.authorSubject.next($event.target.value);
   }
 
   onSubmit(videoForm: NgForm) {
@@ -104,6 +105,7 @@ export class UploadVideoComponent implements OnInit, OnChanges {
         res => {
           if (res.status === 201) {
             this.notify.add(new Notification(NotificationType.OK, 'Видео успешно загружено!'));
+            this.video.episode++;
           }
         },
         err => {
