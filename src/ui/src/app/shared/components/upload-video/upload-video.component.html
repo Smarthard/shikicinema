@@ -51,11 +51,11 @@
     <input hidden name="uploader" [value]="uploaderId" [(ngModel)]="video.uploader">
     <input hidden name="anime_russian" value="russian" [(ngModel)]="video.anime_russian">
     <input hidden name="anime_english" value="english" [(ngModel)]="video.anime_english">
-    <ng-container *ngIf="(sources$ | async) as sources">
-      <datalist id="authors">
+    <datalist id="authors">
+      <ng-container *ngIf="(sources$ | async) as sources">
         <option *ngFor="let key of (sources | keys)">{{ sources[key].author }}</option>
-      </datalist>
-    </ng-container>
+      </ng-container>
+    </datalist>
 
   </div>
 
