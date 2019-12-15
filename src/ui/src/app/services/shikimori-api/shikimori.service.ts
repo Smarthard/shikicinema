@@ -3,6 +3,7 @@ import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {Shikimori} from '../../types/shikimori';
 import {Observable, of} from 'rxjs';
 import {catchError} from 'rxjs/operators';
+import {SmarthardNet} from '../../types/smarthard-net';
 
 @Injectable({
   providedIn: 'root'
@@ -53,7 +54,7 @@ export class ShikimoriService {
     return this.http.get<Shikimori.User>(`${this.SHIKIMORI_URL}/api/users/${user}`, { params });
   }
 
-  public getAnime(animeId: number) {
-    return this.http.get(`${this.SHIKIMORI_URL}/api/animes/${animeId}`);
+  public getAnime(animeId: number): Observable<SmarthardNet.Shikivideo> {
+    return this.http.get<SmarthardNet.Shikivideo>(`${this.SHIKIMORI_URL}/api/animes/${animeId}`);
   }
 }

@@ -12,7 +12,7 @@ import {NotificationsService} from '../../services/notifications/notifications.s
 import {ShikicinemaSettings} from '../../types/ShikicinemaSettings';
 import {SettingsService} from '../../services/settings/settings.service';
 import {UserPreferencesService} from '../../services/user-preferences/user-preferences.service';
-import {catchError, debounceTime, map, publishReplay, refCount, switchMap, takeWhile} from 'rxjs/operators';
+import {catchError, debounceTime, distinctUntilChanged, map, publishReplay, refCount, switchMap, takeWhile} from 'rxjs/operators';
 import {BehaviorSubject, iif, Observable, of} from 'rxjs';
 import {Notification, NotificationType} from '../../types/notification';
 
@@ -43,7 +43,8 @@ export class PlayerComponent implements OnInit, OnDestroy {
   readonly uploaderSubject = new BehaviorSubject<string>(null);
 
   readonly animeId$ = this.route.params.pipe(
-    map(params => <number> +params.animeId)
+    map(params => <number> +params.animeId),
+    distinctUntilChanged()
   );
 
   readonly episode$ = this.episodeSubject.pipe(
