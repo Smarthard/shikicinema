@@ -5,7 +5,7 @@
   "main": "src/shikicinema.js",
   "scripts": {
     "bundle": "cd src/ui && ng b && cd ../.. && webpack --mode development",
-    "release": "rm -rf bin/ && cd src/ui && ng b --prod --output-hashing none && cd ../.. && webpack --mode production",
+    "release": "rm -rf bin/ && cd src/ui && ng b --prod && cd ../.. && webpack --mode production",
     "test": "echo 'no tests specified'"
   },
   "repository": {
