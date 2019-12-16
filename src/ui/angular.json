@@ -16,7 +16,7 @@
             "customWebpackConfig": {
               "path": "extra-webpack.config.js"
             },
-            "outputPath": "dist/ui",
+            "outputPath": "../../bin/",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
