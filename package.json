@@ -6,6 +6,7 @@
   "scripts": {
     "bundle": "cd src/ui && ng b && cd ../.. && webpack --mode development",
     "release": "cd src/ui && ng b --prod && cd ../.. && webpack --mode production",
+    "watch": "webpack --mode development && cd src/ui && ng b --watch --delete-output-path=false",
     "test": "echo 'no tests specified'"
   },
   "repository": {
