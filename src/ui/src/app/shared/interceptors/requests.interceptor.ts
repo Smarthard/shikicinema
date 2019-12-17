@@ -1,10 +1,14 @@
+import {Injectable} from '@angular/core';
 import {HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
 import {from, Observable, throwError} from 'rxjs';
-import {AuthService} from '../../services/auth/auth.service';
 import {catchError} from 'rxjs/operators';
+import {AuthService} from '../../services/auth/auth.service';
 import {NotificationsService} from '../../services/notifications/notifications.service';
 import {Notification, NotificationType} from '../../types/notification';
 
+@Injectable({
+  providedIn: 'root'
+})
 export class HttpRequestsInterceptor implements HttpInterceptor {
 
   private EXTENSION_VERSION = chrome.runtime.getManifest().version;
