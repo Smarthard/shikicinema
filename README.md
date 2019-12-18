@@ -71,13 +71,16 @@ Shikicinema и сайт Smarthard.net не располагают физичес
 
 Для тестирования из исходников же понадобятся следующие программы и компонеты:
 
-- [Node.js & npm](https://nodejs.org/)
-- Ваш браузер
+-   [Node.js & npm](https://nodejs.org/)
+-   [Angular CLI](https://www.npmjs.com/package/@angular/cli)
+-   Ваш браузер
  
 ### Подготовка к запуску
 
 1. `npm i`;
 2. `npm run bundle`;
+
+Также вместо `npm run bundle` можно использовать `npm run watch`, если вы активно вносите изменения в код UI.
 
 ### Загрузка временного плагина в Firefox
 
