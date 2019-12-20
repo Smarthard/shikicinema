@@ -77,3 +77,10 @@ input[type=url].ng-valid.ng-touched  {
   padding: 0 10px 10px;
   color: orangered;
 }
+
+.required-field {
+  font-weight: bolder;
+  vertical-align: super;
+  font-size: smaller;
+  color: red;
+}

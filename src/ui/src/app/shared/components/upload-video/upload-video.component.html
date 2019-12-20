@@ -1,7 +1,7 @@
 <form id="video-upload-form" novalidate (ngSubmit)="onSubmit(videoForm)" #videoForm="ngForm">
   <div>
     <p>Пожалуйста, проверяйте видео перед загрузкой!</p>
-    <label>URL проигрывателя*:
+    <label>URL проигрывателя<span class="required-field">*</span>:
       <input class="mdc-text-field__input" name="url" type="url"
              [(ngModel)]="video.url" (paste)="video.url = trimUrl($event)"
              pattern="https?:\/\/.*" required>
@@ -20,7 +20,7 @@
     </div>
 
     <div class="flex">
-      <label>Эпизод*:
+      <label>Эпизод<span class="required-field">*</span>:
         <input class="mdc-text-field__input" id="episode-input" type="number" name="episode"
                placeholder="Эпизод" value="1" min="1" [(ngModel)]="video.episode" required>
       </label>
