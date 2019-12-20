@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
+import {Component, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild} from '@angular/core';
 import {HttpParams} from '@angular/common/http';
 import {ShikivideosService} from '../../../services/shikivideos-api/shikivideos.service';
 import {SmarthardNet} from '../../../types/smarthard-net';
@@ -27,6 +27,9 @@ export class UploadVideoComponent implements OnInit, OnChanges {
 
   @Output()
   public check: EventEmitter<SmarthardNet.Shikivideo> = new EventEmitter<SmarthardNet.Shikivideo>();
+
+  @ViewChild('authorInput', { static: true })
+  _inputAuthorRef: ElementRef;
 
   public video = new SmarthardNet.Shikivideo();
 
@@ -114,6 +117,12 @@ export class UploadVideoComponent implements OnInit, OnChanges {
             );
         }
       );
+  }
+
+  authorNotSet() {
+    const authorInput = <HTMLInputElement> this._inputAuthorRef.nativeElement;
+    console.log('input', authorInput);
+    return authorInput.value.trim().length === 0;
   }
 
 }

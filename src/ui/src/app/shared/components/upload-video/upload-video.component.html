@@ -13,8 +13,11 @@
     <label>Автор (озвучки, субтитров):
       <input class="mdc-text-field__input" name="author" type="text"
              [(ngModel)]="video.author" (input)="search4Authors($event)"
-             autocomplete="off" list="authors">
+             autocomplete="off" list="authors" #authorInput>
     </label>
+    <div class="form-warning" *ngIf="authorNotSet()">
+      Это поле можно оставить пустым, но видео с неизвестными авторами менее популярны
+    </div>
 
     <div class="flex">
       <label>Эпизод*:

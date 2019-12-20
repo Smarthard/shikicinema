@@ -72,3 +72,8 @@ input[type=url].ng-valid.ng-touched  {
   padding: 0 10px 10px;
   color: red;
 }
+
+.form-warning {
+  padding: 0 10px 10px;
+  color: orangered;
+}
