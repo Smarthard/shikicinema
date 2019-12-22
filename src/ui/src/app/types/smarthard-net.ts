@@ -43,11 +43,15 @@ export namespace SmarthardNet {
     public author: string;
     public kind: string;
     public language: string;
-    public player: string;
+    public url: string;
     public quality: string;
 
     constructor(obj?: any) {
       Object.assign(this, obj);
+    }
+
+    public get player() {
+      return this.url ? this.url.split('.').slice(-2)[0] : null;
     }
   }
 

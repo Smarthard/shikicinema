@@ -10,6 +10,11 @@
                             placeholder="Язык"></app-dropdown-filters>
       <app-dropdown-filters [unique]="unique"
                             [episode]="episode$ | async"
+                            (change)="filter.url = ($event !== 'Плеер' ?  $event :  null)"
+                            column="url"
+                            placeholder="Плеер"></app-dropdown-filters>
+      <app-dropdown-filters [unique]="unique"
+                            [episode]="episode$ | async"
                             (change)="filter.author = ($event !== 'Студия' ?  $event :  null)"
                             column="author"
                             placeholder="Студия"></app-dropdown-filters>
@@ -101,6 +106,7 @@
               | filterBy:['language']:filter.language
               | filterBy:['author']:filter.author
               | filterBy:['quality']:filter.quality
+              | filterBy:['url']:filter.player
              as filteredVideos
              else videosEmpty">
         <div id="series" *ngIf="settings.oldFagApproves">
