@@ -2,23 +2,27 @@
   <app-video-player [video]="currentVideo"></app-video-player>
 
   <ng-container *ngIf="(videos$ | async) as videos">
-    <div id="filters" *ngIf="videos.length > 0 && unique$ | async as unique">
-      <app-dropdown-filters [unique]="unique"
+    <div id="filters" *ngIf="videos.length > 0 && settings.filters.enabled && unique$ | async as unique">
+      <app-dropdown-filters *ngIf="settings.filters.language"
+                            [unique]="unique"
                             [episode]="episode$ | async"
                             (change)="filter.language = ($event !== 'Язык' ?  $event :  null)"
                             column="language"
                             placeholder="Язык"></app-dropdown-filters>
-      <app-dropdown-filters [unique]="unique"
+      <app-dropdown-filters *ngIf="settings.filters.player"
+                            [unique]="unique"
                             [episode]="episode$ | async"
                             (change)="filter.url = ($event !== 'Плеер' ?  $event :  null)"
                             column="url"
                             placeholder="Плеер"></app-dropdown-filters>
-      <app-dropdown-filters [unique]="unique"
+      <app-dropdown-filters *ngIf="settings.filters.author"
+                            [unique]="unique"
                             [episode]="episode$ | async"
                             (change)="filter.author = ($event !== 'Студия' ?  $event :  null)"
                             column="author"
                             placeholder="Студия"></app-dropdown-filters>
-      <app-dropdown-filters [unique]="unique"
+      <app-dropdown-filters *ngIf="settings.filters.quality"
+                            [unique]="unique"
                             [episode]="episode$ | async"
                             (change)="filter.quality = ($event !== 'Качество' ?  $event :  null)"
                             column="quality"
