@@ -32,9 +32,11 @@ import {
   MatCheckboxModule,
   MatPaginatorModule,
   MatSlideToggleModule,
+  MatSortModule,
   MatTableModule
 } from '@angular/material';
 import {ControlBoxComponent} from './shared/components/control-box/control-box.component';
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -69,7 +71,9 @@ import {ControlBoxComponent} from './shared/components/control-box/control-box.c
     MatPaginatorModule,
     MatCardModule,
     MatCheckboxModule,
-    MatSlideToggleModule
+    MatSlideToggleModule,
+    MatSortModule,
+    NoopAnimationsModule
   ],
   providers: [
     { provide: LocationStrategy, useClass: HashLocationStrategy },
