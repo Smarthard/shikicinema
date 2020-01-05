@@ -112,7 +112,7 @@ export class UploadVideoComponent implements OnInit, OnDestroy, OnChanges {
       .set('anime_id', video.anime_id)
       .set('anime_english', video.anime_english)
       .set('anime_russian', video.anime_russian)
-      .set('author', video.author)
+      .set('author', video.author ? video.author : '')
       .set('episode', `${video.episode}`)
       .set('kind', video.kind)
       .set('language', video.language)
