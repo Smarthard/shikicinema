@@ -2,8 +2,9 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {Shikimori} from '../../types/shikimori';
 import {Observable, of} from 'rxjs';
-import {catchError} from 'rxjs/operators';
+import {catchError, map} from 'rxjs/operators';
 import {SmarthardNet} from '../../types/smarthard-net';
+import {environment} from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -57,4 +58,97 @@ export class ShikimoriService {
   public getAnime(animeId: number): Observable<SmarthardNet.Shikivideo> {
     return this.http.get<SmarthardNet.Shikivideo>(`${this.SHIKIMORI_URL}/api/animes/${animeId}`);
   }
+
+  public async getNewToken(): Promise<Shikimori.Token> {
+    return new Promise(async (resolve, reject) => {
+      const code = await this._getShikimoriAuthCode() || null;
+      const params = new HttpParams()
+        .set('grant_type', 'authorization_code')
+        .set('client_id', environment.SHIKIMORI_CLIENT_ID)
+        .set('client_secret', environment.SHIKIMORI_CLIENT_SECRET)
+        .set('code', code)
+        .set('redirect_uri', 'urn:ietf:wg:oauth:2.0:oob');
+
+      if (code) {
+        this.http.post<Shikimori.IToken>('https://shikimori.one/oauth/token', null, { params })
+          .subscribe(
+            async (token) => {
+              const shikimoriToken = new Shikimori.Token(token.access_token, token.refresh_token, token.created_at, token.expires_in);
+              resolve(shikimoriToken);
+            }
+          );
+      } else {
+        reject();
+      }
+    });
+  }
+
+  public getRefreshedToken(oldToken: Shikimori.Token): Promise<Shikimori.Token> {
+    const params = new HttpParams()
+      .set('grant_type', 'refresh_token')
+      .set('client_id', environment.SHIKIMORI_CLIENT_ID)
+      .set('client_secret', environment.SHIKIMORI_CLIENT_SECRET)
+      .set('refresh_token', oldToken.resfresh);
+
+    return this.http.post<Shikimori.IToken>('https://shikimori.one/oauth/token', null,{ params })
+      .pipe(
+        map((token) => new Shikimori.Token(token.access_token, token.refresh_token, token.created_at, token.expires_in))
+      ).toPromise();
+  }
+
+  private _getShikimoriAuthCode(): Promise<any> {
+    return new Promise(async (resolve, reject) => {
+      let codeUrl = new URL('https://shikimori.one/oauth/authorize?');
+      codeUrl.searchParams.set('client_id', environment.SHIKIMORI_CLIENT_ID);
+      codeUrl.searchParams.set('redirect_uri', 'urn:ietf:wg:oauth:2.0:oob');
+      codeUrl.searchParams.set('response_type', 'code');
+
+      chrome.tabs.query({active: true}, ([selectedTab]) =>
+        chrome.tabs.create({active: true, url: codeUrl.toString()}, new_tab => {
+
+          const onRemove = (tabId) => {
+            if (tabId === new_tab.id) {
+              reject({error: 'tab-removed'});
+              removeListeners();
+            }
+          };
+
+          const onUpdate = (tabId, changeInfo) => {
+            if (!changeInfo.url)
+              return;
+
+            const tabUrl = new URL(changeInfo.url);
+            const error = tabUrl.searchParams.get('error');
+            const message = tabUrl.searchParams.get('error_description');
+            const code = tabUrl.toString().split('authorize/')[1];
+
+            if (tabId !== new_tab.id || !changeInfo.url || tabUrl.toString().includes('response_type'))
+              return;
+
+            if (error || message) {
+              reject({ error, message });
+            } else {
+              resolve(code);
+            }
+
+            removeListeners();
+            chrome.tabs.update(
+              selectedTab.id,
+              { active: true },
+              () => chrome.tabs.remove(new_tab.id)
+            );
+          };
+
+          const removeListeners = () => {
+            chrome.tabs.onRemoved.removeListener(onRemove);
+            chrome.tabs.onUpdated.removeListener(onUpdate);
+          };
+
+          chrome.tabs.onRemoved.addListener(onRemove);
+          chrome.tabs.onUpdated.addListener(onUpdate);
+        })
+      );
+    });
+  }
+
 }
