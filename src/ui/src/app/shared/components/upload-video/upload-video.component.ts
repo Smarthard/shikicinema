@@ -31,6 +31,8 @@ export class UploadVideoComponent implements OnInit, OnChanges {
   @ViewChild('authorInput', { static: true })
   _inputAuthorRef: ElementRef;
 
+  videoWasChecked = false;
+
   public video = new SmarthardNet.Shikivideo();
 
   private authorSubject = new Subject<Event>();
@@ -123,6 +125,11 @@ export class UploadVideoComponent implements OnInit, OnChanges {
     const authorInput = <HTMLInputElement> this._inputAuthorRef.nativeElement;
     console.log('input', authorInput);
     return authorInput.value.trim().length === 0;
+  }
+
+  checkVideo(video: SmarthardNet.Shikivideo) {
+    this.videoWasChecked = true;
+    this.check.emit(video);
   }
 
 }

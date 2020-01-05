@@ -1,6 +1,5 @@
 <form id="video-upload-form" novalidate (ngSubmit)="onSubmit(videoForm)" #videoForm="ngForm">
   <div>
-    <p>Пожалуйста, проверяйте видео перед загрузкой!</p>
     <label>URL проигрывателя<span class="required-field">*</span>:
       <input class="mdc-text-field__input" name="url" type="url"
              [(ngModel)]="video.url" (paste)="video.url = trimUrl($event)"
@@ -63,12 +62,15 @@
   </div>
 
   <div id="upload-controls">
-    <button class="mdc-button" type="button"
+    <button *ngIf="!videoWasChecked"
+            class="mdc-button" type="button" id="check-button"
             title="Проверить видео в плеере"
-            (click)="check.emit(video)">
+            [disabled]="videoForm.invalid"
+            (click)="checkVideo(video)">
       Проверить
     </button>
-    <button class="mdc-button" type="submit"
+    <button *ngIf="videoWasChecked"
+            class="mdc-button" type="submit" id="upload-button"
             [title]="videoForm.invalid ? 'Перед загрузкой, введите корректные данные' : 'Загрузить видео в архив'"
             [disabled]="videoForm.invalid">
       Загрузить
