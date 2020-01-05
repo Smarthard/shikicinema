@@ -34,6 +34,29 @@ app-notify {
   top: 0;
 }
 
+mat-card {
+  margin-top: 10px;
+  min-width: 300px;
+}
+
+h4 {
+  display: flex;
+  justify-content: space-between;
+  margin: 15px 5px 0;
+}
+
+h4 *:last-child {
+  margin-left: auto;
+}
+
+section {
+  display: flex;
+  flex-direction: column;
+  align-items: baseline;
+  align-content: center;
+  padding: 5px 15px;
+}
+
 .setting-group-header {
   text-align: left;
 }
@@ -49,6 +72,7 @@ app-notify {
 .help {
   cursor: help;
   font-size: medium;
+  vertical-align: super;
 }
 
 .ok {
