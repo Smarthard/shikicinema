@@ -27,7 +27,10 @@ export class UploadVideoComponent implements OnInit, OnDestroy, OnChanges {
   public episode: number;
 
   @Output()
-  public check: EventEmitter<SmarthardNet.Shikivideo> = new EventEmitter<SmarthardNet.Shikivideo>();
+  public check = new EventEmitter<SmarthardNet.Shikivideo>();
+
+  @Output()
+  public uploaded = new EventEmitter<SmarthardNet.Shikivideo>();
 
   @ViewChild('authorInput', { static: true })
   _inputAuthorRef: ElementRef;
@@ -125,6 +128,7 @@ export class UploadVideoComponent implements OnInit, OnDestroy, OnChanges {
         res => {
           if (res.status === 201) {
             this.notify.add(new Notification(NotificationType.OK, 'Видео успешно загружено!'));
+            this.uploaded.emit(video);
             this.video.episode++;
           }
         },
