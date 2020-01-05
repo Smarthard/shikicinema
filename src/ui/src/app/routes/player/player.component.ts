@@ -234,7 +234,6 @@ export class PlayerComponent implements OnInit, OnDestroy {
   }
 
   openUploadForm() {
-    this.auth.shikivideosSync();
     this.isUploadOpened = !this.isUploadOpened;
   }
 
