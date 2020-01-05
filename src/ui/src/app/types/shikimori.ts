@@ -31,18 +31,35 @@ export namespace Shikimori {
 
   }
 
+  export interface IToken {
+    readonly access_token?: string,
+    readonly refresh_token?: string,
+    readonly created_at?: number,
+    readonly expires_in?: number
+  }
+
   export class Token extends AbstractToken {
-    private access_token: string;
-    private refresh_token: string;
-    private created_at: number;
-    private expires_in: number;
+    constructor(
+      private access_token?: string,
+      private refresh_token?: string,
+      private created_at?: number,
+      private expires_in?: number
+    ) {
+      super();
+    }
 
     public get expired(): boolean {
-      return new Date() > new Date((this.created_at + this.expires_in) * 1000);
+      return new Date() > this.expireDate;
     }
 
     public get token(): string {
       return this.access_token;
+    }
+
+    public get expireDate(): Date {
+      const created = this.created_at || 0;
+      const expires = this.expires_in || 0;
+      return new Date((created + expires) * 1000);
     }
 
     public get resfresh(): string {
