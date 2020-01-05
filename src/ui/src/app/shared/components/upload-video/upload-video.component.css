@@ -75,7 +75,7 @@ input[type=url].ng-valid.ng-touched  {
 
 .form-warning {
   padding: 0 10px 10px;
-  color: orangered;
+  color: #555555;
 }
 
 .required-field {
