@@ -5,6 +5,7 @@ import {catchError} from 'rxjs/operators';
 import {AuthService} from '../../services/auth/auth.service';
 import {NotificationsService} from '../../services/notifications/notifications.service';
 import {Notification, NotificationType} from '../../types/notification';
+import {environment} from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +13,7 @@ import {Notification, NotificationType} from '../../types/notification';
 export class HttpRequestsInterceptor implements HttpInterceptor {
 
   private EXTENSION_VERSION = chrome.runtime.getManifest().version;
+  private IS_PRODUCTION = environment.production;
 
   constructor(
     private auth: AuthService,
@@ -23,7 +25,7 @@ export class HttpRequestsInterceptor implements HttpInterceptor {
   }
 
   private async _handle(req: HttpRequest<any>, next: HttpHandler) {
-    const headers = { 'User-Agent': `Shikicinema ${this.EXTENSION_VERSION}` };
+    const headers = { 'User-Agent': `Shikicinema ${this.EXTENSION_VERSION}${this.IS_PRODUCTION ? '' : ' DEV'}`};
     const shikivideos = await this.auth.shikivideos;
     const shikimori = await this.auth.shikimori;
 
