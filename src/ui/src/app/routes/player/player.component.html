@@ -71,29 +71,52 @@
           </button>
         </app-control-box>
       </ng-template>
-      <app-control-box subtext="Загрузить"
-                       *ngIf="(whoami$ | async) else lockedUpload"
-                       title="Загрузить видео">
-        <button class="mdc-button"
-                (click)="openUploadForm()">
-          <i class="material-icons md-24">add</i>
-        </button>
-      </app-control-box>
-      <ng-template #lockedUpload>
+
+      <ng-container *ngIf="settings.extraButtons else extraInMenu">
         <app-control-box subtext="Загрузить"
-                         title="Требуется авторизация на Шикимори">
+                         *ngIf="(whoami$ | async) else lockedUpload"
+                         title="Загрузить видео">
           <button class="mdc-button"
-                  disabled>
+                  (click)="openUploadForm()">
             <i class="material-icons md-24">add</i>
           </button>
         </app-control-box>
+        <ng-template #lockedUpload>
+          <app-control-box subtext="Загрузить"
+                           title="Требуется авторизация на Шикимори">
+            <button class="mdc-button"
+                    disabled>
+              <i class="material-icons md-24">add</i>
+            </button>
+          </app-control-box>
+        </ng-template>
+        <app-control-box subtext="Настройки"
+                         title="Настойки плагина">
+          <button class="mdc-button" routerLink="/settings">
+            <i class="material-icons md-24">settings_applications</i>
+          </button>
+        </app-control-box>
+      </ng-container>
+
+      <ng-template #extraInMenu>
+        <mat-menu #extraButtonsMenu="matMenu">
+          <button mat-menu-item
+                  (click)="openUploadForm()">
+            {{ isUploadOpened ? 'Закрыть форму' : 'Загрузить видео' }}
+          </button>
+          <button mat-menu-item routerLink="/settings">
+            Настройки
+          </button>
+        </mat-menu>
+
+        <app-control-box subtext="Меню"
+                         title="Показать меню">
+          <button mat-icon-button [matMenuTriggerFor]="extraButtonsMenu">
+            <mat-icon>more_vert</mat-icon>
+          </button>
+        </app-control-box>
       </ng-template>
-      <app-control-box subtext="Настройки"
-                       title="Настойки плагина">
-        <button class="mdc-button" routerLink="/settings">
-          <i class="material-icons md-24">settings_applications</i>
-        </button>
-      </app-control-box>
+
     </div>
 
     <div>

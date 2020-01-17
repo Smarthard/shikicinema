@@ -30,8 +30,8 @@ import {
   MatButtonModule,
   MatCardModule,
   MatCheckboxModule,
-  MatFormFieldModule,
-  MatInputModule,
+  MatFormFieldModule, MatIconModule,
+  MatInputModule, MatMenuModule,
   MatPaginatorModule,
   MatSelectModule,
   MatSlideToggleModule,
@@ -79,7 +79,9 @@ import {NoopAnimationsModule} from '@angular/platform-browser/animations';
     NoopAnimationsModule,
     MatFormFieldModule,
     MatInputModule,
-    MatSelectModule
+    MatSelectModule,
+    MatIconModule,
+    MatMenuModule
   ],
   providers: [
     { provide: LocationStrategy, useClass: HashLocationStrategy },
