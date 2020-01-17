@@ -141,6 +141,13 @@ export class PlayerComponent implements OnInit, OnDestroy {
       }
     );
 
+    this.anime$
+      .subscribe(anime => {
+        const title = anime.russian || anime.name;
+        const episode = this.urlParams.episode;
+        this.title.setTitle(`${title} - эпизод ${episode}`)
+      });
+
     this.videos$
       .pipe(
         takeWhile(() => this.isAlive),
@@ -150,12 +157,9 @@ export class PlayerComponent implements OnInit, OnDestroy {
         videos => {
         const query = this.route.snapshot.queryParams;
         const videoById = videos.filter(vid => query && query.id && vid.id == query.id)[0];
-        const video = videos[0];
-        let title = 'Shikicinema';
+        const favVideos = this._chooseFavourite(videos);
 
-        title = video ? video.anime_russian || video.anime_english : title;
-        this.title.setTitle(video ? `${title} - эпизод ${video.episode}` : title);
-        this.changeVideo(videos.length === 0 ? this.EMPTY_VIDEO : videoById ? videoById : this._chooseFavourite(videos)[0]);
+        this.changeVideo( videos.length === 0 ? this.EMPTY_VIDEO : (videoById ? videoById : favVideos[0]) );
       }
     );
 
