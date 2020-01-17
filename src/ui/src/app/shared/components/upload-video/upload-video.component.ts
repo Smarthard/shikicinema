@@ -35,6 +35,7 @@ export class UploadVideoComponent implements OnInit, OnDestroy, OnChanges {
   @ViewChild('authorInput', { static: true })
   _inputAuthorRef: ElementRef;
 
+  autoIncEpisode = true;
   isAlive = true;
   videoWasChecked = false;
 
@@ -129,7 +130,10 @@ export class UploadVideoComponent implements OnInit, OnDestroy, OnChanges {
           if (res.status === 201) {
             this.notify.add(new Notification(NotificationType.OK, 'Видео успешно загружено!'));
             this.uploaded.emit(video);
-            this.video.episode++;
+
+            if (this.autoIncEpisode) {
+              this.video.episode++;
+            }
           }
         },
         err => {

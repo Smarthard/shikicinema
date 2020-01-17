@@ -56,7 +56,7 @@ input[type=url].ng-valid.ng-touched  {
   border-left: 5px solid #0A09;
 }
 
-.ng-untouched:not(form) {
+.ng-untouched:not(form):not(.pale) {
   border-left: 5px solid #d2d2d2;
 }
 

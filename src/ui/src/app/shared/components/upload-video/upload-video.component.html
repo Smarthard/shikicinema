@@ -19,6 +19,11 @@
     </div>
 
     <div class="flex">
+      <label>
+        <mat-checkbox class="pale"
+                      [(ngModel)]="autoIncEpisode"
+                      [ngModelOptions]="{standalone: true}">Автоинкремент эпизода</mat-checkbox>
+      </label>
       <label>Эпизод<span class="required-field">*</span>:
         <input class="mdc-text-field__input" id="episode-input" type="number" name="episode"
                placeholder="Эпизод" value="1" min="1" [(ngModel)]="video.episode" required>
