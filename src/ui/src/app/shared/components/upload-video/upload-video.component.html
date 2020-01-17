@@ -1,63 +1,74 @@
 <form id="video-upload-form" novalidate (ngSubmit)="onSubmit(videoForm)" #videoForm="ngForm">
-  <div>
-    <label>URL проигрывателя<span class="required-field">*</span>:
-      <input class="mdc-text-field__input" name="url" type="url"
-             [(ngModel)]="video.url" (paste)="video.url = trimUrl($event)"
+  <div id="fields">
+    <mat-form-field>
+      <input matInput placeholder="URL проигрывателя" name="url" type="url"
+             [(ngModel)]="video.url"
+             (paste)="video.url = trimUrl($event)"
+             [errorStateMatcher]="matcher"
              pattern="https?:\/\/.*" required>
-    </label>
-    <div class="form-error" *ngIf="videoForm.invalid && videoForm.touched">
-      Это поле должно быть адресом web-страницы
-    </div>
+      <mat-error *ngIf="videoForm.invalid && videoForm.touched">
+        Это поле должно быть адресом web-страницы
+      </mat-error>
+    </mat-form-field>
 
-    <label>Автор (озвучки, субтитров):
-      <input class="mdc-text-field__input" name="author" type="text"
-             [(ngModel)]="video.author" (input)="search4Authors($event)"
+    <mat-form-field>
+      <input matInput placeholder="Автор озвучки/субтитров" name="author" type="text"
+             [(ngModel)]="video.author"
+             (input)="search4Authors($event)"
              autocomplete="off" list="authors" #authorInput>
-    </label>
-    <div class="form-warning" *ngIf="authorNotSet()">
-      Это поле можно оставить пустым, но видео с неизвестными авторами менее популярны
-    </div>
+      <mat-hint>
+        Это поле можно оставить пустым, но видео с неизвестными авторами менее популярны
+      </mat-hint>
+    </mat-form-field>
 
     <div class="flex">
-      <label>
-        <mat-checkbox class="pale"
-                      [(ngModel)]="autoIncEpisode"
-                      [ngModelOptions]="{standalone: true}">Автоинкремент эпизода</mat-checkbox>
-      </label>
-      <label>Эпизод<span class="required-field">*</span>:
-        <input class="mdc-text-field__input" id="episode-input" type="number" name="episode"
-               placeholder="Эпизод" value="1" min="1" [(ngModel)]="video.episode" required>
-      </label>
-      <label>Тип:
-        <select name="kind" class="mdc-select__native-control" [(ngModel)]="video.kind">
-          <option>озвучка</option>
-          <option>субтитры</option>
-          <option>оригинал</option>
-        </select>
-      </label>
-      <label>Качество:
-        <select name="quality" class="mdc-select__native-control" [(ngModel)]="video.quality">
-          <option value="TV">TV</option>
-          <option value="DVD">DVD</option>
-          <option value="BD">BD</option>
-          <option value="WEB">WEB</option>
-          <option value="unknown">неизвестное</option>
-        </select>
-      </label>
-      <label>Язык озвучки:
-        <select name="language" class="mdc-select__native-control" [(ngModel)]="video.language">
-          <option value="russian">русский</option>
-          <option value="english">английский</option>
-          <option value="original">оригинальный</option>
-          <option value="unknown">неизвестный</option>
-        </select>
-      </label>
+      <mat-form-field>
+        <input matInput name="episode"
+               type="number"
+               placeholder="Эпизод"
+               value="1" min="1"
+               [(ngModel)]="video.episode" required>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Тип</mat-label>
+        <mat-select name="kind"
+                    [(ngModel)]="video.kind">
+          <mat-option value="озвучка">озвучка</mat-option>
+          <mat-option value="субтитры">субтитры</mat-option>
+          <mat-option value="оригинал">оригинал</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Качество</mat-label>
+        <mat-select name="quality"
+                    [(ngModel)]="video.quality">
+          <mat-option value="unknown">неизвестное</mat-option>
+          <mat-option value="TV">TV</mat-option>
+          <mat-option value="DVD">DVD</mat-option>
+          <mat-option value="BD">BD</mat-option>
+          <mat-option value="WEB">WEB</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Язык озвучки</mat-label>
+        <mat-select name="language"
+                    [(ngModel)]="video.language">
+          <mat-option value="russian">русский</mat-option>
+          <mat-option value="english">английский</mat-option>
+          <mat-option value="original">оригинальный</mat-option>
+          <mat-option value="unknown">неизвестный</mat-option>
+        </mat-select>
+      </mat-form-field>
     </div>
 
     <input hidden name="anime_id" [value]="animeId" [(ngModel)]="video.anime_id">
     <input hidden name="uploader" [value]="uploaderId" [(ngModel)]="video.uploader">
     <input hidden name="anime_russian" value="russian" [(ngModel)]="video.anime_russian">
     <input hidden name="anime_english" value="english" [(ngModel)]="video.anime_english">
+
     <datalist id="authors">
       <ng-container *ngIf="(sources$ | async) as sources">
         <option *ngFor="let key of (sources | keys)">{{ sources[key].author }}</option>
@@ -67,15 +78,25 @@
   </div>
 
   <div id="upload-controls">
-    <button *ngIf="!videoWasChecked"
-            class="mdc-button" type="button" id="check-button"
+    <label id="autoinc">
+      <mat-checkbox class="pale"
+                    labelPosition="before"
+                    [(ngModel)]="autoIncEpisode"
+                    [ngModelOptions]="{standalone: true}">Автоинкремент эпизода</mat-checkbox>
+    </label>
+    <button mat-stroked-button
+            *ngIf="!videoWasChecked"
+            type="button" id="check-button"
+            color="accent"
             title="Проверить видео в плеере"
             [disabled]="videoForm.invalid"
             (click)="checkVideo(video)">
       Проверить
     </button>
-    <button *ngIf="videoWasChecked"
-            class="mdc-button" type="submit" id="upload-button"
+    <button mat-stroked-button
+            *ngIf="videoWasChecked"
+            color="accent"
+            type="submit" id="upload-button"
             [title]="videoForm.invalid ? 'Перед загрузкой, введите корректные данные' : 'Загрузить видео в архив'"
             [disabled]="videoForm.invalid">
       Загрузить

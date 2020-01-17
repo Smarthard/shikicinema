@@ -1,86 +1,50 @@
 form {
-  padding: 10px;
-  background-color: whitesmoke;
+  padding: 5px 10px;
+  border: 1px solid grey;
+  border-radius: 5px;
 }
 
-label {
-  display: block;
-  padding: 10px 0;
-}
-
-select {
-  border-radius: 0;
+#fields * {
+  width: 100%;
 }
 
 @media (max-width: 1024px) {
-  div div {
+  div.flex {
     flex-flow: column;
+    margin-top: 25px;
   }
 
-  div div label {
-    margin: 10px 0;
-  }
-
-  div div.flex select {
+  div.flex mat-select {
     max-width: 100%;
+  }
+
+  form {
+    border-left-width: 0;
+    border-right-width: 0;
   }
 }
 
 @media (min-width: 1025px) {
-  div span.flex select {
-    max-width: 10%;
+  div.flex {
+    margin-top: 25px;
   }
 
-  div.flex label {
+  div.flex * {
     margin: 0 5px;
-    width: 25%;
   }
+}
+
+#autoinc {
+  display: flex;
+  align-content: center;
+  align-items: center;
+  font-size: smaller;
 }
 
 #upload-controls {
   display: flex;
-  justify-content: flex-end;
 }
 
 #upload-controls button {
-  margin: 10px 5px;
-  border: #555 solid 1px;
-  pointer-events: auto;
-}
-
-#episode-input {
-  height: 69%;
-}
-
-input[type=url].ng-valid.ng-touched  {
-  border-left: 5px solid #0A09;
-}
-
-.ng-untouched:not(form):not(.pale) {
-  border-left: 5px solid #d2d2d2;
-}
-
-.ng-invalid.ng-touched:not(form) {
-  border-left: 5px solid red;
-}
-
-:focus {
-  background-color: #d2d2d2;
-}
-
-.form-error {
-  padding: 0 10px 10px;
-  color: red;
-}
-
-.form-warning {
-  padding: 0 10px 10px;
-  color: #555555;
-}
-
-.required-field {
-  font-weight: bolder;
-  vertical-align: super;
-  font-size: smaller;
-  color: red;
+  margin-left: auto;
 }

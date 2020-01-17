@@ -9,6 +9,7 @@ import {Notification, NotificationType} from '../../../types/notification';
 import {debounceTime, distinctUntilChanged, switchMap, takeWhile} from 'rxjs/operators';
 import {Subject, timer} from 'rxjs';
 import {AuthService} from '../../../services/auth/auth.service';
+import {ErrorStateMatcher} from '@angular/material';
 
 @Component({
   selector: 'app-upload-video',
@@ -38,6 +39,7 @@ export class UploadVideoComponent implements OnInit, OnDestroy, OnChanges {
   autoIncEpisode = true;
   isAlive = true;
   videoWasChecked = false;
+  matcher = new ErrorStateMatcher();
 
   public video = new SmarthardNet.Shikivideo();
 
@@ -142,11 +144,6 @@ export class UploadVideoComponent implements OnInit, OnDestroy, OnChanges {
             );
         }
       );
-  }
-
-  authorNotSet() {
-    const authorInput = <HTMLInputElement> this._inputAuthorRef.nativeElement;
-    return authorInput.value.trim().length === 0;
   }
 
   checkVideo(video: SmarthardNet.Shikivideo) {
