@@ -1,4 +1,4 @@
-<div id="player">
+<div id="player" *ngIf="settings && (anime$ | async) as anime">
   <app-video-player [video]="currentVideo"></app-video-player>
 
   <ng-container *ngIf="(videos$ | async) as videos">
@@ -33,7 +33,7 @@
       <app-control-box subtext="Предыдущий">
         <button class="mdc-button"
                 [disabled]="+urlParams.episode - 1 < 1"
-                (click)="changeEpisode(+urlParams.episode - 1, currentVideo)">
+                (click)="changeEpisode(+urlParams.episode - 1)">
           <i class="material-icons md-24">fast_rewind</i>
         </button>
       </app-control-box>
@@ -46,18 +46,17 @@
                (ngModelChange)="changeEpisode($event)"
                value="1">
       </app-control-box>
-      <app-control-box subtext="Следующий"
-                       *ngIf="(maxEpisode$ | async) as max">
+      <app-control-box subtext="Следующий">
         <button class="mdc-button"
-                [disabled]="+urlParams.episode + 1 > max.length"
-                (click)="changeEpisode(+urlParams.episode + 1, currentVideo)">
+                [disabled]="+urlParams.episode + 1 > anime.episodes"
+                (click)="changeEpisode(+urlParams.episode + 1)">
           <i class="material-icons md-24">fast_forward</i>
         </button>
       </app-control-box>
       <app-control-box subtext="Просмотрено"
                        *ngIf="(whoami$ | async) as user else sync"
                        title="Отметить как просмотренную"
-                       (click)="markAsWatched(currentVideo, user)">
+                       (click)="markAsWatched(anime, currentVideo.episode, user)">
         <button class="mdc-button"
                 [class.watched]="watched(urlParams.episode)">
           <i class="material-icons md-24">done</i>

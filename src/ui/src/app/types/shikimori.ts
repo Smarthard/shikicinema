@@ -2,6 +2,35 @@ import {AbstractToken} from './abstract-token';
 
 export namespace Shikimori {
 
+  export interface Anime {
+    readonly id: number,
+    readonly name: string,
+    readonly russian: string,
+    readonly image: {
+      readonly original: string,
+      readonly preview: string,
+      readonly x96: string,
+      readonly x48: string
+    },
+    readonly url: string,
+    readonly kind: string,
+    readonly score: string,
+    readonly status: string,
+    readonly episodes: number,
+    readonly episodes_aired: number,
+    readonly rating: string,
+    readonly english: string[],
+    readonly japanese: string[],
+    readonly duration: number,
+    readonly description: string,
+    readonly franchise: string,
+    readonly favoured: boolean,
+    readonly anons: boolean,
+    readonly ongoing: boolean,
+    readonly thread_id: number,
+    readonly topic_id: number
+  }
+
   export class User {
 
     readonly id: number;

@@ -40,18 +40,22 @@ export namespace SmarthardNet {
   }
 
   export class VideoFilter {
-    public author: string;
-    public kind: string;
-    public language: string;
-    public url: string;
-    public quality: string;
-
-    constructor(obj?: any) {
-      Object.assign(this, obj);
-    }
+    constructor(
+      public author?: string,
+      public kind?: string,
+      public language?: string,
+      public url?: string,
+      public quality?: string
+    ) {}
 
     public get player() {
-      return this.url ? this.url.split('.').slice(-2)[0] : null;
+      let url: URL;
+      try {
+        url = new URL(`${this.url}`.startsWith('http') ? this.url : `http://${this.url}`);
+      } catch (e) {
+        console.warn(e);
+      }
+      return this.url && url ? url.hostname.split('.').slice(-2).join('.') : null;
     }
   }
 
