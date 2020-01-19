@@ -12,7 +12,7 @@
 @media (max-width: 1024px) and (orientation: landscape) {
 
   .control-box-subtext {
-    font-size: 7pt;
+    font-size: small;
   }
   .control-box {
     margin: 5px;
@@ -24,7 +24,7 @@
 @media (max-width: 1024px) and (orientation: portrait) {
 
   .control-box-subtext {
-    font-size: 7pt;
+    font-size: xx-small;
   }
   .control-box {
     margin: 0;
