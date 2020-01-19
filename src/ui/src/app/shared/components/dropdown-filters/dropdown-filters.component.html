@@ -1,5 +1,5 @@
 <select class="mdc-select__native-control" *ngIf="unique && episode && unique[episode]">
-  <option [value]="value" *ngFor="let value of getColumns()" (click)="change.emit(value)">
+  <option [value]="value" *ngFor="let value of getColumns()" (click)="onChange(value)">
     {{ value }}
   </option>
 </select>

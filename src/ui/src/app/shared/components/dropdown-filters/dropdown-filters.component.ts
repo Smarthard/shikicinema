@@ -25,6 +25,10 @@ export class DropdownFiltersComponent implements OnInit {
 
   ngOnInit() {}
 
+  onChange(value: string) {
+    this.change.emit(value !== this.placeholder ? value : null);
+  }
+
   getColumns() {
     const episode = this.episode;
     const column = this.column;
