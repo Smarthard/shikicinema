@@ -48,7 +48,7 @@
       </app-control-box>
       <app-control-box subtext="Следующий">
         <button mat-button
-                [disabled]="+urlParams.episode + 1 > anime.episodes"
+                [disabled]="+urlParams.episode + 1 > (anime.episodes || anime.episodes_aired)"
                 (click)="changeEpisode(+urlParams.episode + 1)">
           <mat-icon>fast_forward</mat-icon>
         </button>
