@@ -2,7 +2,7 @@
 <mat-card>
 
   <mat-card-header>
-    <i mat-card-avatar class="material-icons">palette</i>
+    <mat-icon mat-card-avatar>palette</mat-icon>
     <mat-card-title>Внешний вид плеера</mat-card-title>
   </mat-card-header>
 
@@ -17,10 +17,10 @@
 
     <h4>
       Дополнительные кнопки плеера
-      <i class="material-icons help"
-         title="отображение кнопок настроек и загрузки видео">
+      <mat-icon class="help"
+                title="отображение кнопок настроек и загрузки видео">
         help
-      </i>
+      </mat-icon>
     </h4>
     <section>
       <mat-checkbox [(ngModel)]="settings.extraButtons" (ngModelChange)="update()">
@@ -60,7 +60,7 @@
 <mat-card>
 
   <mat-card-header>
-    <i mat-card-avatar class="material-icons">sync</i>
+    <mat-icon mat-card-avatar>sync</mat-icon>
     <mat-card-title>Настройки авторизации</mat-card-title>
   </mat-card-header>
 
@@ -69,10 +69,10 @@
     <div *ngIf="auth.shikivideos$ | async as shikivideos">
       <h4>
         Доступ к Видео-Архиву
-        <i class="material-icons help"
+        <mat-icon class="help"
            [title]="'Необходимо иметь актуальный токен доступа для загрузок видео.\n\n' + (shikivideos | json)">
           help
-        </i>
+        </mat-icon>
         <mat-slide-toggle [checked]="!shikivideos.expired"
                           (toggleChange)="shikivideos.expired ? auth.shikivideosSync() : auth.shikivideosDrop()"
                           [title]="!shikivideos.expired ? 'Всё в порядке' : 'Обновить доступ'"></mat-slide-toggle>
@@ -88,10 +88,10 @@
     <div *ngIf="auth.shikimori$ | async as shikimori">
       <h4>
         Синхронизация с Шикимори
-        <i class="material-icons help"
+        <mat-icon class="help"
            [title]="'Необходимо иметь актуальный токен доступа для синхронизации просмотра.\n\n' + (shikimori | json)">
           help
-        </i>
+        </mat-icon>
         <mat-slide-toggle [checked]="!shikimori.expired"
                           (toggleChange)="shikimori.expired ? auth.shikimoriSync() : auth.shikimoriDrop()"
                           [title]="!shikimori.expired ? 'Всё в порядке' : 'Обновить доступ'"></mat-slide-toggle>

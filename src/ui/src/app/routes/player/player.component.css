@@ -112,15 +112,6 @@ mat-icon {
   text-align: center;
 }
 
-.mdc-button {
-  color: #333333;
-  background-color: white;
-}
-
-.mdc-button:disabled {
-  color: #999;
-}
-
 .watched {
   color: green;
 }

@@ -3,11 +3,6 @@ body {
   padding: 0;
   font-family: 'Roboto', sans-serif;
   font-size: medium;
-
-  --mdc-theme-primary: #333;
-  --mdc-theme-secondary: #999;
-  --mdc-theme-on-primary: #555;
-  --mdc-theme-on-secondary: #fff;
 }
 
 footer {
