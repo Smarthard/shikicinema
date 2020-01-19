@@ -26,13 +26,13 @@ export class DropdownFiltersComponent implements OnInit {
   ngOnInit() {}
 
   onChange(value: string) {
-    this.change.emit(value !== this.placeholder ? value : null);
+    this.change.emit(!!value ? value : null);
   }
 
   getColumns() {
     const episode = this.episode;
     const column = this.column;
-    const values = new Set<string>([this.placeholder, ...this.unique[episode][column].sort()]);
+    const values = new Set<string>(this.unique[episode][column].sort());
 
     values.delete(null);
     return values;

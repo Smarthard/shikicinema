@@ -1,5 +1,13 @@
-<select class="mdc-select__native-control" *ngIf="unique && episode && unique[episode]">
-  <option [value]="value" *ngFor="let value of getColumns()" (click)="onChange(value)">
-    {{ value }}
-  </option>
-</select>
+<mat-form-field *ngIf="unique && episode && unique[episode]">
+  <mat-label>{{ placeholder }}</mat-label>
+  <mat-select>
+    <mat-option (click)="onChange(null)">
+      {{ placeholder }}
+    </mat-option>
+    <mat-option *ngFor="let value of getColumns()"
+                [value]="value"
+                (click)="onChange(value)">
+      {{ value }}
+    </mat-option>
+  </mat-select>
+</mat-form-field>
