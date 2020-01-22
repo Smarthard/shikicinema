@@ -9,8 +9,14 @@
     </mat-option>
     <mat-option *ngFor="let value of getColumns()"
                 [value]="value"
-                (click)="onChange(value)">
-      {{ value }}
+                (click)="onChange(value)" i18n="@@filterValues">
+      { value, select,
+          english {английский}
+          original {оригинальный}
+          russian {русский}
+          unknown { {{ column === 'language' ? 'неизвестный' : 'неизвестно' }} }
+          other { {{ value }} }
+      }
     </mat-option>
   </mat-select>
 </mat-form-field>

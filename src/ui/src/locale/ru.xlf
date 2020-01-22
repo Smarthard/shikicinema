@@ -9,11 +9,11 @@
       </notes>
       <segment>
         <source>
-          <ph id="0" equiv="ICU" disp="{ placeholder, select, author {...} language {...} quality {...} url {...}}"/>
-        </source>
+    <ph id="0" equiv="ICU" disp="{ placeholder, select, author {...} language {...} quality {...} url {...}}"/>
+  </source>
       </segment>
     </unit>
-    <unit id="4998727637155511963">
+    <unit id="3128597099427757943">
       <notes>
         <note category="location">src/app/shared/components/dropdown-filters/dropdown-filters.component.html:3</note>
         <note category="location">src/app/shared/components/dropdown-filters/dropdown-filters.component.html:8</note>
@@ -21,6 +21,24 @@
       </notes>
       <segment>
         <source>{VAR_SELECT, select, author {Студия} language {Язык} quality {Качество} url {Плеер} }</source>
+      </segment>
+    </unit>
+    <unit id="filterValues">
+      <notes>
+        <note category="location">src/app/shared/components/dropdown-filters/dropdown-filters.component.html:12,20</note>
+      </notes>
+      <segment>
+        <source>
+      <ph id="0" equiv="ICU" disp="{ value, select, english {...} original {...} russian {...} unknown {...} other {...}}"/>
+    </source>
+      </segment>
+    </unit>
+    <unit id="694173842290304957">
+      <notes>
+        <note category="location">src/app/shared/components/dropdown-filters/dropdown-filters.component.html:13,19</note>
+      </notes>
+      <segment>
+        <source>{VAR_SELECT, select, english {английский} original {оригинальный} russian {русский} unknown {<ph id="0" equiv="INTERPOLATION" disp="{{ column === &apos;language&apos; ? &apos;неизвестный&apos; : &apos;неизвестно&apos; }}"/> } other {<ph id="1" equiv="INTERPOLATION_1" disp="{{ value }}"/> } }</source>
       </segment>
     </unit>
   </file>
