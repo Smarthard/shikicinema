@@ -29,29 +29,20 @@
     </section>
 
     <h4>Фильтры для плеера
-      <mat-slide-toggle [(ngModel)]="settings.filters.enabled" (ngModelChange)="update()"></mat-slide-toggle>
+      <mat-slide-toggle [(ngModel)]="settings.playerFiltersEnabled"
+                        (ngModelChange)="update()"></mat-slide-toggle>
     </h4>
     <section>
-        <mat-checkbox [disabled]="!settings.filters.enabled"
-                      [(ngModel)]="settings.filters.author"
-                      (ngModelChange)="update()">
-          ...по автору
-        </mat-checkbox>
-        <mat-checkbox [disabled]="!settings.filters.enabled"
-                      [(ngModel)]="settings.filters.quality"
-                      (ngModelChange)="update()">
-          ...по качеству
-        </mat-checkbox>
-        <mat-checkbox [disabled]="!settings.filters.enabled"
-                      [(ngModel)]="settings.filters.player"
-                      (ngModelChange)="update()">
-          ...по плееру
-        </mat-checkbox>
-        <mat-checkbox [disabled]="!settings.filters.enabled"
-                      [(ngModel)]="settings.filters.language"
-                      (ngModelChange)="update()">
-          ...по языку
-        </mat-checkbox>
+      <div cdkDropList class="material-drag-n-drop-list"
+           cdkDropListOrientation="horizontal"
+           (cdkDropListDropped)="drop($event)">
+        <div *ngFor="let filter of settings.playerFilters"
+             [cdkDragDisabled]="!filter.enabled || !settings.playerFiltersEnabled"
+             (click)="filter.enabled = !filter.enabled; update()"
+             class="material-drag-n-drop-item" cdkDrag>
+          {{ filter.name }}
+        </div>
+      </div>
     </section>
 
   </mat-card-content>

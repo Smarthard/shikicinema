@@ -40,6 +40,7 @@ import {
 } from '@angular/material';
 import {ControlBoxComponent} from './shared/components/control-box/control-box.component';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+import {DragDropModule} from '@angular/cdk/drag-drop';
 
 @NgModule({
   declarations: [
@@ -81,7 +82,8 @@ import {NoopAnimationsModule} from '@angular/platform-browser/animations';
     MatInputModule,
     MatSelectModule,
     MatIconModule,
-    MatMenuModule
+    MatMenuModule,
+    DragDropModule
   ],
   providers: [
     { provide: LocationStrategy, useClass: HashLocationStrategy },

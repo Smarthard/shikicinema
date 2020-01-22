@@ -2,31 +2,15 @@
   <app-video-player [video]="currentVideo"></app-video-player>
 
   <ng-container *ngIf="(videos$ | async) as videos">
-    <div id="filters" *ngIf="videos.length > 0 && settings.filters.enabled && unique$ | async as unique">
-      <app-dropdown-filters *ngIf="settings.filters.language"
+    <div id="filters" *ngIf="videos.length > 0 && settings.playerFiltersEnabled && unique$ | async as unique">
+      <app-dropdown-filters *ngFor="let f of settings.playerFilters
+                              | filterBy: ['enabled']:true as enabledFilters"
                             [unique]="unique"
                             [episode]="episode$ | async"
-                            (change)="filter.language = $event"
-                            column="language"
-                            placeholder="Язык"></app-dropdown-filters>
-      <app-dropdown-filters *ngIf="settings.filters.player"
-                            [unique]="unique"
-                            [episode]="episode$ | async"
-                            (change)="filter.url = $event"
-                            column="url"
-                            placeholder="Плеер"></app-dropdown-filters>
-      <app-dropdown-filters *ngIf="settings.filters.author"
-                            [unique]="unique"
-                            [episode]="episode$ | async"
-                            (change)="filter.author = $event"
-                            column="author"
-                            placeholder="Студия"></app-dropdown-filters>
-      <app-dropdown-filters *ngIf="settings.filters.quality"
-                            [unique]="unique"
-                            [episode]="episode$ | async"
-                            (change)="filter.quality = $event"
-                            column="quality"
-                            placeholder="Качество"></app-dropdown-filters>
+                            [ngStyle]="{ 'width.%':  100 / enabledFilters.length }"
+                            (change)="filter[f.name] = $event"
+                            column="{{ f.name }}"
+                            placeholder="{{ f.name }}"></app-dropdown-filters>
     </div>
 
     <div id="controls">

@@ -6,6 +6,7 @@ import {NotificationsService} from '../../services/notifications/notifications.s
 import {Notification, NotificationType} from '../../types/notification';
 import {Location} from '@angular/common';
 import {AuthService} from '../../services/auth/auth.service';
+import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-settings',
@@ -41,6 +42,11 @@ export class SettingsComponent implements OnInit {
 
   async reset() {
     this.settings = new ShikicinemaSettings();
+    await this.update();
+  }
+
+  async drop(evt: CdkDragDrop<string[]>) {
+    moveItemInArray(this.settings.playerFilters, evt.previousIndex, evt.currentIndex);
     await this.update();
   }
 
