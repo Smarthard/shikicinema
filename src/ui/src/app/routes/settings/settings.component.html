@@ -39,8 +39,8 @@
         <div *ngFor="let filter of settings.playerFilters"
              [cdkDragDisabled]="!filter.enabled || !settings.playerFiltersEnabled"
              (click)="filter.enabled = !filter.enabled; update()"
-             class="material-drag-n-drop-item" cdkDrag>
-          {{ filter.name }}
+             class="material-drag-n-drop-item" cdkDrag i18n="@@filterName">
+          { filter.name, select, author {Студия} language {Язык} quality {Качество} url {Плеер} }
         </div>
       </div>
     </section>

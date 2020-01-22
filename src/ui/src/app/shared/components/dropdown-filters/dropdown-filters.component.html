@@ -1,8 +1,11 @@
 <mat-form-field *ngIf="unique && episode && unique[episode]">
-  <mat-label>{{ placeholder }}</mat-label>
+  <mat-label i18n="@@filterName">
+    { placeholder, select, author {Студия} language {Язык} quality {Качество} url {Плеер} }
+  </mat-label>
   <mat-select>
-    <mat-option (click)="onChange(null)">
-      {{ placeholder }}
+    <mat-option (click)="onChange(null)"
+                i18n="@@filterName">
+      { placeholder, select, author {Студия} language {Язык} quality {Качество} url {Плеер} }
     </mat-option>
     <mat-option *ngFor="let value of getColumns()"
                 [value]="value"
