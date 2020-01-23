@@ -30,6 +30,9 @@
 
     <h4>Фильтры для плеера
       <mat-slide-toggle [(ngModel)]="settings.playerFiltersEnabled"
+                        [matTooltip]="settings.playerFiltersEnabled
+                          ? 'Отключить панель фильтров'
+                          : 'Включить панель фильтров'"
                         (ngModelChange)="update()"></mat-slide-toggle>
     </h4>
     <section>
@@ -39,6 +42,8 @@
         <div *ngFor="let filter of settings.playerFilters"
              [cdkDragDisabled]="!filter.enabled || !settings.playerFiltersEnabled"
              (click)="filter.enabled = !filter.enabled; update()"
+             matTooltip="Нажмите для переключения видимости
+                Перетягивайте для изменения положения"
              class="material-drag-n-drop-item" cdkDrag i18n="@@filterName">
           { filter.name, select, author {Студия} language {Язык} quality {Качество} url {Плеер} }
         </div>
@@ -66,7 +71,7 @@
         </mat-icon>
         <mat-slide-toggle [checked]="!shikivideos.expired"
                           (toggleChange)="shikivideos.expired ? auth.shikivideosSync() : auth.shikivideosDrop()"
-                          [title]="!shikivideos.expired ? 'Всё в порядке' : 'Обновить доступ'"></mat-slide-toggle>
+                          [matTooltip]="!shikivideos.expired ? 'Сбросить токен' : 'Обновить доступ'"></mat-slide-toggle>
       </h4>
       <div *ngIf="shikivideos.token">
         <b>Токен</b>: {{ shikivideos.token }}<br>
@@ -85,7 +90,7 @@
         </mat-icon>
         <mat-slide-toggle [checked]="!shikimori.expired"
                           (toggleChange)="shikimori.expired ? auth.shikimoriSync() : auth.shikimoriDrop()"
-                          [title]="!shikimori.expired ? 'Всё в порядке' : 'Обновить доступ'"></mat-slide-toggle>
+                          [matTooltip]="!shikimori.expired ? 'Сбросить токен' : 'Обновить доступ'"></mat-slide-toggle>
       </h4>
       <div *ngIf="shikimori.token">
         <b>Токен</b>: <span style="font-size: x-small">{{ shikimori.token }}</span><br>
@@ -98,8 +103,18 @@
 </mat-card>
 
 <div class="flex flex-end">
-  <button mat-stroked-button color="warn" title="Сбросить в настройки по-умолчанию" (click)="reset()">Сбросить</button>
-  <button mat-stroked-button color="accent" title="Вернуться к просмотру" (click)="back()">Вернуться</button>
+  <button mat-stroked-button
+          color="warn"
+          matTooltip="Сбросить в настройки по-умолчанию"
+          (click)="reset()">
+    Сбросить
+  </button>
+  <button mat-stroked-button
+          color="accent"
+          matTooltip="Вернуться к просмотру"
+          (click)="back()">
+    Вернуться
+  </button>
 </div>
 
 <app-notify></app-notify>

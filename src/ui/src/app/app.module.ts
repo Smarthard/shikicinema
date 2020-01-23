@@ -36,7 +36,7 @@ import {
   MatSelectModule,
   MatSlideToggleModule,
   MatSortModule,
-  MatTableModule
+  MatTableModule, MatTooltipModule
 } from '@angular/material';
 import {ControlBoxComponent} from './shared/components/control-box/control-box.component';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
@@ -83,7 +83,8 @@ import {DragDropModule} from '@angular/cdk/drag-drop';
     MatSelectModule,
     MatIconModule,
     MatMenuModule,
-    DragDropModule
+    DragDropModule,
+    MatTooltipModule
   ],
   providers: [
     { provide: LocationStrategy, useClass: HashLocationStrategy },
