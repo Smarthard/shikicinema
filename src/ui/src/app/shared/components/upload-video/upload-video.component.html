@@ -84,7 +84,7 @@
                     [(ngModel)]="autoIncEpisode"
                     [ngModelOptions]="{standalone: true}">Автоинкремент эпизода</mat-checkbox>
     </label>
-    <button mat-stroked-button
+    <button mat-flat-button
             *ngIf="!videoWasChecked"
             type="button" id="check-button"
             color="accent"
@@ -93,7 +93,7 @@
             (click)="checkVideo(video)">
       Проверить
     </button>
-    <button mat-stroked-button
+    <button mat-flat-button
             *ngIf="videoWasChecked"
             color="accent"
             type="submit" id="upload-button"
