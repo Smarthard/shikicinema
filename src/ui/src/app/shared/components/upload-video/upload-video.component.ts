@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
+import {Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild} from '@angular/core';
 import {HttpParams} from '@angular/common/http';
 import {ShikivideosService} from '../../../services/shikivideos-api/shikivideos.service';
 import {SmarthardNet} from '../../../types/smarthard-net';
@@ -6,15 +6,17 @@ import {NgForm} from '@angular/forms';
 import {ShikimoriService} from '../../../services/shikimori-api/shikimori.service';
 import {NotificationsService} from '../../../services/notifications/notifications.service';
 import {Notification, NotificationType} from '../../../types/notification';
-import {debounceTime, distinctUntilChanged, switchMap} from 'rxjs/operators';
-import {Subject} from 'rxjs';
+import {debounceTime, distinctUntilChanged, switchMap, takeWhile} from 'rxjs/operators';
+import {Subject, timer} from 'rxjs';
+import {AuthService} from '../../../services/auth/auth.service';
+import {ErrorStateMatcher} from '@angular/material';
 
 @Component({
   selector: 'app-upload-video',
   templateUrl: './upload-video.component.html',
   styleUrls: ['./upload-video.component.css']
 })
-export class UploadVideoComponent implements OnInit, OnChanges {
+export class UploadVideoComponent implements OnInit, OnDestroy, OnChanges {
 
   @Input()
   public animeId: number;
@@ -26,7 +28,18 @@ export class UploadVideoComponent implements OnInit, OnChanges {
   public episode: number;
 
   @Output()
-  public check: EventEmitter<SmarthardNet.Shikivideo> = new EventEmitter<SmarthardNet.Shikivideo>();
+  public check = new EventEmitter<SmarthardNet.Shikivideo>();
+
+  @Output()
+  public uploaded = new EventEmitter<SmarthardNet.Shikivideo>();
+
+  @ViewChild('authorInput', { static: true })
+  _inputAuthorRef: ElementRef;
+
+  autoIncEpisode = true;
+  isAlive = true;
+  videoWasChecked = false;
+  matcher = new ErrorStateMatcher();
 
   public video = new SmarthardNet.Shikivideo();
 
@@ -42,13 +55,26 @@ export class UploadVideoComponent implements OnInit, OnChanges {
     ))
   );
 
+  readonly tokenRefreshTimer$ = timer(0, 45 * 60 * 1000);
+
   constructor(
+    private auth: AuthService,
     private notify: NotificationsService,
     private videoApi: ShikivideosService,
     private shikimori: ShikimoriService
   ) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.tokenRefreshTimer$
+      .pipe(
+        takeWhile(() => this.isAlive),
+        switchMap(() => this.auth.shikivideosSync())
+      ).subscribe();
+  }
+
+  ngOnDestroy(): void {
+    this.isAlive = false;
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     this.shikimori.getAnime(this.animeId)
@@ -92,7 +118,7 @@ export class UploadVideoComponent implements OnInit, OnChanges {
       .set('anime_id', video.anime_id)
       .set('anime_english', video.anime_english)
       .set('anime_russian', video.anime_russian)
-      .set('author', video.author)
+      .set('author', video.author ? video.author : '')
       .set('episode', `${video.episode}`)
       .set('kind', video.kind)
       .set('language', video.language)
@@ -105,7 +131,11 @@ export class UploadVideoComponent implements OnInit, OnChanges {
         res => {
           if (res.status === 201) {
             this.notify.add(new Notification(NotificationType.OK, 'Видео успешно загружено!'));
-            this.video.episode++;
+            this.uploaded.emit(video);
+
+            if (this.autoIncEpisode) {
+              this.video.episode++;
+            }
           }
         },
         err => {
@@ -114,6 +144,11 @@ export class UploadVideoComponent implements OnInit, OnChanges {
             );
         }
       );
+  }
+
+  checkVideo(video: SmarthardNet.Shikivideo) {
+    this.videoWasChecked = true;
+    this.check.emit(video);
   }
 
 }

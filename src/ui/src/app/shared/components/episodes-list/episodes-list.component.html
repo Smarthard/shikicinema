@@ -13,7 +13,10 @@
       </span>
     </li>
   </ul>
-  <button *ngIf="limit < getEpisodes().length" class="mdc-button" (click)="limit = limit + 30" title="Следующие эпизоды">
-    <i class="material-icons">keyboard_arrow_down</i>
+  <button *ngIf="limit < getEpisodes().length"
+          (click)="limit = limit + 30"
+          title="Следующие эпизоды"
+          mat-flat-button>
+    <mat-icon>keyboard_arrow_down</mat-icon>
   </button>
 </div>

@@ -1,16 +1,18 @@
 @media (min-width: 1025px) {
+
   #player {
     margin-top: 10px;
     padding: 0 13%;
   }
 
-  .material-icons.md-24 {
+  mat-icon {
     font-size: 36px;
-    font-weight: 500;
   }
+
   .control-box-subtext {
     font-size: 8pt;
   }
+
   .control-box {
     margin: 20px;
   }
@@ -19,13 +21,8 @@
 
 @media (max-width: 1024px) and (orientation: landscape) {
 
-  #shikicinema-episode + .control-box-subtext {
-    margin-top: 6px;
-  }
-
-  .material-icons.md-24 {
-    font-size: 32px;
-    font-weight: 500;
+  mat-icon {
+    font-size: 36px;
   }
   .control-box-subtext {
     font-size: 7pt;
@@ -38,9 +35,17 @@
 
 @media (max-width: 1024px) and (orientation: portrait) {
 
-  .material-icons.md-24 {
+  #player {
+    display: block;
+    margin-top: 30px;
+  }
+
+  input#shikicinema-episode {
+    height: 36px;
+  }
+
+  .mat-icon {
     font-size: 32px;
-    font-weight: 500;
   }
   .control-box-subtext {
     font-size: 7pt;
@@ -51,6 +56,12 @@
 
 }
 
+mat-icon {
+  height: auto;
+  width: auto;
+  font-weight: 500;
+}
+
 #filters {
   display: flex;
   flex-direction: row;
@@ -59,7 +70,6 @@
 }
 
 #filters * {
-  min-width: 32.5%;
   margin: 0 5px;
 }
 
@@ -91,22 +101,14 @@
   border: none;
   padding: 0;
   margin: 0;
-  width: 87px;
-  height: 36px;
+  width: 80px;
+  height: 37px;
+  font: larger 'Roboto', sans-serif;
   text-align: center;
 }
 
 .control-box-subtext {
   text-align: center;
-}
-
-.mdc-button {
-  color: #333333;
-  background-color: white;
-}
-
-.mdc-button:disabled {
-  color: #999;
 }
 
 .watched {

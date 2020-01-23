@@ -6,7 +6,9 @@ import {ShikimoriService} from '../../services/shikimori-api/shikimori.service';
 import {ShikivideosService} from '../../services/shikivideos-api/shikivideos.service';
 import {Title} from '@angular/platform-browser';
 import {debounceTime, mergeMap, publishReplay, refCount, switchMap} from 'rxjs/operators';
-import {BehaviorSubject} from 'rxjs';
+import {BehaviorSubject, Observable} from 'rxjs';
+import {Sort} from '@angular/material';
+import {Shikimori} from '../../types/shikimori';
 
 @Component({
   selector: 'app-videos',
@@ -20,15 +22,17 @@ export class VideosComponent implements OnInit {
 
   public offset = 0;
   public pageSize = 20;
+  public sortedColumn: string = 'id';
+  public sortDirection: '' | '-' = '';
 
   public displayedColumns: string[] = ['id', 'anime_id', 'episode', 'author', 'uploader'];
 
-  readonly uploader$ = this.route.queryParams.pipe(
-    switchMap(query => this.shikimori.getUserInfo(query.uploader, new HttpParams().set('is_nickname', '1'))),
+  readonly uploader$: Observable<Shikimori.User> = this.route.queryParams.pipe(
+    switchMap(query => this.shikimori.getUserInfo(query.uploader)),
     publishReplay(1),
     refCount()
   );
-  readonly count$ = this.uploader$.pipe(
+  readonly count$: Observable<{ count: number }> = this.uploader$.pipe(
     switchMap(uploader => this.videosApi.contributions(new HttpParams()
       .set('uploader', `${uploader.nickname}+${uploader.id}`))
     ),
@@ -54,6 +58,11 @@ export class VideosComponent implements OnInit {
 
   ngOnInit() {
     this.uploader$.subscribe(uploader => this.title.setTitle(`Загрузки ${uploader.nickname}`));
+  }
+
+  sortData(sort: Sort) {
+    this.sortedColumn = sort.active;
+    this.sortDirection = sort.direction === 'desc' ? '-' : '';
   }
 
   changePage(event: PageEvent) {

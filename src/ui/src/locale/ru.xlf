@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xliff version="2.0" xmlns="urn:oasis:names:tc:xliff:document:2.0" srcLang="ru">
+  <file original="ng.template" id="ngi18n">
+    <unit id="filterName">
+      <notes>
+        <note category="location">src/app/shared/components/dropdown-filters/dropdown-filters.component.html:2,4</note>
+        <note category="location">src/app/shared/components/dropdown-filters/dropdown-filters.component.html:7,9</note>
+        <note category="location">src/app/routes/settings/settings.component.html:42,44</note>
+      </notes>
+      <segment>
+        <source>
+    <ph id="0" equiv="ICU" disp="{ placeholder, select, author {...} language {...} quality {...} url {...}}"/>
+  </source>
+      </segment>
+    </unit>
+    <unit id="3128597099427757943">
+      <notes>
+        <note category="location">src/app/shared/components/dropdown-filters/dropdown-filters.component.html:3</note>
+        <note category="location">src/app/shared/components/dropdown-filters/dropdown-filters.component.html:8</note>
+        <note category="location">src/app/routes/settings/settings.component.html:43</note>
+      </notes>
+      <segment>
+        <source>{VAR_SELECT, select, author {Студия} language {Язык} quality {Качество} url {Плеер} }</source>
+      </segment>
+    </unit>
+    <unit id="filterValues">
+      <notes>
+        <note category="location">src/app/shared/components/dropdown-filters/dropdown-filters.component.html:12,20</note>
+      </notes>
+      <segment>
+        <source>
+      <ph id="0" equiv="ICU" disp="{ value, select, english {...} original {...} russian {...} unknown {...} other {...}}"/>
+    </source>
+      </segment>
+    </unit>
+    <unit id="694173842290304957">
+      <notes>
+        <note category="location">src/app/shared/components/dropdown-filters/dropdown-filters.component.html:13,19</note>
+      </notes>
+      <segment>
+        <source>{VAR_SELECT, select, english {английский} original {оригинальный} russian {русский} unknown {<ph id="0" equiv="INTERPOLATION" disp="{{ column === &apos;language&apos; ? &apos;неизвестный&apos; : &apos;неизвестно&apos; }}"/> } other {<ph id="1" equiv="INTERPOLATION_1" disp="{{ value }}"/> } }</source>
+      </segment>
+    </unit>
+  </file>
+</xliff>

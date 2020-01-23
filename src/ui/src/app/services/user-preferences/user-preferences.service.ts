@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {SmarthardNet} from '../../types/smarthard-net';
 import {StorageService} from '../chrome-storage/storage.service';
 
@@ -15,6 +15,13 @@ export class UserPreferencesService {
         pref => {
           // keep it to be checking for typeof 'string' because of older versions compatibility
           this.prefMap = pref && typeof pref === 'string' ? new Map(JSON.parse(pref)) : this.prefMap;
+
+          for (let entry of this.prefMap.entries()) {
+            const key = entry[0];
+            const filter = entry[1];
+            const value = new SmarthardNet.VideoFilter(filter.author, null, null, filter.url, filter.quality);
+            this.prefMap.set(key, value)
+          }
         }
       )
   }

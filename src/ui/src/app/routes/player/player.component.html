@@ -1,91 +1,116 @@
-<div id="player">
+<div id="player" *ngIf="settings && (anime$ | async) as anime">
   <app-video-player [video]="currentVideo"></app-video-player>
 
   <ng-container *ngIf="(videos$ | async) as videos">
-    <div id="filters" *ngIf="videos.length > 0 && unique$ | async as unique">
-      <app-dropdown-filters [unique]="unique"
+    <div id="filters" *ngIf="videos.length > 0 && settings.playerFiltersEnabled && unique$ | async as unique">
+      <app-dropdown-filters *ngFor="let f of settings.playerFilters
+                              | filterBy: ['enabled']:true as enabledFilters"
+                            [unique]="unique"
                             [episode]="episode$ | async"
-                            (change)="filter.language = ($event !== 'Язык' ?  $event :  null)"
-                            column="language"
-                            placeholder="Язык"></app-dropdown-filters>
-      <app-dropdown-filters [unique]="unique"
-                            [episode]="episode$ | async"
-                            (change)="filter.author = ($event !== 'Студия' ?  $event :  null)"
-                            column="author"
-                            placeholder="Студия"></app-dropdown-filters>
-      <app-dropdown-filters [unique]="unique"
-                            [episode]="episode$ | async"
-                            (change)="filter.quality = ($event !== 'Качество' ?  $event :  null)"
-                            column="quality"
-                            placeholder="Качество"></app-dropdown-filters>
+                            [ngStyle]="{ 'width.%':  100 / enabledFilters.length }"
+                            (change)="filter[f.name] = $event"
+                            column="{{ f.name }}"
+                            placeholder="{{ f.name }}"></app-dropdown-filters>
     </div>
 
     <div id="controls">
       <app-control-box subtext="Предыдущий">
-        <button class="mdc-button"
+        <button mat-button
                 [disabled]="+urlParams.episode - 1 < 1"
-                (click)="changeEpisode(+urlParams.episode - 1, currentVideo)">
-          <i class="material-icons md-24">fast_rewind</i>
+                (click)="changeEpisode(+urlParams.episode - 1)">
+          <mat-icon>fast_rewind</mat-icon>
         </button>
       </app-control-box>
       <app-control-box subtext="прямая ссылка"
                        [href]="(currentVideo)?.url || '#'">
         <label for="shikicinema-episode"></label>
         <input id="shikicinema-episode"
-               class="mdc-text-field__input"
+               maxlength="5"
                [(ngModel)]="urlParams.episode"
                (ngModelChange)="changeEpisode($event)"
                value="1">
       </app-control-box>
-      <app-control-box subtext="Следующий"
-                       *ngIf="(maxEpisode$ | async) as max">
-        <button class="mdc-button"
-                [disabled]="+urlParams.episode + 1 > max.length"
-                (click)="changeEpisode(+urlParams.episode + 1, currentVideo)">
-          <i class="material-icons md-24">fast_forward</i>
+      <app-control-box subtext="Следующий">
+        <button mat-button
+                [disabled]="+urlParams.episode + 1 > (anime.episodes || anime.episodes_aired)"
+                (click)="changeEpisode(+urlParams.episode + 1)">
+          <mat-icon>fast_forward</mat-icon>
         </button>
       </app-control-box>
       <app-control-box subtext="Просмотрено"
                        *ngIf="(whoami$ | async) as user else sync"
-                       title="Отметить как просмотренную"
-                       (click)="markAsWatched(currentVideo, user)">
-        <button class="mdc-button"
+                       matTooltip="Отметить как просмотренную"
+                       matTooltipPosition="after"
+                       matTooltipShowDelay="1000"
+                       (click)="markAsWatched(anime, currentVideo.episode, user)">
+        <button mat-button
                 [class.watched]="watched(urlParams.episode)">
-          <i class="material-icons md-24">done</i>
+          <mat-icon>done</mat-icon>
         </button>
       </app-control-box>
       <ng-template #sync>
         <app-control-box subtext="Шикимори"
-                         title="Синхронизироваться с Шикимори"
+                         matTooltip="Синхронизироваться с Шикимори"
+                         matTooltipPosition="after"
+                         matTooltipShowDelay="1000"
                          (click)="synchronize()">
-          <button class="mdc-button">
-            <i class="material-icons md-24">sync</i>
+          <button mat-button>
+            <mat-icon>sync</mat-icon>
           </button>
         </app-control-box>
       </ng-template>
-      <app-control-box subtext="Загрузить"
-                       *ngIf="(whoami$ | async) else lockedUpload"
-                       title="Загрузить видео">
-        <button class="mdc-button"
-                (click)="openUploadForm()">
-          <i class="material-icons md-24">add</i>
-        </button>
-      </app-control-box>
-      <ng-template #lockedUpload>
+
+      <!-- those buttons will appear when related setting is on -->
+      <ng-container *ngIf="settings.extraButtons else extraInMenu">
         <app-control-box subtext="Загрузить"
-                         title="Требуется авторизация на Шикимори">
-          <button class="mdc-button"
-                  disabled>
-            <i class="material-icons md-24">add</i>
+                         *ngIf="(whoami$ | async) else lockedUpload"
+                         matTooltip="Загрузить видео"
+                         matTooltipPosition="after"
+                         matTooltipShowDelay="1000">
+          <button mat-button (click)="openUploadForm()">
+            <mat-icon>add</mat-icon>
+          </button>
+        </app-control-box>
+        <ng-template #lockedUpload>
+          <app-control-box subtext="Загрузить"
+                           matTooltip="Требуется авторизация на Шикимори">
+            <button mat-button disabled>
+              <mat-icon>add</mat-icon>
+            </button>
+          </app-control-box>
+        </ng-template>
+        <app-control-box subtext="Настройки"
+                         matTooltip="Настойки плагина"
+                         matTooltipPosition="after"
+                         matTooltipShowDelay="1000">
+          <button mat-button routerLink="/settings">
+            <mat-icon>settings_applications</mat-icon>
+          </button>
+        </app-control-box>
+      </ng-container>
+
+      <!-- those buttons hidden in dropdown menu -->
+      <ng-template #extraInMenu>
+        <mat-menu #extraButtonsMenu="matMenu">
+          <button mat-menu-item
+                  (click)="openUploadForm()">
+            {{ isUploadOpened ? 'Закрыть форму' : 'Загрузить видео' }}
+          </button>
+          <button mat-menu-item routerLink="/settings">
+            Настройки
+          </button>
+        </mat-menu>
+
+        <app-control-box subtext="Меню"
+                         matTooltip="Показать меню"
+                         matTooltipPosition="after"
+                         matTooltipShowDelay="1000">
+          <button mat-button [matMenuTriggerFor]="extraButtonsMenu">
+            <mat-icon>more_horiz</mat-icon>
           </button>
         </app-control-box>
       </ng-template>
-      <app-control-box subtext="Настройки"
-                       title="Настойки плагина">
-        <button class="mdc-button" routerLink="/settings">
-          <i class="material-icons md-24">settings_applications</i>
-        </button>
-      </app-control-box>
+
     </div>
 
     <div>
@@ -101,6 +126,7 @@
               | filterBy:['language']:filter.language
               | filterBy:['author']:filter.author
               | filterBy:['quality']:filter.quality
+              | filterBy:['url']:filter.player
              as filteredVideos
              else videosEmpty">
         <div id="series" *ngIf="settings.oldFagApproves">

@@ -47,6 +47,12 @@ export class PlayerComponent implements OnInit, OnDestroy {
     distinctUntilChanged()
   );
 
+  readonly anime$: Observable<Shikimori.Anime> = this.animeId$.pipe(
+    switchMap(animeId => this.shikimori.getAnime(animeId)),
+    publishReplay(1),
+    refCount()
+  );
+
   readonly episode$ = this.episodeSubject.pipe(
     switchMap(episode => {
       return episode !== 1 ? of(episode) : this.route.params.pipe(map(params => <number> params.episode || 1));
@@ -60,13 +66,6 @@ export class PlayerComponent implements OnInit, OnDestroy {
     )),
     map(videos => videos.map(video => new SmarthardNet.Shikivideo(video))),
     catchError(err => this._httpErrorHandler(err)),
-    publishReplay(1),
-    refCount()
-  );
-
-  readonly maxEpisode$: Observable<{ length: number }> = this.animeId$.pipe(
-    switchMap(animeId => this.videosApi.getAnimeMaxLoadedEp(animeId)),
-    catchError(() => of({ length: 0 })),
     publishReplay(1),
     refCount()
   );
@@ -142,6 +141,13 @@ export class PlayerComponent implements OnInit, OnDestroy {
       }
     );
 
+    this.anime$
+      .subscribe(anime => {
+        const title = anime.russian || anime.name;
+        const episode = this.urlParams.episode;
+        this.title.setTitle(`${title} - эпизод ${episode}`)
+      });
+
     this.videos$
       .pipe(
         takeWhile(() => this.isAlive),
@@ -151,12 +157,9 @@ export class PlayerComponent implements OnInit, OnDestroy {
         videos => {
         const query = this.route.snapshot.queryParams;
         const videoById = videos.filter(vid => query && query.id && vid.id == query.id)[0];
-        const video = videos[0];
-        let title = 'Shikicinema';
+        const favVideos = this._chooseFavourite(videos);
 
-        title = video ? video.anime_russian || video.anime_english : title;
-        this.title.setTitle(video ? `${title} - эпизод ${video.episode}` : title);
-        this.changeVideo(videos.length === 0 ? this.EMPTY_VIDEO : videoById ? videoById : this._chooseFavourite(videos)[0]);
+        this.changeVideo( videos.length === 0 ? this.EMPTY_VIDEO : (videoById ? videoById : favVideos[0]) );
       }
     );
 
@@ -183,24 +186,16 @@ export class PlayerComponent implements OnInit, OnDestroy {
     );
   }
 
-  public async changeEpisode(episode: number | string, fromVideo?: SmarthardNet.Shikivideo) {
+  async changeEpisode(episode: number | string) {
     if (episode != '') {
-
-      if (fromVideo && fromVideo.id !== this.EMPTY_VIDEO.id) {
-        const fav = new SmarthardNet.VideoFilter({
-          author: fromVideo.author,
-          player: fromVideo.getSecondLvlDomain(),
-          quality: fromVideo.quality
-        });
-        this.preferenses.set(+fromVideo.anime_id, fav);
-      }
-
       await this.router.navigate([`../${episode}`], { relativeTo:  this.route });
     }
   }
 
   changeVideo(video: SmarthardNet.Shikivideo) {
+    const fav = new SmarthardNet.VideoFilter(video.author, null, null, video.url, video.quality);
     this.currentVideo = video;
+    this.preferenses.set(+video.anime_id, fav);
     this.uploaderSubject.next(video.uploader);
   }
 
@@ -213,28 +208,31 @@ export class PlayerComponent implements OnInit, OnDestroy {
     return this.userRate && this.userRate.episodes >= episode;
   }
 
-  async markAsWatched(video: SmarthardNet.Shikivideo, user: Shikimori.User) {
+  async markAsWatched(anime: Shikimori.Anime, episode: number, user: Shikimori.User) {
     if (this.userRate.id) {
-      if (this.userRate.episodes < video.episode) {
+      if (this.userRate.episodes < episode) {
         const userRate = await this.shikimori.incUserRates(this.userRate).toPromise();
         this.userRate = new Shikimori.UserRate(userRate)
       }
     } else {
       this.userRate = new Shikimori.UserRate({
         user_id: user.id,
-        target_id: video.anime_id,
+        target_id: anime.id,
         target_type: 'Anime',
-        episodes: video.episode
+        episodes: episode
       });
 
       await this.shikimori.createUserRates(this.userRate).toPromise();
     }
-    this.changeEpisode(+video.episode + 1, video);
+
+    if (anime.episodes >= episode + 1) {
+      this.changeEpisode(episode + 1);
+    }
+
     this.notify.add(new Notification(NotificationType.OK, 'Просмотрено'));
   }
 
   openUploadForm() {
-    this.auth.shikivideosSync();
     this.isUploadOpened = !this.isUploadOpened;
   }
 

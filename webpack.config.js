@@ -35,8 +35,7 @@ module.exports = {
     },
     plugins: [
         new CopyPlugin([
-            { from: 'manifest.json' },
-            { from: '**', context: 'src/ui/dist/ui/'},
+            { from: 'manifest.json' }
         ])
     ],
     optimization: {

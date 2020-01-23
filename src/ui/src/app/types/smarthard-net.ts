@@ -40,14 +40,22 @@ export namespace SmarthardNet {
   }
 
   export class VideoFilter {
-    public author: string;
-    public kind: string;
-    public language: string;
-    public player: string;
-    public quality: string;
+    constructor(
+      public author?: string,
+      public kind?: string,
+      public language?: string,
+      public url?: string,
+      public quality?: string
+    ) {}
 
-    constructor(obj?: any) {
-      Object.assign(this, obj);
+    public get player() {
+      let url: URL;
+      try {
+        url = new URL(`${this.url}`.startsWith('http') ? this.url : `http://${this.url}`);
+      } catch (e) {
+        console.warn(e);
+      }
+      return this.url && url ? url.hostname.split('.').slice(-2).join('.') : null;
     }
   }
 
@@ -90,16 +98,30 @@ export namespace SmarthardNet {
     Unknown = 'UNKNOWN'
   }
 
+  export interface IToken {
+    readonly access_token: string,
+    readonly expires: string
+  }
+
   export class Token extends AbstractToken {
-    private access_token: string;
-    private expires: any;
+    constructor(
+      private access_token?: string,
+      private expires?: string
+    ) {
+      super();
+    }
 
     public get token(): string {
       return this.access_token;
     }
 
     public get expired(): boolean {
-      return new Date() > new Date(this.expires);
+      const expires = Date.parse(this.expires || '1970');
+      return Date.now() > expires;
+    }
+
+    public get expireDate(): Date {
+      return new Date(Date.parse(this.expires));
     }
   }
 }

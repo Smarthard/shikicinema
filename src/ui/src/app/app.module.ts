@@ -26,8 +26,21 @@ import {NitificationComponent} from './shared/components/nitification/nitificati
 import {SettingsComponent} from './routes/settings/settings.component';
 import {CompactVideoListComponent} from './shared/components/compact-video-list/compact-video-list.component';
 import {VideosComponent} from './routes/videos/videos.component';
-import {MatPaginatorModule, MatTableModule} from '@angular/material';
+import {
+  MatButtonModule,
+  MatCardModule,
+  MatCheckboxModule,
+  MatFormFieldModule, MatIconModule,
+  MatInputModule, MatMenuModule,
+  MatPaginatorModule,
+  MatSelectModule,
+  MatSlideToggleModule,
+  MatSortModule,
+  MatTableModule, MatTooltipModule
+} from '@angular/material';
 import {ControlBoxComponent} from './shared/components/control-box/control-box.component';
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+import {DragDropModule} from '@angular/cdk/drag-drop';
 
 @NgModule({
   declarations: [
@@ -58,7 +71,20 @@ import {ControlBoxComponent} from './shared/components/control-box/control-box.c
     FormsModule,
     NgPipesModule,
     MatTableModule,
-    MatPaginatorModule
+    MatButtonModule,
+    MatPaginatorModule,
+    MatCardModule,
+    MatCheckboxModule,
+    MatSlideToggleModule,
+    MatSortModule,
+    NoopAnimationsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatIconModule,
+    MatMenuModule,
+    DragDropModule,
+    MatTooltipModule
   ],
   providers: [
     { provide: LocationStrategy, useClass: HashLocationStrategy },
