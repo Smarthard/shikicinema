@@ -39,7 +39,9 @@
       </app-control-box>
       <app-control-box subtext="Просмотрено"
                        *ngIf="(whoami$ | async) as user else sync"
-                       title="Отметить как просмотренную"
+                       matTooltip="Отметить как просмотренную"
+                       matTooltipPosition="after"
+                       matTooltipShowDelay="1000"
                        (click)="markAsWatched(anime, currentVideo.episode, user)">
         <button mat-button
                 [class.watched]="watched(urlParams.episode)">
@@ -48,7 +50,9 @@
       </app-control-box>
       <ng-template #sync>
         <app-control-box subtext="Шикимори"
-                         title="Синхронизироваться с Шикимори"
+                         matTooltip="Синхронизироваться с Шикимори"
+                         matTooltipPosition="after"
+                         matTooltipShowDelay="1000"
                          (click)="synchronize()">
           <button mat-button>
             <mat-icon>sync</mat-icon>
@@ -60,21 +64,25 @@
       <ng-container *ngIf="settings.extraButtons else extraInMenu">
         <app-control-box subtext="Загрузить"
                          *ngIf="(whoami$ | async) else lockedUpload"
-                         title="Загрузить видео">
+                         matTooltip="Загрузить видео"
+                         matTooltipPosition="after"
+                         matTooltipShowDelay="1000">
           <button mat-button (click)="openUploadForm()">
             <mat-icon>add</mat-icon>
           </button>
         </app-control-box>
         <ng-template #lockedUpload>
           <app-control-box subtext="Загрузить"
-                           title="Требуется авторизация на Шикимори">
+                           matTooltip="Требуется авторизация на Шикимори">
             <button mat-button disabled>
               <mat-icon>add</mat-icon>
             </button>
           </app-control-box>
         </ng-template>
         <app-control-box subtext="Настройки"
-                         title="Настойки плагина">
+                         matTooltip="Настойки плагина"
+                         matTooltipPosition="after"
+                         matTooltipShowDelay="1000">
           <button mat-button routerLink="/settings">
             <mat-icon>settings_applications</mat-icon>
           </button>
@@ -94,7 +102,9 @@
         </mat-menu>
 
         <app-control-box subtext="Меню"
-                         title="Показать меню">
+                         matTooltip="Показать меню"
+                         matTooltipPosition="after"
+                         matTooltipShowDelay="1000">
           <button mat-button [matMenuTriggerFor]="extraButtonsMenu">
             <mat-icon>more_horiz</mat-icon>
           </button>
