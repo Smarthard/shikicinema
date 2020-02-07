@@ -1,4 +1,4 @@
-import {Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild} from '@angular/core';
+import {Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges, ViewChild} from '@angular/core';
 import {HttpParams} from '@angular/common/http';
 import {ShikivideosService} from '../../../services/shikivideos-api/shikivideos.service';
 import {SmarthardNet} from '../../../types/smarthard-net';
@@ -6,8 +6,8 @@ import {NgForm} from '@angular/forms';
 import {ShikimoriService} from '../../../services/shikimori-api/shikimori.service';
 import {NotificationsService} from '../../../services/notifications/notifications.service';
 import {Notification, NotificationType} from '../../../types/notification';
-import {debounceTime, distinctUntilChanged, switchMap, takeWhile} from 'rxjs/operators';
-import {Subject, timer} from 'rxjs';
+import {debounceTime, distinctUntilChanged, switchMap} from 'rxjs/operators';
+import {Subject} from 'rxjs';
 import {AuthService} from '../../../services/auth/auth.service';
 import {ErrorStateMatcher} from '@angular/material';
 
@@ -16,7 +16,7 @@ import {ErrorStateMatcher} from '@angular/material';
   templateUrl: './upload-video.component.html',
   styleUrls: ['./upload-video.component.css']
 })
-export class UploadVideoComponent implements OnInit, OnDestroy, OnChanges {
+export class UploadVideoComponent implements OnDestroy, OnChanges {
 
   @Input()
   public animeId: number;
@@ -55,22 +55,12 @@ export class UploadVideoComponent implements OnInit, OnDestroy, OnChanges {
     ))
   );
 
-  readonly tokenRefreshTimer$ = timer(0, 45 * 60 * 1000);
-
   constructor(
     private auth: AuthService,
     private notify: NotificationsService,
     private videoApi: ShikivideosService,
     private shikimori: ShikimoriService
   ) {}
-
-  ngOnInit() {
-    this.tokenRefreshTimer$
-      .pipe(
-        takeWhile(() => this.isAlive),
-        switchMap(() => this.auth.shikivideosSync())
-      ).subscribe();
-  }
 
   ngOnDestroy(): void {
     this.isAlive = false;

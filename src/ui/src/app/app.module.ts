@@ -41,6 +41,7 @@ import {
 import {ControlBoxComponent} from './shared/components/control-box/control-box.component';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {DragDropModule} from '@angular/cdk/drag-drop';
+import {ShikivideosRequestsInterceptor} from './shared/interceptors/shikivideos-requests.interceptor';
 
 @NgModule({
   declarations: [
@@ -89,6 +90,7 @@ import {DragDropModule} from '@angular/cdk/drag-drop';
   providers: [
     { provide: LocationStrategy, useClass: HashLocationStrategy },
     { provide: HTTP_INTERCEPTORS, useClass: HttpRequestsInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: ShikivideosRequestsInterceptor, multi: true },
     ShikivideosService,
     ShikimoriService
   ],
