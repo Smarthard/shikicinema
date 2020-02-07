@@ -200,8 +200,11 @@ export class PlayerComponent implements OnInit, OnDestroy {
   }
 
   async synchronize() {
-    await this.auth.shikimoriSync();
-    setTimeout(() => window.location.reload(), 700);
+    const token = await this.auth.shikimoriSync().toPromise();
+
+    if (token) {
+      setTimeout(() => window.location.reload(), 700);
+    }
   }
 
   watched(episode: number): boolean {

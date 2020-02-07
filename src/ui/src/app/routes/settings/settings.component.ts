@@ -54,6 +54,10 @@ export class SettingsComponent implements OnInit {
     return this.auth.shikivideosSync().toPromise();
   }
 
+  async newShikimori() {
+    return this.auth.shikimoriSync().toPromise();
+  }
+
   back() {
     this.location.back();
   }

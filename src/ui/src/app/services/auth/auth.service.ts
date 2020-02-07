@@ -2,12 +2,12 @@ import {Injectable} from '@angular/core';
 import {StorageService} from '../chrome-storage/storage.service';
 import {SmarthardNet} from '../../types/smarthard-net';
 import {Shikimori} from '../../types/shikimori';
-import {Observable, ReplaySubject} from 'rxjs';
+import {EMPTY, from, Observable, ReplaySubject} from 'rxjs';
 import {ShikimoriService} from '../shikimori-api/shikimori.service';
 import {NotificationsService} from '../notifications/notifications.service';
 import {Notification, NotificationType} from '../../types/notification';
 import {ShikivideosService} from '../shikivideos-api/shikivideos.service';
-import {tap} from 'rxjs/operators';
+import {catchError, tap} from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -59,14 +59,23 @@ export class AuthService {
     return this._shikimori;
   }
 
-  public shikimoriSync() {
+  public shikimoriSync(): Observable<Shikimori.Token> {
     if (!this.shikimori.resfresh) {
-      this.shikimoriService.getNewToken()
-        .then(token => this._updateShikimoriToken(token))
-        .catch(() => this.notify.add(new Notification(NotificationType.ERROR, 'Войдите в свой аккаунт на Шикимори')))
+      return from(this.shikimoriService.getNewToken())
+        .pipe(
+          tap((token) => this._updateShikimoriToken(token)),
+          catchError((err) => {
+            console.error(err);
+            this.notify.add(new Notification(NotificationType.ERROR, 'Пожалуйста, войдите в свой аккаунт на Шикимори'));
+
+            return EMPTY;
+          })
+        )
     } else {
-      this.shikimoriService.getRefreshedToken(this.shikimori)
-        .then(token => this._updateShikimoriToken(token))
+      return from(this.shikimoriService.getRefreshedToken(this.shikimori))
+        .pipe(
+          tap((token) => this._updateShikimoriToken(token))
+        )
     }
   }
 
