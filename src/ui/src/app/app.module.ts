@@ -29,6 +29,7 @@ import {
   MatButtonModule,
   MatCardModule,
   MatCheckboxModule,
+  MatDialogModule,
   MatFormFieldModule,
   MatIconModule,
   MatInputModule,
@@ -45,6 +46,7 @@ import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {DragDropModule} from '@angular/cdk/drag-drop';
 import {ShikivideosRequestsInterceptor} from './shared/interceptors/shikivideos-requests.interceptor';
 import {ShikimoriRequestsInterceptor} from './shared/interceptors/shikimori-requests.interceptor';
+import {AboutDialogComponent} from './shared/components/about-dialog/about-dialog.component';
 
 @NgModule({
   declarations: [
@@ -64,7 +66,8 @@ import {ShikimoriRequestsInterceptor} from './shared/interceptors/shikimori-requ
     SettingsComponent,
     CompactVideoListComponent,
     VideosComponent,
-    ControlBoxComponent
+    ControlBoxComponent,
+    AboutDialogComponent
   ],
   imports: [
     AppRoutingModule,
@@ -88,7 +91,8 @@ import {ShikimoriRequestsInterceptor} from './shared/interceptors/shikimori-requ
     MatIconModule,
     MatMenuModule,
     DragDropModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatDialogModule
   ],
   providers: [
     { provide: LocationStrategy, useClass: HashLocationStrategy },
@@ -97,6 +101,7 @@ import {ShikimoriRequestsInterceptor} from './shared/interceptors/shikimori-requ
     ShikivideosService,
     ShikimoriService
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [AboutDialogComponent]
 })
 export class AppModule { }

@@ -1,5 +1,6 @@
 /// <reference types="@types/chrome" />
 import {Component, OnDestroy, OnInit} from '@angular/core';
+import {AboutDialogComponent} from '../../shared/components/about-dialog/about-dialog.component';
 import {ShikivideosService} from '../../services/shikivideos-api/shikivideos.service';
 import {ShikimoriService} from '../../services/shikimori-api/shikimori.service';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -15,6 +16,7 @@ import {UserPreferencesService} from '../../services/user-preferences/user-prefe
 import {catchError, debounceTime, distinctUntilChanged, map, publishReplay, refCount, switchMap, takeWhile} from 'rxjs/operators';
 import {BehaviorSubject, iif, Observable, of} from 'rxjs';
 import {Notification, NotificationType} from '../../types/notification';
+import {MatDialog} from '@angular/material';
 
 @Component({
   selector: 'app-player',
@@ -117,7 +119,8 @@ export class PlayerComponent implements OnInit, OnDestroy {
     private videosApi: ShikivideosService,
     private shikimori: ShikimoriService,
     private settingsService: SettingsService,
-    private title: Title
+    private title: Title,
+    private dialog: MatDialog
   ) {}
 
   ngOnDestroy(): void {
@@ -235,6 +238,10 @@ export class PlayerComponent implements OnInit, OnDestroy {
 
   openUploadForm() {
     this.isUploadOpened = !this.isUploadOpened;
+  }
+
+  openAboutDialog() {
+    this.dialog.open(AboutDialogComponent);
   }
 
   private _chooseFavourite(videos: SmarthardNet.Shikivideo[]): SmarthardNet.Shikivideo[] {

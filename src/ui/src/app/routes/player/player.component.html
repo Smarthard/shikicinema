@@ -65,7 +65,7 @@
       </ng-template>
 
       <!-- those buttons will appear when related setting is on -->
-      <ng-container *ngIf="settings.extraButtons else extraInMenu">
+      <ng-container *ngIf="settings.extraButtons">
         <app-control-box subtext="Загрузить"
                          *ngIf="(whoami$ | async) else lockedUpload"
                          matTooltip="Загрузить видео"
@@ -93,15 +93,26 @@
         </app-control-box>
       </ng-container>
 
-      <!-- those buttons hidden in dropdown menu -->
-      <ng-template #extraInMenu>
+
         <mat-menu #extraButtonsMenu="matMenu">
-          <button mat-menu-item
-                  (click)="openUploadForm()">
-            {{ isUploadOpened ? 'Закрыть форму' : 'Загрузить видео' }}
+          <!-- those buttons hidden in dropdown menu -->
+          <ng-container *ngIf="!settings.extraButtons">
+            <button mat-menu-item
+                    (click)="openUploadForm()">
+              {{ isUploadOpened ? 'Закрыть форму' : 'Загрузить видео' }}
+            </button>
+            <button mat-menu-item
+                    routerLink="/settings">
+              Настройки
+            </button>
+          </ng-container>
+
+          <button mat-menu-item>
+            Жалоба
           </button>
-          <button mat-menu-item routerLink="/settings">
-            Настройки
+          <button mat-menu-item
+                  (click)="openAboutDialog()">
+            О программе
           </button>
         </mat-menu>
 
@@ -113,7 +124,7 @@
             <mat-icon>more_horiz</mat-icon>
           </button>
         </app-control-box>
-      </ng-template>
+
 
     </div>
 
