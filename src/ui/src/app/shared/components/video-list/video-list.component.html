@@ -5,7 +5,7 @@
       class="shc-links"
       (click)="change.emit(video)"
       title="{{ video.author }} - {{ video.url }}"
-      [class.selected]="video.id === chosen.id">
+      [class.selected]="chosen && video.id === chosen.id">
     <span class="hostname">({{ video.getSecondLvlDomain() }})</span>
 
     {{ !video.hasUnknownAttribute('author') ? video.author : 'неизвестно' }}
