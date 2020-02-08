@@ -211,28 +211,26 @@ export class PlayerComponent implements OnInit, OnDestroy {
     return this.userRate && this.userRate.episodes >= episode;
   }
 
-  async markAsWatched(anime: Shikimori.Anime, episode: number, user: Shikimori.User) {
-    if (this.userRate.id) {
-      if (this.userRate.episodes < episode) {
-        const userRate = await this.shikimori.incUserRates(this.userRate).toPromise();
-        this.userRate = new Shikimori.UserRate(userRate)
-      }
-    } else {
-      this.userRate = new Shikimori.UserRate({
-        user_id: user.id,
-        target_id: anime.id,
-        target_type: 'Anime',
-        episodes: episode
-      });
+  async watch(anime: Shikimori.Anime, episode: number, user: Shikimori.User, message: string) {
+    const userRate = new Shikimori.UserRate({
+      user_id: user.id,
+      target_id: anime.id,
+      target_type: 'Anime',
+      episodes: episode
+    });
 
-      await this.shikimori.createUserRates(this.userRate).toPromise();
+    if (this.userRate.id) {
+      userRate.id = this.userRate.id;
+      this.userRate = await this.shikimori.setUserRates(userRate).toPromise();
+    } else {
+      this.userRate = await this.shikimori.createUserRates(userRate).toPromise();
     }
 
     if (anime.episodes >= episode + 1) {
       this.changeEpisode(episode + 1);
     }
 
-    this.notify.add(new Notification(NotificationType.OK, 'Просмотрено'));
+    this.notify.add(new Notification(NotificationType.OK, message));
   }
 
   openUploadForm() {

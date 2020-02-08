@@ -39,10 +39,14 @@
       </app-control-box>
       <app-control-box subtext="Просмотрено"
                        *ngIf="(whoami$ | async) as user else sync"
-                       matTooltip="Отметить как просмотренную"
+                       [matTooltip]="watched(urlParams.episode)
+                                      ? 'Убрать отметку о просмотре'
+                                      : 'Отметить как просмотренную'"
                        matTooltipPosition="after"
                        matTooltipShowDelay="1000"
-                       (click)="markAsWatched(anime, currentVideo.episode, user)">
+                       (click)="watched(urlParams.episode)
+                                ? watch(anime, +currentVideo.episode - 1, user, 'Просмотр отменен')
+                                : watch(anime, currentVideo.episode, user, 'Просмотрено')">
         <button mat-button
                 [class.watched]="watched(urlParams.episode)">
           <mat-icon>done</mat-icon>
