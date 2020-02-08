@@ -238,6 +238,10 @@ export class PlayerComponent implements OnInit, OnDestroy {
   }
 
   private _chooseFavourite(videos: SmarthardNet.Shikivideo[]): SmarthardNet.Shikivideo[] {
+    if (videos.length === 0) {
+      return videos;
+    }
+
     const preferences = this.preferenses.get(+videos[0].anime_id);
     const byAuthor = videos.filter(value => value.author === preferences.author);
     const byPlayer = byAuthor.filter(value => value.getSecondLvlDomain() === preferences.player);
