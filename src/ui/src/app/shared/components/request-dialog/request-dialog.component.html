@@ -1,0 +1,104 @@
+<h2 mat-dialog-title>Создать запрос</h2>
+
+<mat-dialog-content>
+  <div>
+    <mat-form-field>
+      <mat-label>Тип</mat-label>
+      <mat-select [(ngModel)]="selectedRequestType">
+        <mat-option *ngFor="let type of REQUEST_TYPES"
+                    [value]="type">
+          { type, select, change {Изменение видео} issue {Жалоба на видео} delete {Удаление видео} }
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <div [ngSwitch]="selectedRequestType">
+    <div *ngSwitchCase="'change'">
+
+      <div>
+        <mat-form-field>
+          <mat-label>Автор</mat-label>
+          <input matInput
+                 type="text"
+                 [(ngModel)]="newVideo.author"
+                 required>
+        </mat-form-field>
+      </div>
+
+      <div class="flex">
+        <mat-form-field>
+          <mat-label>Эпизод</mat-label>
+          <input matInput
+                 type="number"
+                 [(ngModel)]="newVideo.episode"
+                 required>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Kind</mat-label>
+          <mat-select [(ngModel)]="newVideo.kind"
+                      required>
+            <mat-option *ngFor="let kind of KINDS"
+                        [value]="kind" ngDefaultControl>
+              {{ kind }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Качество</mat-label>
+          <mat-select [(ngModel)]="newVideo.quality"
+                      required>
+            <mat-option *ngFor="let quality of QUALITIES"
+                        [value]="quality" ngDefaultControl>
+              { quality, select, unknown {неизвестное} other { {{quality}} } }
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Язык</mat-label>
+          <mat-select [(ngModel)]="newVideo.language"
+                      required>
+            <mat-option *ngFor="let lang of LANGUAGES"
+                        [value]="lang" ngDefaultControl>
+              { lang, select, russian {русский} english {английский} original {оригинальный} unknown {неизвестный} }
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+    </div>
+
+    <div>
+      <mat-form-field floatLabel="always">
+        <mat-label>Комментарий</mat-label>
+        <textarea [(ngModel)]="comment"
+                  [required]="selectedRequestType !== 'change'"
+                  [placeholder]="commentPlaceholder(selectedRequestType)"
+                  matInput
+                  cdkTextareaAutosize
+                  maxlength="250"></textarea>
+      </mat-form-field>
+    </div>
+
+  </div>
+
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-raised-button
+          color="warn"
+          i18n="@@cancel"
+          (click)="close()">
+    ОТМЕНА
+  </button>
+  <button mat-raised-button
+          color="accent"
+          [disabled]="isSendButtonBlocked()"
+          i18n="@@send"
+          (click)="send()">
+    ОТПРАВИТЬ
+  </button>
+</mat-dialog-actions>

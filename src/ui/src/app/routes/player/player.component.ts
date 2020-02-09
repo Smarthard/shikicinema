@@ -14,9 +14,10 @@ import {ShikicinemaSettings} from '../../types/ShikicinemaSettings';
 import {SettingsService} from '../../services/settings/settings.service';
 import {UserPreferencesService} from '../../services/user-preferences/user-preferences.service';
 import {catchError, debounceTime, distinctUntilChanged, map, publishReplay, refCount, switchMap, takeWhile} from 'rxjs/operators';
-import {BehaviorSubject, iif, Observable, of} from 'rxjs';
+import {BehaviorSubject, EMPTY, iif, Observable, of} from 'rxjs';
 import {Notification, NotificationType} from '../../types/notification';
 import {MatDialog} from '@angular/material';
+import {IRequestDialogData, RequestDialogComponent} from '../../shared/components/request-dialog/request-dialog.component';
 
 @Component({
   selector: 'app-player',
@@ -242,6 +243,25 @@ export class PlayerComponent implements OnInit, OnDestroy {
 
   openAboutDialog() {
     this.dialog.open(AboutDialogComponent);
+  }
+
+  async openRequestsDialog() {
+    const user = await this.whoami$.toPromise();
+    const data: IRequestDialogData = {
+      video: this.currentVideo,
+      requester: `https://shikimori.one/${user.nickname}`
+    };
+    const requestDialogRef = this.dialog.open(RequestDialogComponent, { minWidth: '50%', disableClose: true, data });
+
+    requestDialogRef
+      .afterClosed()
+      .pipe(
+        switchMap((request: SmarthardNet.IRequest) => request ? this.videosApi.createRequest(request) : EMPTY)
+      )
+      .subscribe(
+        () => this.notify.add(new Notification(NotificationType.OK, 'Запрос успешно отправлен!')),
+        () => this.notify.add(new Notification(NotificationType.ERROR, 'Не удалось отправить'))
+      )
   }
 
   private _chooseFavourite(videos: SmarthardNet.Shikivideo[]): SmarthardNet.Shikivideo[] {

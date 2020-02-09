@@ -47,6 +47,7 @@ import {DragDropModule} from '@angular/cdk/drag-drop';
 import {ShikivideosRequestsInterceptor} from './shared/interceptors/shikivideos-requests.interceptor';
 import {ShikimoriRequestsInterceptor} from './shared/interceptors/shikimori-requests.interceptor';
 import {AboutDialogComponent} from './shared/components/about-dialog/about-dialog.component';
+import {RequestDialogComponent} from './shared/components/request-dialog/request-dialog.component';
 
 @NgModule({
   declarations: [
@@ -67,7 +68,8 @@ import {AboutDialogComponent} from './shared/components/about-dialog/about-dialo
     CompactVideoListComponent,
     VideosComponent,
     ControlBoxComponent,
-    AboutDialogComponent
+    AboutDialogComponent,
+    RequestDialogComponent
   ],
   imports: [
     AppRoutingModule,
@@ -102,6 +104,6 @@ import {AboutDialogComponent} from './shared/components/about-dialog/about-dialo
     ShikimoriService
   ],
   bootstrap: [AppComponent],
-  entryComponents: [AboutDialogComponent]
+  entryComponents: [AboutDialogComponent, RequestDialogComponent]
 })
 export class AppModule { }
