@@ -11,6 +11,22 @@ console.log('shikicinema loaded');
 
 observer.observe(document, {childList: true, subtree: true});
 
+function _getUploadedEpisodes(animeId) {
+    return fetch(`${SHIKIVIDEOS_API}/${animeId}/length`)
+      .then((res) => res.json())
+      .then((res) => res.length)
+      .catch(() => 0);
+}
+
+function _getEpisode(animeId) {
+    const spanEpisode = document.querySelector('span.current-episodes');
+    let episode = spanEpisode ? +spanEpisode.innerText + 1 : 1;
+
+    return _getUploadedEpisodes(animeId)
+              .then((length) => Math.max(Math.min(episode, +length), 1))
+              .catch(() => 1);
+}
+
 async function main() {
 
     const LOCATION = `${window.location}`;
@@ -64,8 +80,6 @@ async function main() {
 
     /* watch button logic */
     if (divInfo && LOCATION.includes('/animes/') && !document.querySelector('#watch_button')) {
-        let spanEpisode = document.querySelector('span.current-episodes');
-        let episode = spanEpisode ? +spanEpisode.innerText + 1 : 1;
         let animeId = LOCATION.match(/\d+/);
 
         playerButton.id = 'watch_button';
@@ -74,22 +88,18 @@ async function main() {
         playerButton.style.margin = '0 10%';
 
         if (animeId) {
-            fetch(`${SHIKIVIDEOS_API}/${animeId}/length`)
-                .then(response => response.json())
-                .then((res) => {
-                    let length = res.length || 0;
-                    episode = Math.max(Math.min(episode, length), 1);
-
-                    if (length === 0) {
-                        playerButton.textContent = 'Загрузить видео';
-                        playerButton.classList.remove('watch-online');
-                    }
-                });
+            const episodesAvailable = await _getUploadedEpisodes(animeId);
 
             divInfo.appendChild(playerButton);
             divInfo.appendChild(info);
 
-            playerButton.onclick = () => {
+            if (episodesAvailable === 0) {
+                playerButton.textContent = 'Загрузить видео';
+                playerButton.classList.remove('watch-online');
+            }
+
+            playerButton.onclick = async () => {
+                const episode = await _getEpisode(animeId);
                 chrome.runtime.sendMessage({ openUrl: `${PLAYER_URL}#/${animeId}/${episode}` });
             };
         } else {
