@@ -29,7 +29,7 @@ export class ShikivideosRequestsInterceptor implements HttpInterceptor {
     const headers = { 'User-Agent': `Shikicinema ${this.EXTENSION_VERSION}${this.IS_PRODUCTION ? '' : ' DEV'}`};
     const shikivideos = token || this.auth.shikivideos;
 
-    if (shikivideos && shikivideos.token) {
+    if (request.method === 'POST' && shikivideos && shikivideos.token) {
       headers['Authorization'] = `Bearer ${shikivideos.token}`;
     }
 
@@ -40,13 +40,13 @@ export class ShikivideosRequestsInterceptor implements HttpInterceptor {
     this.notify.add(
       new Notification(
         NotificationType.WARNING,
-        `Не удалось загрузить видео :(`
+        `Не удалось связаться с видео-архивом :(`
       )
     );
   }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    if (/smarthard/i.test(req.url) && req.method === 'POST') {
+    if (/smarthard/i.test(req.url)) {
       req = this._appendHeaders(req);
 
       return next.handle(req)
@@ -63,7 +63,10 @@ export class ShikivideosRequestsInterceptor implements HttpInterceptor {
                 );
             }
 
-            this._showWarningNotification();
+            if (req.method === 'POST') {
+              this._showWarningNotification();
+            }
+
             return throwError(err);
           })
         );
