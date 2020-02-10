@@ -38,6 +38,10 @@ body {
  justify-content: flex-end;
 }
 
+.with-space-between {
+  justify-content: space-between;
+}
+
 .note {
   padding: 20vh 0;
   font-size: xx-large;
