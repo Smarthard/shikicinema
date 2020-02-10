@@ -1,7 +1,0 @@
-mat-dialog-actions {
-  display: flex;
-  flex-direction: row;
-  align-content: flex-end;
-  align-items: flex-end;
-  float: right;
-}
