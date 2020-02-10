@@ -63,7 +63,9 @@ export class ShikimoriRequestsInterceptor implements HttpInterceptor {
                 );
             }
 
-            this._showWarningNotification();
+            if (req.method === 'POST') {
+              this._showWarningNotification();
+            }
             return throwError(err);
           })
         )
