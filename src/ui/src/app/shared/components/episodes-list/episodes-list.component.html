@@ -1,7 +1,9 @@
 <div>
   <b>Эпизоды</b>
   <ul *ngFor="let episode of (getEpisodes() | slice: 0:limit)">
-    <li class="shc-links" [class.selected]="episode == chosen.episode" (click)="change.emit(+episode)">
+    <li class="shc-links"
+        [class.selected]="chosen && episode == chosen.episode"
+        (click)="change.emit(+episode)">
       <span class="text">
         #{{ episode }}
       </span>

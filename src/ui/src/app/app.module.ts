@@ -20,7 +20,6 @@ import {DropdownFiltersComponent} from './shared/components/dropdown-filters/dro
 import {NgPipesModule} from 'ngx-pipes';
 import {ShikimoriService} from './services/shikimori-api/shikimori.service';
 import {UploadVideoComponent} from './shared/components/upload-video/upload-video.component';
-import {HttpRequestsInterceptor} from './shared/interceptors/requests.interceptor';
 import {NotifyComponent} from './shared/components/notify/notify.component';
 import {NitificationComponent} from './shared/components/nitification/nitification.component';
 import {SettingsComponent} from './routes/settings/settings.component';
@@ -30,17 +29,25 @@ import {
   MatButtonModule,
   MatCardModule,
   MatCheckboxModule,
-  MatFormFieldModule, MatIconModule,
-  MatInputModule, MatMenuModule,
+  MatDialogModule,
+  MatFormFieldModule,
+  MatIconModule,
+  MatInputModule,
+  MatMenuModule,
   MatPaginatorModule,
   MatSelectModule,
   MatSlideToggleModule,
   MatSortModule,
-  MatTableModule, MatTooltipModule
+  MatTableModule,
+  MatTooltipModule
 } from '@angular/material';
 import {ControlBoxComponent} from './shared/components/control-box/control-box.component';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {DragDropModule} from '@angular/cdk/drag-drop';
+import {ShikivideosRequestsInterceptor} from './shared/interceptors/shikivideos-requests.interceptor';
+import {ShikimoriRequestsInterceptor} from './shared/interceptors/shikimori-requests.interceptor';
+import {AboutDialogComponent} from './shared/components/about-dialog/about-dialog.component';
+import {RequestDialogComponent} from './shared/components/request-dialog/request-dialog.component';
 
 @NgModule({
   declarations: [
@@ -60,7 +67,9 @@ import {DragDropModule} from '@angular/cdk/drag-drop';
     SettingsComponent,
     CompactVideoListComponent,
     VideosComponent,
-    ControlBoxComponent
+    ControlBoxComponent,
+    AboutDialogComponent,
+    RequestDialogComponent
   ],
   imports: [
     AppRoutingModule,
@@ -84,14 +93,17 @@ import {DragDropModule} from '@angular/cdk/drag-drop';
     MatIconModule,
     MatMenuModule,
     DragDropModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatDialogModule
   ],
   providers: [
     { provide: LocationStrategy, useClass: HashLocationStrategy },
-    { provide: HTTP_INTERCEPTORS, useClass: HttpRequestsInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: ShikivideosRequestsInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: ShikimoriRequestsInterceptor, multi: true },
     ShikivideosService,
     ShikimoriService
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [AboutDialogComponent, RequestDialogComponent]
 })
 export class AppModule { }

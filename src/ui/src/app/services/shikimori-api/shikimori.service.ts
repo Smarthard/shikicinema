@@ -28,7 +28,9 @@ export class ShikimoriService {
   }
 
   public setUserRates(userRate: Shikimori.UserRate): Observable<Shikimori.UserRate> {
-    return this.http.put<Shikimori.UserRate>(`${this.SHIKIMORI_URL}/api/v2/user_rates/${userRate.id}`, userRate, { withCredentials: true })
+    const id = userRate.id;
+
+    return this.http.put<Shikimori.UserRate>(`${this.SHIKIMORI_URL}/api/v2/user_rates/${id}`, userRate, { withCredentials: true })
       .pipe(
         catchError(err => { console.warn(err); return of({}) })
       );

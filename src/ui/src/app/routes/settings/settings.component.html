@@ -70,7 +70,7 @@
           help
         </mat-icon>
         <mat-slide-toggle [checked]="!shikivideos.expired"
-                          (toggleChange)="shikivideos.expired ? auth.shikivideosSync() : auth.shikivideosDrop()"
+                          (toggleChange)="shikivideos.expired ? newShikivideos()  : auth.shikivideosDrop()"
                           [matTooltip]="!shikivideos.expired ? 'Сбросить токен' : 'Обновить доступ'"></mat-slide-toggle>
       </h4>
       <div *ngIf="shikivideos.token">
@@ -89,7 +89,7 @@
           help
         </mat-icon>
         <mat-slide-toggle [checked]="!shikimori.expired"
-                          (toggleChange)="shikimori.expired ? auth.shikimoriSync() : auth.shikimoriDrop()"
+                          (toggleChange)="shikimori.expired ? newShikimori() : auth.shikimoriDrop()"
                           [matTooltip]="!shikimori.expired ? 'Сбросить токен' : 'Обновить доступ'"></mat-slide-toggle>
       </h4>
       <div *ngIf="shikimori.token">

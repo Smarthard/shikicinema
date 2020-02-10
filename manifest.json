@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "shikicinema",
-  "version": "0.6.0",
+  "version": "0.6.1",
 
   "icons": {
     "64": "assets/icon64.png",
@@ -9,7 +9,7 @@
   },
 
   "description": "Returns video player on Shikimori",
-  "content_security_policy": "default-src 'self'; img-src *; frame-src *; font-src *; style-src 'unsafe-inline' https://*.googleapis.com https://unpkg.com; connect-src https://smarthard.net https://shikimori.org https://shikimori.one; script-src 'self' 'unsafe-eval'",
+  "content_security_policy": "default-src 'self'; img-src *; frame-src *; font-src *; style-src 'unsafe-inline' https://*.googleapis.com; connect-src https://smarthard.net https://shikimori.org https://shikimori.one; script-src 'self' 'unsafe-eval'",
 
   "browser_specific_settings": {
     "gecko": {

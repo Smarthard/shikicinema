@@ -1,0 +1,23 @@
+mat-form-field {
+  margin: 5px;
+  width: 100%;
+}
+
+mat-dialog-actions {
+  display: flex;
+  flex-direction: row;
+  align-content: flex-end;
+  align-items: flex-end;
+  float: right;
+}
+
+.max-width {
+  width: 100%;
+}
+
+@media (max-width: 1024px) {
+  mat-form-field {
+    margin: 5px 0;
+    width: 100%;
+  }
+}

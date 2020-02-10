@@ -124,4 +124,38 @@ export namespace SmarthardNet {
       return new Date(Date.parse(this.expires));
     }
   }
+
+  export interface IRequest {
+    readonly id?: number,
+    readonly type?: string,
+    readonly target_id?: number,
+    readonly requester?: string,
+    readonly comment?: string,
+    readonly request?: object,
+    readonly old?: object,
+    readonly approved?: boolean,
+    readonly reviewer_id?: number,
+    readonly reviewed?: string,
+    readonly feedback?: string,
+    readonly createdAt?: string
+  }
+
+  export class Request {
+
+    constructor(
+      public id: number,
+      public type: string,
+      public targetId: number,
+      public requester: string,
+      public comment: string,
+      public request: object,
+      public old: object,
+      public approved: boolean,
+      public reviewerId: number,
+      public reviewed: Date,
+      public feedback: string,
+      public created: Date
+    ) {}
+
+  }
 }

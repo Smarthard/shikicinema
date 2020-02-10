@@ -1,5 +1,6 @@
 /// <reference types="@types/chrome" />
 import {Component, OnDestroy, OnInit} from '@angular/core';
+import {AboutDialogComponent} from '../../shared/components/about-dialog/about-dialog.component';
 import {ShikivideosService} from '../../services/shikivideos-api/shikivideos.service';
 import {ShikimoriService} from '../../services/shikimori-api/shikimori.service';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -13,8 +14,10 @@ import {ShikicinemaSettings} from '../../types/ShikicinemaSettings';
 import {SettingsService} from '../../services/settings/settings.service';
 import {UserPreferencesService} from '../../services/user-preferences/user-preferences.service';
 import {catchError, debounceTime, distinctUntilChanged, map, publishReplay, refCount, switchMap, takeWhile} from 'rxjs/operators';
-import {BehaviorSubject, iif, Observable, of} from 'rxjs';
+import {BehaviorSubject, EMPTY, iif, Observable, of} from 'rxjs';
 import {Notification, NotificationType} from '../../types/notification';
+import {MatDialog} from '@angular/material';
+import {IRequestDialogData, RequestDialogComponent} from '../../shared/components/request-dialog/request-dialog.component';
 
 @Component({
   selector: 'app-player',
@@ -117,7 +120,8 @@ export class PlayerComponent implements OnInit, OnDestroy {
     private videosApi: ShikivideosService,
     private shikimori: ShikimoriService,
     private settingsService: SettingsService,
-    private title: Title
+    private title: Title,
+    private dialog: MatDialog
   ) {}
 
   ngOnDestroy(): void {
@@ -200,43 +204,71 @@ export class PlayerComponent implements OnInit, OnDestroy {
   }
 
   async synchronize() {
-    await this.auth.shikimoriSync();
-    setTimeout(() => window.location.reload(), 700);
+    const token = await this.auth.shikimoriSync().toPromise();
+
+    if (token) {
+      setTimeout(() => window.location.reload(), 700);
+    }
   }
 
   watched(episode: number): boolean {
     return this.userRate && this.userRate.episodes >= episode;
   }
 
-  async markAsWatched(anime: Shikimori.Anime, episode: number, user: Shikimori.User) {
-    if (this.userRate.id) {
-      if (this.userRate.episodes < episode) {
-        const userRate = await this.shikimori.incUserRates(this.userRate).toPromise();
-        this.userRate = new Shikimori.UserRate(userRate)
-      }
-    } else {
-      this.userRate = new Shikimori.UserRate({
-        user_id: user.id,
-        target_id: anime.id,
-        target_type: 'Anime',
-        episodes: episode
-      });
+  async watch(anime: Shikimori.Anime, episode: number, user: Shikimori.User, message: string) {
+    const userRate = new Shikimori.UserRate({
+      user_id: user.id,
+      target_id: anime.id,
+      target_type: 'Anime',
+      episodes: episode
+    });
 
-      await this.shikimori.createUserRates(this.userRate).toPromise();
+    if (this.userRate.id) {
+      userRate.id = this.userRate.id;
+      this.userRate = await this.shikimori.setUserRates(userRate).toPromise();
+    } else {
+      this.userRate = await this.shikimori.createUserRates(userRate).toPromise();
     }
 
     if (anime.episodes >= episode + 1) {
       this.changeEpisode(episode + 1);
     }
 
-    this.notify.add(new Notification(NotificationType.OK, 'Просмотрено'));
+    this.notify.add(new Notification(NotificationType.OK, message));
   }
 
   openUploadForm() {
     this.isUploadOpened = !this.isUploadOpened;
   }
 
+  openAboutDialog() {
+    this.dialog.open(AboutDialogComponent);
+  }
+
+  async openRequestsDialog() {
+    const user = await this.whoami$.toPromise();
+    const data: IRequestDialogData = {
+      video: this.currentVideo,
+      requester: `https://shikimori.one/${user.nickname}`
+    };
+    const requestDialogRef = this.dialog.open(RequestDialogComponent, { minWidth: '50%', disableClose: true, data });
+
+    requestDialogRef
+      .afterClosed()
+      .pipe(
+        switchMap((request: SmarthardNet.IRequest) => request ? this.videosApi.createRequest(request) : EMPTY)
+      )
+      .subscribe(
+        () => this.notify.add(new Notification(NotificationType.OK, 'Запрос успешно отправлен!')),
+        () => this.notify.add(new Notification(NotificationType.ERROR, 'Не удалось отправить'))
+      )
+  }
+
   private _chooseFavourite(videos: SmarthardNet.Shikivideo[]): SmarthardNet.Shikivideo[] {
+    if (videos.length === 0) {
+      return videos;
+    }
+
     const preferences = this.preferenses.get(+videos[0].anime_id);
     const byAuthor = videos.filter(value => value.author === preferences.author);
     const byPlayer = byAuthor.filter(value => value.getSecondLvlDomain() === preferences.player);
