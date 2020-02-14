@@ -16,7 +16,7 @@ import {UserPreferencesService} from '../../services/user-preferences/user-prefe
 import {catchError, debounceTime, distinctUntilChanged, map, publishReplay, refCount, switchMap, takeWhile} from 'rxjs/operators';
 import {BehaviorSubject, EMPTY, iif, Observable, of} from 'rxjs';
 import {Notification, NotificationType} from '../../types/notification';
-import {MatDialog} from '@angular/material';
+import {MatDialog} from '@angular/material/dialog';
 import {IRequestDialogData, RequestDialogComponent} from '../../shared/components/request-dialog/request-dialog.component';
 
 @Component({
