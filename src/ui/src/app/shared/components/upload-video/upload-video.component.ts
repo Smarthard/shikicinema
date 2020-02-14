@@ -9,7 +9,7 @@ import {Notification, NotificationType} from '../../../types/notification';
 import {debounceTime, distinctUntilChanged, switchMap} from 'rxjs/operators';
 import {Subject} from 'rxjs';
 import {AuthService} from '../../../services/auth/auth.service';
-import {ErrorStateMatcher} from '@angular/material';
+import {ErrorStateMatcher} from '@angular/material/core';
 
 @Component({
   selector: 'app-upload-video',
@@ -32,6 +32,9 @@ export class UploadVideoComponent implements OnDestroy, OnChanges {
 
   @Output()
   public uploaded = new EventEmitter<SmarthardNet.Shikivideo>();
+
+  @Output()
+  public close = new EventEmitter();
 
   @ViewChild('authorInput', { static: true })
   _inputAuthorRef: ElementRef;

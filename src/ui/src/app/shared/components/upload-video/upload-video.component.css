@@ -45,6 +45,10 @@ form {
   display: flex;
 }
 
-#upload-controls button {
+#close-button {
   margin-left: auto;
+}
+
+button {
+  margin: 5px;
 }

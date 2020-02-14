@@ -7,7 +7,7 @@ import {ShikivideosService} from '../../services/shikivideos-api/shikivideos.ser
 import {Title} from '@angular/platform-browser';
 import {debounceTime, mergeMap, publishReplay, refCount, switchMap} from 'rxjs/operators';
 import {BehaviorSubject, Observable} from 'rxjs';
-import {Sort} from '@angular/material';
+import {Sort} from '@angular/material/sort';
 import {Shikimori} from '../../types/shikimori';
 
 @Component({
