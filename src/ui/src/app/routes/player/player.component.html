@@ -109,7 +109,7 @@
           </ng-container>
 
           <button mat-menu-item
-                  [disabled]="!(whoami$ | async)?.id"
+                  [disabled]="!(whoami$ | async)?.id || currentVideo.id === EMPTY_VIDEO.id"
                   (click)="openRequestsDialog()">
             Жалоба
           </button>
