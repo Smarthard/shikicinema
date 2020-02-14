@@ -85,8 +85,16 @@
                     [ngModelOptions]="{standalone: true}">Автоинкремент эпизода</mat-checkbox>
     </label>
     <button mat-flat-button
+            id="close-button"
+            type="button"
+            color="warn"
+            title="Закрыть форму загрузки"
+            (click)="close.emit($event)">
+      Закрыть
+    </button>
+    <button mat-flat-button
             *ngIf="!videoWasChecked"
-            type="button" id="check-button"
+            type="button"
             color="accent"
             title="Проверить видео в плеере"
             [disabled]="videoForm.invalid"
@@ -96,7 +104,7 @@
     <button mat-flat-button
             *ngIf="videoWasChecked"
             color="accent"
-            type="submit" id="upload-button"
+            type="submit"
             [title]="videoForm.invalid ? 'Перед загрузкой, введите корректные данные' : 'Загрузить видео в архив'"
             [disabled]="videoForm.invalid">
       Загрузить

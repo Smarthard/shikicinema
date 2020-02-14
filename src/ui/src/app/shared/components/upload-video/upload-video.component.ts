@@ -33,6 +33,9 @@ export class UploadVideoComponent implements OnDestroy, OnChanges {
   @Output()
   public uploaded = new EventEmitter<SmarthardNet.Shikivideo>();
 
+  @Output()
+  public close = new EventEmitter();
+
   @ViewChild('authorInput', { static: true })
   _inputAuthorRef: ElementRef;
 

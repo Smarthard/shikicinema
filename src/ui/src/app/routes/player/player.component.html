@@ -71,7 +71,7 @@
                          matTooltip="Загрузить видео"
                          matTooltipPosition="after"
                          matTooltipShowDelay="1000">
-          <button mat-button (click)="openUploadForm()">
+          <button mat-button (click)="isUploadOpened ? closeUploadForm() : openUploadForm()">
             <mat-icon>add</mat-icon>
           </button>
         </app-control-box>
@@ -100,7 +100,7 @@
             <button mat-menu-item
                     [disabled]="!(whoami$ | async)?.id"
                     (click)="openUploadForm()">
-              {{ isUploadOpened ? 'Закрыть форму' : 'Загрузить видео' }}
+              Загрузить видео
             </button>
             <button mat-menu-item
                     routerLink="/settings">
@@ -135,6 +135,7 @@
       <div id="upload-form" *ngIf="isUploadOpened && (whoami$ | async) as user">
         <app-upload-video *ngIf="user && user.id"
                           (check)="changeVideo($event)"
+                          (close)="closeUploadForm()"
                           [uploaderId]="user.id"
                           [animeId]="urlParams.animeId"
                           [episode]="urlParams.episode"></app-upload-video>

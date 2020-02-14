@@ -238,7 +238,11 @@ export class PlayerComponent implements OnInit, OnDestroy {
   }
 
   openUploadForm() {
-    this.isUploadOpened = !this.isUploadOpened;
+    this.isUploadOpened = true;
+  }
+
+  closeUploadForm() {
+    this.isUploadOpened = false;
   }
 
   openAboutDialog() {
