@@ -38,6 +38,10 @@ body {
  justify-content: flex-end;
 }
 
+.flex-column {
+  flex-direction: column;
+}
+
 .with-space-between {
   justify-content: space-between;
 }
