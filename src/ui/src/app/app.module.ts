@@ -39,8 +39,9 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import {MatSortModule} from '@angular/material/sort';
 import {MatTableModule} from '@angular/material/table';
 import {MatTooltipModule} from '@angular/material/tooltip';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {ControlBoxComponent} from './shared/components/control-box/control-box.component';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {DragDropModule} from '@angular/cdk/drag-drop';
 import {ShikivideosRequestsInterceptor} from './shared/interceptors/shikivideos-requests.interceptor';
 import {ShikimoriRequestsInterceptor} from './shared/interceptors/shikimori-requests.interceptor';
@@ -69,31 +70,32 @@ import {RequestDialogComponent} from './shared/components/request-dialog/request
     AboutDialogComponent,
     RequestDialogComponent
   ],
-  imports: [
-    AppRoutingModule,
-    BrowserModule,
-    HttpClientModule,
-    NgxResponsiveEmbedModule,
-    CommonModule,
-    FormsModule,
-    NgPipesModule,
-    MatTableModule,
-    MatButtonModule,
-    MatPaginatorModule,
-    MatCardModule,
-    MatCheckboxModule,
-    MatSlideToggleModule,
-    MatSortModule,
-    NoopAnimationsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatSelectModule,
-    MatIconModule,
-    MatMenuModule,
-    DragDropModule,
-    MatTooltipModule,
-    MatDialogModule
-  ],
+    imports: [
+        AppRoutingModule,
+        BrowserModule,
+        HttpClientModule,
+        NgxResponsiveEmbedModule,
+        CommonModule,
+        FormsModule,
+        NgPipesModule,
+        MatTableModule,
+        MatButtonModule,
+        MatPaginatorModule,
+        MatCardModule,
+        MatCheckboxModule,
+        MatSlideToggleModule,
+        MatSortModule,
+        BrowserAnimationsModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatSelectModule,
+        MatIconModule,
+        MatMenuModule,
+        DragDropModule,
+        MatTooltipModule,
+        MatDialogModule,
+        MatProgressSpinnerModule
+    ],
   providers: [
     { provide: LocationStrategy, useClass: HashLocationStrategy },
     { provide: HTTP_INTERCEPTORS, useClass: ShikivideosRequestsInterceptor, multi: true },

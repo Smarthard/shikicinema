@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpParams, HttpResponse} from '@angular/common/http';
+import {HttpClient, HttpHeaders, HttpParams, HttpResponse} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {SmarthardNet} from '../../types/smarthard-net';
 import {environment} from '../../../environments/environment';
@@ -93,5 +93,11 @@ export class ShikivideosService {
       .pipe(
         map((request) => this._buildRequest(request))
       );
+  }
+
+  public getReleaseNotes(version: string) {
+    const headers = new HttpHeaders().set('Content-Type', 'text/plain; charset=utf-8');
+
+    return this.http.get(`${this.SHIKIVIDEOS_API}/release-notes/${version}`, { headers, responseType: 'text'});
   }
 }

@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {MatDialogRef} from '@angular/material/dialog';
 import {environment} from '../../../../environments/environment';
+import {ShikivideosService} from '../../../services/shikivideos-api/shikivideos.service';
 
 @Component({
   selector: 'app-about-dialog',
@@ -11,8 +12,10 @@ export class AboutDialogComponent implements OnInit {
 
   readonly VERSION = chrome.runtime.getManifest().version;
   readonly IS_PRODUCTION = environment.production;
+  readonly releaseNotes$ = this.shikivideos.getReleaseNotes(this.VERSION);
 
   constructor(
+    private shikivideos: ShikivideosService,
     private dialogRef: MatDialogRef<AboutDialogComponent>
   ) { }
 

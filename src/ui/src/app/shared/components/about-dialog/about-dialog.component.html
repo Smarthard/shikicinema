@@ -4,14 +4,32 @@
 </h2>
 
 <mat-dialog-content>
-  <div>
+  <div class="flex flex-column">
     <p>Спасибо, что используете Shikicinema!</p>
-    <p>Здесь будут появляться заметки о выпуске.</p>
 
-    Обратная связь:
-    <a href="https://shikimori.one/th3_smart" target="_blank" class="shc-links">Shikimori</a> |
-    <a href="https://github.com/Smarthard/shikicinema" target="_blank" class="shc-links">GitHub</a> |
-    <a href="mailto:th3smartchan@gmail.com" class="shc-links">E-mail</a>
+    <div *ngIf="(releaseNotes$ | async) as releaseNotes else loading">
+      <b>Changelog:</b>
+      <div [innerHTML]="releaseNotes"></div>
+      Изменения в более старых версиях можно посмотреть<a class="shc-links"
+         target="_blank"
+         href="https://addons.mozilla.org/en-US/firefox/addon/shikicinema/versions/">
+        здесь
+      </a>
+    </div>
+
+    <ng-template #loading>
+      <div class="flex">
+        <mat-spinner [diameter]="50"
+                     color="primary"></mat-spinner>
+      </div>
+    </ng-template>
+
+    <p>
+      Обратная связь:
+      <a href="https://shikimori.one/th3_smart" target="_blank" class="shc-links">Shikimori</a> |
+      <a href="https://github.com/Smarthard/shikicinema" target="_blank" class="shc-links">GitHub</a> |
+      <a href="mailto:th3smartchan@gmail.com" class="shc-links">E-mail</a>
+    </p>
   </div>
 </mat-dialog-content>
 
