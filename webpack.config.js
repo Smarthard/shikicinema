@@ -7,7 +7,7 @@ const IS_PRODUCTION = process.env.NODE_ENV === 'production';
 module.exports = {
     context: path.resolve(__dirname, ''),
     entry: {
-        shikicinema: './src/shikicinema.js',
+        shikicinema: ['./src/watch-button.js', './src/contributions.js'],
         background: './src/background.js'
     },
     output: {
