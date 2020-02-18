@@ -18,6 +18,19 @@ function _getUploadedEpisodes(animeId) {
       .catch(() => 0);
 }
 
+function _getKodikEpisodes(animeTitle) {
+    const query = `strict=true&types=anime,anime-serial&title=${animeTitle}`;
+
+    return fetch(`https://smarthard.net/api/kodik/search?${query}`)
+      .then((res) => res.json())
+      .then((res) => res.total);
+}
+
+function _getAnimeInfo(animeId) {
+    return fetch(`https://shikimori.one/api/animes/${animeId}`)
+      .then((res) => res.json());
+}
+
 function _getEpisode(animeId) {
     const spanEpisode = document.querySelector('span.current-episodes');
     let episode = spanEpisode ? +spanEpisode.innerText + 1 : 1;
@@ -89,11 +102,12 @@ async function main() {
 
         if (animeId) {
             const episodesAvailable = await _getUploadedEpisodes(animeId);
+            const anime = await _getAnimeInfo(animeId);
 
             divInfo.appendChild(playerButton);
             divInfo.appendChild(info);
 
-            if (episodesAvailable === 0) {
+            if (episodesAvailable === 0 && await _getKodikEpisodes(anime.name) === 0) {
                 playerButton.textContent = 'Загрузить видео';
                 playerButton.classList.remove('watch-online');
             }
