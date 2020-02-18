@@ -14,10 +14,11 @@ import {ShikicinemaSettings} from '../../types/ShikicinemaSettings';
 import {SettingsService} from '../../services/settings/settings.service';
 import {UserPreferencesService} from '../../services/user-preferences/user-preferences.service';
 import {catchError, debounceTime, distinctUntilChanged, map, publishReplay, refCount, switchMap, takeWhile} from 'rxjs/operators';
-import {BehaviorSubject, EMPTY, iif, Observable, of} from 'rxjs';
+import {BehaviorSubject, combineLatest, EMPTY, iif, Observable, of} from 'rxjs';
 import {Notification, NotificationType} from '../../types/notification';
 import {MatDialog} from '@angular/material/dialog';
 import {IRequestDialogData, RequestDialogComponent} from '../../shared/components/request-dialog/request-dialog.component';
+import {KodikService} from '../../services/kodik-api/kodik.service';
 
 @Component({
   selector: 'app-player',
@@ -46,7 +47,7 @@ export class PlayerComponent implements OnInit, OnDestroy {
   readonly uploaderSubject = new BehaviorSubject<string>(null);
 
   readonly animeId$ = this.route.params.pipe(
-    map(params => <number> +params.animeId),
+    map((params) => +params['animeId']),
     distinctUntilChanged()
   );
 
@@ -62,16 +63,31 @@ export class PlayerComponent implements OnInit, OnDestroy {
     })
   );
 
-  readonly videos$: Observable<SmarthardNet.Shikivideo[]> = this.route.params.pipe(
-    switchMap(params => this.videosApi.findById(params.animeId, new HttpParams()
-      .set('limit', 'all')
-      .set('episode', params.episode ? params.episode : 1)
-    )),
-    map(videos => videos.map(video => new SmarthardNet.Shikivideo(video))),
-    catchError(err => this._httpErrorHandler(err)),
-    publishReplay(1),
-    refCount()
-  );
+  readonly shikivideos$ = this.episode$
+    .pipe(
+      (episode$) => combineLatest([this.anime$, episode$]),
+      switchMap(([anime, episode]) => this.videosApi.findById(anime.id, new HttpParams()
+        .set('limit', 'all')
+        .set('episode', `${episode}`)
+      ))
+    );
+
+  readonly kodikvideos$ = this.episode$
+    .pipe(
+      (episode$) => combineLatest([this.anime$, episode$]),
+      switchMap(([anime, episode]) => this.kodikService.search(anime, episode)),
+      publishReplay(1),
+      refCount()
+    );
+
+  readonly videos$ = this.shikivideos$
+    .pipe(
+      (shikivideos$) => combineLatest([shikivideos$, this.kodikvideos$]),
+      map(([shikivideos, kodikvideos]) => [...shikivideos, ...kodikvideos]),
+      catchError(err => this._httpErrorHandler(err)),
+      publishReplay(1),
+      refCount()
+    );
 
   readonly unique$: Observable<SmarthardNet.Unique> = this.animeId$.pipe(
     switchMap(animeId => this.videosApi.getUniqueValues(new HttpParams()
@@ -118,6 +134,7 @@ export class PlayerComponent implements OnInit, OnDestroy {
     private notify: NotificationsService,
     private preferenses: UserPreferencesService,
     private videosApi: ShikivideosService,
+    private kodikService: KodikService,
     private shikimori: ShikimoriService,
     private settingsService: SettingsService,
     private title: Title,
@@ -155,7 +172,6 @@ export class PlayerComponent implements OnInit, OnDestroy {
     this.videos$
       .pipe(
         takeWhile(() => this.isAlive),
-        map(videos => videos.map(v => new SmarthardNet.Shikivideo(v)))
       )
       .subscribe(
         videos => {

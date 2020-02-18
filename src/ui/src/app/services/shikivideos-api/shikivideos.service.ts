@@ -12,7 +12,7 @@ export class ShikivideosService {
 
   private SHIKIVIDEOS_API: string = 'https://smarthard.net/api/shikivideos';
 
-  private _buildRequest(request: SmarthardNet.IRequest) {
+  private static _buildRequest(request: SmarthardNet.IRequest) {
     return new SmarthardNet.Request(
       request.id,
       request.type,
@@ -36,7 +36,12 @@ export class ShikivideosService {
   }
 
   public findById(animeId: number, params: HttpParams): Observable<SmarthardNet.Shikivideo[]> {
-    return this.http.get<SmarthardNet.Shikivideo[]>(`${this.SHIKIVIDEOS_API}/${animeId}`, { params });
+    return this.http.get<SmarthardNet.Shikivideo[]>(`${this.SHIKIVIDEOS_API}/${animeId}`, { params })
+      .pipe(
+        map(
+          (videos) => videos.map(v => new SmarthardNet.Shikivideo(v))
+        )
+      );
   }
 
   public search(params: HttpParams): Observable<SmarthardNet.Shikivideo[]> {
@@ -71,7 +76,7 @@ export class ShikivideosService {
   public getRequestById(id: number | string): Observable<SmarthardNet.Request> {
     return this.http.get<SmarthardNet.IRequest>(`https://smarthard.net/api/requests/${id}`)
       .pipe(
-        map((request) => this._buildRequest(request))
+        map((request) => ShikivideosService._buildRequest(request))
       )
   }
 
@@ -91,7 +96,7 @@ export class ShikivideosService {
 
     return this.http.post<SmarthardNet.IRequest>('https://smarthard.net/api/requests', body, { params })
       .pipe(
-        map((request) => this._buildRequest(request))
+        map((request) => ShikivideosService._buildRequest(request))
       );
   }
 
