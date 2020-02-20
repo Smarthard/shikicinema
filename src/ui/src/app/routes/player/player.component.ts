@@ -1,4 +1,3 @@
-/// <reference types="@types/chrome" />
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AboutDialogComponent} from '../../shared/components/about-dialog/about-dialog.component';
 import {ShikivideosService} from '../../services/shikivideos-api/shikivideos.service';
