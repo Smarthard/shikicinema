@@ -1,13 +1,14 @@
 const path = require('path');
 const CopyPlugin = require('copy-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
+const webpack = require('webpack');
 
 const IS_PRODUCTION = process.env.NODE_ENV === 'production';
 
 module.exports = {
     context: path.resolve(__dirname, ''),
     entry: {
-        shikicinema: './src/shikicinema.js',
+        shikicinema: ['./src/watch-button.js', './src/contributions.js'],
         background: './src/background.js'
     },
     output: {
@@ -36,7 +37,10 @@ module.exports = {
     plugins: [
         new CopyPlugin([
             { from: 'manifest.json' }
-        ])
+        ]),
+        new webpack.DefinePlugin({
+            'process.env.KODIK_TOKEN': JSON.stringify(process.env.KODIK_TOKEN)
+        })
     ],
     optimization: {
         minimizer: [

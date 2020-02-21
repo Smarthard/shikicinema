@@ -176,4 +176,5 @@
 
 <app-notify></app-notify>
 <app-server-status></app-server-status>
-<app-uploader *ngIf="uploader" [uploadedByUser]="uploader"></app-uploader>
+<app-uploader [uploadedByUser]="uploader"
+              [isForeignSource]="currentVideo && currentVideo.foreign"></app-uploader>

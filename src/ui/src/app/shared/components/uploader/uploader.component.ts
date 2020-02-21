@@ -11,6 +11,9 @@ export class UploaderComponent implements OnInit {
   @Input()
   public uploadedByUser: Shikimori.User;
 
+  @Input()
+  public isForeignSource: boolean;
+
   constructor() {}
 
   ngOnInit() {}
