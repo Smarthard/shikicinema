@@ -15,6 +15,7 @@ export namespace SmarthardNet {
     public author: string;
     public watches_count: string;
     public uploader: string;
+    public foreign?: boolean;
 
     constructor(obj?: any) {
       Object.assign(this, obj);

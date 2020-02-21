@@ -1,3 +1,9 @@
 li {
   list-style-type: none;
 }
+
+.small-icon {
+  font-size: x-small;
+  vertical-align: super;
+  color: #176093;
+}

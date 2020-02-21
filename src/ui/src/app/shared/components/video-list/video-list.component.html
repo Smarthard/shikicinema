@@ -18,5 +18,10 @@
          height="16px"
          src="assets/{{video.quality | lowercase }}.png"
          alt="{{ video.quality }}">
+
+    <mat-icon *ngIf="!!video.foreign"
+              class="small-icon">
+      launch
+    </mat-icon>
   </li>
 </ul>
