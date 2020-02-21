@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
-import {map, shareReplay} from 'rxjs/operators';
+import {shareReplay} from 'rxjs/operators';
 import {SmarthardNet} from '../../types/smarthard-net';
 import {Shikimori} from '../../types/shikimori';
 import {Kodik} from '../../types/kodik';
@@ -10,7 +10,7 @@ import {Kodik} from '../../types/kodik';
 })
 export class KodikService {
 
-  private _videosCache: Kodik.IVideo[];
+  private _kodikResponseCache: Kodik.ISearchResponse;
 
   constructor(
     private http: HttpClient
@@ -28,8 +28,8 @@ export class KodikService {
     return 'unknown';
   }
 
-  private static _castToShikivideo(animeId: number, episode: number, kodikvideo: Kodik.IVideo) {
-    const link = kodikvideo.seasons[1].episodes[episode];
+  private static _castToShikivideo(animeId: number, season: string, episode: number, kodikvideo: Kodik.IVideo) {
+    const link = kodikvideo.seasons[season].episodes[episode];
     const url = `https:${link}`;
 
     return new SmarthardNet.Shikivideo({
@@ -61,8 +61,8 @@ export class KodikService {
     return unique[episode];
   }
 
-  private _getCached() {
-    return this._videosCache;
+  private _getCachedResponse() {
+    return this._kodikResponseCache;
   }
 
   private _getKodikvideos(anime: Shikimori.Anime) {
@@ -74,33 +74,46 @@ export class KodikService {
         .set('title', anime.name)
     })
       .pipe(
-        map((res: Kodik.ISearchResponse) => res.results),
         shareReplay(1)
       );
   }
 
-  public async getVideos(anime: Shikimori.Anime) {
-    let videos = this._getCached();
+  private async _getSeason(anime: Shikimori.Anime) {
+    const response = await this.getVideos(anime);
+    const season = '1';
 
-    if (!videos) {
-      videos = await this._getKodikvideos(anime).toPromise();
-      this._videosCache = videos;
+    if (response.results[0] && !response.results[0].seasons[season]) {
+      return Object.keys(response.results[0].seasons)[0];
     }
 
-    return videos;
+    return season;
+  }
+
+  public async getVideos(anime: Shikimori.Anime) {
+    let response = this._getCachedResponse();
+
+    if (!response) {
+      response = await this._getKodikvideos(anime).toPromise();
+      this._kodikResponseCache = response;
+    }
+
+    return response;
   }
 
   public async search(anime: Shikimori.Anime, episode: number): Promise<SmarthardNet.Shikivideo[]> {
-    const videos = await this.getVideos(anime);
+    const response = await this.getVideos(anime);
+    const season = await this._getSeason(anime);
 
-    return videos
-      .filter(video => video && video.seasons[1] && video.seasons[1].episodes[episode])
-      .map(v => KodikService._castToShikivideo(anime.id, episode, v));
+    return response.results
+      .filter(video => video && video.seasons[season] && video.seasons[season].episodes[episode])
+      .map(v => KodikService._castToShikivideo(anime.id, season, episode, v));
   }
 
   public async getUnique(anime) {
-    const videos = await this.getVideos(anime);
+    const response = await this.getVideos(anime);
+    const season = await this._getSeason(anime);
     const unique = new SmarthardNet.Unique();
+    const videos = response.results.filter(video => video.seasons[season]);
 
     for (const video of videos) {
       const newValues = {
@@ -111,7 +124,8 @@ export class KodikService {
         language: ['russian']
       };
 
-      for (const episode in video.seasons[1].episodes) {
+      console.log(video.seasons, video.seasons[season]);
+      for (const episode in video.seasons[season].episodes) {
         unique[episode] = KodikService._buildNewUnique(unique, newValues, episode)
       }
     }
