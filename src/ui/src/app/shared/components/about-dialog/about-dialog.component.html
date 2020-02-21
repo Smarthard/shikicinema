@@ -9,7 +9,8 @@
 
     <div *ngIf="(releaseNotes$ | async) as releaseNotes else loading">
       <b>Changelog:</b>
-      <div [innerHTML]="releaseNotes"></div>
+      <div *ngIf="releaseNotes"
+           [innerHTML]="releaseNotes"></div>
       Изменения в более старых версиях можно посмотреть<a class="shc-links"
          target="_blank"
          href="https://addons.mozilla.org/en-US/firefox/addon/shikicinema/versions/">
@@ -19,8 +20,12 @@
 
     <ng-template #loading>
       <div class="flex">
-        <mat-spinner [diameter]="50"
+        <mat-spinner *ngIf="!(timeout$ | async)"
+                     [diameter]="50"
                      color="primary"></mat-spinner>
+        <div *ngIf="timeout$ | async">
+          Упс, похоже, для <b>v{{ VERSION }}</b> заметок об изменениях еще нет :(
+        </div>
       </div>
     </ng-template>
 
