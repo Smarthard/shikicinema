@@ -88,7 +88,7 @@ export class PlayerComponent implements OnInit, OnDestroy {
       refCount()
     );
 
-  readonly unique$: Observable<SmarthardNet.Unique> = this.animeId$.pipe(
+  readonly shikivideosUnique$: Observable<SmarthardNet.Unique> = this.animeId$.pipe(
     switchMap(animeId => this.videosApi.getUniqueValues(new HttpParams()
       .set('anime_id', `${animeId}`)
       .set('column', 'author+kind+language+url+quality')
@@ -97,6 +97,19 @@ export class PlayerComponent implements OnInit, OnDestroy {
     publishReplay(1),
     refCount()
   );
+
+  readonly kodikUnique$ = this.kodikvideos$
+    .pipe(
+      switchMap(() => this.anime$),
+      switchMap((anime: Shikimori.Anime) => this.kodikService.getUnique(anime)),
+    );
+
+  readonly unique$ = this.anime$
+    .pipe(
+      switchMap(() => this.shikivideosUnique$),
+      (shikivideosUnique) => combineLatest([shikivideosUnique, this.kodikUnique$]),
+      map((uniques: SmarthardNet.Unique[]) => SmarthardNet.mergeUniques(uniques))
+    );
 
   readonly whoami$ = this.shikimori.whoAmI(new HttpHeaders()
     .set('Cache-Control', 'no-cache, no-store, must-revalidate')

@@ -60,13 +60,15 @@ export namespace SmarthardNet {
   }
 
   export class Unique {
-    readonly [episode: number]: {
+    [episode: number]: {
       anime_id?: number[],
       anime_russian?: string[],
       anime_english?: string[],
       author?: string[],
       kind?: string[],
-      url?: string[]
+      url?: string[],
+      quality?: string[],
+      language?: string[],
     }
 
     constructor(obj?: any) {
@@ -157,5 +159,26 @@ export namespace SmarthardNet {
       public created: Date
     ) {}
 
+  }
+
+  export function mergeUniques(uniques: Unique[]) {
+    const mergedUnique = uniques[0] || new Unique();
+
+    for (let i = 1; i < uniques.length; i++) {
+      for (const episode in uniques[i]) {
+        const nextValues = uniques[i][episode];
+
+        if (mergedUnique[episode] && mergedUnique[episode]) {
+          for (const key in nextValues) {
+            const newUnique = new Set([ ...mergedUnique[episode][key], ...nextValues[key] ]);
+            mergedUnique[episode][key] = [...newUnique];
+          }
+        } else {
+          mergedUnique[episode] = nextValues;
+        }
+      }
+    }
+
+    return mergedUnique;
   }
 }
