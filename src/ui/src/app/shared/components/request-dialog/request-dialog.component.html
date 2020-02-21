@@ -1,10 +1,14 @@
 <h2 mat-dialog-title>Создать запрос</h2>
 
 <mat-dialog-content>
+  <div *ngIf="data.video.foreign" class="flex">
+    Извините, но на данное видео нельзя создать запрос: оно получено из сторонних источников
+  </div>
   <div>
     <mat-form-field>
       <mat-label>Тип</mat-label>
-      <mat-select [(ngModel)]="selectedRequestType">
+      <mat-select [(ngModel)]="selectedRequestType"
+                  [disabled]="data.video.foreign">
         <mat-option *ngFor="let type of REQUEST_TYPES"
                     [value]="type">
           { type, select, change {Изменение видео} issue {Жалоба на видео} delete {Удаление видео} }
@@ -22,6 +26,7 @@
           <input matInput
                  type="text"
                  [(ngModel)]="newVideo.author"
+                 [disabled]="data.video.foreign"
                  required>
         </mat-form-field>
       </div>
@@ -32,12 +37,14 @@
           <input matInput
                  type="number"
                  [(ngModel)]="newVideo.episode"
+                 [disabled]="data.video.foreign"
                  required>
         </mat-form-field>
 
         <mat-form-field>
           <mat-label>Kind</mat-label>
           <mat-select [(ngModel)]="newVideo.kind"
+                      [disabled]="data.video.foreign"
                       required>
             <mat-option *ngFor="let kind of KINDS"
                         [value]="kind" ngDefaultControl>
@@ -49,6 +56,7 @@
         <mat-form-field>
           <mat-label>Качество</mat-label>
           <mat-select [(ngModel)]="newVideo.quality"
+                      [disabled]="data.video.foreign"
                       required>
             <mat-option *ngFor="let quality of QUALITIES"
                         [value]="quality" ngDefaultControl>
@@ -60,8 +68,10 @@
         <mat-form-field>
           <mat-label>Язык</mat-label>
           <mat-select [(ngModel)]="newVideo.language"
+                      [disabled]="data.video.foreign"
                       required>
             <mat-option *ngFor="let lang of LANGUAGES"
+                        [disabled]="data.video.foreign"
                         [value]="lang" ngDefaultControl>
               { lang, select, russian {русский} english {английский} original {оригинальный} unknown {неизвестный} }
             </mat-option>
@@ -76,6 +86,7 @@
         <mat-label>Комментарий</mat-label>
         <textarea [(ngModel)]="comment"
                   [required]="selectedRequestType !== 'change'"
+                  [disabled]="data.video.foreign"
                   [placeholder]="commentPlaceholder(selectedRequestType)"
                   matInput
                   cdkTextareaAutosize
