@@ -4,6 +4,7 @@ import {shareReplay} from 'rxjs/operators';
 import {SmarthardNet} from '../../types/smarthard-net';
 import {Shikimori} from '../../types/shikimori';
 import {Kodik} from '../../types/kodik';
+import {environment} from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -66,7 +67,8 @@ export class KodikService {
   }
 
   private _getKodikvideos(anime: Shikimori.Anime) {
-    return this.http.get<Kodik.ISearchResponse>(`https://smarthard.net/api/kodik/search`, { params: new HttpParams()
+    return this.http.get<Kodik.ISearchResponse>(`https://kodikapi.com/search`, { params: new HttpParams()
+        .set('token', `${environment.KODIK_TOKEN}`)
         .set('types', 'anime,anime-serial')
         .set('strict', 'true')
         .set('with_seasons', 'true')
@@ -124,7 +126,6 @@ export class KodikService {
         language: ['russian']
       };
 
-      console.log(video.seasons, video.seasons[season]);
       for (const episode in video.seasons[season].episodes) {
         unique[episode] = KodikService._buildNewUnique(unique, newValues, episode)
       }

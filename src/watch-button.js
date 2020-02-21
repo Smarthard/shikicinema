@@ -2,6 +2,7 @@
 
 const PLAYER_URL = chrome.runtime.getURL('/index.html');
 const SHIKIVIDEOS_API = 'https://smarthard.net/api/shikivideos';
+const KODIK_TOKEN = `${process.env.KODIK_TOKEN}`;
 const PLAYER_BUTTON = document.createElement('a');
 const INFO_DIV = document.createElement('div');
 
@@ -25,9 +26,9 @@ function _getUploadedEpisodes(animeId) {
 }
 
 function _getKodikEpisodes(animeTitle) {
-  const query = `strict=true&types=anime,anime-serial&title=${animeTitle}`;
+  const query = `strict=true&types=anime,anime-serial&title=${animeTitle}&token=${KODIK_TOKEN}`;
 
-  return fetch(`https://smarthard.net/api/kodik/search?${query}`)
+  return fetch(`https://kodikapi.com/search?${query}`)
     .then((res) => res.json())
     .then((res) => res.total);
 }
