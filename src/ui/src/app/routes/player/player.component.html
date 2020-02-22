@@ -46,7 +46,7 @@
                        matTooltipShowDelay="1000"
                        (click)="watched(urlParams.episode)
                                 ? watch(anime, +currentVideo.episode - 1, user, 'Просмотр отменен')
-                                : watch(anime, currentVideo.episode, user, 'Просмотрено')">
+                                : watch(anime, +currentVideo.episode, user, 'Просмотрено')">
         <button mat-button
                 [class.watched]="watched(urlParams.episode)">
           <mat-icon>done</mat-icon>
