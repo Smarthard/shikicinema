@@ -83,6 +83,7 @@ export class PlayerComponent implements OnInit, OnDestroy {
     .pipe(
       (shikivideos$) => combineLatest([shikivideos$, this.kodikvideos$]),
       map(([shikivideos, kodikvideos]) => [...shikivideos, ...kodikvideos]),
+      map((videos: SmarthardNet.Shikivideo[]) => videos.sort((a, b) => `${a.author}`.localeCompare(`${b.author}`))),
       catchError(err => this._httpErrorHandler(err)),
       publishReplay(1),
       refCount()

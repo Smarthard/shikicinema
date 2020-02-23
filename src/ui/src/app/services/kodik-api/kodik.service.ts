@@ -82,9 +82,9 @@ export class KodikService {
 
   private async _getSeason(anime: Shikimori.Anime) {
     const response = await this.getVideos(anime);
-    const season = '1';
+    const season = null;
 
-    if (response.results[0] && !response.results[0].seasons[season]) {
+    if (response.results[0] && response.results[0].seasons && !response.results[0].seasons[season]) {
       return Object.keys(response.results[0].seasons)[0];
     }
 
@@ -106,6 +106,10 @@ export class KodikService {
     const response = await this.getVideos(anime);
     const season = await this._getSeason(anime);
 
+    if (!season) {
+      return [];
+    }
+
     return response.results
       .filter(video => video && video.seasons[season] && video.seasons[season].episodes[episode])
       .map(v => KodikService._castToShikivideo(anime.id, season, episode, v));
@@ -115,23 +119,28 @@ export class KodikService {
     const response = await this.getVideos(anime);
     const season = await this._getSeason(anime);
     const unique = new SmarthardNet.Unique();
-    const videos = response.results.filter(video => video.seasons[season]);
 
-    for (const video of videos) {
-      const newValues = {
-        author: [video.translation.title],
-        url: [new URL(`https://${video.link}`).hostname],
-        quality: [KodikService._translateQuality(video.quality)],
-        kind: ['озвучка'],
-        language: ['russian']
-      };
+    if (season) {
+      const videos = response.results.filter(video => video.seasons[season]);
 
-      for (const episode in video.seasons[season].episodes) {
-        unique[episode] = KodikService._buildNewUnique(unique, newValues, episode)
+      for (const video of videos) {
+        const newValues = {
+          author: [video.translation.title],
+          url: [new URL(`https://${video.link}`).hostname],
+          quality: [KodikService._translateQuality(video.quality)],
+          kind: ['озвучка'],
+          language: ['russian']
+        };
+
+        for (const episode in video.seasons[season].episodes) {
+          unique[episode] = KodikService._buildNewUnique(unique, newValues, episode)
+        }
       }
+
+      return unique;
     }
 
-    return unique;
+    return {};
   }
 
 }
