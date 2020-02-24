@@ -1,3 +1,5 @@
+#!/bin/bash
+
 shopt -s nocasematch;
 
 mkdir -p releases
