@@ -18,7 +18,7 @@ case "$1" in
     --dev)
         npm run bundle && archive dev-builds ;;
     --prod)
-        npm run bundle && archive ;;
+        npm run release && archive ;;
     --both|*)
         npm run bundle && archive dev-builds && npm run release && archive ;;
 esac
