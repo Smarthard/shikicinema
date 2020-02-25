@@ -33,6 +33,10 @@ export class KodikService {
     return /movie/i.test(video.id);
   }
 
+  private static _isSubtitles(video: Kodik.IVideo) {
+    return video.translation.id === 869 || video.translation.title.toUpperCase() === 'СУБТИТРЫ';
+  }
+
   private static _castToShikivideo(animeId: number, season: string, episode: number, kodikvideo: Kodik.IVideo) {
     const link = KodikService._isMovie(kodikvideo)
       ? kodikvideo.link
@@ -48,7 +52,7 @@ export class KodikService {
       anime_russian: kodikvideo.title,
       anime_english: kodikvideo.title_orig,
       author: kodikvideo.translation.title,
-      kind: 'озвучка',
+      kind: KodikService._isSubtitles(kodikvideo) ? 'субтитры' : 'озвучка',
       language: 'russian',
       foreign: true
     });
@@ -128,7 +132,7 @@ export class KodikService {
         author: [video.translation.title],
         url: [new URL(`https://${video.link}`).hostname],
         quality: [KodikService._translateQuality(video.quality)],
-        kind: ['озвучка'],
+        kind: [ KodikService._isSubtitles(video) ? 'субтитры' : 'озвучка'],
         language: ['russian']
       };
 
