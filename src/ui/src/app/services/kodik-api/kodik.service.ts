@@ -111,7 +111,7 @@ export class KodikService {
     }
 
     return response.results
-      .filter(video => video && video.seasons[season] && video.seasons[season].episodes[episode])
+      .filter(video => video && video.seasons && video.seasons[season] && video.seasons[season].episodes[episode])
       .map(v => KodikService._castToShikivideo(anime.id, season, episode, v));
   }
 
@@ -121,7 +121,7 @@ export class KodikService {
     const unique = new SmarthardNet.Unique();
 
     if (season) {
-      const videos = response.results.filter(video => video.seasons[season]);
+      const videos = response.results.filter(video => video && video.seasons && video.seasons[season]);
 
       for (const video of videos) {
         const newValues = {
