@@ -77,9 +77,10 @@ export class KodikService {
   }
 
   private _getKodikvideos(anime: Shikimori.Anime) {
+    const type = anime.kind === 'movie' ? 'anime' : 'anime-serial';
     return this.http.get<Kodik.ISearchResponse>(`https://kodikapi.com/search`, { params: new HttpParams()
         .set('token', `${environment.KODIK_TOKEN}`)
-        .set('types', 'anime,anime-serial')
+        .set('types', type)
         .set('strict', 'true')
         .set('with_seasons', 'true')
         .set('with_episodes', 'true')
