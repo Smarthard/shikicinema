@@ -29,8 +29,18 @@ export class KodikService {
     return 'unknown';
   }
 
+  private static _isMovie(video: Kodik.IVideo) {
+    return /movie/i.test(video.id);
+  }
+
+  private static _isSubtitles(video: Kodik.IVideo) {
+    return video.translation.id === 869 || video.translation.title.toUpperCase() === 'СУБТИТРЫ';
+  }
+
   private static _castToShikivideo(animeId: number, season: string, episode: number, kodikvideo: Kodik.IVideo) {
-    const link = kodikvideo.seasons[season].episodes[episode];
+    const link = KodikService._isMovie(kodikvideo)
+      ? kodikvideo.link
+      : kodikvideo.seasons[season].episodes[episode];
     const url = `https:${link}`;
 
     return new SmarthardNet.Shikivideo({
@@ -42,7 +52,7 @@ export class KodikService {
       anime_russian: kodikvideo.title,
       anime_english: kodikvideo.title_orig,
       author: kodikvideo.translation.title,
-      kind: 'озвучка',
+      kind: KodikService._isSubtitles(kodikvideo) ? 'субтитры' : 'озвучка',
       language: 'russian',
       foreign: true
     });
@@ -67,9 +77,10 @@ export class KodikService {
   }
 
   private _getKodikvideos(anime: Shikimori.Anime) {
+    const type = anime.kind === 'movie' || anime.episodes === 1 ? 'anime' : 'anime-serial';
     return this.http.get<Kodik.ISearchResponse>(`https://kodikapi.com/search`, { params: new HttpParams()
         .set('token', `${environment.KODIK_TOKEN}`)
-        .set('types', 'anime,anime-serial')
+        .set('types', type)
         .set('strict', 'true')
         .set('with_seasons', 'true')
         .set('with_episodes', 'true')
@@ -106,12 +117,8 @@ export class KodikService {
     const response = await this.getVideos(anime);
     const season = await this._getSeason(anime);
 
-    if (!season) {
-      return [];
-    }
-
     return response.results
-      .filter(video => video && video.seasons && video.seasons[season] && video.seasons[season].episodes[episode])
+      .filter(video => video && video.seasons && video.seasons[season] && video.seasons[season].episodes[episode] || KodikService._isMovie(video))
       .map(v => KodikService._castToShikivideo(anime.id, season, episode, v));
   }
 
@@ -119,28 +126,27 @@ export class KodikService {
     const response = await this.getVideos(anime);
     const season = await this._getSeason(anime);
     const unique = new SmarthardNet.Unique();
+    const videos = response.results.filter(video => video && video.seasons && video.seasons[season] || KodikService._isMovie(video));
 
-    if (season) {
-      const videos = response.results.filter(video => video && video.seasons && video.seasons[season]);
+    for (const video of videos) {
+      const newValues = {
+        author: [video.translation.title],
+        url: [new URL(`https://${video.link}`).hostname],
+        quality: [KodikService._translateQuality(video.quality)],
+        kind: [ KodikService._isSubtitles(video) ? 'субтитры' : 'озвучка'],
+        language: ['russian']
+      };
 
-      for (const video of videos) {
-        const newValues = {
-          author: [video.translation.title],
-          url: [new URL(`https://${video.link}`).hostname],
-          quality: [KodikService._translateQuality(video.quality)],
-          kind: ['озвучка'],
-          language: ['russian']
-        };
-
+      if (video.seasons && video.seasons[season] && video.seasons[season].episodes) {
         for (const episode in video.seasons[season].episodes) {
           unique[episode] = KodikService._buildNewUnique(unique, newValues, episode)
         }
+      } else {
+        unique[1] = KodikService._buildNewUnique(unique, newValues, '1');
       }
-
-      return unique;
     }
 
-    return {};
+    return unique;
   }
 
 }
