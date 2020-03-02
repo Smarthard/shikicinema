@@ -25,8 +25,9 @@ function _getUploadedEpisodes(animeId) {
     .catch(() => 0);
 }
 
-function _getKodikEpisodes(animeTitle) {
-  const query = `strict=true&types=anime,anime-serial&title=${animeTitle}&token=${KODIK_TOKEN}`;
+function _getKodikEpisodes(anime) {
+  const type = anime.kind === 'movie' || anime.episodes === 1 ? 'anime' : 'anime-serial';
+  const query = `strict=true&types=${type}&title=${anime.name}&token=${KODIK_TOKEN}`;
 
   return fetch(`https://kodikapi.com/search?${query}`)
     .then((res) => res.json())
@@ -62,7 +63,7 @@ async function appendWatchButtonTo(element) {
     element.appendChild(PLAYER_BUTTON);
     element.appendChild(INFO_DIV);
 
-    if (episodesAvailable === 0 && await _getKodikEpisodes(anime.name) === 0) {
+    if (episodesAvailable === 0 && await _getKodikEpisodes(anime) === 0) {
       PLAYER_BUTTON.textContent = 'Загрузить видео';
       PLAYER_BUTTON.classList.remove('watch-online');
     }
