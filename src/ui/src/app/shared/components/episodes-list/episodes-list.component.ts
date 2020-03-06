@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {SmarthardNet} from '../../../types/smarthard-net';
 
 @Component({
@@ -6,7 +6,7 @@ import {SmarthardNet} from '../../../types/smarthard-net';
   templateUrl: './episodes-list.component.html',
   styleUrls: ['./episodes-list.component.css']
 })
-export class EpisodesListComponent implements OnInit {
+export class EpisodesListComponent implements OnChanges {
 
   @Input()
   public unique: SmarthardNet.Unique;
@@ -17,11 +17,22 @@ export class EpisodesListComponent implements OnInit {
   @Output()
   public change: EventEmitter<number> = new EventEmitter<number>();
 
-  public limit: number = 30;
+  offset: number = 0;
+  limit: number = 30;
 
   constructor() { }
 
-  ngOnInit() {}
+  ngOnChanges(changes: SimpleChanges): void {
+    if (this.chosen.episode >= this.limit || this.chosen.episode <= this.offset) {
+      if (this.chosen.episode < 30) {
+        this.offset = 0;
+        this.limit = 30;
+      } else {
+        this.offset = +this.chosen.episode - 1;
+        this.limit = +this.chosen.episode + 29;
+      }
+    }
+  }
 
   getUrlsSecondLvlDomain(urls: string[]) {
     return urls.map(url => url.split('.').slice(-2).join('.'));

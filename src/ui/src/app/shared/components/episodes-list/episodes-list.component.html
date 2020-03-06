@@ -1,6 +1,12 @@
 <div>
   <b>Эпизоды</b>
-  <ul *ngFor="let episode of (getEpisodes() | slice: 0:limit)">
+  <button *ngIf="offset >= 29"
+          (click)="offset = +offset - 30"
+          title="Предыдущие эпизоды"
+          mat-flat-button>
+    <mat-icon>keyboard_arrow_up</mat-icon>
+  </button>
+  <ul *ngFor="let episode of (getEpisodes() | slice: offset: limit)">
     <li class="shc-links"
         [class.selected]="chosen && episode == chosen.episode"
         (click)="change.emit(+episode)">
@@ -16,7 +22,7 @@
     </li>
   </ul>
   <button *ngIf="limit < getEpisodes().length"
-          (click)="limit = limit + 30"
+          (click)="limit = +limit + 30"
           title="Следующие эпизоды"
           mat-flat-button>
     <mat-icon>keyboard_arrow_down</mat-icon>
