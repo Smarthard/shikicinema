@@ -59,7 +59,7 @@ async function _getEpisode(anime) {
   const kodikMax = await _getKodikEpisodes(anime);
   const maxAvailable = Math.max(mainArchiveMax, kodikMax);
 
-  return Math.max(Math.min(targetEpisode, +maxAvailable), 1);
+  return Math.min(targetEpisode, +maxAvailable);
 }
 
 async function appendWatchButtonTo(element) {
@@ -77,13 +77,13 @@ async function appendWatchButtonTo(element) {
     element.appendChild(PLAYER_BUTTON);
     element.appendChild(INFO_DIV);
 
-    if (lastOrMaxEpisodeAvailable === 0) {
+    if (lastOrMaxEpisodeAvailable === 0 || anime.status === 'anons') {
       PLAYER_BUTTON.textContent = 'Загрузить видео';
       PLAYER_BUTTON.classList.remove('watch-online');
     }
 
     PLAYER_BUTTON.onclick = async () => {
-      const episode = await _getEpisode(anime);
+      const episode = await _getEpisode(anime) || 1;
       chrome.runtime.sendMessage({ openUrl: `${PLAYER_URL}#/${animeId}/${episode}` });
     };
   } else {
