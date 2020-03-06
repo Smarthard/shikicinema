@@ -175,10 +175,13 @@ export class PlayerComponent implements OnInit, OnDestroy {
       }
     );
 
-    this.anime$
-      .subscribe(anime => {
+    this.episode$
+      .pipe(
+        takeWhile(() => this.isAlive),
+        (episode$) => combineLatest([episode$, this.anime$])
+      )
+      .subscribe(([episode, anime]) => {
         const title = anime.russian || anime.name;
-        const episode = this.urlParams.episode;
         this.title.setTitle(`${title} - эпизод ${episode}`)
       });
 
