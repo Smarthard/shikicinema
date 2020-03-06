@@ -8,8 +8,8 @@ const INFO_DIV = document.createElement('div');
 
 const OBSERVER = new MutationObserver(() => {
   let isAnimePage = `${window.location}`.includes('/animes/');
-  let isWatchButtonAppended = document.querySelector('#watch_button');
   let divInfo = document.querySelector('div.c-info-right');
+  let isWatchButtonAppended = divInfo && divInfo.contains(PLAYER_BUTTON);
 
   if (divInfo && isAnimePage && !isWatchButtonAppended) {
     appendWatchButtonTo(divInfo);
