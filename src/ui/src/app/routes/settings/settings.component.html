@@ -28,6 +28,19 @@
       </mat-checkbox>
     </section>
 
+    <h4>
+      Список серий
+    </h4>
+    <section>
+      <mat-form-field class="max-width">
+        <mat-label>Вид списка</mat-label>
+        <mat-select [(ngModel)]="settings.episodeListType" (ngModelChange)="update()">
+          <mat-option [value]="EPISODES_LIST_TYPES.DEFAULT">По-умолчанию</mat-option>
+          <mat-option [value]="EPISODES_LIST_TYPES.SCROLLABLE">Прокручиваемый</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </section>
+
     <h4>Фильтры для плеера
       <mat-slide-toggle [(ngModel)]="settings.playerFiltersEnabled"
                         [matTooltip]="settings.playerFiltersEnabled
