@@ -42,6 +42,10 @@ body {
   flex-direction: column;
 }
 
+.max-width {
+  width: 100%;
+}
+
 .with-space-between {
   justify-content: space-between;
 }

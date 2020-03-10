@@ -11,10 +11,6 @@ mat-dialog-actions {
   float: right;
 }
 
-.max-width {
-  width: 100%;
-}
-
 @media (max-width: 1024px) {
   mat-form-field {
     margin: 5px 0;
