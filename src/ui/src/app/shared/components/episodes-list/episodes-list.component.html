@@ -1,30 +1,16 @@
 <div>
   <b>Эпизоды</b>
-  <button *ngIf="offset >= 29"
-          (click)="offset = +offset - 30"
-          title="Предыдущие эпизоды"
-          mat-flat-button>
-    <mat-icon>keyboard_arrow_up</mat-icon>
-  </button>
-  <ul *ngFor="let episode of (getEpisodes() | slice: offset: limit)">
-    <li class="shc-links"
-        [class.selected]="chosen && episode == chosen.episode"
-        (click)="change.emit(+episode)">
-      <span class="text">
-        #{{ episode }}
-      </span>
+  <app-button-scroll-episode-list *ngIf="settings && settings.episodeListType === EPISODES_LIST_TYPES.DEFAULT"
+                                  (change)="change.emit($event)"
+                                  [unique]="unique"
+                                  [chosen]="chosen"
+                                  [offset]="offset"
+                                  [limit]="limit"></app-button-scroll-episode-list>
 
-      {{ unique[episode].kind.sort().join(', ') }}
-
-      <span class="hostname">
-        ({{ getUrlsSecondLvlDomain(unique[episode].url).sort().join(', ') }})
-      </span>
-    </li>
-  </ul>
-  <button *ngIf="limit < getEpisodes().length"
-          (click)="limit = +limit + 30"
-          title="Следующие эпизоды"
-          mat-flat-button>
-    <mat-icon>keyboard_arrow_down</mat-icon>
-  </button>
+  <app-virtual-scroll-episode-list *ngIf="settings && settings.episodeListType === EPISODES_LIST_TYPES.SCROLLABLE"
+                                   (change)="change.emit($event)"
+                                   [unique]="unique"
+                                   [chosen]="chosen"
+                                   [offset]="offset">
+  </app-virtual-scroll-episode-list>
 </div>

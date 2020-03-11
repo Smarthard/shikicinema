@@ -47,6 +47,9 @@ import {ShikivideosRequestsInterceptor} from './shared/interceptors/shikivideos-
 import {ShikimoriRequestsInterceptor} from './shared/interceptors/shikimori-requests.interceptor';
 import {AboutDialogComponent} from './shared/components/about-dialog/about-dialog.component';
 import {RequestDialogComponent} from './shared/components/request-dialog/request-dialog.component';
+import {ScrollingModule} from '@angular/cdk/scrolling';
+import {VirtualScrollEpisodeListComponent} from './shared/components/virtual-scroll-episode-list/virtual-scroll-episode-list.component';
+import {ButtonScrollEpisodeListComponent} from './shared/components/button-scroll-episode-list/button-scroll-episode-list.component';
 
 @NgModule({
   declarations: [
@@ -68,7 +71,9 @@ import {RequestDialogComponent} from './shared/components/request-dialog/request
     VideosComponent,
     ControlBoxComponent,
     AboutDialogComponent,
-    RequestDialogComponent
+    RequestDialogComponent,
+    VirtualScrollEpisodeListComponent,
+    ButtonScrollEpisodeListComponent
   ],
     imports: [
         AppRoutingModule,
@@ -94,7 +99,8 @@ import {RequestDialogComponent} from './shared/components/request-dialog/request
         DragDropModule,
         MatTooltipModule,
         MatDialogModule,
-        MatProgressSpinnerModule
+        MatProgressSpinnerModule,
+        ScrollingModule
     ],
   providers: [
     { provide: LocationStrategy, useClass: HashLocationStrategy },
