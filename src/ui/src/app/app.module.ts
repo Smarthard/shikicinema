@@ -50,6 +50,8 @@ import {RequestDialogComponent} from './shared/components/request-dialog/request
 import {ScrollingModule} from '@angular/cdk/scrolling';
 import {VirtualScrollEpisodeListComponent} from './shared/components/virtual-scroll-episode-list/virtual-scroll-episode-list.component';
 import {ButtonScrollEpisodeListComponent} from './shared/components/button-scroll-episode-list/button-scroll-episode-list.component';
+import {OldfagEpisodesListSkeletonComponent} from './shared/components/skeletons/oldfag-episodes-list-skeleton/oldfag-episodes-list-skeleton.component';
+import {NgxSkeletonLoaderModule} from '@exalif/ngx-skeleton-loader';
 
 @NgModule({
   declarations: [
@@ -73,35 +75,37 @@ import {ButtonScrollEpisodeListComponent} from './shared/components/button-scrol
     AboutDialogComponent,
     RequestDialogComponent,
     VirtualScrollEpisodeListComponent,
-    ButtonScrollEpisodeListComponent
+    ButtonScrollEpisodeListComponent,
+    OldfagEpisodesListSkeletonComponent
   ],
-    imports: [
-        AppRoutingModule,
-        BrowserModule,
-        HttpClientModule,
-        NgxResponsiveEmbedModule,
-        CommonModule,
-        FormsModule,
-        NgPipesModule,
-        MatTableModule,
-        MatButtonModule,
-        MatPaginatorModule,
-        MatCardModule,
-        MatCheckboxModule,
-        MatSlideToggleModule,
-        MatSortModule,
-        BrowserAnimationsModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatSelectModule,
-        MatIconModule,
-        MatMenuModule,
-        DragDropModule,
-        MatTooltipModule,
-        MatDialogModule,
-        MatProgressSpinnerModule,
-        ScrollingModule
-    ],
+  imports: [
+    AppRoutingModule,
+    BrowserModule,
+    HttpClientModule,
+    NgxResponsiveEmbedModule,
+    CommonModule,
+    FormsModule,
+    NgPipesModule,
+    MatTableModule,
+    MatButtonModule,
+    MatPaginatorModule,
+    MatCardModule,
+    MatCheckboxModule,
+    MatSlideToggleModule,
+    MatSortModule,
+    BrowserAnimationsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatIconModule,
+    MatMenuModule,
+    DragDropModule,
+    MatTooltipModule,
+    MatDialogModule,
+    MatProgressSpinnerModule,
+    ScrollingModule,
+    NgxSkeletonLoaderModule
+  ],
   providers: [
     { provide: LocationStrategy, useClass: HashLocationStrategy },
     { provide: HTTP_INTERCEPTORS, useClass: ShikivideosRequestsInterceptor, multi: true },

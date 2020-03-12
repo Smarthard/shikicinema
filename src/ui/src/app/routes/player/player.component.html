@@ -149,7 +149,7 @@
              as filteredVideos
              else videosEmpty">
         <div id="series" *ngIf="settings.oldFagApproves">
-          <app-episodes-list *ngIf="unique$ | async as unique"
+          <app-episodes-list *ngIf="unique$ | async as unique; else episodesGhost"
             [unique]="unique"
             (change)="changeEpisode($event)"
             [chosen]="currentVideo"></app-episodes-list>
@@ -157,6 +157,10 @@
             [videos]="filteredVideos"
             (change)="changeVideo($event)"
             [chosen]="currentVideo"></app-video-list>
+
+          <ng-template #episodesGhost>
+            <app-oldfag-episodes-list-skeleton></app-oldfag-episodes-list-skeleton>
+          </ng-template>
         </div>
         <div *ngIf="!settings.oldFagApproves">
           <app-compact-video-list
