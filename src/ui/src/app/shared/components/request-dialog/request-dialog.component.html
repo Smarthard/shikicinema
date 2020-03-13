@@ -59,7 +59,7 @@
                       [disabled]="data.video.foreign"
                       required>
             <mat-option *ngFor="let quality of QUALITIES"
-                        [value]="quality" ngDefaultControl>
+                        [value]="quality" ngDefaultControl i18n>
               { quality, select, unknown {неизвестное} other { {{quality}} } }
             </mat-option>
           </mat-select>
@@ -72,7 +72,7 @@
                       required>
             <mat-option *ngFor="let lang of LANGUAGES"
                         [disabled]="data.video.foreign"
-                        [value]="lang" ngDefaultControl>
+                        [value]="lang" ngDefaultControl i18n>
               { lang, select, russian {русский} english {английский} original {оригинальный} unknown {неизвестный} }
             </mat-option>
           </mat-select>
