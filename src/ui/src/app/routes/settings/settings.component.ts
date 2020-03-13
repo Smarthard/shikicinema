@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {SettingsService} from '../../services/settings/settings.service';
-import {ShikicinemaSettings} from '../../types/ShikicinemaSettings';
+import {EpisodesListTypes, ShikicinemaSettings} from '../../types/ShikicinemaSettings';
 import {Title} from '@angular/platform-browser';
 import {NotificationsService} from '../../services/notifications/notifications.service';
 import {Notification, NotificationType} from '../../types/notification';
@@ -15,6 +15,7 @@ import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 })
 export class SettingsComponent implements OnInit {
 
+  readonly EPISODES_LIST_TYPES = EpisodesListTypes;
   public settings = new ShikicinemaSettings();
 
   constructor(

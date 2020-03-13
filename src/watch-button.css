@@ -1,0 +1,13 @@
+a.watch-online:before {
+    font-family: shikimori, serif;
+    content: "\e831";
+    margin-right: 10px;
+    margin-top: 2px;
+}
+
+a.upload-video:before {
+    font-family: shikimori, serif;
+    content: "\e80c";
+    margin-right: 10px;
+    margin-top: 2px;
+}

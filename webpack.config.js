@@ -36,7 +36,8 @@ module.exports = {
     },
     plugins: [
         new CopyPlugin([
-            { from: 'manifest.json' }
+            { from: 'manifest.json' },
+            { from: './src/watch-button.css' }
         ]),
         new webpack.DefinePlugin({
             'process.env.KODIK_TOKEN': JSON.stringify(process.env.KODIK_TOKEN)

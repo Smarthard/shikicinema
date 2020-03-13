@@ -1,0 +1,18 @@
+
+cdk-virtual-scroll-viewport {
+  margin: 10px 0 30px 30px;
+  height: 930px; /* 31px * 30 visible episodes */
+  overflow-x: hidden;
+  overflow-y: scroll;
+  scrollbar-width: none; /* Firefox 64+, mobile 68+ */
+}
+
+/* Chrome-based */
+cdk-virtual-scroll-viewport::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+cdk-virtual-scroll-viewport div {
+  padding: 6px 0;
+}

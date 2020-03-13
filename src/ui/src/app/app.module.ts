@@ -47,6 +47,11 @@ import {ShikivideosRequestsInterceptor} from './shared/interceptors/shikivideos-
 import {ShikimoriRequestsInterceptor} from './shared/interceptors/shikimori-requests.interceptor';
 import {AboutDialogComponent} from './shared/components/about-dialog/about-dialog.component';
 import {RequestDialogComponent} from './shared/components/request-dialog/request-dialog.component';
+import {ScrollingModule} from '@angular/cdk/scrolling';
+import {VirtualScrollEpisodeListComponent} from './shared/components/virtual-scroll-episode-list/virtual-scroll-episode-list.component';
+import {ButtonScrollEpisodeListComponent} from './shared/components/button-scroll-episode-list/button-scroll-episode-list.component';
+import {OldfagEpisodesListSkeletonComponent} from './shared/components/skeletons/oldfag-episodes-list-skeleton/oldfag-episodes-list-skeleton.component';
+import {NgxSkeletonLoaderModule} from '@exalif/ngx-skeleton-loader';
 
 @NgModule({
   declarations: [
@@ -68,34 +73,39 @@ import {RequestDialogComponent} from './shared/components/request-dialog/request
     VideosComponent,
     ControlBoxComponent,
     AboutDialogComponent,
-    RequestDialogComponent
+    RequestDialogComponent,
+    VirtualScrollEpisodeListComponent,
+    ButtonScrollEpisodeListComponent,
+    OldfagEpisodesListSkeletonComponent
   ],
-    imports: [
-        AppRoutingModule,
-        BrowserModule,
-        HttpClientModule,
-        NgxResponsiveEmbedModule,
-        CommonModule,
-        FormsModule,
-        NgPipesModule,
-        MatTableModule,
-        MatButtonModule,
-        MatPaginatorModule,
-        MatCardModule,
-        MatCheckboxModule,
-        MatSlideToggleModule,
-        MatSortModule,
-        BrowserAnimationsModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatSelectModule,
-        MatIconModule,
-        MatMenuModule,
-        DragDropModule,
-        MatTooltipModule,
-        MatDialogModule,
-        MatProgressSpinnerModule
-    ],
+  imports: [
+    AppRoutingModule,
+    BrowserModule,
+    HttpClientModule,
+    NgxResponsiveEmbedModule,
+    CommonModule,
+    FormsModule,
+    NgPipesModule,
+    MatTableModule,
+    MatButtonModule,
+    MatPaginatorModule,
+    MatCardModule,
+    MatCheckboxModule,
+    MatSlideToggleModule,
+    MatSortModule,
+    BrowserAnimationsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatIconModule,
+    MatMenuModule,
+    DragDropModule,
+    MatTooltipModule,
+    MatDialogModule,
+    MatProgressSpinnerModule,
+    ScrollingModule,
+    NgxSkeletonLoaderModule
+  ],
   providers: [
     { provide: LocationStrategy, useClass: HashLocationStrategy },
     { provide: HTTP_INTERCEPTORS, useClass: ShikivideosRequestsInterceptor, multi: true },

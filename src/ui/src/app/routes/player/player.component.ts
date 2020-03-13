@@ -175,10 +175,13 @@ export class PlayerComponent implements OnInit, OnDestroy {
       }
     );
 
-    this.anime$
-      .subscribe(anime => {
+    this.episode$
+      .pipe(
+        takeWhile(() => this.isAlive),
+        (episode$) => combineLatest([episode$, this.anime$])
+      )
+      .subscribe(([episode, anime]) => {
         const title = anime.russian || anime.name;
-        const episode = this.urlParams.episode;
         this.title.setTitle(`${title} - эпизод ${episode}`)
       });
 
@@ -245,6 +248,7 @@ export class PlayerComponent implements OnInit, OnDestroy {
   }
 
   async watch(anime: Shikimori.Anime, episode: number, user: Shikimori.User, message: string) {
+    const animeEpisodes = anime.episodes || anime.episodes_aired;
     const userRate = new Shikimori.UserRate({
       user_id: user.id,
       target_id: anime.id,
@@ -259,7 +263,7 @@ export class PlayerComponent implements OnInit, OnDestroy {
       this.userRate = await this.shikimori.createUserRates(userRate).toPromise();
     }
 
-    if (anime.episodes >= episode + 1) {
+    if (animeEpisodes >= episode + 1) {
       this.changeEpisode(episode + 1);
     }
 

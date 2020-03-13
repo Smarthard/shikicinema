@@ -1,6 +1,7 @@
 export class ShikicinemaSettings {
 
   public oldFagApproves: boolean = true;
+  public episodeListType: EpisodesListTypes = EpisodesListTypes.SCROLLABLE;
   public extraButtons: boolean = false;
   public playerFiltersEnabled: boolean = true;
   public playerFilters: Array<IFilter> = [
@@ -25,6 +26,11 @@ export class ShikicinemaSettings {
   constructor(obj?: any) {
     Object.assign(this, obj);
   }
+}
+
+export enum EpisodesListTypes {
+  DEFAULT,
+  SCROLLABLE
 }
 
 interface IFilter {

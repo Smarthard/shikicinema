@@ -1,0 +1,18 @@
+<cdk-virtual-scroll-viewport itemSize="31" minBufferPx="300" maxBufferPx="600">
+  <div *cdkVirtualFor="let episode of (unique | keys)"
+       (click)="change.emit(+episode)"
+       [class.selected]="chosen && episode == chosen.episode"
+       class="shc-links">
+    <span *ngIf="episode">
+      <span class="text">
+        #{{ episode }}
+      </span>
+
+      {{ unique[episode].kind.sort().join(', ') }}
+
+      <span class="hostname">
+        ({{ getUrlsSecondLvlDomain(unique[episode].url).sort().join(', ') }})
+      </span>
+    </span>
+  </div>
+</cdk-virtual-scroll-viewport>

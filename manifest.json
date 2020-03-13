@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "shikicinema",
-  "version": "0.7.4",
+  "version": "0.7.5",
 
   "icons": {
     "64": "assets/icon64.png",
@@ -25,6 +25,9 @@
       ],
       "js": [
         "shikicinema.js"
+      ],
+      "css": [
+        "watch-button.css"
       ],
       "run_at": "document_idle"
     }

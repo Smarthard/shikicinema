@@ -8,8 +8,8 @@ const INFO_DIV = document.createElement('div');
 
 const OBSERVER = new MutationObserver(() => {
   let isAnimePage = `${window.location}`.includes('/animes/');
-  let isWatchButtonAppended = document.querySelector('#watch_button');
   let divInfo = document.querySelector('div.c-info-right');
+  let isWatchButtonAppended = divInfo && divInfo.contains(PLAYER_BUTTON);
 
   if (divInfo && isAnimePage && !isWatchButtonAppended) {
     appendWatchButtonTo(divInfo);
@@ -25,12 +25,26 @@ function _getUploadedEpisodes(animeId) {
     .catch(() => 0);
 }
 
-function _getKodikEpisodes(animeTitle) {
-  const query = `strict=true&types=anime,anime-serial&title=${animeTitle}&token=${KODIK_TOKEN}`;
+function _getKodikEpisodes(anime) {
+  const type = anime.kind === 'movie' || anime.episodes === 1 ? 'anime' : 'anime-serial';
+  const query = `strict=true&types=${type}&with_episodes=true&title=${anime.name}&token=${KODIK_TOKEN}`;
 
   return fetch(`https://kodikapi.com/search?${query}`)
     .then((res) => res.json())
-    .then((res) => res.total);
+    .then((res) => {
+      let episodes;
+
+      try {
+        const seasonNo = Object.keys(res.results[0].seasons)[0];
+        const season = res.results[0].seasons[seasonNo].episodes;
+        episodes = Math.max.apply(null, Object.keys(season));
+      } catch (e) {
+        episodes = 0;
+      }
+
+      return episodes;
+    })
+    .catch(() => 0);
 }
 
 function _getAnimeInfo(animeId) {
@@ -38,13 +52,14 @@ function _getAnimeInfo(animeId) {
     .then((res) => res.json());
 }
 
-function _getEpisode(animeId) {
+async function _getEpisode(anime) {
   const spanEpisode = document.querySelector('span.current-episodes');
-  let episode = spanEpisode ? +spanEpisode.innerText + 1 : 1;
+  const targetEpisode = spanEpisode ? +spanEpisode.innerText + 1 : 1;
+  const mainArchiveMax = await _getUploadedEpisodes(anime.id);
+  const kodikMax = await _getKodikEpisodes(anime);
+  const maxAvailable = Math.max(mainArchiveMax, kodikMax);
 
-  return _getUploadedEpisodes(animeId)
-    .then((length) => Math.max(Math.min(episode, +length), 1))
-    .catch(() => 1);
+  return Math.min(targetEpisode, +maxAvailable);
 }
 
 async function appendWatchButtonTo(element) {
@@ -52,23 +67,25 @@ async function appendWatchButtonTo(element) {
 
   PLAYER_BUTTON.id = 'watch_button';
   PLAYER_BUTTON.classList.add('b-link_button', 'dark', 'watch-online');
+  PLAYER_BUTTON.classList.remove('upload-video');
   PLAYER_BUTTON.textContent = 'Смотреть онлайн';
   PLAYER_BUTTON.style.margin = '0 10%';
 
   if (animeId) {
-    const episodesAvailable = await _getUploadedEpisodes(animeId);
     const anime = await _getAnimeInfo(animeId);
+    const lastOrMaxEpisodeAvailable = await _getEpisode(anime);
 
     element.appendChild(PLAYER_BUTTON);
     element.appendChild(INFO_DIV);
 
-    if (episodesAvailable === 0 && await _getKodikEpisodes(anime.name) === 0) {
+    if (lastOrMaxEpisodeAvailable === 0 || anime.status === 'anons') {
       PLAYER_BUTTON.textContent = 'Загрузить видео';
+      PLAYER_BUTTON.classList.add('upload-video');
       PLAYER_BUTTON.classList.remove('watch-online');
     }
 
     PLAYER_BUTTON.onclick = async () => {
-      const episode = await _getEpisode(animeId);
+      const episode = await _getEpisode(anime) || 1;
       chrome.runtime.sendMessage({ openUrl: `${PLAYER_URL}#/${animeId}/${episode}` });
     };
   } else {
