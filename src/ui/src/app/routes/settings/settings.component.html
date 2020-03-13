@@ -35,8 +35,14 @@
       <mat-form-field class="max-width">
         <mat-label>Вид списка</mat-label>
         <mat-select [(ngModel)]="settings.episodeListType" (ngModelChange)="update()">
-          <mat-option [value]="EPISODES_LIST_TYPES.DEFAULT">Старый</mat-option>
-          <mat-option [value]="EPISODES_LIST_TYPES.SCROLLABLE">Прокручиваемый</mat-option>
+          <mat-option [value]="EPISODES_LIST_TYPES.DEFAULT"
+                      title="Немного доработанный вариант старого списка (будет убран в дальнейшем)">
+            Старый
+          </mat-option>
+          <mat-option [value]="EPISODES_LIST_TYPES.SCROLLABLE"
+                      title="Могут возникать проблемы с отображением на старых браузерах">
+            Прокручиваемый
+          </mat-option>
         </mat-select>
       </mat-form-field>
     </section>
