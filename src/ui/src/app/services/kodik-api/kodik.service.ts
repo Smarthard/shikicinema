@@ -34,7 +34,18 @@ export class KodikService {
   }
 
   private static _isSubtitles(video: Kodik.IVideo) {
-    return video.translation.id === 869 || video.translation.title.toUpperCase() === 'СУБТИТРЫ';
+    if (video && video.translation && video.translation.id) {
+      switch (video.translation.id) {
+        case 869:
+        case 1070:
+        case 1071:
+          return true;
+        default:
+          return false;
+      }
+    } else {
+      return false;
+    }
   }
 
   private static _castToShikivideo(animeId: number, season: string, episode: number, kodikvideo: Kodik.IVideo) {
