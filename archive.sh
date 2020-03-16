@@ -6,12 +6,22 @@ mkdir -p releases
 mkdir -p dev-builds
 version=""
 
+msg() {
+  echo && echo "**** ${1} ****"
+}
+
 archive() {
     version=$(grep \"version < bin/manifest.json | cut -d\" -f4)
     path="${1:-releases}/shikicinema-$version.zip"
 
-    [[ -e "${path}" ]] && rm "${path}" && echo "${path} removed"
-    cd bin/ && zip -r -9 "../${path}" -- * && cd ..
+    [[ -e "${path}" ]] && \
+    rm "${path}" && \
+    msg "${path} removed"
+
+    cd bin/ && \
+    zip -qr -9 "../${path}" -- * && \
+    cd .. && \
+    msg "${path} generated"
 }
 
 case "$1" in
@@ -20,12 +30,11 @@ case "$1" in
     --prod)
         npm run release && archive ;;
     --both|*)
-        npm run bundle && archive dev-builds && npm run release && archive ;;
+        npm run bundle && archive dev-builds && \
+        npm run release && archive ;;
 esac
 
-echo && echo "**** generating sources archive ****" & echo
-
-zip -r -9 "./shikicinema-src-$version.zip" \
+zip -qr -9 "./shikicinema-src-$version.zip" \
     -x node_modules/\* \
     -x bin/\* \
     -x dev-builds/\* \
@@ -36,4 +45,5 @@ zip -r -9 "./shikicinema-src-$version.zip" \
     -x videos.csv \
     -x archive.sh \
     -x shikicinema-src* \
-    -- *
+    -- * && \
+    msg "sources archive generated"
