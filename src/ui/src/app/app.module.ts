@@ -52,6 +52,7 @@ import {VirtualScrollEpisodeListComponent} from './shared/components/virtual-scr
 import {ButtonScrollEpisodeListComponent} from './shared/components/button-scroll-episode-list/button-scroll-episode-list.component';
 import {OldfagEpisodesListSkeletonComponent} from './shared/components/skeletons/oldfag-episodes-list-skeleton/oldfag-episodes-list-skeleton.component';
 import {NgxSkeletonLoaderModule} from '@exalif/ngx-skeleton-loader';
+import {HeaderComponent} from './shared/components/header/header.component';
 
 @NgModule({
   declarations: [
@@ -76,7 +77,8 @@ import {NgxSkeletonLoaderModule} from '@exalif/ngx-skeleton-loader';
     RequestDialogComponent,
     VirtualScrollEpisodeListComponent,
     ButtonScrollEpisodeListComponent,
-    OldfagEpisodesListSkeletonComponent
+    OldfagEpisodesListSkeletonComponent,
+    HeaderComponent
   ],
   imports: [
     AppRoutingModule,
