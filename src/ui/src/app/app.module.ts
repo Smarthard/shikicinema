@@ -15,7 +15,6 @@ import {VideoListComponent} from './shared/components/video-list/video-list.comp
 import {EpisodesListComponent} from './shared/components/episodes-list/episodes-list.component';
 import {KindRemoteComponent} from './shared/components/kind-remote/kind-remote.component';
 import {UploaderComponent} from './shared/components/uploader/uploader.component';
-import {ServerStatusComponent} from './shared/components/server-status/server-status.component';
 import {DropdownFiltersComponent} from './shared/components/dropdown-filters/dropdown-filters.component';
 import {NgPipesModule} from 'ngx-pipes';
 import {ShikimoriService} from './services/shikimori-api/shikimori.service';
@@ -52,6 +51,7 @@ import {VirtualScrollEpisodeListComponent} from './shared/components/virtual-scr
 import {ButtonScrollEpisodeListComponent} from './shared/components/button-scroll-episode-list/button-scroll-episode-list.component';
 import {OldfagEpisodesListSkeletonComponent} from './shared/components/skeletons/oldfag-episodes-list-skeleton/oldfag-episodes-list-skeleton.component';
 import {NgxSkeletonLoaderModule} from '@exalif/ngx-skeleton-loader';
+import {HeaderComponent} from './shared/components/header/header.component';
 
 @NgModule({
   declarations: [
@@ -63,7 +63,6 @@ import {NgxSkeletonLoaderModule} from '@exalif/ngx-skeleton-loader';
     EpisodesListComponent,
     KindRemoteComponent,
     UploaderComponent,
-    ServerStatusComponent,
     DropdownFiltersComponent,
     UploadVideoComponent,
     NotifyComponent,
@@ -76,7 +75,8 @@ import {NgxSkeletonLoaderModule} from '@exalif/ngx-skeleton-loader';
     RequestDialogComponent,
     VirtualScrollEpisodeListComponent,
     ButtonScrollEpisodeListComponent,
-    OldfagEpisodesListSkeletonComponent
+    OldfagEpisodesListSkeletonComponent,
+    HeaderComponent
   ],
   imports: [
     AppRoutingModule,
