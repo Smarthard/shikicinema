@@ -2,7 +2,7 @@ a.watch-online:before {
     font-family: shikimori, serif;
     content: "\e831";
     margin-right: 10px;
-    margin-top: 2px;
+    margin-top: 1px;
 }
 
 a.upload-video:before {
