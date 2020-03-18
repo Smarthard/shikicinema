@@ -15,7 +15,6 @@ import {VideoListComponent} from './shared/components/video-list/video-list.comp
 import {EpisodesListComponent} from './shared/components/episodes-list/episodes-list.component';
 import {KindRemoteComponent} from './shared/components/kind-remote/kind-remote.component';
 import {UploaderComponent} from './shared/components/uploader/uploader.component';
-import {ServerStatusComponent} from './shared/components/server-status/server-status.component';
 import {DropdownFiltersComponent} from './shared/components/dropdown-filters/dropdown-filters.component';
 import {NgPipesModule} from 'ngx-pipes';
 import {ShikimoriService} from './services/shikimori-api/shikimori.service';
@@ -64,7 +63,6 @@ import {HeaderComponent} from './shared/components/header/header.component';
     EpisodesListComponent,
     KindRemoteComponent,
     UploaderComponent,
-    ServerStatusComponent,
     DropdownFiltersComponent,
     UploadVideoComponent,
     NotifyComponent,
