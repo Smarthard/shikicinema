@@ -7,7 +7,11 @@ const KODIK_TOKEN = `${process.env.KODIK_TOKEN}`;
 const PLAYER_BUTTON = document.createElement('a');
 const INFO_DIV = document.createElement('div');
 const ON_WATCH_CLICK = async (anime) => {
-  const episode = await _getEpisode(anime) || 1;
+  const userRate = await _getAnimeInfo(anime.id)
+    .then((updatedAnime) => updatedAnime.user_rate)
+    .catch(() => null);
+  const episode = await _getEpisode(anime, userRate ? userRate.episodes : 0);
+
   chrome.runtime.sendMessage({ openUrl: `${PLAYER_URL}#/${anime.id}/${episode}` });
 };
 
@@ -67,9 +71,8 @@ function _getAnimeInfo(animeId) {
     .then((res) => res.json());
 }
 
-async function _getEpisode(anime) {
-  const spanEpisode = document.querySelector('span.current-episodes');
-  const targetEpisode = spanEpisode ? +spanEpisode.innerText + 1 : 1;
+async function _getEpisode(anime, watchedEpisode) {
+  const targetEpisode = watchedEpisode ? +watchedEpisode + 1 : 1;
   const mainArchiveMax = await _getUploadedEpisodes(anime.id);
   const kodikMax = await _getKodikEpisodes(anime);
   const maxAvailable = Math.max(mainArchiveMax, kodikMax);
