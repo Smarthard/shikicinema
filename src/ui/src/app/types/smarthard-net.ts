@@ -103,19 +103,25 @@ export namespace SmarthardNet {
 
   export interface IToken {
     readonly access_token: string,
+    readonly refresh_token: string,
     readonly expires: string
   }
 
   export class Token extends AbstractToken {
     constructor(
       private access_token?: string,
-      private expires?: string
+      private expires?: string,
+      private refresh_token?: string
     ) {
       super();
     }
 
     public get token(): string {
       return this.access_token;
+    }
+
+    public get refresh(): string {
+      return this.refresh_token;
     }
 
     public get expired(): boolean {

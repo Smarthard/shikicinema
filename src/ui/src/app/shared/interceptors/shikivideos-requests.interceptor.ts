@@ -4,7 +4,7 @@ import {SmarthardNet} from '../../types/smarthard-net';
 import {AuthService} from '../../services/auth/auth.service';
 import {NotificationsService} from '../../services/notifications/notifications.service';
 import {environment} from '../../../environments/environment';
-import {catchError, switchMap} from 'rxjs/operators';
+import {catchError, exhaustMap, switchMap} from 'rxjs/operators';
 import {Injectable} from '@angular/core';
 import {Notification, NotificationType} from '../../types/notification';
 
@@ -52,6 +52,14 @@ export class ShikivideosRequestsInterceptor implements HttpInterceptor {
       return next.handle(req)
         .pipe(
           catchError((err: HttpErrorResponse) => {
+
+            if (err.status === 403) {
+              return this.auth.shikimoriSync()
+                .pipe(
+                  exhaustMap(() => this.auth.shikivideosSync()),
+                  exhaustMap(() => next.handle(req))
+                );
+            }
 
             if (err.status === 401) {
               return this._updateToken()

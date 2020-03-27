@@ -4,6 +4,7 @@ import {Observable} from 'rxjs';
 import {SmarthardNet} from '../../types/smarthard-net';
 import {environment} from '../../../environments/environment';
 import {map} from 'rxjs/operators';
+import {Shikimori} from '../../types/shikimori';
 
 @Injectable({
   providedIn: 'root'
@@ -60,16 +61,33 @@ export class ShikivideosService {
     return this.http.get<SmarthardNet.Unique>(`${this.SHIKIVIDEOS_API}/unique`, { params });
   }
 
-  public getNewToken(): Observable<SmarthardNet.Token> {
+  public getNewToken(shikimoriToken: Shikimori.Token): Observable<SmarthardNet.Token> {
     const params = new HttpParams()
-      .set('grant_type', 'client_credentials')
+      .set('grant_type', 'shikimori_token')
+      .set('client_id', environment.SHIKIVIDEOS_CLIENT_ID)
+      .set('client_secret', environment.SHIKIVIDEOS_CLIENT_SECRET)
+      .set('scopes', 'database:shikivideos_create');
+    const body = {
+      shikimori_token: shikimoriToken.token
+    };
+
+    return this.http.put<SmarthardNet.IToken>('https://smarthard.net/oauth/token', body, { params })
+      .pipe(
+        map((token) => new SmarthardNet.Token(token.access_token, token.expires, token.refresh_token))
+      );
+  }
+
+  public getRefreshedToken(oldToken: SmarthardNet.Token): Observable<SmarthardNet.Token> {
+    const params = new HttpParams()
+      .set('grant_type', 'refresh_token')
+      .set('refresh_token', oldToken.refresh)
       .set('client_id', environment.SHIKIVIDEOS_CLIENT_ID)
       .set('client_secret', environment.SHIKIVIDEOS_CLIENT_SECRET)
       .set('scopes', 'database:shikivideos_create');
 
     return this.http.get<SmarthardNet.IToken>('https://smarthard.net/oauth/token', { params })
       .pipe(
-        map(token => new SmarthardNet.Token(token.access_token, token.expires))
+        map((token) => new SmarthardNet.Token(token.access_token, token.expires, token.refresh_token))
       );
   }
 

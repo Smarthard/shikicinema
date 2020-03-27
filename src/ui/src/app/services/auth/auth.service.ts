@@ -31,7 +31,7 @@ export class AuthService {
     StorageService.get<SmarthardNet.IToken>('sync', 'videoToken')
       .subscribe(token => {
         const shikivideos = token
-          ? new SmarthardNet.Token(token.access_token, token.expires)
+          ? new SmarthardNet.Token(token.access_token, token.expires, token.refresh_token)
           : new SmarthardNet.Token();
         this.videoToken.next(shikivideos);
       });
@@ -85,13 +85,23 @@ export class AuthService {
   }
 
   public shikivideosSync(): Observable<SmarthardNet.Token> {
-    return this.shikivideosService.getNewToken()
-      .pipe(
-        tap(async (token) => {
-          this.videoToken.next(token);
-          await StorageService.set('sync', { videoToken: token }).toPromise();
-        })
-      );
+    if (!this.shikivideos.refresh) {
+      return this.shikivideosService.getNewToken(this.shikimori)
+        .pipe(
+          tap(async (token) => {
+            this.videoToken.next(token);
+            await StorageService.set('sync', { videoToken: token }).toPromise();
+          })
+        );
+    } else {
+      return this.shikivideosService.getRefreshedToken(this.shikivideos)
+        .pipe(
+          tap(async (token) => {
+            this.videoToken.next(token);
+            await StorageService.set('sync', { videoToken: token }).toPromise();
+          })
+        );
+    }
   }
 
   public async shikivideosDrop() {
