@@ -20,7 +20,7 @@ import {NgPipesModule} from 'ngx-pipes';
 import {ShikimoriService} from './services/shikimori-api/shikimori.service';
 import {UploadVideoComponent} from './shared/components/upload-video/upload-video.component';
 import {NotifyComponent} from './shared/components/notify/notify.component';
-import {NitificationComponent} from './shared/components/nitification/nitification.component';
+import {NotificationComponent} from './shared/components/notification/notification.component';
 import {SettingsComponent} from './routes/settings/settings.component';
 import {CompactVideoListComponent} from './shared/components/compact-video-list/compact-video-list.component';
 import {VideosComponent} from './routes/videos/videos.component';
@@ -66,7 +66,7 @@ import {HeaderComponent} from './shared/components/header/header.component';
     DropdownFiltersComponent,
     UploadVideoComponent,
     NotifyComponent,
-    NitificationComponent,
+    NotificationComponent,
     SettingsComponent,
     CompactVideoListComponent,
     VideosComponent,

@@ -2,11 +2,11 @@ import {Component, Input, OnInit} from '@angular/core';
 import {Notification, NotificationType} from '../../../types/notification';
 
 @Component({
-  selector: 'app-nitification',
-  templateUrl: './nitification.component.html',
-  styleUrls: ['./nitification.component.css']
+  selector: 'app-notification',
+  templateUrl: './notification.component.html',
+  styleUrls: ['./notification.component.css']
 })
-export class NitificationComponent implements OnInit {
+export class NotificationComponent implements OnInit {
 
   public TYPES = NotificationType;
 
