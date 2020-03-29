@@ -61,7 +61,16 @@ export class ShikivideosRequestsInterceptor implements HttpInterceptor {
                 );
             }
 
-            if (err.status === 401) {
+            if (err.status === 401 && req.params.get('grant_type') === 'refresh_token') {
+              return this.auth.shikivideosSync(true)
+                .pipe(
+                  exhaustMap(() => next.handle(req))
+                );
+            }
+
+            if (err.status === 401 && req.method === 'POST') {
+              this._showWarningNotification();
+
               return this._updateToken()
                 .pipe(
                   switchMap((token) => {
@@ -69,10 +78,6 @@ export class ShikivideosRequestsInterceptor implements HttpInterceptor {
                     return next.handle(req);
                   })
                 );
-            }
-
-            if (req.method === 'POST') {
-              this._showWarningNotification();
             }
 
             return throwError(err);

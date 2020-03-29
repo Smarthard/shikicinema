@@ -84,8 +84,8 @@ export class AuthService {
     await StorageService.set('sync', { shikimoriToken: {} }).toPromise();
   }
 
-  public shikivideosSync(): Observable<SmarthardNet.Token> {
-    if (!this.shikivideos.refresh) {
+  public shikivideosSync(forcedNew: boolean = false): Observable<SmarthardNet.Token> {
+    if (!this.shikivideos.refresh || forcedNew) {
       return this.shikivideosService.getNewToken(this.shikimori)
         .pipe(
           tap(async (token) => {
