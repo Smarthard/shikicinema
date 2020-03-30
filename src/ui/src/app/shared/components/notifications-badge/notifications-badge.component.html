@@ -17,7 +17,7 @@
           (close)="markUnread(notifications)"
           class="no-max-width-menu">
   <ng-container *ngIf="notifications && notifications?.length > 0; else noNotifications">
-    <div *ngFor="let notification of notifications | slice: 0: 5; index as i; first as isFirst">
+    <div *ngFor="let notification of notifications; index as i; first as isFirst">
       <mat-divider *ngIf="!isFirst"></mat-divider>
 
       <mat-card [class.viewed]="notification?.viewed"
