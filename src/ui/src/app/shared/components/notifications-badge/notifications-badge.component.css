@@ -39,13 +39,13 @@ div.empty {
   font-size: small;
 }
 
-::ng-deep.mat-menu-panel.no-max-width-menu::-webkit-scrollbar {
+::ng-deep.mat-menu-panel.fixed-max-width-menu::-webkit-scrollbar {
   width: 0;
   height: 0;
 }
 
-::ng-deep.mat-menu-panel.no-max-width-menu {
-  max-width: none;
+::ng-deep.mat-menu-panel.fixed-max-width-menu {
+  max-width: 800px;
   max-height: 600px;
   overflow-y: scroll;
   scrollbar-width: none;
