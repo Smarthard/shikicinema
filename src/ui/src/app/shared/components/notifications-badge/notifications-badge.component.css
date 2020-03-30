@@ -38,6 +38,7 @@ mat-menu::-webkit-scrollbar {
 
 ::ng-deep.mat-menu-panel.no-max-width-menu {
   max-width: none;
+  max-height: 600px;
 }
 
 mat-icon {
