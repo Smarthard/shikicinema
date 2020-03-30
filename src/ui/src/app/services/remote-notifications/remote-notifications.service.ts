@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {combineLatest, Observable, Subject} from 'rxjs';
 import {SmarthardNet} from '../../types/smarthard-net';
 import {StorageService} from '../chrome-storage/storage.service';
-import {map, tap} from 'rxjs/operators';
+import {map} from 'rxjs/operators';
 import {ShikivideosService} from '../shikivideos-api/shikivideos.service';
 
 @Injectable({
@@ -39,6 +39,10 @@ export class RemoteNotificationsService {
           .map(v => new SmarthardNet.Notification(
             v.id, new Date(Date.parse(v.created)), v.info, v.viewed, v.min_version, v.max_version, new Date(v.expires)
           ))
+          .filter(
+            (notification: SmarthardNet.Notification) =>
+              !notification.expires || (notification.expires && notification.expires > new Date())
+          )
         )
       )
   }
