@@ -141,6 +141,8 @@ export class PlayerComponent implements OnInit, OnDestroy {
     refCount()
   );
 
+  readonly notifications$ = this.remoteNotifications.notifications$;
+
   constructor(
     private router: Router,
     private auth: AuthService,
