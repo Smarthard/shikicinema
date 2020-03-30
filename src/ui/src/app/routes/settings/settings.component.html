@@ -34,6 +34,23 @@
 
   <mat-card-content>
 
+    <h4>Тема</h4>
+    <section>
+      <mat-form-field class="max-width">
+        <mat-select [(ngModel)]="settings.theme" (ngModelChange)="update()">
+          <mat-option value="light">
+            Светлая
+          </mat-option>
+          <mat-option value="dark">
+            Тёмная
+          </mat-option>
+          <mat-option value="custom" disabled>
+            Пользовательская
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </section>
+
     <h4>Вид списка серий</h4>
     <section>
       <mat-checkbox [(ngModel)]="settings.oldFagApproves" (ngModelChange)="update()">
