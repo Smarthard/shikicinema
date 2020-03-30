@@ -1,0 +1,56 @@
+div.notification-badge {
+  height: 11px;
+  width: 4px;
+  padding: 1px 6px 1px 4px;
+  border: 2px solid white;
+  border-radius: 12px;
+  background-color: #ff734c;
+  color: white;
+  font-family: monospace;
+  font-size: 10px;
+  line-height: 11px;
+  text-align: center;
+  cursor: default;
+}
+
+div.white {
+  background-color: white;
+  color: #333333;
+}
+
+div.empty {
+  padding: 5px;
+  vertical-align: middle;
+  text-align: center;
+  margin: 0;
+  font-size: small;
+}
+
+mat-menu {
+  overflow-y: scroll;
+  scrollbar-width: none;
+}
+
+mat-menu::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+::ng-deep.mat-menu-panel.no-max-width-menu {
+  max-width: none;
+}
+
+mat-icon {
+  left: 3px;
+  position: absolute;
+  top: 2px;
+}
+
+mat-card {
+  margin: 3px;
+  background-color: white;
+}
+
+mat-card.viewed {
+  background-color: #EEEEEE;
+}

@@ -52,6 +52,10 @@ import {ButtonScrollEpisodeListComponent} from './shared/components/button-scrol
 import {OldfagEpisodesListSkeletonComponent} from './shared/components/skeletons/oldfag-episodes-list-skeleton/oldfag-episodes-list-skeleton.component';
 import {NgxSkeletonLoaderModule} from '@exalif/ngx-skeleton-loader';
 import {HeaderComponent} from './shared/components/header/header.component';
+import {MatBadgeModule} from '@angular/material/badge';
+import {NotificationsBadgeComponent} from './shared/components/notifications-badge/notifications-badge.component';
+import {MatDividerModule} from '@angular/material/divider';
+import {RemoteNotificationsService} from './services/remote-notifications/remote-notifications.service';
 
 @NgModule({
   declarations: [
@@ -76,7 +80,8 @@ import {HeaderComponent} from './shared/components/header/header.component';
     VirtualScrollEpisodeListComponent,
     ButtonScrollEpisodeListComponent,
     OldfagEpisodesListSkeletonComponent,
-    HeaderComponent
+    HeaderComponent,
+    NotificationsBadgeComponent
   ],
   imports: [
     AppRoutingModule,
@@ -104,14 +109,17 @@ import {HeaderComponent} from './shared/components/header/header.component';
     MatDialogModule,
     MatProgressSpinnerModule,
     ScrollingModule,
-    NgxSkeletonLoaderModule
+    NgxSkeletonLoaderModule,
+    MatBadgeModule,
+    MatDividerModule
   ],
   providers: [
     { provide: LocationStrategy, useClass: HashLocationStrategy },
     { provide: HTTP_INTERCEPTORS, useClass: ShikivideosRequestsInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ShikimoriRequestsInterceptor, multi: true },
     ShikivideosService,
-    ShikimoriService
+    ShikimoriService,
+    RemoteNotificationsService
   ],
   bootstrap: [AppComponent],
   entryComponents: [AboutDialogComponent, RequestDialogComponent]

@@ -5,6 +5,15 @@ div {
   height: 24px;
 }
 
+app-notifications-badge {
+  position: absolute;
+  right: 6px;
+  top: 14px;
+  height: 12px;
+  width: 12px;
+  z-index: 10;
+}
+
 div.flex {
   align-items: center;
   align-content: center;

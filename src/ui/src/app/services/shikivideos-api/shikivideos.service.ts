@@ -123,4 +123,26 @@ export class ShikivideosService {
 
     return this.http.get(`${this.SHIKIVIDEOS_API}/release-notes/${version}`, { headers, responseType: 'text'});
   }
+
+  public getNotifications(version: string): Observable<SmarthardNet.Notification[]> {
+    const params = new HttpParams()
+      .set('version', version);
+
+    return this.http.get<SmarthardNet.INotification[]>(`https://smarthard.net/api/notifications`, { params })
+      .pipe(
+        map((notifications) => notifications
+          .map(notification => {
+            const id = notification.id;
+            const info = notification.info;
+            const viewed = false;
+            const created = new Date(Date.parse(notification.createdAt));
+            const expires = notification.expires ? new Date(Date.parse(notification.expires)) : null;
+            const minVersion = notification.min_version;
+            const maxVersion = notification.max_version;
+
+            return new SmarthardNet.Notification(id, created, info, viewed, minVersion, maxVersion, expires)
+          })
+        )
+      );
+  }
 }

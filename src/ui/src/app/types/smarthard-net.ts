@@ -168,6 +168,28 @@ export namespace SmarthardNet {
 
   }
 
+  export interface INotification {
+    readonly id: number,
+    readonly info: object,
+    readonly createdAt: string,
+    readonly viewed: boolean,
+    readonly min_version?: string,
+    readonly max_version?: string,
+    readonly expires?: string
+  }
+
+  export class Notification {
+    constructor(
+      public id: number,
+      public created: Date,
+      public info: any,
+      public viewed: boolean,
+      public minVersion?: string,
+      public maxVersion?: string,
+      public expires?: Date
+    ) {}
+  }
+
   export function mergeUniques(uniques: Unique[]) {
     const mergedUnique = uniques[0] || new Unique();
 

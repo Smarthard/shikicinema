@@ -13,6 +13,7 @@
            alt="user_avatar"
            height="24px">
     </button>
+    <app-notifications-badge [notifications]="notifications"></app-notifications-badge>
     <mat-menu #extraButtonsMenu="matMenu">
       <button mat-menu-item
               (click)="openUrl(SHIKIMORI_URL + (anime ? anime.url : ''))"

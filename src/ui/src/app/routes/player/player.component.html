@@ -1,5 +1,6 @@
 <app-header [anime]="anime$ | async"
-            [user]="whoami$ | async">
+            [user]="whoami$ | async"
+            [notifications]="remoteNotifications.notifications$ | async">
   <app-uploader [uploadedByUser]="uploader"
                 [isForeignSource]="currentVideo && currentVideo.foreign"></app-uploader>
 </app-header>
