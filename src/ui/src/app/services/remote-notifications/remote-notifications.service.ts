@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {combineLatest, Observable, Subject} from 'rxjs';
+import {combineLatest, Observable, ReplaySubject} from 'rxjs';
 import {SmarthardNet} from '../../types/smarthard-net';
 import {StorageService} from '../chrome-storage/storage.service';
 import {map} from 'rxjs/operators';
@@ -11,7 +11,7 @@ import {ShikivideosService} from '../shikivideos-api/shikivideos.service';
 export class RemoteNotificationsService {
 
   private readonly EXTENSION_VERSION = chrome.runtime.getManifest().version;
-  private _notificationsSubject = new Subject<SmarthardNet.Notification[]>();
+  private _notificationsSubject = new ReplaySubject<SmarthardNet.Notification[]>(1);
   readonly notifications$ = this._notificationsSubject.asObservable();
 
   constructor(
