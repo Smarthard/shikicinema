@@ -26,12 +26,7 @@ div.empty {
   font-size: small;
 }
 
-mat-menu {
-  overflow-y: scroll;
-  scrollbar-width: none;
-}
-
-mat-menu::-webkit-scrollbar {
+::ng-deep.mat-menu-panel.no-max-width-menu::-webkit-scrollbar {
   width: 0;
   height: 0;
 }
@@ -39,6 +34,8 @@ mat-menu::-webkit-scrollbar {
 ::ng-deep.mat-menu-panel.no-max-width-menu {
   max-width: none;
   max-height: 600px;
+  overflow-y: scroll;
+  scrollbar-width: none;
 }
 
 mat-icon {
