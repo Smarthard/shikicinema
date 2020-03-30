@@ -18,6 +18,7 @@ import {Notification, NotificationType} from '../../types/notification';
 import {MatDialog} from '@angular/material/dialog';
 import {IRequestDialogData, RequestDialogComponent} from '../../shared/components/request-dialog/request-dialog.component';
 import {KodikService} from '../../services/kodik-api/kodik.service';
+import {RemoteNotificationsService} from '../../services/remote-notifications/remote-notifications.service';
 
 @Component({
   selector: 'app-player',
@@ -140,11 +141,14 @@ export class PlayerComponent implements OnInit, OnDestroy {
     refCount()
   );
 
+  readonly notifications$ = this.remoteNotifications.notifications$;
+
   constructor(
     private router: Router,
     private auth: AuthService,
     private route: ActivatedRoute,
     private notify: NotificationsService,
+    private remoteNotifications: RemoteNotificationsService,
     private preferenses: UserPreferencesService,
     private videosApi: ShikivideosService,
     private kodikService: KodikService,

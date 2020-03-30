@@ -1,5 +1,31 @@
 
 <mat-card>
+  <mat-card-header>
+    <mat-icon mat-card-avatar>build</mat-icon>
+    <mat-card-title>Настройки Shikicinema</mat-card-title>
+  </mat-card-header>
+
+  <mat-card-content>
+
+    <h4>Кнопка просмотра</h4>
+    <section>
+      <mat-form-field class="max-width">
+        <mat-label>Плеер открывать</mat-label>
+        <mat-select [(ngModel)]="settings.playerTabOpens" (ngModelChange)="update()">
+          <mat-option value="new">
+            в новом окне
+          </mat-option>
+          <mat-option value="same">
+            на странице с аниме
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </section>
+
+  </mat-card-content>
+</mat-card>
+
+<mat-card>
 
   <mat-card-header>
     <mat-icon mat-card-avatar>palette</mat-icon>
@@ -7,6 +33,23 @@
   </mat-card-header>
 
   <mat-card-content>
+
+    <h4>Тема</h4>
+    <section>
+      <mat-form-field class="max-width">
+        <mat-select [(ngModel)]="settings.theme" (ngModelChange)="update()">
+          <mat-option value="light">
+            Светлая
+          </mat-option>
+          <mat-option value="dark">
+            Тёмная
+          </mat-option>
+          <mat-option value="custom" disabled>
+            Пользовательская
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </section>
 
     <h4>Вид списка серий</h4>
     <section>

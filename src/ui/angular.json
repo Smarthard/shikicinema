@@ -27,7 +27,7 @@
               "src/assets"
             ],
             "styles": [
-              "src/themes/light.scss",
+              "src/themes/default.scss",
               "src/styles.css"
             ],
             "scripts": []

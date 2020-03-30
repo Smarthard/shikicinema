@@ -103,19 +103,25 @@ export namespace SmarthardNet {
 
   export interface IToken {
     readonly access_token: string,
+    readonly refresh_token: string,
     readonly expires: string
   }
 
   export class Token extends AbstractToken {
     constructor(
       private access_token?: string,
-      private expires?: string
+      private expires?: string,
+      private refresh_token?: string
     ) {
       super();
     }
 
     public get token(): string {
       return this.access_token;
+    }
+
+    public get refresh(): string {
+      return this.refresh_token;
     }
 
     public get expired(): boolean {
@@ -160,6 +166,28 @@ export namespace SmarthardNet {
       public created: Date
     ) {}
 
+  }
+
+  export interface INotification {
+    readonly id: number,
+    readonly info: object,
+    readonly createdAt: string,
+    readonly viewed: boolean,
+    readonly min_version?: string,
+    readonly max_version?: string,
+    readonly expires?: string
+  }
+
+  export class Notification {
+    constructor(
+      public id: number,
+      public created: Date,
+      public info: any,
+      public viewed: boolean,
+      public minVersion?: string,
+      public maxVersion?: string,
+      public expires?: Date
+    ) {}
   }
 
   export function mergeUniques(uniques: Unique[]) {

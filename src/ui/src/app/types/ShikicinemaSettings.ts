@@ -3,6 +3,8 @@ export class ShikicinemaSettings {
   public oldFagApproves: boolean = true;
   public episodeListType: EpisodesListTypes = EpisodesListTypes.SCROLLABLE;
   public extraButtons: boolean = false;
+  public theme: 'light' | 'dark' | 'custom' = 'dark';
+  public playerTabOpens: 'new' | 'same' = 'new';
   public playerFiltersEnabled: boolean = true;
   public playerFilters: Array<IFilter> = [
     {

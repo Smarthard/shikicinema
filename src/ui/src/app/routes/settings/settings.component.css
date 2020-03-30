@@ -1,9 +1,14 @@
 :host {
   padding: 10px;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
+}
+
+.dark-theme :host {
+  background-color: #2e2e2e;
 }
 
 @media (min-width: 1025px) {

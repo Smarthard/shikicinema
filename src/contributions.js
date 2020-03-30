@@ -1,5 +1,6 @@
 'use strict';
 
+let timeout = null;
 const PLAYER_URL = chrome.runtime.getURL('/index.html');
 const SHIKIVIDEOS_API = 'https://smarthard.net/api/shikivideos';
 
@@ -9,9 +10,14 @@ let observer = new MutationObserver(() => {
   let isAnimePage = `${window.location}`.includes('/animes/');
   let isContribtuonsAppened = uploads.classList.contains('uploader_contributions');
 
-  if (profileBody && !isAnimePage && !isContribtuonsAppened) {
+  if (timeout)
+    clearTimeout(timeout);
+
+  timeout = setTimeout(async () => {
+    if (profileBody && !isAnimePage && !isContribtuonsAppened) {
       correctContributions(uploads);
-  }
+    }
+  }, 150);
 });
 
 observer.observe(document, {childList: true, subtree: true});

@@ -1,19 +1,38 @@
 'use strict';
 
+let timeout = null;
 const PLAYER_URL = chrome.runtime.getURL('/index.html');
 const SHIKIVIDEOS_API = 'https://smarthard.net/api/shikivideos';
 const KODIK_TOKEN = `${process.env.KODIK_TOKEN}`;
 const PLAYER_BUTTON = document.createElement('a');
 const INFO_DIV = document.createElement('div');
+const ON_WATCH_CLICK = async (anime) => {
+  const userRate = await _getAnimeInfo(anime.id)
+    .then((updatedAnime) => updatedAnime.user_rate)
+    .catch(() => null);
+  const episode = await _getEpisode(anime, userRate ? userRate.episodes : 0);
+
+  chrome.runtime.sendMessage({ openUrl: `${PLAYER_URL}#/${anime.id}/${episode}` });
+};
 
 const OBSERVER = new MutationObserver(() => {
+  let animeId = `${window.location}`.match(/\d+/);
   let isAnimePage = `${window.location}`.includes('/animes/');
   let divInfo = document.querySelector('div.c-info-right');
-  let isWatchButtonAppended = divInfo && divInfo.contains(PLAYER_BUTTON);
+  let watchButton = document.querySelector('a#watch_button');
 
-  if (divInfo && isAnimePage && !isWatchButtonAppended) {
-    appendWatchButtonTo(divInfo);
-  }
+  if (timeout)
+    clearTimeout(timeout);
+
+  timeout = setTimeout(async () => {
+    let anime = await _getAnimeInfo(animeId);
+
+    if (divInfo && isAnimePage && !watchButton) {
+      appendWatchButtonTo(divInfo, anime);
+    } else {
+      watchButton.onclick = () => ON_WATCH_CLICK(anime);
+    }
+  }, 100);
 });
 
 OBSERVER.observe(document, {childList: true, subtree: true});
@@ -52,9 +71,8 @@ function _getAnimeInfo(animeId) {
     .then((res) => res.json());
 }
 
-async function _getEpisode(anime) {
-  const spanEpisode = document.querySelector('span.current-episodes');
-  const targetEpisode = spanEpisode ? +spanEpisode.innerText + 1 : 1;
+async function _getEpisode(anime, watchedEpisode) {
+  const targetEpisode = watchedEpisode ? +watchedEpisode + 1 : 1;
   const mainArchiveMax = await _getUploadedEpisodes(anime.id);
   const kodikMax = await _getKodikEpisodes(anime);
   const maxAvailable = Math.max(mainArchiveMax, kodikMax);
@@ -62,33 +80,22 @@ async function _getEpisode(anime) {
   return Math.min(targetEpisode, +maxAvailable);
 }
 
-async function appendWatchButtonTo(element) {
-  let animeId = `${window.location}`.match(/\d+/);
+async function appendWatchButtonTo(element, anime) {
+  const lastOrMaxEpisodeAvailable = await _getEpisode(anime);
 
   PLAYER_BUTTON.id = 'watch_button';
   PLAYER_BUTTON.classList.add('b-link_button', 'dark', 'watch-online');
   PLAYER_BUTTON.classList.remove('upload-video');
   PLAYER_BUTTON.textContent = 'Смотреть онлайн';
   PLAYER_BUTTON.style.margin = '0 10%';
+  PLAYER_BUTTON.onclick = () => ON_WATCH_CLICK(anime);
 
-  if (animeId) {
-    const anime = await _getAnimeInfo(animeId);
-    const lastOrMaxEpisodeAvailable = await _getEpisode(anime);
+  element.appendChild(PLAYER_BUTTON);
+  element.appendChild(INFO_DIV);
 
-    element.appendChild(PLAYER_BUTTON);
-    element.appendChild(INFO_DIV);
-
-    if (lastOrMaxEpisodeAvailable === 0 || anime.status === 'anons') {
-      PLAYER_BUTTON.textContent = 'Загрузить видео';
-      PLAYER_BUTTON.classList.add('upload-video');
-      PLAYER_BUTTON.classList.remove('watch-online');
-    }
-
-    PLAYER_BUTTON.onclick = async () => {
-      const episode = await _getEpisode(anime) || 1;
-      chrome.runtime.sendMessage({ openUrl: `${PLAYER_URL}#/${animeId}/${episode}` });
-    };
-  } else {
-    console.error('Не удалось узнать название аниме!');
+  if (lastOrMaxEpisodeAvailable === 0 || anime.status === 'anons') {
+    PLAYER_BUTTON.textContent = 'Загрузить видео';
+    PLAYER_BUTTON.classList.add('upload-video');
+    PLAYER_BUTTON.classList.remove('watch-online');
   }
 }

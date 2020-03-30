@@ -2,8 +2,16 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  min-height: 100%;
+  justify-content: flex-start;
+  min-height: 100vh;
+}
+
+.dark-theme :host {
+  background-color: #2e2e2e;
+}
+
+.dark-theme :host * {
+  background-color: #2e2e2e;
 }
 
 @media (max-width: 1024px) {

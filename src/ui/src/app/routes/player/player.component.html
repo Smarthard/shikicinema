@@ -1,5 +1,6 @@
 <app-header [anime]="anime$ | async"
-            [user]="whoami$ | async">
+            [user]="whoami$ | async"
+            [notifications]="notifications$ | async">
   <app-uploader [uploadedByUser]="uploader"
                 [isForeignSource]="currentVideo && currentVideo.foreign"></app-uploader>
 </app-header>
@@ -30,6 +31,7 @@
                        [href]="(currentVideo)?.url || '#'">
         <label for="shikicinema-episode"></label>
         <input id="shikicinema-episode"
+               class="text"
                maxlength="5"
                [(ngModel)]="urlParams.episode"
                (ngModelChange)="changeEpisode($event)"

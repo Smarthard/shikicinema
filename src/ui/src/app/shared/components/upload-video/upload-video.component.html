@@ -1,7 +1,7 @@
 <form id="video-upload-form" novalidate (ngSubmit)="onSubmit(videoForm)" #videoForm="ngForm">
   <div id="fields">
     <mat-form-field>
-      <input matInput placeholder="URL проигрывателя" name="url" type="url"
+      <input matInput class="text" placeholder="URL проигрывателя" name="url" type="url"
              [(ngModel)]="video.url"
              (paste)="video.url = trimUrl($event)"
              [errorStateMatcher]="matcher"
@@ -12,7 +12,7 @@
     </mat-form-field>
 
     <mat-form-field>
-      <input matInput placeholder="Автор озвучки/субтитров" name="author" type="text"
+      <input matInput class="text" placeholder="Автор озвучки/субтитров" name="author" type="text"
              [(ngModel)]="video.author"
              (input)="search4Authors($event)"
              autocomplete="off" list="authors" #authorInput>
@@ -23,7 +23,7 @@
 
     <div class="flex">
       <mat-form-field>
-        <input matInput name="episode"
+        <input matInput class="text" name="episode"
                type="number"
                placeholder="Эпизод"
                value="1" min="1"
@@ -79,7 +79,7 @@
 
   <div id="upload-controls">
     <label id="autoinc">
-      <mat-checkbox class="pale"
+      <mat-checkbox class="pale text"
                     labelPosition="before"
                     [(ngModel)]="autoIncEpisode"
                     [ngModelOptions]="{standalone: true}">Автоинкремент эпизода</mat-checkbox>

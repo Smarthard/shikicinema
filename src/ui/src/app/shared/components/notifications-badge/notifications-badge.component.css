@@ -1,0 +1,67 @@
+div.notification-badge {
+  height: 11px;
+  width: 4px;
+  padding: 1px 6px 1px 4px;
+  border: 2px solid white;
+  border-radius: 12px;
+  background-color: #ff734c;
+  color: white;
+  font-family: monospace;
+  font-size: 10px;
+  line-height: 11px;
+  text-align: center;
+  cursor: default;
+}
+
+div.white {
+  background-color: white;
+  color: #333333;
+}
+
+.dark-theme :host div.notification-badge {
+  border: 2px solid #2e2e2e;
+}
+
+.dark-theme :host div.white {
+  background-color: #2e2e2e;
+  color: #EEEEEE;
+}
+
+.dark-theme ::ng-deep.mat-menu-panel {
+  background-color: #2e2e2e;
+}
+
+div.empty {
+  padding: 5px;
+  vertical-align: middle;
+  text-align: center;
+  margin: 0;
+  font-size: small;
+}
+
+::ng-deep.mat-menu-panel.fixed-max-width-menu::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+::ng-deep.mat-menu-panel.fixed-max-width-menu {
+  max-width: 800px;
+  max-height: 600px;
+  overflow-y: scroll;
+  scrollbar-width: none;
+}
+
+mat-icon {
+  left: 3px;
+  position: absolute;
+  top: 2px;
+}
+
+mat-card {
+  margin: 3px;
+  background-color: white;
+}
+
+mat-card.viewed {
+  background-color: #EEEEEE;
+}

@@ -7,6 +7,7 @@ import {Notification, NotificationType} from '../../types/notification';
 import {Location} from '@angular/common';
 import {AuthService} from '../../services/auth/auth.service';
 import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
+import {ThemesService} from '../../services/themes/themes.service';
 
 @Component({
   selector: 'app-settings',
@@ -20,6 +21,7 @@ export class SettingsComponent implements OnInit {
 
   constructor(
     public auth: AuthService,
+    private themesService: ThemesService,
     private settingsService: SettingsService,
     private notify: NotificationsService,
     private title: Title,
@@ -38,6 +40,7 @@ export class SettingsComponent implements OnInit {
 
   async update() {
     await this.settingsService.set(this.settings);
+    this.themesService.change(this.settings.theme);
     this.notify.add(new Notification(NotificationType.OK, 'Настройки сохранены'));
   }
 

@@ -19,6 +19,9 @@ export class HeaderComponent {
   @Input()
   public video: SmarthardNet.Shikivideo;
 
+  @Input()
+  public notifications: SmarthardNet.Notification[];
+
   constructor() {}
 
   openUrl(url: string, target: '_self' | '_blank' = '_self') {
