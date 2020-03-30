@@ -15,7 +15,7 @@ export class RemoteNotificationsService {
   readonly notifications$ = this._notificationsSubject.asObservable();
 
   cmpByDate = (a, b) => a.created.getDate() - b.created.getDate();
-  cmpByViewed = (a, b) => a.viewed ? 0 : 1 - b.viewed ? 0 : 1;
+  cmpByViewed = (a, b) => (a.viewed ? 0 : 1) - (b.viewed ? 0 : 1);
 
   constructor(
     private videosApi: ShikivideosService
@@ -25,7 +25,7 @@ export class RemoteNotificationsService {
         (notifications) => combineLatest([notifications, this.getReadNotifications()]),
         map(([notifications, readNotifications]) => notifications
           .map(x => Object.assign(x, readNotifications.find(y => y.id === x.id)))
-          .sort((a, b) => this.cmpByDate(a, b) || this.cmpByViewed(a, b))
+          .sort((a, b) => this.cmpByViewed(b, a) > 0 ? this.cmpByDate(b, a) : this.cmpByViewed(b, a))
         )
       )
       .subscribe((notifications) => this._notificationsSubject.next(notifications));
