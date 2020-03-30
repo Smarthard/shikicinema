@@ -30,4 +30,18 @@ export class NotificationsBadgeComponent implements OnInit {
     this.remoteNotifications.setReadNotifications(notifications);
   }
 
+  cmpByDate(a: SmarthardNet.Notification, b: SmarthardNet.Notification): number {
+    return a.created.getDate() - b.created.getDate();
+  }
+
+  sort(notifications: SmarthardNet.Notification[]): SmarthardNet.Notification[] {
+    let viewed = notifications.filter(v => v.viewed);
+    let notViewed = notifications.filter(v => !v.viewed);
+
+    return [
+      ...notViewed.sort((a, b) => this.cmpByDate(b, a)),
+      ...viewed.sort((a, b) => this.cmpByDate(b, a)),
+    ];
+  }
+
 }
