@@ -1,3 +1,7 @@
+.dark-theme :host div {
+  background-color: #2e2e2e;
+}
+
 div {
   flex-flow: row nowrap;
   justify-content: space-between;

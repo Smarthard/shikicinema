@@ -1,5 +1,5 @@
 <div>
-  <b>Эпизоды</b>
+  <b class="text">Эпизоды</b>
   <app-button-scroll-episode-list *ngIf="settings && settings.episodeListType === EPISODES_LIST_TYPES.DEFAULT"
                                   (change)="change.emit($event)"
                                   [unique]="unique"

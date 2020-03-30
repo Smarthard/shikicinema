@@ -6,6 +6,14 @@
   min-height: 100%;
 }
 
+.dark-theme :host {
+  background-color: #2e2e2e;
+}
+
+.dark-theme :host * {
+  background-color: #2e2e2e;
+}
+
 @media (max-width: 1024px) {
   * {
     font-size: small;

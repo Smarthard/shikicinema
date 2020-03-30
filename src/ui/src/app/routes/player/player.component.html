@@ -31,6 +31,7 @@
                        [href]="(currentVideo)?.url || '#'">
         <label for="shikicinema-episode"></label>
         <input id="shikicinema-episode"
+               class="text"
                maxlength="5"
                [(ngModel)]="urlParams.episode"
                (ngModelChange)="changeEpisode($event)"

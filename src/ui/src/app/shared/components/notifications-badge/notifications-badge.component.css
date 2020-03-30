@@ -18,6 +18,19 @@ div.white {
   color: #333333;
 }
 
+.dark-theme :host div.notification-badge {
+  border: 2px solid #2e2e2e;
+}
+
+.dark-theme :host div.white {
+  background-color: #2e2e2e;
+  color: #EEEEEE;
+}
+
+.dark-theme ::ng-deep.mat-menu-panel {
+  background-color: #2e2e2e;
+}
+
 div.empty {
   padding: 5px;
   vertical-align: middle;

@@ -6,6 +6,10 @@
   justify-content: flex-start;
 }
 
+.dark-theme :host {
+  background-color: #2e2e2e;
+}
+
 @media (min-width: 1025px) {
   :host {
     padding: 10px 30% 10px 30%;

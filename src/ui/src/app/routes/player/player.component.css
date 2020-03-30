@@ -54,6 +54,18 @@
 
 }
 
+.dark-theme :host, .dark-theme :host * {
+  background-color: #2e2e2e;
+}
+
+.dark-theme :host button:not(.watched) mat-icon {
+  color: #AAA;
+}
+
+.dark-theme :host button:disabled mat-icon {
+  color: #444444;
+}
+
 mat-icon {
   height: auto;
   width: auto;
