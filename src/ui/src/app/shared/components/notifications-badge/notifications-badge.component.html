@@ -27,7 +27,7 @@
             {{ notification?.info?.name }}
           </mat-card-title>
           <mat-card-subtitle>
-            {{ notification.created | date: 'medium' }}
+            {{ notification.created | date: 'dd.MM.y, HH:mm' }}
             <span *ngIf="notification?.viewed">(просмотрено)</span>
           </mat-card-subtitle>
         </mat-card-header>
