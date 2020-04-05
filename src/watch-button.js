@@ -25,11 +25,11 @@ const OBSERVER = new MutationObserver(() => {
     clearTimeout(timeout);
 
   timeout = setTimeout(async () => {
-    let anime = await _getAnimeInfo(animeId);
+    let anime = isAnimePage ? await _getAnimeInfo(animeId) : {};
 
     if (divInfo && isAnimePage && !watchButton) {
       appendWatchButtonTo(divInfo, anime);
-    } else {
+    } else if (isAnimePage && watchButton) {
       watchButton.onclick = () => ON_WATCH_CLICK(anime);
     }
   }, 100);
