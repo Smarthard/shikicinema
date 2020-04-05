@@ -68,7 +68,8 @@ function _getKodikEpisodes(anime) {
 
 function _getAnimeInfo(animeId) {
   return fetch(`https://shikimori.one/api/animes/${animeId}`)
-    .then((res) => res.json());
+    .then((res) => res.json())
+    .catch(() => ({ id: animeId }));
 }
 
 async function _getEpisode(anime, watchedEpisode) {
