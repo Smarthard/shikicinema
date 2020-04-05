@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
+import {HttpClient, HttpErrorResponse, HttpHeaders, HttpParams} from '@angular/common/http';
 import {Shikimori} from '../../types/shikimori';
-import {Observable, of} from 'rxjs';
+import {Observable, of, throwError} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
 import {environment} from '../../../environments/environment';
 
@@ -53,7 +53,14 @@ export class ShikimoriService {
       params = new HttpParams().set('is_nickname', '1');
     }
 
-    return this.http.get<Shikimori.User>(`${this.SHIKIMORI_URL}/api/users/${user}`, { params });
+    return this.http.get<Shikimori.User>(`${this.SHIKIMORI_URL}/api/users/${user}`, { params })
+      .pipe(
+        catchError((err: HttpErrorResponse) => {
+          const deletedOrRenamedUser = new Shikimori.User({ avatar: 'https://shikimori.one/favicon.ico', nickname: user});
+
+          return err.status === 404 ? of(deletedOrRenamedUser) : throwError(err)
+        })
+      );
   }
 
   public getAnime(animeId: number): Observable<Shikimori.Anime> {
