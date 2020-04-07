@@ -34,7 +34,7 @@ export class VideosComponent implements OnInit {
   );
   readonly count$: Observable<{ count: number }> = this.uploader$.pipe(
     switchMap(uploader => this.videosApi.contributions(new HttpParams()
-      .set('uploader', `${uploader.nickname}+${uploader.id}`))
+      .set('uploader', `${uploader.id}`))
     ),
     publishReplay(1),
     refCount()
@@ -45,7 +45,7 @@ export class VideosComponent implements OnInit {
     switchMap(uploader => this.videosApi.search(new HttpParams()
       .set('offset', `${this.offset}`)
       .set('limit', `${this.pageSize}`)
-      .set('uploader', `${uploader.nickname}+${uploader.id}`))
+      .set('uploader', `${uploader.id}`))
     )
   );
 

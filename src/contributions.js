@@ -30,7 +30,7 @@ async function correctContributions(element) {
     .then(res => res.json());
 
   if (user && user.id) {
-    let contributions = await fetch(`${SHIKIVIDEOS_API}/contributions?uploader=${user.id}+${user.nickname}`)
+    let contributions = await fetch(`${SHIKIVIDEOS_API}/contributions?uploader=${user.id}`)
       .then(res => res.json());
     let upload = `загруз${contributions.count === 1 ? 'ка' : contributions.count < 5 ? 'ки' : 'ок'}`;
 
