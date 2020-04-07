@@ -58,6 +58,7 @@ export class VideosComponent implements OnInit {
 
   ngOnInit() {
     this.uploader$.subscribe(uploader => this.title.setTitle(`Загрузки ${uploader.nickname}`));
+    this.sortData({ active: 'id', direction: 'desc' })
   }
 
   sortData(sort: Sort) {
