@@ -67,6 +67,57 @@ export class ShikimoriService {
     return this.http.get<Shikimori.Anime>(`${this.SHIKIMORI_URL}/api/animes/${animeId}`);
   }
 
+  public getAnimeTopics(animeId: number, kind?: string, episode?: number): Observable<Shikimori.ITopic[]> {
+    let params = new HttpParams();
+
+    if (kind) {
+      params = params.set('kind', kind);
+    }
+
+    if (episode) {
+      params = params.set('episode', `${episode}`);
+    }
+
+    return this.http.get<Shikimori.ITopic[]>(`${this.SHIKIMORI_URL}/api/animes/${animeId}/topics`, { params });
+  }
+
+  public getComments(
+    commentableId: number, type: Shikimori.CommentableType, page: number = 1, limit: number = 20, desc?: '0' | '1', isSumary?: boolean
+  ) {
+    let params = new HttpParams()
+      .set('commentable_id', `${commentableId}`)
+      .set('commentable_type', `${type}`)
+      .set('page', `${page}`)
+      .set('limit', `${limit}`);
+
+    if (desc) {
+      params = params.set('desc', desc)
+    }
+
+    if (isSumary) {
+      params = params.set('is_summary', `${isSumary}`);
+    }
+
+    return this.http.get<Shikimori.IComment[]>(`${this.SHIKIMORI_URL}/api/comments`, { params })
+      .pipe(
+        map((comments) => comments
+          .map(c => new Shikimori.Comment(
+            c.id,
+            c.commentable_id,
+            c.commentable_type,
+            c.body,
+            c.html_body,
+            new Date(Date.parse(c.created_at)),
+            new Date(Date.parse(c.updated_at)),
+            c.is_offtopic,
+            c.is_summary,
+            c.can_be_edited,
+            new Shikimori.User(c.user)
+          ))
+        )
+      );
+  }
+
   public async getNewToken(): Promise<Shikimori.Token> {
     return new Promise(async (resolve, reject) => {
       const code = await this._getShikimoriAuthCode() || null;

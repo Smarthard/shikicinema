@@ -177,6 +177,11 @@
         </div>
       </ng-container>
     </div>
+    <app-comments (nextPage)="nextCommentsPage()"
+                  [comments]="commentsService.comments$ | async"
+                  [hasNextPage]="commentsService.hasNextPage"
+                  [newCommentsCount]="commentsService.pageSize"
+                  [totalCommentsRemaining]="commentsService.commentsRemaining"></app-comments>
 
   </ng-container>
 

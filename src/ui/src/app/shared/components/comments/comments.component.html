@@ -1,0 +1,77 @@
+<div id="comments-section">
+  <ng-container *ngIf="comments?.length > 0; else noComments">
+    <button (click)="hasNextPage ? nextPage.emit() : toggleComments()"
+            class="max-width text"
+            mat-flat-button>
+      {{
+          hasNextPage ? 'Загрузить еще ' +
+            (totalCommentsRemaining > newCommentsCount ? newCommentsCount : totalCommentsRemaining)
+          + ' комментариев' : (commentsHidden ? 'Раскрыть' : 'Скрыть') + ' комментарии'
+      }}
+      {{
+          (totalCommentsRemaining > 0 && totalCommentsRemaining > newCommentsCount && hasNextPage)
+            ? 'из ' + totalCommentsRemaining
+            : ''
+      }}
+    </button>
+    <div *ngFor="let comment of comments
+        | unique: 'id'
+        | slice: commentsStarts: commentsEnds
+        | orderBy: 'created';
+          trackBy: trackComment">
+      <div class="comment">
+        <div class="comment-avatar">
+          <ng-container *ngIf="userExists(comment?.user?.nickname); else deletedUserAvatar">
+            <a [href]="'https://shikimori.one/' + comment?.user.nickname">
+              <img [src]="comment?.user?.avatar"
+                   [alt]="comment?.user?.nickname"
+                   loading="lazy"
+                   height="48px" width="48px">
+            </a>
+          </ng-container>
+          <ng-template #deletedUserAvatar>
+            <img src="https://shikimori.one/favicon.ico"
+                 alt="deleted user"
+                 loading="lazy"
+                 height="48px" width="48px">
+          </ng-template>
+        </div>
+        <div class="max-width">
+          <div class="comment-info">
+            <ng-container *ngIf="userExists(comment?.user?.nickname); else deletedUserNickname">
+              <span>
+                <a [href]="'https://shikimori.one/' + comment?.user.nickname"
+                   class="shc-links">
+                  {{ comment?.user.nickname }}
+                </a>
+              </span>
+            </ng-container>
+            <div class="text smaller">
+              <span>
+                {{ comment?.lastUpdated | date: 'short' }}
+              </span>
+              <mat-icon *ngIf="comment?.isEdited"
+                        [title]="'создано: ' + (comment?.created | date: 'short')"
+                        class="small">edit</mat-icon>
+            </div>
+            <ng-template #deletedUserNickname>
+              <a class="shc-links">DELETED USER</a>
+            </ng-template>
+          </div>
+          <div [innerHTML]="comment?.html"
+               class="text"></div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+  <ng-template #noComments>
+    <div class="comment text">Нет комментариев</div>
+  </ng-template>
+</div>
+
+<div *ngIf="imgLink"
+     (click)="closeImg()"
+     class="view-img flex flex-column">
+  <img [src]="imgLink"
+       alt="image viewer">
+</div>

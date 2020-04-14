@@ -1,0 +1,70 @@
+.dark-theme :host #comments-section {
+  background-color: #2e2e2e;
+}
+
+.comment {
+  min-width: 100px;
+  min-height: 50px;
+  display: flex;
+  flex-direction: row;
+  background-color: transparent;
+  border-top: 1px dashed #777;
+  padding: 15px 0;
+}
+
+.comment-avatar {
+  padding: 5px;
+  width: 48px;
+  height: 48px;
+  background-color: transparent;
+}
+
+.comment-avatar img {
+  border-radius: 53px;
+}
+
+.comment-info {
+  padding: 5px;
+  height: 48px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-color: transparent;
+}
+
+.smaller {
+  font-size: smaller;
+}
+
+.small {
+  font-size: small;
+}
+
+div.view-img {
+  top: 0;
+  left: 0;
+  position: fixed;
+  overflow: hidden;
+  z-index: 20;
+  background: #0007;
+  width: 100vw;
+  height: 100vh;
+}
+
+div.view-img img {
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  display: block;
+  box-sizing: border-box;
+  padding: 40px 0;
+  margin: 0 auto;
+}
+
+button {
+  background-color: #f9f9f9;
+}
+
+.dark-theme button {
+  background-color: #7777;
+}

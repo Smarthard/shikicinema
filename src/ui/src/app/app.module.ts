@@ -1,5 +1,6 @@
-import {NgModule} from '@angular/core';
-import {CommonModule, HashLocationStrategy, LocationStrategy} from '@angular/common';
+import {LOCALE_ID, NgModule} from '@angular/core';
+import localeRu from '@angular/common/locales/ru';
+import {CommonModule, HashLocationStrategy, LocationStrategy, registerLocaleData} from '@angular/common';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {NgxResponsiveEmbedModule} from 'ngx-responsive-embed';
 
@@ -56,6 +57,9 @@ import {MatBadgeModule} from '@angular/material/badge';
 import {NotificationsBadgeComponent} from './shared/components/notifications-badge/notifications-badge.component';
 import {MatDividerModule} from '@angular/material/divider';
 import {RemoteNotificationsService} from './services/remote-notifications/remote-notifications.service';
+import {CommentsComponent} from './shared/components/comments/comments.component';
+
+registerLocaleData(localeRu, 'ru');
 
 @NgModule({
   declarations: [
@@ -81,7 +85,8 @@ import {RemoteNotificationsService} from './services/remote-notifications/remote
     ButtonScrollEpisodeListComponent,
     OldfagEpisodesListSkeletonComponent,
     HeaderComponent,
-    NotificationsBadgeComponent
+    NotificationsBadgeComponent,
+    CommentsComponent
   ],
   imports: [
     AppRoutingModule,
@@ -117,6 +122,7 @@ import {RemoteNotificationsService} from './services/remote-notifications/remote
     { provide: LocationStrategy, useClass: HashLocationStrategy },
     { provide: HTTP_INTERCEPTORS, useClass: ShikivideosRequestsInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ShikimoriRequestsInterceptor, multi: true },
+    { provide: LOCALE_ID, useValue: 'ru' },
     ShikivideosService,
     ShikimoriService,
     RemoteNotificationsService

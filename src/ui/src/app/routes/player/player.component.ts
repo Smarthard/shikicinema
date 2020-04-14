@@ -19,6 +19,7 @@ import {MatDialog} from '@angular/material/dialog';
 import {IRequestDialogData, RequestDialogComponent} from '../../shared/components/request-dialog/request-dialog.component';
 import {KodikService} from '../../services/kodik-api/kodik.service';
 import {RemoteNotificationsService} from '../../services/remote-notifications/remote-notifications.service';
+import {CommentsService} from '../../services/comments/comments.service';
 
 @Component({
   selector: 'app-player',
@@ -154,6 +155,7 @@ export class PlayerComponent implements OnInit, OnDestroy {
     private kodikService: KodikService,
     private shikimori: ShikimoriService,
     private settingsService: SettingsService,
+    readonly commentsService: CommentsService,
     private title: Title,
     private dialog: MatDialog
   ) {}
@@ -186,6 +188,8 @@ export class PlayerComponent implements OnInit, OnDestroy {
       )
       .subscribe(([episode, anime]) => {
         const title = anime.russian || anime.name;
+        this.commentsService.setAnime(anime);
+        this.commentsService.setEpisode(episode);
         this.title.setTitle(`${title} - эпизод ${episode}`)
       });
 
@@ -303,6 +307,10 @@ export class PlayerComponent implements OnInit, OnDestroy {
         () => this.notify.add(new Notification(NotificationType.OK, 'Запрос успешно отправлен!')),
         () => this.notify.add(new Notification(NotificationType.ERROR, 'Не удалось отправить'))
       )
+  }
+
+  nextCommentsPage() {
+    this.commentsService.nextPage();
   }
 
   private _chooseFavourite(videos: SmarthardNet.Shikivideo[]): SmarthardNet.Shikivideo[] {
