@@ -122,22 +122,9 @@ export class PlayerComponent implements OnInit, OnDestroy {
     refCount()
   );
 
-  readonly userRates$ = this.animeId$.pipe(
-    switchMap(animeId => {
-      return this.whoami$.pipe(
-        map(user => { return {user, animeId} })
-      );
-    }),
-    switchMap(query => this.shikimori.getUserRates(
-      new HttpParams()
-        .set('user_id', `${query.user.id}`)
-        .set('target_type', 'Anime')
-        .set('target_id', `${query.animeId}`)
-    )),
-    catchError(() => {
-      console.warn('Вы не авторизованы');
-      return of(<Shikimori.UserRate[]> [])
-    }),
+  readonly userRate$ = this.anime$.pipe(
+    map((anime) => anime.user_rate),
+    catchError(() => of(null)),
     publishReplay(1),
     refCount()
   );
@@ -207,12 +194,12 @@ export class PlayerComponent implements OnInit, OnDestroy {
       }
     );
 
-    this.userRates$
+    this.userRate$
       .pipe(
         takeWhile(() => this.isAlive)
       )
       .subscribe(
-        userRates => this.userRate = new Shikimori.UserRate(userRates[0] ? userRates[0] : {})
+        userRates => this.userRate = new Shikimori.UserRate(userRates ? userRates : {})
     );
 
     this.uploaderSubject
