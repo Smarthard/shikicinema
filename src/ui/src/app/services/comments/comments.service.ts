@@ -66,13 +66,9 @@ export class CommentsService {
       shareReplay(1)
     );
 
-
   readonly comments$: Observable<Shikimori.Comment[]> = this._comments$
     .pipe(
-      scan((acc, value) => {
-        console.debug('switched to', acc[0] && value[0] && acc[0].commentableId !== value[0].commentableId ? value[0]?.commentableId : acc[0]?.commentableId)
-        return acc[0] && value[0] && acc[0].commentableId === value[0].commentableId ? [...value, ...acc] : value
-      }, []),
+      scan((acc, value) => this.mergeComments(acc, value))
     );
 
   constructor(
@@ -133,6 +129,19 @@ export class CommentsService {
     return url.startsWith(CommentsService.PLAYER_URL)
       ? url.replace(CommentsService.PLAYER_URL, 'https://shikimori.one/')
       : url;
+  }
+
+  mergeComments(acc: Shikimori.Comment[], newValues: Shikimori.Comment[]): Shikimori.Comment[] {
+    const accFirst = acc[0];
+    const newFirst = newValues[0];
+
+    if (accFirst && newValues && accFirst.commentableId === newFirst.commentableId) {
+      const intersection = acc.filter(a => newValues.some(n => a.id === n.id));
+      acc = acc.filter(a => !intersection.some(i => a.id === i.id));
+      return [...newValues, ...acc];
+    } else {
+      return newValues;
+    }
   }
 
   parseHtml(comment: Shikimori.Comment): Shikimori.Comment {

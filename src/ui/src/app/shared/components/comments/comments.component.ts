@@ -24,8 +24,6 @@ export class CommentsComponent implements AfterViewChecked {
   nextPage = new EventEmitter();
 
   commentsHidden = false;
-  commentsStarts = 0;
-  commentsEnds = Number.POSITIVE_INFINITY;
   imgLink: string = null;
 
   constructor(private _elementRef: ElementRef) {}
@@ -48,15 +46,15 @@ export class CommentsComponent implements AfterViewChecked {
   }
 
   toggleComments() {
-    if (!this.commentsHidden) {
-      this.commentsStarts = this.comments.length - 20;
-      this.commentsEnds = this.comments.length;
-    } else {
-      this.commentsStarts = 0;
-      this.commentsEnds = Number.POSITIVE_INFINITY;
+    this.commentsHidden = !this.commentsHidden;
+  }
+
+  getTail(): number {
+    if (this.comments.length <= 21) {
+      this.commentsHidden = false;
     }
 
-    this.commentsHidden = !this.commentsHidden;
+    return this.commentsHidden && this.comments.length > 21 ? this.comments.length - 21 : 0;
   }
 
   updateEventListeners() {

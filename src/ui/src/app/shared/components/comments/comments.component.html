@@ -1,6 +1,7 @@
 <div id="comments-section">
   <ng-container *ngIf="comments?.length > 0; else noComments">
-    <button (click)="hasNextPage ? nextPage.emit() : toggleComments()"
+    <button *ngIf="comments?.length >= newCommentsCount"
+            (click)="hasNextPage ? nextPage.emit() : toggleComments()"
             class="max-width text"
             mat-flat-button>
       {{
@@ -15,9 +16,8 @@
       }}
     </button>
     <div *ngFor="let comment of comments
-        | unique: 'id'
-        | slice: commentsStarts: commentsEnds
-        | orderBy: 'created';
+        | orderBy: 'created'
+        | tail: getTail();
           trackBy: trackComment">
       <div class="comment">
         <div class="comment-avatar">
