@@ -87,7 +87,8 @@ body {
   display: inline;
 }
 
-.selected {
+.selected,
+.dark-theme .selected {
   color: #B34100;
 }
 
