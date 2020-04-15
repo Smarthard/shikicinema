@@ -36,7 +36,7 @@ export class CommentsComponent implements AfterViewChecked {
     const label = element.querySelector('label');
     const content = <HTMLDivElement> element.querySelector('div.content');
 
-    if ((label.style.display !== 'none') !== !!this.imgLink) {
+    if (label.style.display !== 'none') {
       label.style.display = 'none';
       content.style.display = 'inline';
     } else {
@@ -60,7 +60,11 @@ export class CommentsComponent implements AfterViewChecked {
   updateEventListeners() {
     this._elementRef.nativeElement
       .querySelectorAll('.shc-spoiler')
-      .forEach((spoiler) => spoiler.onclick = () => this.toggleSpoiler(spoiler));
+      .forEach((spoiler) => spoiler.onclick = (evt) => {
+        evt.preventDefault();
+        evt.stopPropagation();
+        this.toggleSpoiler(spoiler);
+      });
 
     this._elementRef.nativeElement
       .querySelectorAll('.shc-image img')
@@ -70,6 +74,7 @@ export class CommentsComponent implements AfterViewChecked {
         if (!parent.onclick) {
           parent.onclick =  (evt) => {
             evt.preventDefault();
+            evt.stopPropagation();
             this.openImg(parent.href);
           };
         }
