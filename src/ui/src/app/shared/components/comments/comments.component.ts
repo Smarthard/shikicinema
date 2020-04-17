@@ -12,20 +12,20 @@ export class CommentsComponent implements AfterViewChecked {
   comments: Shikimori.Comment[] = [];
 
   @Input()
-  hasNextPage: boolean = false;
+  hasNextPage = false;
 
   @Input()
-  newCommentsCount: number = 0;
+  newCommentsCount = 0;
 
   @Input()
-  totalCommentsRemaining: number = 0;
+  totalCommentsRemaining = 0;
 
   @Output()
   nextPage = new EventEmitter();
 
   commentsHidden = false;
   imgLink: string = null;
-  imgBroken: boolean = false;
+  imgBroken = false;
 
   constructor(private _elementRef: ElementRef) {}
 
@@ -35,7 +35,7 @@ export class CommentsComponent implements AfterViewChecked {
 
   toggleSpoiler(element: Element) {
     const label = element.querySelector('label');
-    const content = <HTMLDivElement> element.querySelector('div.content');
+    const content = element.querySelector('div.content') as HTMLDivElement;
 
     if (label.style.display !== 'none') {
       label.style.display = 'none';
@@ -59,27 +59,26 @@ export class CommentsComponent implements AfterViewChecked {
   }
 
   updateEventListeners() {
-    this._elementRef.nativeElement
-      .querySelectorAll('.shc-spoiler')
-      .forEach((spoiler) => spoiler.onclick = (evt) => {
-        evt.preventDefault();
-        evt.stopPropagation();
-        this.toggleSpoiler(spoiler);
-      });
+    const SPOILERS = this._elementRef.nativeElement.querySelectorAll('.shc-spoiler');
+    const IMAGES = this._elementRef.nativeElement.querySelectorAll('.shc-image img');
 
-    this._elementRef.nativeElement
-      .querySelectorAll('.shc-image img')
-      .forEach((img) => {
-        const parent = img.parentElement;
+    SPOILERS.forEach((spoiler) => spoiler.onclick = (evt) => {
+      evt.preventDefault();
+      evt.stopPropagation();
+      this.toggleSpoiler(spoiler);
+    });
 
-        if (!parent.onclick) {
-          parent.onclick =  (evt) => {
-            evt.preventDefault();
-            evt.stopPropagation();
-            this.openImg(parent.href);
-          };
-        }
-      });
+    IMAGES.forEach((img) => {
+      const PARENT = img.parentElement;
+
+      if (!PARENT.onclick) {
+        PARENT.onclick = (evt) => {
+          evt.preventDefault();
+          evt.stopPropagation();
+          this.openImg(PARENT.href);
+        };
+      }
+    });
   }
 
   openImg(src: string) {
