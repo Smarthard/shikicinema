@@ -61,6 +61,11 @@ div.view-img img {
   margin: 0 auto;
 }
 
+div.view-img * {
+  color: white;
+  text-align: center;
+}
+
 button {
   background-color: #f9f9f9;
 }

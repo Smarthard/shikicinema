@@ -25,6 +25,7 @@ export class CommentsComponent implements AfterViewChecked {
 
   commentsHidden = false;
   imgLink: string = null;
+  imgBroken: boolean = false;
 
   constructor(private _elementRef: ElementRef) {}
 
@@ -89,6 +90,11 @@ export class CommentsComponent implements AfterViewChecked {
   closeImg() {
     document.body.style.overflow = 'visible';
     this.imgLink = null;
+    this.imgBroken = false;
+  }
+
+  imgNotLoaded() {
+    this.imgBroken = true;
   }
 
   userExists(nickname: string): boolean {

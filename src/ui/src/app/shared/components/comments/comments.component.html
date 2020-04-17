@@ -69,9 +69,16 @@
   </ng-template>
 </div>
 
-<div *ngIf="imgLink"
-     (click)="closeImg()"
-     class="view-img flex flex-column">
-  <img [src]="imgLink"
-       alt="image viewer">
-</div>
+<ng-container *ngIf="imgLink">
+  <div (click)="closeImg()"
+    class="view-img flex flex-column">
+    <img *ngIf="!imgBroken"
+         [src]="imgLink"
+         (error)="imgNotLoaded()"
+         alt="image viewer">
+    <div *ngIf="imgBroken"
+         class="text">
+      <b>Изображение было перемещено или удалено</b>
+    </div>
+  </div>
+</ng-container>
