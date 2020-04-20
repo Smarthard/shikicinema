@@ -125,6 +125,13 @@ export class CommentsService {
     return this.limit;
   }
 
+  public getCommentById(id: number): Observable<Shikimori.Comment> {
+    return this.shikimori.getComment(id)
+      .pipe(
+        map((c) => this.parseHtml(c))
+      );
+  }
+
   cleanUrl(url: string) {
     return url.startsWith(CommentsService.PLAYER_URL)
       ? url.replace(CommentsService.PLAYER_URL, 'https://shikimori.one/')
