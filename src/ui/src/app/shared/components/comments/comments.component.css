@@ -32,6 +32,10 @@
   background-color: transparent;
 }
 
+.hidden {
+  display: none;
+}
+
 .smaller {
   font-size: smaller;
 }

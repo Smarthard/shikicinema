@@ -1,5 +1,8 @@
 import {AfterViewChecked, Component, ElementRef, EventEmitter, Input, Output} from '@angular/core';
 import {Shikimori} from '../../../types/shikimori';
+import {Bubble} from 'src/app/types/bubble';
+import {CommentsService} from '../../../services/comments/comments.service';
+import Timeout = NodeJS.Timeout;
 
 @Component({
   selector: 'app-comments',
@@ -26,11 +29,50 @@ export class CommentsComponent implements AfterViewChecked {
   commentsHidden = false;
   imgLink: string = null;
   imgBroken = false;
+  bubbledComments: Bubble<Shikimori.Comment>[] = [];
+  bubbledCommentsCache = new Map<number, Bubble<Shikimori.Comment>>();
+  bubbledInTimeout: Timeout;
+  bubbledOutTimeout: Timeout;
 
-  constructor(private _elementRef: ElementRef) {}
+  constructor(
+    private _elementRef: ElementRef,
+    private _comments: CommentsService
+  ) {}
 
   ngAfterViewChecked(): void {
     this.updateEventListeners();
+  }
+
+  private async _getComment(id: number): Promise<Shikimori.Comment> {
+    let comment: Shikimori.Comment;
+
+    if (this.bubbledCommentsCache.has(id)) {
+      comment = this.bubbledCommentsCache.get(id).data;
+    } else if (this.comments.some((c) => c.id === id)) {
+      comment = this.comments.find((c) => c.id === id);
+    } else {
+      comment = await this._comments.getCommentById(id).toPromise();
+    }
+
+    return Promise.resolve(comment);
+  }
+
+  private _findBubbleById(bubbleId: number): Bubble<Shikimori.Comment> {
+    const BUBBLE_INDEX = this.bubbledComments.findIndex((c) => c.data.id === bubbleId);
+    return BUBBLE_INDEX === -1 ? null : this.bubbledComments[BUBBLE_INDEX];
+  }
+
+  private _showBubble(bubble: Bubble<Shikimori.Comment>) {
+    const BUBBLE = this._findBubbleById(bubble.data.id);
+    const ALREADY_PRESENTED = this.bubbledComments.some((c) => c.data.id === bubble.data.id);
+
+    if (BUBBLE) {
+      BUBBLE.coordinates = bubble.coordinates;
+      BUBBLE.hidden = false;
+    } else if (!ALREADY_PRESENTED) {
+      this.bubbledComments.push(bubble);
+      this.bubbledCommentsCache.set(bubble.data.id, bubble);
+    }
   }
 
   toggleSpoiler(element: Element) {
@@ -61,6 +103,7 @@ export class CommentsComponent implements AfterViewChecked {
   updateEventListeners() {
     const SPOILERS = this._elementRef.nativeElement.querySelectorAll('.shc-spoiler');
     const IMAGES = this._elementRef.nativeElement.querySelectorAll('.shc-image img');
+    const BUBBLED_COMMENTS = this._elementRef.nativeElement.querySelectorAll('a.shc-links.bubbled');
 
     SPOILERS.forEach((spoiler) => spoiler.onclick = (evt) => {
       evt.preventDefault();
@@ -77,6 +120,43 @@ export class CommentsComponent implements AfterViewChecked {
           evt.stopPropagation();
           this.openImg(PARENT.href);
         };
+      }
+    });
+
+    BUBBLED_COMMENTS.forEach((reply: HTMLLinkElement) => {
+      const HREF = `${reply.href}`;
+      const ELEM_RECT = reply.getBoundingClientRect();
+      const COMMENT_ID = HREF.match(/comments/i) && parseInt(HREF.match(/\d+/)[0], 10);
+
+      if (COMMENT_ID) {
+        reply.onmouseover = () => {
+          clearTimeout(this.bubbledInTimeout);
+          this.bubbledInTimeout = setTimeout(async () => {
+            const COMMENT = await this._getComment(COMMENT_ID);
+            const BUBBLE: Bubble<Shikimori.Comment> = {
+              coordinates: {
+                x: +reply.offsetLeft + ELEM_RECT.width,
+                y: +ELEM_RECT.top + window.pageYOffset
+              },
+              data: COMMENT,
+              hidden: false,
+              timeout: null
+            };
+
+            this._showBubble(BUBBLE);
+          }, 200);
+        }
+
+        reply.onmouseleave = () => {
+          clearTimeout(this.bubbledOutTimeout);
+          this.bubbledOutTimeout = setTimeout(() => {
+            const BUBBLE = this._findBubbleById(COMMENT_ID);
+
+            if (BUBBLE) {
+              this.startBubbleDestroyTimeout(BUBBLE);
+            }
+          }, 200);
+        }
       }
     });
   }
@@ -102,6 +182,27 @@ export class CommentsComponent implements AfterViewChecked {
 
   trackComment(index: number, item: Shikimori.Comment) {
     return item.id;
+  }
+
+  stopBubbleDestroyTimeout(bubble: Bubble<Shikimori.Comment>) {
+    this.dropInOutTimeouts();
+    clearTimeout(bubble.timeout);
+    bubble.hidden = false;
+  }
+
+  startBubbleDestroyTimeout(bubble: Bubble<Shikimori.Comment>) {
+    this.dropInOutTimeouts();
+    clearTimeout(bubble.timeout);
+    bubble.timeout = setTimeout(() => this.hideBubble(bubble), 500);
+  }
+
+  dropInOutTimeouts() {
+    clearTimeout(this.bubbledInTimeout);
+    clearTimeout(this.bubbledOutTimeout);
+  }
+
+  hideBubble(bubble: Bubble<Shikimori.Comment>) {
+    bubble.hidden = true;
   }
 
 }

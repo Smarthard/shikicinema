@@ -58,6 +58,7 @@ import {NotificationsBadgeComponent} from './shared/components/notifications-bad
 import {MatDividerModule} from '@angular/material/divider';
 import {RemoteNotificationsService} from './services/remote-notifications/remote-notifications.service';
 import {CommentsComponent} from './shared/components/comments/comments.component';
+import {BubbleViewComponent} from './shared/components/bubble-view/bubble-view.component';
 
 registerLocaleData(localeRu, 'ru');
 
@@ -86,7 +87,8 @@ registerLocaleData(localeRu, 'ru');
     OldfagEpisodesListSkeletonComponent,
     HeaderComponent,
     NotificationsBadgeComponent,
-    CommentsComponent
+    CommentsComponent,
+    BubbleViewComponent
   ],
   imports: [
     AppRoutingModule,
