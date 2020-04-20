@@ -152,42 +152,42 @@ export class CommentsService {
   }
 
   parseHtml(comment: Shikimori.Comment): Shikimori.Comment {
-    let parsedComment = this._domParser.parseFromString(comment.html, 'text/html');
+    const PARSED_COMMENTS = this._domParser.parseFromString(comment.html, 'text/html');
 
-    parsedComment
+    PARSED_COMMENTS
       .querySelectorAll('.b-link')
       .forEach((elem) => elem.classList.replace('b-link', 'shc-links'));
-    parsedComment
+    PARSED_COMMENTS
       .querySelectorAll('.b-image')
       .forEach((elem) => elem.classList.replace('b-image', 'shc-image'));
-    parsedComment
+    PARSED_COMMENTS
       .querySelectorAll('.b-replies')
       .forEach((elem) => elem.classList.replace('b-replies', 'shc-replies'));
-    parsedComment
+    PARSED_COMMENTS
       .querySelectorAll('.b-spoiler')
       .forEach((elem) => elem.classList.replace('b-spoiler', 'shc-spoiler'));
-    parsedComment
+    PARSED_COMMENTS
       .querySelectorAll('.b-quote')
       .forEach((elem) => elem.classList.replace('b-quote', 'shc-quote'));
 
-    parsedComment
+    PARSED_COMMENTS
       .querySelectorAll('.inner')
       .forEach((elem) => elem.classList.add('text'));
-    parsedComment
+    PARSED_COMMENTS
       .querySelectorAll('.b-mention')
       .forEach((elem) => elem.classList.add('shc-links'));
-    parsedComment
+    PARSED_COMMENTS
       .querySelectorAll('.shc-spoiler')
       .forEach((elem) => elem.classList.add('inline'));
 
-    parsedComment
+    PARSED_COMMENTS
       .querySelectorAll('a[href]')
       .forEach((link: HTMLLinkElement) => link.href = this.cleanUrl(link.href))
-    parsedComment
+    PARSED_COMMENTS
       .querySelectorAll('*[src]')
       .forEach((resource: HTMLSourceElement) => resource.src = this.cleanUrl(resource.src))
 
-    comment.html = parsedComment.documentElement.innerHTML;
+    comment.html = PARSED_COMMENTS.documentElement.innerHTML;
     return comment;
   }
 }
