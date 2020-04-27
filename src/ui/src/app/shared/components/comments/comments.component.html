@@ -58,7 +58,7 @@
               <a class="shc-links">DELETED USER</a>
             </ng-template>
           </div>
-          <div [innerHTML]="comment?.html"
+          <div [innerHTML]="comment?.html | safeHtml"
                class="text"></div>
         </div>
       </div>

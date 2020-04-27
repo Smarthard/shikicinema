@@ -59,6 +59,7 @@ import {MatDividerModule} from '@angular/material/divider';
 import {RemoteNotificationsService} from './services/remote-notifications/remote-notifications.service';
 import {CommentsComponent} from './shared/components/comments/comments.component';
 import {BubbleViewComponent} from './shared/components/bubble-view/bubble-view.component';
+import {SafeHtmlPipe} from './shared/pipes/safe-html-pipe/safe-html.pipe';
 
 registerLocaleData(localeRu, 'ru');
 
@@ -88,7 +89,8 @@ registerLocaleData(localeRu, 'ru');
     HeaderComponent,
     NotificationsBadgeComponent,
     CommentsComponent,
-    BubbleViewComponent
+    BubbleViewComponent,
+    SafeHtmlPipe
   ],
   imports: [
     AppRoutingModule,
