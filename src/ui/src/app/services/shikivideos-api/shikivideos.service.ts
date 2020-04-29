@@ -1,9 +1,9 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpErrorResponse, HttpHeaders, HttpParams, HttpResponse} from '@angular/common/http';
-import {EMPTY, Observable, throwError} from 'rxjs';
+import {EMPTY, Observable, of, throwError} from 'rxjs';
 import {SmarthardNet} from '../../types/smarthard-net';
 import {environment} from '../../../environments/environment';
-import {catchError, map} from 'rxjs/operators';
+import {catchError, map, timeout} from 'rxjs/operators';
 import {Shikimori} from '../../types/shikimori';
 
 @Injectable({
@@ -11,7 +11,8 @@ import {Shikimori} from '../../types/shikimori';
 })
 export class ShikivideosService {
 
-  private SHIKIVIDEOS_API: string = 'https://smarthard.net/api/shikivideos';
+  private readonly SHIKIVIDEOS_API = 'https://smarthard.net/api/shikivideos';
+  private readonly TIMEOUT_MS = 3000;
 
   private static _buildRequest(request: SmarthardNet.IRequest) {
     return new SmarthardNet.Request(
@@ -39,26 +40,44 @@ export class ShikivideosService {
   public findById(animeId: number, params: HttpParams): Observable<SmarthardNet.Shikivideo[]> {
     return this.http.get<SmarthardNet.Shikivideo[]>(`${this.SHIKIVIDEOS_API}/${animeId}`, { params })
       .pipe(
+        timeout(this.TIMEOUT_MS),
         map(
           (videos) => videos.map(v => new SmarthardNet.Shikivideo(v))
-        )
+        ),
+        catchError(() => of([] as SmarthardNet.Shikivideo[]))
       );
   }
 
   public search(params: HttpParams): Observable<SmarthardNet.Shikivideo[]> {
     return this.http.get<SmarthardNet.Shikivideo[]>(`${this.SHIKIVIDEOS_API}/search`, { params })
+      .pipe(
+        timeout(this.TIMEOUT_MS),
+        catchError(() => of([] as SmarthardNet.Shikivideo[]))
+      );
   }
 
   public contributions(params: HttpParams): Observable<{ count: number }> {
-    return this.http.get<{ count: number }>(`${this.SHIKIVIDEOS_API}/contributions`, { params });
+    return this.http.get<{ count: number }>(`${this.SHIKIVIDEOS_API}/contributions`, { params })
+      .pipe(
+        timeout(this.TIMEOUT_MS),
+        catchError(() => of({ count: 0 }))
+      );
   }
 
   public getAnimeMaxLoadedEp(animeId: number): Observable<{length: number}> {
-    return this.http.get<{length: number}>(`${this.SHIKIVIDEOS_API}/${animeId}/length`);
+    return this.http.get<{length: number}>(`${this.SHIKIVIDEOS_API}/${animeId}/length`)
+      .pipe(
+        timeout(this.TIMEOUT_MS),
+        catchError(() => of({ length: 0 }))
+      );
   }
 
   public getUniqueValues(params: HttpParams): Observable<SmarthardNet.Unique> {
-    return this.http.get<SmarthardNet.Unique>(`${this.SHIKIVIDEOS_API}/unique`, { params });
+    return this.http.get<SmarthardNet.Unique>(`${this.SHIKIVIDEOS_API}/unique`, { params })
+      .pipe(
+        timeout(this.TIMEOUT_MS),
+        catchError(() => of({} as SmarthardNet.Unique))
+      );
   }
 
   public getNewToken(shikimoriToken: Shikimori.Token): Observable<SmarthardNet.Token> {
@@ -73,7 +92,9 @@ export class ShikivideosService {
 
     return this.http.put<SmarthardNet.IToken>('https://smarthard.net/oauth/token', body, { params })
       .pipe(
-        map((token) => new SmarthardNet.Token(token.access_token, token.expires, token.refresh_token))
+        timeout(this.TIMEOUT_MS),
+        map((token) => new SmarthardNet.Token(token.access_token, token.expires, token.refresh_token)),
+        catchError(() => of({} as SmarthardNet.Token))
       );
   }
 
@@ -87,13 +108,16 @@ export class ShikivideosService {
 
     return this.http.get<SmarthardNet.IToken>('https://smarthard.net/oauth/token', { params })
       .pipe(
-        map((token) => new SmarthardNet.Token(token.access_token, token.expires, token.refresh_token))
+        timeout(this.TIMEOUT_MS),
+        map((token) => new SmarthardNet.Token(token.access_token, token.expires, token.refresh_token)),
+        catchError(() => of({} as SmarthardNet.Token))
       );
   }
 
   public getRequestById(id: number | string): Observable<SmarthardNet.Request> {
     return this.http.get<SmarthardNet.IRequest>(`https://smarthard.net/api/requests/${id}`)
       .pipe(
+        timeout(this.TIMEOUT_MS),
         map((request) => ShikivideosService._buildRequest(request))
       )
   }
@@ -114,7 +138,8 @@ export class ShikivideosService {
 
     return this.http.post<SmarthardNet.IRequest>('https://smarthard.net/api/requests', body, { params })
       .pipe(
-        map((request) => ShikivideosService._buildRequest(request))
+        timeout(this.TIMEOUT_MS),
+        map((res) => ShikivideosService._buildRequest(res))
       );
   }
 
@@ -123,7 +148,9 @@ export class ShikivideosService {
 
     return this.http.get(`${this.SHIKIVIDEOS_API}/release-notes/${version}`, { headers, responseType: 'text'})
       .pipe(
-        catchError((err: HttpErrorResponse) => err.status === 404 ? EMPTY : throwError(err))
+        timeout(this.TIMEOUT_MS),
+        catchError((err: HttpErrorResponse) => err.status === 404 ? EMPTY : throwError(err)),
+        catchError(() => of(null))
       );
   }
 
@@ -133,6 +160,7 @@ export class ShikivideosService {
 
     return this.http.get<SmarthardNet.INotification[]>(`https://smarthard.net/api/notifications`, { params })
       .pipe(
+        timeout(this.TIMEOUT_MS),
         map((notifications) => notifications
           .map(notification => {
             const id = notification.id;
@@ -145,7 +173,8 @@ export class ShikivideosService {
 
             return new SmarthardNet.Notification(id, created, info, viewed, minVersion, maxVersion, expires)
           })
-        )
+        ),
+        catchError(() => of([] as SmarthardNet.Notification[]))
       );
   }
 }
