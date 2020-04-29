@@ -1,5 +1,7 @@
 'use strict';
 
+import { fetch } from './fetch-timeout';
+
 let timeout = null;
 const PLAYER_URL = chrome.runtime.getURL('/index.html');
 const SHIKIVIDEOS_API = 'https://smarthard.net/api/shikivideos';
@@ -8,19 +10,19 @@ let observer = new MutationObserver(() => {
   let uploads = document.querySelector('div[data-type="video_uploads"]') || document.createElement('div');
   let profileBody = document.querySelector('body#profiles_show');
   let isAnimePage = `${window.location}`.includes('/animes/');
-  let isContribtuonsAppened = uploads.classList.contains('uploader_contributions');
+  let isContributionsAppended = uploads.classList.contains('uploader_contributions');
 
   if (timeout)
     clearTimeout(timeout);
 
   timeout = setTimeout(async () => {
-    if (profileBody && !isAnimePage && !isContribtuonsAppened) {
-      correctContributions(uploads);
+    if (profileBody && !isAnimePage && !isContributionsAppended) {
+      await correctContributions(uploads);
     }
   }, 150);
 });
 
-observer.observe(document, {childList: true, subtree: true});
+observer.observe(window.document, {childList: true, subtree: true});
 
 async function correctContributions(element) {
   let cInfoDiv = document.querySelector('div.c-info');
