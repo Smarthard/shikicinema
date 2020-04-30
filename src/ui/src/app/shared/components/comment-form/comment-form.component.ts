@@ -10,10 +10,14 @@ export class CommentFormComponent implements OnInit {
   isSmileysSectionOpen = false;
 
   static _insertAtCaret(textarea: HTMLTextAreaElement, before?: string, after?: string) {
-    const BEFORE_TEXT = textarea.value.substr(0, textarea.selectionStart);
-    const TEXT = before + textarea.value.substr(textarea.selectionStart, textarea.selectionEnd) + after;
-    const AFTER_TEXT = textarea.value.substr(textarea.selectionEnd, textarea.value.length);
-    textarea.value = BEFORE_TEXT + TEXT + AFTER_TEXT;
+    if (textarea.selectionStart || textarea.selectionStart === 0) {
+      const BEFORE_TEXT = textarea.value.substr(0, textarea.selectionStart);
+      const TEXT = before + textarea.value.substr(textarea.selectionStart, textarea.selectionEnd) + after;
+      const AFTER_TEXT = textarea.value.substr(textarea.selectionEnd, textarea.value.length);
+      textarea.value = BEFORE_TEXT + TEXT + AFTER_TEXT;
+    } else {
+      textarea.value += before + after;
+    }
   }
 
   static _insertAtCursor(textarea: HTMLTextAreaElement, text: string) {
@@ -36,6 +40,10 @@ export class CommentFormComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  addSmiley(textarea: HTMLTextAreaElement, smiley: string) {
+    CommentFormComponent._insertAtCursor(textarea, ` ${smiley} `);
+  }
+
   bold(textarea: HTMLTextAreaElement) {
     CommentFormComponent._insertAtCaret(textarea,'[b]', '[/b]');
   }
@@ -52,8 +60,8 @@ export class CommentFormComponent implements OnInit {
     CommentFormComponent._insertAtCaret(textarea, '[s]', '[/s]')
   }
 
-  addSmiley(textarea: HTMLTextAreaElement, smiley: string) {
-    CommentFormComponent._insertAtCursor(textarea, ` ${smiley} `);
+  spoiler(textarea: HTMLTextAreaElement) {
+    CommentFormComponent._insertAtCaret(textarea, '[spoiler=спойлер]', '[/spoiler]')
   }
 
   openSmileys() {
