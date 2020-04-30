@@ -111,6 +111,10 @@ body {
   justify-content: center;
 }
 
+.flex-start {
+ justify-content: flex-start;
+}
+
 .flex-end {
  justify-content: flex-end;
 }
