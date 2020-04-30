@@ -44,6 +44,14 @@
   padding-right: 3px;
 }
 
+.smaller {
+  font-size: smaller;
+}
+
+.small {
+  font-size: small;
+}
+
 .close {
   position: absolute;
   cursor: pointer;
