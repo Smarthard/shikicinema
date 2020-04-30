@@ -38,4 +38,11 @@ export class VirtualScrollEpisodeListComponent implements AfterViewInit, OnChang
     return urls.map(url => url.split('.').slice(-2).join('.'));
   }
 
+  calcHeight() {
+    const EPISODES_COUNT = Object.keys(this.unique).length;
+    const EPISODE_ELEM_HEIGHT = 31;
+
+    return EPISODES_COUNT > 30 ? 30 * EPISODE_ELEM_HEIGHT : EPISODES_COUNT * EPISODE_ELEM_HEIGHT;
+  }
+
 }

@@ -1,4 +1,7 @@
-<cdk-virtual-scroll-viewport itemSize="31" minBufferPx="300" maxBufferPx="600">
+<cdk-virtual-scroll-viewport [ngStyle]="{ 'height.px': calcHeight() }"
+                             itemSize="31"
+                             minBufferPx="300"
+                             maxBufferPx="600">
   <div *cdkVirtualFor="let episode of (unique | keys)"
        (click)="change.emit(+episode)"
        [class.selected]="chosen && episode == chosen.episode"
