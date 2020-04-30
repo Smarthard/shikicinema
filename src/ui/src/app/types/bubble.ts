@@ -4,5 +4,6 @@ export type Bubble<T> = {
   coordinates: { x: number | string, y: number | string },
   data: T,
   hidden: boolean,
-  timeout: Timeout
+  timeout: Timeout,
+  zIndex: number
 }

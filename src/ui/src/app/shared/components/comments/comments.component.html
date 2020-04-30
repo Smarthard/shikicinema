@@ -19,7 +19,8 @@
         | orderBy: 'created'
         | tail: getTail();
           trackBy: trackComment">
-      <div class="comment">
+      <div [id]="'comment-' + comment.id"
+           class="comment">
         <div class="comment-avatar">
           <ng-container *ngIf="userExists(comment?.user?.nickname); else deletedUserAvatar">
             <a [href]="'https://shikimori.one/' + comment?.user.nickname">
@@ -70,10 +71,10 @@
 </div>
 
 <app-bubble-view *ngFor="let bubble of bubbledComments; index as i"
-                 [id]="'comment-' + bubble.data.id"
                  [class.hidden]="bubble.hidden"
                  [comment]="bubble.data"
                  [coordinates]="bubble.coordinates"
+                 [ngStyle]="{ 'z-index': bubble.zIndex }"
                  (mouseenter)="stopBubbleDestroyTimeout(bubble)"
                  (mouseleave)="startBubbleDestroyTimeout(bubble)"
                  (hide)="hideBubble(bubble)"></app-bubble-view>

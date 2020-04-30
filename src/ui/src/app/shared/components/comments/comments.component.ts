@@ -35,8 +35,8 @@ export class CommentsComponent implements AfterViewChecked {
   bubbledOutTimeout: Timeout;
 
   constructor(
-    private _elementRef: ElementRef,
-    private _comments: CommentsService
+    private _comments: CommentsService,
+    private _elementRef: ElementRef
   ) {}
 
   ngAfterViewChecked(): void {
@@ -62,14 +62,22 @@ export class CommentsComponent implements AfterViewChecked {
     return BUBBLE_INDEX === -1 ? null : this.bubbledComments[BUBBLE_INDEX];
   }
 
+  private _getBubbleMaxZIndex(): number {
+    const Z_INDICES = this.bubbledComments
+      .filter(v => !v.hidden)
+      .map(v => v.zIndex);
+
+    return Math.max.apply(null,[ 1, ...Z_INDICES]);
+  }
+
   private _showBubble(bubble: Bubble<Shikimori.Comment>) {
     const BUBBLE = this._findBubbleById(bubble.data.id);
-    const ALREADY_PRESENTED = this.bubbledComments.some((c) => c.data.id === bubble.data.id);
 
     if (BUBBLE) {
       BUBBLE.coordinates = bubble.coordinates;
       BUBBLE.hidden = false;
-    } else if (!ALREADY_PRESENTED) {
+      BUBBLE.zIndex = +this._getBubbleMaxZIndex() + 1;
+    } else {
       this.bubbledComments.push(bubble);
       this.bubbledCommentsCache.set(bubble.data.id, bubble);
     }
@@ -125,6 +133,7 @@ export class CommentsComponent implements AfterViewChecked {
 
     BUBBLED_COMMENTS.forEach((reply: HTMLLinkElement) => {
       const HREF = `${reply.href}`;
+      const BODY_RECT = document.body.getBoundingClientRect();
       const ELEM_RECT = reply.getBoundingClientRect();
       const COMMENT_ID = HREF.match(/comments/i) && parseInt(HREF.match(/\d+/)[0], 10);
 
@@ -135,12 +144,13 @@ export class CommentsComponent implements AfterViewChecked {
             const COMMENT = await this._getComment(COMMENT_ID);
             const BUBBLE: Bubble<Shikimori.Comment> = {
               coordinates: {
-                x: +reply.offsetLeft + ELEM_RECT.width,
-                y: +ELEM_RECT.top + window.pageYOffset
+                x: +ELEM_RECT.left + ELEM_RECT.width + pageXOffset,
+                y: +ELEM_RECT.top - BODY_RECT.top
               },
               data: COMMENT,
               hidden: false,
-              timeout: null
+              timeout: null,
+              zIndex: 2
             };
 
             this._showBubble(BUBBLE);
@@ -203,6 +213,7 @@ export class CommentsComponent implements AfterViewChecked {
 
   hideBubble(bubble: Bubble<Shikimori.Comment>) {
     bubble.hidden = true;
+    bubble.zIndex = 1;
   }
 
 }
