@@ -16,6 +16,11 @@ mat-form-field.textarea textarea {
   border-radius: 5px;
 }
 
+.smileys-row * {
+  display: inline-block;
+  margin: 0 0 7px 0;
+}
+
 ::ng-deep .textarea .mat-form-field-label {
   margin-left: 10px;
 }

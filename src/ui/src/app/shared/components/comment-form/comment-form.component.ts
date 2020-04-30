@@ -7,14 +7,31 @@ import {Component, OnInit} from '@angular/core';
 })
 export class CommentFormComponent implements OnInit {
 
-  static _insertAtCaret(textearea: HTMLTextAreaElement, before?: string, after?: string) {
-    const BEFORE_TEXT = textearea.value.substr(0, textearea.selectionStart);
-    const TEXT = before + textearea.value.substr(textearea.selectionStart, textearea.selectionEnd) + after;
-    const AFTER_TEXT = textearea.value.substr(textearea.selectionEnd, textearea.value.length);
-    textearea.value = BEFORE_TEXT + TEXT + AFTER_TEXT;
+  isSmileysSectionOpen = false;
+
+  static _insertAtCaret(textarea: HTMLTextAreaElement, before?: string, after?: string) {
+    const BEFORE_TEXT = textarea.value.substr(0, textarea.selectionStart);
+    const TEXT = before + textarea.value.substr(textarea.selectionStart, textarea.selectionEnd) + after;
+    const AFTER_TEXT = textarea.value.substr(textarea.selectionEnd, textarea.value.length);
+    textarea.value = BEFORE_TEXT + TEXT + AFTER_TEXT;
+  }
+
+  static _insertAtCursor(textarea: HTMLTextAreaElement, text: string) {
+    if (textarea.selectionStart || textarea.selectionStart === 0) {
+      const BEFORE_TEXT = textarea.value.substr(0, textarea.selectionStart);
+      const AFTER_TEXT = textarea.value.substr(textarea.selectionEnd, textarea.value.length);
+
+      textarea.value = BEFORE_TEXT + text + AFTER_TEXT;
+    } else {
+      textarea.value += text;
+    }
   }
 
   constructor() { }
+
+  private _closeAllSections() {
+    this.isSmileysSectionOpen = false;
+  }
 
   ngOnInit(): void {
   }
@@ -33,6 +50,15 @@ export class CommentFormComponent implements OnInit {
 
   strike(textarea: HTMLTextAreaElement) {
     CommentFormComponent._insertAtCaret(textarea, '[s]', '[/s]')
+  }
+
+  addSmiley(textarea: HTMLTextAreaElement, smiley: string) {
+    CommentFormComponent._insertAtCursor(textarea, ` ${smiley} `);
+  }
+
+  openSmileys() {
+    this._closeAllSections();
+    this.isSmileysSectionOpen = true;
   }
 
 }
