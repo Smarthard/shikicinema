@@ -1,3 +1,19 @@
+@keyframes flash-background {
+  0% {
+    background-color: #0000;
+  }
+  50% {
+    background-color: #DD5202AA;
+  }
+  100% {
+    background-color: #0000;
+  }
+}
+
+.flashing-comment {
+  animation: flash-background 1s ease-in-out;
+}
+
 .dark-theme :host #comments-section {
   background-color: #2e2e2e;
 }

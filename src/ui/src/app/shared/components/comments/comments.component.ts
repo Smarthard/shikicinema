@@ -138,6 +138,11 @@ export class CommentsComponent implements AfterViewChecked {
       const COMMENT_ID = HREF.match(/comments/i) && parseInt(HREF.match(/\d+/)[0], 10);
 
       if (COMMENT_ID) {
+        reply.onclick = async (evt) => {
+          evt.preventDefault();
+          await this.scrollToComment(COMMENT_ID);
+        }
+
         reply.onmouseover = () => {
           clearTimeout(this.bubbledInTimeout);
           this.bubbledInTimeout = setTimeout(async () => {
@@ -154,10 +159,11 @@ export class CommentsComponent implements AfterViewChecked {
             };
 
             this._showBubble(BUBBLE);
-          }, 200);
+          }, 600);
         }
 
         reply.onmouseleave = () => {
+          clearTimeout(this.bubbledInTimeout);
           clearTimeout(this.bubbledOutTimeout);
           this.bubbledOutTimeout = setTimeout(() => {
             const BUBBLE = this._findBubbleById(COMMENT_ID);
@@ -169,6 +175,29 @@ export class CommentsComponent implements AfterViewChecked {
         }
       }
     });
+  }
+
+  scrollCommentsUntil(id: number, delay = 0): Promise<HTMLElement> {
+    const _nextPageUntilComment = (cid, ms, resolve) => setTimeout(() => {
+      if (!this.comments.some(v => v.id === id)) {
+        this.nextPage.emit();
+        _nextPageUntilComment(id, +ms + 255, resolve);
+      } else {
+        resolve(this._elementRef.nativeElement.querySelector(`#comment-${id}`));
+      }
+    }, ms);
+
+    return new Promise((resolve) => _nextPageUntilComment(id, delay, resolve));
+  }
+
+  async scrollToComment(id: number) {
+    const COMMENT = await this.scrollCommentsUntil(id, 0);
+
+    if (COMMENT) {
+      COMMENT.scrollIntoView({ behavior: 'smooth' });
+      COMMENT.classList.add('flashing-comment');
+      setTimeout(() => COMMENT.classList.remove('flashing-comment'), 1100);
+    }
   }
 
   openImg(src: string) {
