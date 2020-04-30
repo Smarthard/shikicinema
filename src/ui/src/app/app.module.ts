@@ -60,6 +60,7 @@ import {RemoteNotificationsService} from './services/remote-notifications/remote
 import {CommentsComponent} from './shared/components/comments/comments.component';
 import {BubbleViewComponent} from './shared/components/bubble-view/bubble-view.component';
 import {SafeHtmlPipe} from './shared/pipes/safe-html-pipe/safe-html.pipe';
+import {CommentFormComponent} from './shared/components/comment-form/comment-form.component';
 
 registerLocaleData(localeRu, 'ru');
 
@@ -90,7 +91,8 @@ registerLocaleData(localeRu, 'ru');
     NotificationsBadgeComponent,
     CommentsComponent,
     BubbleViewComponent,
-    SafeHtmlPipe
+    SafeHtmlPipe,
+    CommentFormComponent
   ],
   imports: [
     AppRoutingModule,

@@ -1,0 +1,26 @@
+:host {
+  width: 100%;
+}
+
+div.separator {
+  width: 15px;
+}
+
+mat-form-field.textarea {
+  width: 100%;
+}
+
+mat-form-field.textarea textarea {
+  padding: 5px 10px;
+  box-sizing: border-box;
+  border-radius: 5px;
+}
+
+::ng-deep .textarea .mat-form-field-label {
+  margin-left: 10px;
+}
+
+.dark-theme :host textarea {
+  background-color:#7777;
+  color: white;
+}
