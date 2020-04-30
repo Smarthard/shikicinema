@@ -51,7 +51,7 @@ export class CommentsService {
     .pipe(
       (episode$) => combineLatest([this.anime$, episode$]),
       switchMap(([anime, episode]) => this.shikimori.getAnimeTopics(anime.id, 'episode', episode)),
-      map((topics: Shikimori.ITopic[]) => topics[0]),
+      map((topics: Shikimori.ITopic[]) => topics.length > 0 ? topics[0] : {} as Shikimori.ITopic),
       shareReplay(1)
     );
 
@@ -76,7 +76,7 @@ export class CommentsService {
   ) {
     this.page$.subscribe((page) => this.page = page);
     this.topic$.subscribe((topic) => {
-      this.totalComments = topic.comments_count;
+      this.totalComments = topic?.comments_count || 0;
       this._pageSubject.next(1);
     });
     this.limit$.subscribe((limit) => this.limit = limit);
@@ -142,7 +142,7 @@ export class CommentsService {
     const accFirst = acc[0];
     const newFirst = newValues[0];
 
-    if (accFirst && newValues && accFirst.commentableId === newFirst.commentableId) {
+    if (accFirst && newValues && newFirst && accFirst.commentableId === newFirst.commentableId) {
       const intersection = acc.filter(a => newValues.some(n => a.id === n.id));
       acc = acc.filter(a => !intersection.some(i => a.id === i.id));
       return [...newValues, ...acc];
