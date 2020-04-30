@@ -2,31 +2,37 @@
   <form>
     <mat-form-field class="textarea">
       <div class="flex flex-start">
-        <button class="text"
+        <button (click)="bold(userComment)"
+                class="text"
                 matTooltip="Жирный"
                 matTooltipPosition="above"
                 mat-icon-button>
           <mat-icon>format_bold</mat-icon>
         </button>
-        <button class="text"
+        <button (click)="italic(userComment)"
+                class="text"
                 matTooltip="Курсив"
                 matTooltipPosition="above"
                 mat-icon-button>
           <mat-icon>format_italic</mat-icon>
         </button>
-        <button class="text"
+        <button (click)="underline(userComment)"
+                class="text"
                 matTooltip="Подчеркнутый"
                 matTooltipPosition="above"
                 mat-icon-button>
           <mat-icon>format_underlined</mat-icon>
         </button>
-        <button class="text"
+        <button (click)="strike(userComment)"
+                class="text"
                 matTooltip="Зачеркнутый"
                 matTooltipPosition="above"
                 mat-icon-button>
           <mat-icon>strikethrough_s</mat-icon>
         </button>
+
         <div class="separator"></div>
+
         <button class="text"
                 matTooltip="Вставить ссылку"
                 matTooltipPosition="above"
@@ -59,7 +65,8 @@
         </button>
       </div>
 
-      <textarea rows="10"
+      <textarea #userComment
+                rows="10"
                 matNativeControl></textarea>
     </mat-form-field>
   </form>
