@@ -58,7 +58,7 @@ export class CommentsService {
   readonly _comments$ = this.topic$
     .pipe(
       (topic$) => combineLatest([topic$, this.page$, this.limit$, this.order$]),
-      mergeMap(([topic, page, limit, order]) => iif(() => !!topic,
+      mergeMap(([topic, page, limit, order]) => iif(() => !!topic && !!topic.id,
         this.shikimori.getComments(topic.id, 'Topic', page, limit, order),
         of([])
       )),
