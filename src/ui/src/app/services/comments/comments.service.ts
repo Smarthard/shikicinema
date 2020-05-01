@@ -71,6 +71,12 @@ export class CommentsService {
       scan((acc, value) => this.mergeComments(acc, value))
     );
 
+  readonly users$ = this.comments$
+    .pipe(
+      map((comments) => comments.map((c) => c.user.nickname)),
+      map((nicknames: string[]) => [ ...new Set(nicknames) ])
+    );
+
   constructor(
     private shikimori: ShikimoriService
   ) {
