@@ -33,6 +33,10 @@ mat-form-field.textarea textarea {
   width: 30%;
 }
 
+#add-image-section mat-form-field {
+  width: 45%;
+}
+
 .bb-helpers {
   align-items: center;
   margin-left: 10px;

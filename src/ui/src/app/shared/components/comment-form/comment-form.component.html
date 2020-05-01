@@ -40,7 +40,9 @@
               mat-icon-button>
         <mat-icon>insert_link</mat-icon>
       </button>
-      <button class="text"
+      <button (click)="isImageSectionOpen ? close() : openImageSection()"
+              [color]="isImageSectionOpen ? 'accent' : 'primary'"
+              class="text"
               matTooltip="Вставить картинку"
               matTooltipPosition="above"
               mat-icon-button>
@@ -98,6 +100,36 @@
 
           <button [disabled]="addLinkForm.invalid && addLinkForm.touched"
                   color="{{ addLinkForm.invalid && addLinkForm.touched ? 'warn' : 'primary' }}"
+                  type="submit"
+                  mat-icon-button>
+            <mat-icon>chevron_right</mat-icon>
+          </button>
+
+        </form>
+      </div>
+    </ng-container>
+
+    <!-- IMAGE INSERTION -->
+    <ng-container *ngIf="isImageSectionOpen">
+      <div class="flex flex-start bb-helpers">
+        <form id="add-image-section"
+              [formGroup]="addImageForm"
+              (ngSubmit)="image(userComment, addImageForm.value)"
+              class="max-width">
+
+          <mat-form-field>
+            <mat-label>Ссылка на изображение</mat-label>
+            <input formControlName="imageSrc"
+                   class="text max-width"
+                   matInput
+                   required>
+            <mat-error>
+              Необходима ссылка на web-ресурс
+            </mat-error>
+          </mat-form-field>
+
+          <button [disabled]="addImageForm.invalid && addImageForm.touched"
+                  color="{{ addImageForm.invalid && addImageForm.touched ? 'warn' : 'primary' }}"
                   type="submit"
                   mat-icon-button>
             <mat-icon>chevron_right</mat-icon>

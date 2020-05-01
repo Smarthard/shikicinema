@@ -9,8 +9,10 @@ import {FormControl, FormGroup, Validators} from '@angular/forms';
 export class CommentFormComponent implements OnInit {
 
   addLinkForm: FormGroup;
+  addImageForm: FormGroup;
 
   isLinkSectionOpen = false;
+  isImageSectionOpen = false;
   isSmileysSectionOpen = false;
 
   static _insertBeforeAfterCursor(textarea: HTMLTextAreaElement, before = '', after = '') {
@@ -49,6 +51,7 @@ export class CommentFormComponent implements OnInit {
 
   private _closeAllSections() {
     this.isLinkSectionOpen = false;
+    this.isImageSectionOpen = false;
     this.isSmileysSectionOpen = false;
   }
 
@@ -60,6 +63,13 @@ export class CommentFormComponent implements OnInit {
      ]),
      name: new FormControl()
    });
+
+   this.addImageForm = new FormGroup({
+     imageSrc: new FormControl('', [
+       Validators.required,
+       Validators.pattern(/https?:\/\/.*/i)
+     ])
+   })
   }
 
   addSmiley(textarea: HTMLTextAreaElement, smiley: string) {
@@ -72,6 +82,12 @@ export class CommentFormComponent implements OnInit {
 
   close() {
     this._closeAllSections();
+  }
+
+  image(textarea: HTMLTextAreaElement, form: { imageSrc: string }) {
+    if (form.imageSrc) {
+      CommentFormComponent._insertAtCursor(textarea, `[img]${form.imageSrc}[/img]`);
+    }
   }
 
   italic(textarea: HTMLTextAreaElement) {
@@ -93,6 +109,11 @@ export class CommentFormComponent implements OnInit {
   openLinkSection() {
     this._closeAllSections();
     this.isLinkSectionOpen = true;
+  }
+
+  openImageSection() {
+    this._closeAllSections();
+    this.isImageSectionOpen = true;
   }
 
   openSmileys() {
