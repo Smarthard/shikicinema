@@ -35,6 +35,7 @@ mat-form-field.textarea textarea {
 
 .bb-helpers {
   align-items: center;
+  margin-left: 10px;
 }
 
 .bb-helpers mat-form-field {
