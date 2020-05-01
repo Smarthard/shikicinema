@@ -33,6 +33,7 @@
       <div class="separator"></div>
 
       <button (click)="isLinkSectionOpen ? close() : openLinkSection()"
+              [color]="isLinkSectionOpen ? 'accent' : 'primary'"
               class="text"
               matTooltip="Вставить ссылку"
               matTooltipPosition="above"
@@ -59,6 +60,7 @@
         <mat-icon>error_outline</mat-icon>
       </button>
       <button (click)="isSmileysSectionOpen ? close() : openSmileys()"
+              [color]="isSmileysSectionOpen ? 'accent' : 'primary'"
               class="text"
               matTooltip="Смайлик"
               matTooltipPosition="above"
