@@ -25,6 +25,10 @@ mat-form-field.textarea textarea {
   margin-left: 10px;
 }
 
+#format-tools {
+  margin-bottom: -15px;
+}
+
 #add-link-form mat-form-field {
   width: 30%;
 }
