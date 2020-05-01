@@ -79,4 +79,8 @@ export class CommentFormComponent implements OnInit {
     this.isSmileysSectionOpen = true;
   }
 
+  close() {
+    this._closeAllSections();
+  }
+
 }

@@ -58,7 +58,8 @@
                 mat-icon-button>
           <mat-icon>error_outline</mat-icon>
         </button>
-        <button (click)="openSmileys()" class="text"
+        <button (click)="isSmileysSectionOpen ? close() : openSmileys()"
+                class="text"
                 matTooltip="Смайлик"
                 matTooltipPosition="above"
                 mat-icon-button>
