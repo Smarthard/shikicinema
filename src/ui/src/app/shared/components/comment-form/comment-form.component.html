@@ -48,7 +48,9 @@
               mat-icon-button>
         <mat-icon>insert_photo</mat-icon>
       </button>
-      <button class="text"
+      <button (click)="isQuotesSectionOpen ? close() : openQuotesSection()"
+              [color]="isQuotesSectionOpen ? 'accent' : 'primary'"
+              class="text"
               matTooltip="Вставить цитату"
               matTooltipPosition="above"
               mat-icon-button>
@@ -137,6 +139,37 @@
 
         </form>
       </div>
+    </ng-container>
+
+    <!-- QUOTES INSERTION -->
+    <ng-container *ngIf="isQuotesSectionOpen">
+      <form id="add-quotes-section"
+            [formGroup]="addQuotesForm"
+            (ngSubmit)="quote(userComment, addQuotesForm.value)">
+
+        <mat-form-field>
+          <mat-label>Цитировать пользователя</mat-label>
+          <input formControlName="nickname"
+                 class="text max-width"
+                 autocomplete="off"
+                 list="users-from-comments"
+                 matInput
+                 required>
+          <mat-error>Необходимо указать ник пользователя</mat-error>
+        </mat-form-field>
+
+        <button [disabled]="addQuotesForm.invalid && addQuotesForm.touched"
+                color="{{ addQuotesForm.invalid && addQuotesForm.touched ? 'warn' : 'primary' }}"
+                type="submit"
+                mat-icon-button>
+          <mat-icon>chevron_right</mat-icon>
+        </button>
+
+      </form>
+
+      <datalist id="users-from-comments">
+        <option *ngFor="let user of users">{{ user }}</option>
+      </datalist>
     </ng-container>
 
     <!-- DAMN HUGE BLOCK WITH SHIKIMORI's SMILEYS -->

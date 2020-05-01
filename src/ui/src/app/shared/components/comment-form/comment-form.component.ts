@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 
 @Component({
@@ -8,11 +8,16 @@ import {FormControl, FormGroup, Validators} from '@angular/forms';
 })
 export class CommentFormComponent implements OnInit {
 
+  @Input()
+  users: string[];
+
   addLinkForm: FormGroup;
   addImageForm: FormGroup;
+  addQuotesForm: FormGroup;
 
-  isLinkSectionOpen = false;
   isImageSectionOpen = false;
+  isLinkSectionOpen = false;
+  isQuotesSectionOpen = false;
   isSmileysSectionOpen = false;
 
   static _insertBeforeAfterCursor(textarea: HTMLTextAreaElement, before = '', after = '') {
@@ -50,8 +55,9 @@ export class CommentFormComponent implements OnInit {
   constructor() { }
 
   private _closeAllSections() {
-    this.isLinkSectionOpen = false;
     this.isImageSectionOpen = false;
+    this.isLinkSectionOpen = false;
+    this.isQuotesSectionOpen = false;
     this.isSmileysSectionOpen = false;
   }
 
@@ -69,7 +75,14 @@ export class CommentFormComponent implements OnInit {
        Validators.required,
        Validators.pattern(/https?:\/\/.*/i)
      ])
-   })
+   });
+
+   this.addQuotesForm = new FormGroup({
+     nickname: new FormControl('', [
+       Validators.required,
+       Validators.minLength(1)
+     ])
+   });
   }
 
   addSmiley(textarea: HTMLTextAreaElement, smiley: string) {
@@ -116,9 +129,18 @@ export class CommentFormComponent implements OnInit {
     this.isImageSectionOpen = true;
   }
 
+  openQuotesSection() {
+    this._closeAllSections();
+    this.isQuotesSectionOpen = true;
+  }
+
   openSmileys() {
     this._closeAllSections();
     this.isSmileysSectionOpen = true;
+  }
+
+  quote(textarea: HTMLTextAreaElement, form: { nickname: string }) {
+    CommentFormComponent._insertAtCursor(textarea, `[quote=${form.nickname}][/quote]`)
   }
 
   strike(textarea: HTMLTextAreaElement) {

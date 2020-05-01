@@ -182,7 +182,7 @@
                   [hasNextPage]="commentsService.hasNextPage"
                   [newCommentsCount]="commentsService.pageSize"
                   [totalCommentsRemaining]="commentsService.commentsRemaining"></app-comments>
-    <app-comment-form></app-comment-form>
+    <app-comment-form [users]="commentsService.users$ | async"></app-comment-form>
 
   </ng-container>
 

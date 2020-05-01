@@ -33,7 +33,7 @@ mat-form-field.textarea textarea {
   width: 30%;
 }
 
-#add-image-section mat-form-field {
+#add-image-section mat-form-field, #add-quotes-section mat-form-field {
   width: 45%;
 }
 
