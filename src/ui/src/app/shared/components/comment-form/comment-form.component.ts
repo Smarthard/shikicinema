@@ -1,4 +1,5 @@
 import {Component, OnInit} from '@angular/core';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
 
 @Component({
   selector: 'app-comment-form',
@@ -7,6 +8,9 @@ import {Component, OnInit} from '@angular/core';
 })
 export class CommentFormComponent implements OnInit {
 
+  addLinkForm: FormGroup;
+
+  isLinkSectionOpen = false;
   isSmileysSectionOpen = false;
 
   static _insertBeforeAfterCursor(textarea: HTMLTextAreaElement, before = '', after = '') {
@@ -44,10 +48,18 @@ export class CommentFormComponent implements OnInit {
   constructor() { }
 
   private _closeAllSections() {
+    this.isLinkSectionOpen = false;
     this.isSmileysSectionOpen = false;
   }
 
   ngOnInit(): void {
+   this.addLinkForm = new FormGroup({
+     href: new FormControl('', [
+       Validators.required,
+       Validators.pattern(/https?:\/\/.*/i)
+     ]),
+     name: new FormControl()
+   });
   }
 
   addSmiley(textarea: HTMLTextAreaElement, smiley: string) {
@@ -58,12 +70,34 @@ export class CommentFormComponent implements OnInit {
     CommentFormComponent._insertBeforeAfterCursor(textarea,'[b]', '[/b]');
   }
 
+  close() {
+    this._closeAllSections();
+  }
+
   italic(textarea: HTMLTextAreaElement) {
     CommentFormComponent._insertBeforeAfterCursor(textarea, '[i]', '[/i]')
   }
 
-  underline(textarea: HTMLTextAreaElement) {
-    CommentFormComponent._insertBeforeAfterCursor(textarea, '[u]', '[/u]')
+  link(textarea: HTMLTextAreaElement, form: { href: string, name: string }) {
+    if (form.href) {
+      const LINK_URL = new URL(form.href);
+
+      if (!form.name) {
+        form.name = LINK_URL.host;
+      }
+
+      CommentFormComponent._insertAtCursor(textarea, `[url=${form.href}]${form.name}[/url]`);
+    }
+  }
+
+  openLinkSection() {
+    this._closeAllSections();
+    this.isLinkSectionOpen = true;
+  }
+
+  openSmileys() {
+    this._closeAllSections();
+    this.isSmileysSectionOpen = true;
   }
 
   strike(textarea: HTMLTextAreaElement) {
@@ -74,13 +108,8 @@ export class CommentFormComponent implements OnInit {
     CommentFormComponent._insertBeforeAfterCursor(textarea, '[spoiler=спойлер]', '[/spoiler]')
   }
 
-  openSmileys() {
-    this._closeAllSections();
-    this.isSmileysSectionOpen = true;
-  }
-
-  close() {
-    this._closeAllSections();
+  underline(textarea: HTMLTextAreaElement) {
+    CommentFormComponent._insertBeforeAfterCursor(textarea, '[u]', '[/u]')
   }
 
 }

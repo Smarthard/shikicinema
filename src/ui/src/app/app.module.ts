@@ -11,7 +11,7 @@ import {VideoPlayerComponent} from './shared/components/video-player/video-playe
 import {SafeVideoUrlPipe} from './shared/pipes/safe-video-url-pipe/safe-video-url.pipe';
 import {ShikivideosService} from './services/shikivideos-api/shikivideos.service';
 import {BrowserModule} from '@angular/platform-browser';
-import {FormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {VideoListComponent} from './shared/components/video-list/video-list.component';
 import {EpisodesListComponent} from './shared/components/episodes-list/episodes-list.component';
 import {KindRemoteComponent} from './shared/components/kind-remote/kind-remote.component';
@@ -124,7 +124,8 @@ registerLocaleData(localeRu, 'ru');
     ScrollingModule,
     NgxSkeletonLoaderModule,
     MatBadgeModule,
-    MatDividerModule
+    MatDividerModule,
+    ReactiveFormsModule
   ],
   providers: [
     { provide: LocationStrategy, useClass: HashLocationStrategy },

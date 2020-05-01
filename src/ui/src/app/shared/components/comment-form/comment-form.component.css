@@ -25,6 +25,23 @@ mat-form-field.textarea textarea {
   margin-left: 10px;
 }
 
+#add-link-form mat-form-field {
+  width: 30%;
+}
+
+.bb-helpers {
+  align-items: center;
+}
+
+.bb-helpers mat-form-field {
+  margin-right: 10px;
+}
+
+.bb-helpers button.mat-warn {
+  background-color: #f44336;
+  color: white;
+}
+
 .dark-theme :host textarea {
   background-color:#7777;
   color: white;
