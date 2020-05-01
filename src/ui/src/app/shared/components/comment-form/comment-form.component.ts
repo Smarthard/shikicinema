@@ -87,10 +87,12 @@ export class CommentFormComponent implements OnInit {
 
   addSmiley(textarea: HTMLTextAreaElement, smiley: string) {
     CommentFormComponent._insertAtCursor(textarea, ` ${smiley} `);
+    this.resize(textarea);
   }
 
   bold(textarea: HTMLTextAreaElement) {
     CommentFormComponent._insertBeforeAfterCursor(textarea,'[b]', '[/b]');
+    this.resize(textarea);
   }
 
   close() {
@@ -100,11 +102,13 @@ export class CommentFormComponent implements OnInit {
   image(textarea: HTMLTextAreaElement, form: { imageSrc: string }) {
     if (form.imageSrc) {
       CommentFormComponent._insertAtCursor(textarea, `[img]${form.imageSrc}[/img]`);
+      this.resize(textarea);
     }
   }
 
   italic(textarea: HTMLTextAreaElement) {
-    CommentFormComponent._insertBeforeAfterCursor(textarea, '[i]', '[/i]')
+    CommentFormComponent._insertBeforeAfterCursor(textarea, '[i]', '[/i]');
+    this.resize(textarea);
   }
 
   link(textarea: HTMLTextAreaElement, form: { href: string, name: string }) {
@@ -116,6 +120,7 @@ export class CommentFormComponent implements OnInit {
       }
 
       CommentFormComponent._insertAtCursor(textarea, `[url=${form.href}]${form.name}[/url]`);
+      this.resize(textarea);
     }
   }
 
@@ -140,19 +145,29 @@ export class CommentFormComponent implements OnInit {
   }
 
   quote(textarea: HTMLTextAreaElement, form: { nickname: string }) {
-    CommentFormComponent._insertAtCursor(textarea, `[quote=${form.nickname}][/quote]`)
+    CommentFormComponent._insertAtCursor(textarea, `[quote=${form.nickname}][/quote]`);
+    this.resize(textarea);
+  }
+
+  resize(textarea: HTMLTextAreaElement) {
+    textarea.style.height = 'auto';
+    textarea.style.height = `${textarea.scrollHeight}px`;
+    textarea.scrollIntoView({ block: 'end' });
   }
 
   strike(textarea: HTMLTextAreaElement) {
-    CommentFormComponent._insertBeforeAfterCursor(textarea, '[s]', '[/s]')
+    CommentFormComponent._insertBeforeAfterCursor(textarea, '[s]', '[/s]');
+    this.resize(textarea);
   }
 
   spoiler(textarea: HTMLTextAreaElement) {
-    CommentFormComponent._insertBeforeAfterCursor(textarea, '[spoiler=спойлер]', '[/spoiler]')
+    CommentFormComponent._insertBeforeAfterCursor(textarea, '[spoiler=спойлер]', '[/spoiler]');
+    this.resize(textarea);
   }
 
   underline(textarea: HTMLTextAreaElement) {
-    CommentFormComponent._insertBeforeAfterCursor(textarea, '[u]', '[/u]')
+    CommentFormComponent._insertBeforeAfterCursor(textarea, '[u]', '[/u]');
+    this.resize(textarea);
   }
 
 }

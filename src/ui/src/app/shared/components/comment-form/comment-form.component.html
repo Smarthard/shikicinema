@@ -340,6 +340,7 @@
     <mat-form-field class="textarea">
 
       <textarea #userComment
+                (input)="resize(userComment)"
                 rows="10"
                 matNativeControl></textarea>
     </mat-form-field>

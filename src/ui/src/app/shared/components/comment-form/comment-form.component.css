@@ -51,6 +51,11 @@ mat-form-field.textarea textarea {
   color: white;
 }
 
+mat-form-field.textarea textarea {
+  resize: none;
+  overflow: hidden;
+}
+
 .dark-theme :host textarea {
   background-color:#7777;
   color: white;
