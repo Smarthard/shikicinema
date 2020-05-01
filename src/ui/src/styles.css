@@ -100,6 +100,10 @@ body {
   color: #AAA;
 }
 
+.dark-theme .mat-select-value {
+  color: #AAA;
+}
+
 .hostname {
   font-size: 10pt;
   color: #999999;
