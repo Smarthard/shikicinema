@@ -71,7 +71,7 @@
 
     <datalist id="authors">
       <ng-container *ngIf="(sources$ | async) as sources">
-        <option *ngFor="let key of (sources | keys)">{{ sources[key].author }}</option>
+        <option *ngFor="let author of getUniqueAuthors(sources)">{{ author }}</option>
       </ng-container>
     </datalist>
 

@@ -139,6 +139,15 @@ export class UploadVideoComponent implements OnDestroy, OnChanges {
       );
   }
 
+  getUniqueAuthors(unique: SmarthardNet.Unique) {
+    const AUTHORS: string[] = [];
+
+    Object.keys(unique)
+      .forEach((key) => AUTHORS.push(...unique[key].author));
+
+    return [...new Set(AUTHORS)];
+  }
+
   checkVideo(video: SmarthardNet.Shikivideo) {
     this.videoWasChecked = true;
     this.check.emit(video);
