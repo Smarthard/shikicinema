@@ -3,5 +3,7 @@
           class="close text">
     🞪
   </div>
-  <app-comment [comment]="comment"></app-comment>
+  <app-comment [comment]="comment"
+               [showTooltips]="false"
+               (reply)="reply.emit($event)"></app-comment>
 </div>

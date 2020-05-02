@@ -18,6 +18,10 @@
   border-radius: 53px;
 }
 
+.comment-tooltip {
+  justify-content: space-between;
+}
+
 .comment-info {
   padding: 5px;
   height: 48px;
@@ -25,6 +29,10 @@
   flex-direction: column;
   justify-content: center;
   background-color: transparent;
+}
+
+.medium {
+  font-size: medium;
 }
 
 .smaller {

@@ -20,7 +20,8 @@
         | tail: getTail();
           trackBy: trackComment"
                  [id]="'comment-' + comment.id"
-                 [comment]="comment"></app-comment>
+                 [comment]="comment"
+                 (reply)="reply.emit($event)"></app-comment>
   </ng-container>
   <ng-template #noComments>
     <div class="comment text">Нет комментариев</div>
@@ -34,6 +35,7 @@
                  [ngStyle]="{ 'z-index': bubble.zIndex }"
                  (mouseenter)="stopBubbleDestroyTimeout(bubble)"
                  (mouseleave)="startBubbleDestroyTimeout(bubble)"
+                 (reply)="reply.emit($event)"
                  (hide)="hideBubble(bubble)"></app-bubble-view>
 
 <ng-container *ngIf="imgLink">

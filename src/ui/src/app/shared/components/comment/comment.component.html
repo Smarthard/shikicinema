@@ -16,26 +16,34 @@
     </ng-template>
   </div>
   <div class="max-width">
-    <div class="comment-info">
-      <ng-container *ngIf="userExists(comment?.user?.nickname); else deletedUserNickname">
+    <div class="flex flex-start comment-tooltip">
+      <div class="comment-info">
+        <ng-container *ngIf="userExists(comment?.user?.nickname); else deletedUserNickname">
             <span>
               <a [href]="'https://shikimori.one/' + comment?.user.nickname"
                  class="shc-links">
                 {{ comment?.user.nickname }}
               </a>
             </span>
-      </ng-container>
-      <div class="text smaller">
+        </ng-container>
+        <div class="text smaller">
             <span>
               {{ comment?.lastUpdated | date: 'short' }}
             </span>
-        <mat-icon *ngIf="comment?.isEdited"
-                  [title]="'создано: ' + (comment?.created | date: 'short')"
-                  class="small">edit</mat-icon>
+          <mat-icon *ngIf="comment?.isEdited"
+                    [title]="'создано: ' + (comment?.created | date: 'short')"
+                    class="small">edit</mat-icon>
+        </div>
+        <ng-template #deletedUserNickname>
+          <a class="shc-links">DELETED USER</a>
+        </ng-template>
       </div>
-      <ng-template #deletedUserNickname>
-        <a class="shc-links">DELETED USER</a>
-      </ng-template>
+      <div *ngIf="showTooltips">
+        <button (click)="addReply(comment)"
+                mat-icon-button>
+          <mat-icon class="text medium">reply</mat-icon>
+        </button>
+      </div>
     </div>
     <div [innerHTML]="comment?.html | safeHtml"
          class="text"></div>
