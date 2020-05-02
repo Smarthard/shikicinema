@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, ElementRef, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 
 @Component({
@@ -6,10 +6,16 @@ import {FormControl, FormGroup, Validators} from '@angular/forms';
   templateUrl: './comment-form.component.html',
   styleUrls: ['./comment-form.component.css']
 })
-export class CommentFormComponent implements OnInit {
+export class CommentFormComponent implements OnInit, OnChanges {
 
   @Input()
   users: string[];
+
+  @Input()
+  reply: string;
+
+  @ViewChild('userComment', { static: true })
+  _textareaRef: ElementRef<HTMLTextAreaElement>;
 
   addLinkForm: FormGroup;
   addImageForm: FormGroup;
@@ -83,6 +89,12 @@ export class CommentFormComponent implements OnInit {
        Validators.minLength(1)
      ])
    });
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes?.reply?.currentValue) {
+      CommentFormComponent._insertAtCursor(this._textareaRef.nativeElement, this.reply);
+    }
   }
 
   addSmiley(textarea: HTMLTextAreaElement, smiley: string) {

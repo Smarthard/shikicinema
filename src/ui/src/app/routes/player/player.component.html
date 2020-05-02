@@ -178,11 +178,13 @@
       </ng-container>
     </div>
     <app-comments (nextPage)="nextCommentsPage()"
+                  (reply)="addReply($event)"
                   [comments]="commentsService.comments$ | async"
                   [hasNextPage]="commentsService.hasNextPage"
                   [newCommentsCount]="commentsService.pageSize"
                   [totalCommentsRemaining]="commentsService.commentsRemaining"></app-comments>
-    <app-comment-form [users]="commentsService.users$ | async"></app-comment-form>
+    <app-comment-form [reply]="replies$ | async"
+                      [users]="commentsService.users$ | async"></app-comment-form>
 
   </ng-container>
 

@@ -13,7 +13,7 @@ import {ShikicinemaSettings} from '../../types/ShikicinemaSettings';
 import {SettingsService} from '../../services/settings/settings.service';
 import {UserPreferencesService} from '../../services/user-preferences/user-preferences.service';
 import {catchError, debounceTime, distinctUntilChanged, map, publishReplay, refCount, switchMap, takeWhile} from 'rxjs/operators';
-import {BehaviorSubject, combineLatest, EMPTY, iif, Observable, of} from 'rxjs';
+import {BehaviorSubject, combineLatest, EMPTY, iif, Observable, of, Subject} from 'rxjs';
 import {Notification, NotificationType} from '../../types/notification';
 import {MatDialog} from '@angular/material/dialog';
 import {IRequestDialogData, RequestDialogComponent} from '../../shared/components/request-dialog/request-dialog.component';
@@ -45,6 +45,7 @@ export class PlayerComponent implements OnInit, OnDestroy {
   public currentVideo: SmarthardNet.Shikivideo;
 
   readonly episodeSubject = new BehaviorSubject<number>(1);
+  readonly repliesSubject = new Subject<string>();
   readonly uploaderSubject = new BehaviorSubject<string>(null);
 
   readonly animeId$ = this.route.params.pipe(
@@ -106,6 +107,8 @@ export class PlayerComponent implements OnInit, OnDestroy {
       switchMap(() => this.anime$),
       switchMap((anime: Shikimori.Anime) => this.kodikService.getUnique(anime)),
     );
+
+  readonly replies$ = this.repliesSubject.asObservable();
 
   readonly unique$ = this.anime$
     .pipe(
@@ -221,6 +224,10 @@ export class PlayerComponent implements OnInit, OnDestroy {
     if (episode != '') {
       await this.router.navigate([`../${episode}`], { relativeTo:  this.route });
     }
+  }
+
+  addReply(reply: string) {
+    this.repliesSubject.next(reply);
   }
 
   changeVideo(video: SmarthardNet.Shikivideo) {
