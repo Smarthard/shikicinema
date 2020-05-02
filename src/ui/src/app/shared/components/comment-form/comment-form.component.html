@@ -1,28 +1,28 @@
 <div>
   <div id="format-tools">
     <div class="flex flex-start">
-      <button (click)="bold(userComment)"
+      <button (click)="bold()"
               class="text"
               matTooltip="Жирный"
               matTooltipPosition="above"
               mat-icon-button>
         <mat-icon>format_bold</mat-icon>
       </button>
-      <button (click)="italic(userComment)"
+      <button (click)="italic()"
               class="text"
               matTooltip="Курсив"
               matTooltipPosition="above"
               mat-icon-button>
         <mat-icon>format_italic</mat-icon>
       </button>
-      <button (click)="underline(userComment)"
+      <button (click)="underline()"
               class="text"
               matTooltip="Подчеркнутый"
               matTooltipPosition="above"
               mat-icon-button>
         <mat-icon>format_underlined</mat-icon>
       </button>
-      <button (click)="strike(userComment)"
+      <button (click)="strike()"
               class="text"
               matTooltip="Зачеркнутый"
               matTooltipPosition="above"
@@ -56,7 +56,7 @@
               mat-icon-button>
         <mat-icon>format_quote</mat-icon>
       </button>
-      <button (click)="spoiler(userComment)"
+      <button (click)="spoiler()"
               class="text"
               matTooltip="Спойлер"
               matTooltipPosition="above"
@@ -78,7 +78,7 @@
       <div class="flex flex-start bb-helpers">
         <form id="add-link-form"
               [formGroup]="addLinkForm"
-              (ngSubmit)="link(userComment, addLinkForm.value)"
+              (ngSubmit)="link(addLinkForm.value)"
               class="max-width">
 
           <mat-form-field>
@@ -116,7 +116,7 @@
       <div class="flex flex-start bb-helpers">
         <form id="add-image-section"
               [formGroup]="addImageForm"
-              (ngSubmit)="image(userComment, addImageForm.value)"
+              (ngSubmit)="image(addImageForm.value)"
               class="max-width">
 
           <mat-form-field>
@@ -145,7 +145,7 @@
     <ng-container *ngIf="isQuotesSectionOpen">
       <form id="add-quotes-section"
             [formGroup]="addQuotesForm"
-            (ngSubmit)="addQuote(userComment, addQuotesForm.value)">
+            (ngSubmit)="addQuote(addQuotesForm.value)">
 
         <mat-form-field>
           <mat-label>Цитировать пользователя</mat-label>
@@ -175,164 +175,164 @@
     <!-- DAMN HUGE BLOCK WITH SHIKIMORI's SMILEYS -->
     <ng-container *ngIf="isSmileysSectionOpen">
       <div class="smileys-row">
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":)"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":D"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":-D"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":lol:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":ololo:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":evil:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley="+_+"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":cool:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":thumbup:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":yahoo:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":tea2:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":star:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":)"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":D"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":-D"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":lol:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":ololo:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":evil:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley="+_+"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":cool:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":thumbup:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":yahoo:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":tea2:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":star:"></app-smilley>
       </div>
       <div class="smileys-row">
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":oh:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":shy:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":shy2:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":hurray:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":-P"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":roll:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":!:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":watching:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":love:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":love2:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":bunch:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":perveted:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":oh:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":shy:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":shy2:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":hurray:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":-P"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":roll:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":!:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":watching:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":love:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":love2:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":bunch:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":perveted:"></app-smilley>
       </div>
       <div class="smileys-row">
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":("></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":very sad:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":depressed:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":depressed2:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":hopeless:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":very sad2:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":-("></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":cry:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":cry6:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":Cry2:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":Cry3:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":Cry4:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":("></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":very sad:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":depressed:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":depressed2:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":hopeless:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":very sad2:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":-("></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":cry:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":cry6:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":Cry2:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":Cry3:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":Cry4:"></app-smilley>
       </div>
       <div class="smileys-row">
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":-o"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":shock:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":shock2:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":scream:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":dont want:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":noooo:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":scared:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":shocked2:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":shocked3:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":shocked4:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":tea shock:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":frozen3:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":-o"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":shock:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":shock2:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":scream:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":dont want:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":noooo:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":scared:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":shocked2:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":shocked3:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":shocked4:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":tea shock:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":frozen3:"></app-smilley>
       </div>
       <div class="smileys-row">
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":angry4:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":revenge:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":evil2:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":twisted:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":angry:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":angry3:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":angry5:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":angry6:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":cold:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":strange4:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":ball:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":evil3:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":angry4:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":revenge:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":evil2:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":twisted:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":angry:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":angry3:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":angry5:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":angry6:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":cold:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":strange4:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":ball:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":evil3:"></app-smilley>
       </div>
       <div class="smileys-row">
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":8):"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":oh2:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":ooph:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":wink:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":dunno:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":dont listen:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":hypno:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":advise:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":bored:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":disappointment:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":hunf:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":8):"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":oh2:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":ooph:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":wink:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":dunno:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":dont listen:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":hypno:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":advise:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":bored:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":disappointment:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":hunf:"></app-smilley>
       </div>
       <div class="smileys-row">
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":hot:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":hot2:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":hot3:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":stress:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":strange3:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":strange2:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":strange1:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":strange:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":hope:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":hope3:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":diplom:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":hot:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":hot2:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":hot3:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":stress:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":strange3:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":strange2:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":strange1:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":strange:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":hope:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":hope3:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":diplom:"></app-smilley>
       </div>
       <div class="smileys-row">
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":hi:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":bye:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":sleep:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":bow:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":Warning:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":Ban:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":Bath2:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":Im dead:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":sick:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":s1:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":s3:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":s2:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":happy_cry:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":hi:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":bye:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":sleep:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":bow:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":Warning:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":Ban:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":Bath2:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":Im dead:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":sick:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":s1:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":s3:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":s2:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":happy_cry:"></app-smilley>
       </div>
       <div class="smileys-row">
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":ill:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":sad2:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":bullied:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":bdl2:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":Happy Birthday:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":flute:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":cry5:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":gaze:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":hope2:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":sleepy:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":study:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":study2:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":study3:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":gamer:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":animal:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":caterpillar:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":cold2:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":shocked:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":frozen:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":frozen2:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":kia:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":interested:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":happy:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":happy3:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":water:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":ill:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":sad2:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":bullied:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":bdl2:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":Happy Birthday:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":flute:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":cry5:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":gaze:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":hope2:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":sleepy:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":study:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":study2:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":study3:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":gamer:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":animal:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":caterpillar:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":cold2:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":shocked:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":frozen:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":frozen2:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":kia:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":interested:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":happy:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":happy3:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":water:"></app-smilley>
       </div>
       <div class="smileys-row">
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":dance:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":liar:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":prcl:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":play:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":s4:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":s:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":bath:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":kiss:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":whip:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":relax:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":smoker:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":smoker2:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":bdl:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":cool2:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":V:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":V2:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":V3:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":sarcasm:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":angry2:"></app-smilley>
-        <app-smilley (pick)="addSmiley(userComment, $event)" smiley=":kya:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":dance:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":liar:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":prcl:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":play:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":s4:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":s:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":bath:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":kiss:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":whip:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":relax:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":smoker:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":smoker2:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":bdl:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":cool2:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":V:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":V2:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":V3:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":sarcasm:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":angry2:"></app-smilley>
+        <app-smilley (pick)="addSmiley($event)" smiley=":kya:"></app-smilley>
       </div>
     </ng-container>
   </div>
@@ -340,7 +340,7 @@
     <mat-form-field class="textarea">
 
       <textarea #userComment
-                (input)="resize(userComment)"
+                (input)="resize()"
                 rows="10"
                 matNativeControl></textarea>
     </mat-form-field>
