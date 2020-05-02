@@ -5,7 +5,7 @@
   <div *cdkVirtualFor="let episode of (unique | keys)"
        (click)="change.emit(+episode)"
        [class.selected]="chosen && episode == chosen.episode"
-       class="shc-links">
+       class="shc-links episodes">
     <span *ngIf="episode">
       <span class="text">
         #{{ episode }}
