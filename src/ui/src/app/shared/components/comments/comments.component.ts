@@ -126,7 +126,7 @@ export class CommentsComponent implements AfterViewChecked {
         PARENT.onclick = (evt) => {
           evt.preventDefault();
           evt.stopPropagation();
-          this.openImg(PARENT.href);
+          this.openImg(PARENT.href || img.src);
         };
       }
     });
