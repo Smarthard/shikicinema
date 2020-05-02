@@ -15,6 +15,9 @@ export class CommentComponent {
   showTooltips = true;
 
   @Output()
+  quote = new EventEmitter<string>();
+
+  @Output()
   reply = new EventEmitter<string>();
 
   constructor() {}
@@ -23,8 +26,19 @@ export class CommentComponent {
     return !!nickname;
   }
 
+  getQuote(comment: Shikimori.Comment) {
+    return `[quote=c${comment.id};${comment.user.id};${comment.user.nickname}]\n${comment.body}\n[/quote]\n`;
+  }
+
   getReply(comment: Shikimori.Comment) {
     return `[comment=${comment.id}]${comment.user.nickname}[/comment], `;
+  }
+
+  addQuote(comment: Shikimori.Comment) {
+    this.quote.emit(this.getQuote(comment));
+
+    /* keep this for stupid function ngOnChanges to be triggered correctly */
+    setTimeout(() => this.quote.emit(''), 10);
   }
 
   addReply(comment: Shikimori.Comment) {

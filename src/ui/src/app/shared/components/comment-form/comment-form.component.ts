@@ -12,6 +12,9 @@ export class CommentFormComponent implements OnInit, OnChanges {
   users: string[];
 
   @Input()
+  quote: string;
+
+  @Input()
   reply: string;
 
   @ViewChild('userComment', { static: true })
@@ -95,6 +98,10 @@ export class CommentFormComponent implements OnInit, OnChanges {
     if (changes?.reply?.currentValue) {
       CommentFormComponent._insertAtCursor(this._textareaRef.nativeElement, this.reply);
     }
+
+    if (changes?.quote?.currentValue) {
+      CommentFormComponent._insertAtCursor(this._textareaRef.nativeElement, this.quote);
+    }
   }
 
   addSmiley(textarea: HTMLTextAreaElement, smiley: string) {
@@ -156,7 +163,7 @@ export class CommentFormComponent implements OnInit, OnChanges {
     this.isSmileysSectionOpen = true;
   }
 
-  quote(textarea: HTMLTextAreaElement, form: { nickname: string }) {
+  addQuote(textarea: HTMLTextAreaElement, form: { nickname: string }) {
     CommentFormComponent._insertAtCursor(textarea, `[quote=${form.nickname}][/quote]`);
     this.resize(textarea);
   }

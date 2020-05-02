@@ -145,7 +145,7 @@
     <ng-container *ngIf="isQuotesSectionOpen">
       <form id="add-quotes-section"
             [formGroup]="addQuotesForm"
-            (ngSubmit)="quote(userComment, addQuotesForm.value)">
+            (ngSubmit)="addQuote(userComment, addQuotesForm.value)">
 
         <mat-form-field>
           <mat-label>Цитировать пользователя</mat-label>

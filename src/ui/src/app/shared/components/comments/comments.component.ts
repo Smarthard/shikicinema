@@ -27,6 +27,9 @@ export class CommentsComponent implements AfterViewChecked {
   nextPage = new EventEmitter();
 
   @Output()
+  quote = new EventEmitter<string>();
+
+  @Output()
   reply = new EventEmitter<string>();
 
   commentsHidden = false;

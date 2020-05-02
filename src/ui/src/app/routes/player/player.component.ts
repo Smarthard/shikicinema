@@ -45,6 +45,7 @@ export class PlayerComponent implements OnInit, OnDestroy {
   public currentVideo: SmarthardNet.Shikivideo;
 
   readonly episodeSubject = new BehaviorSubject<number>(1);
+  readonly quotesSubject = new Subject<string>();
   readonly repliesSubject = new Subject<string>();
   readonly uploaderSubject = new BehaviorSubject<string>(null);
 
@@ -108,6 +109,7 @@ export class PlayerComponent implements OnInit, OnDestroy {
       switchMap((anime: Shikimori.Anime) => this.kodikService.getUnique(anime)),
     );
 
+  readonly quotes$ = this.quotesSubject.asObservable();
   readonly replies$ = this.repliesSubject.asObservable();
 
   readonly unique$ = this.anime$
@@ -224,6 +226,10 @@ export class PlayerComponent implements OnInit, OnDestroy {
     if (episode != '') {
       await this.router.navigate([`../${episode}`], { relativeTo:  this.route });
     }
+  }
+
+  addQuote(quote: string) {
+    this.quotesSubject.next(quote);
   }
 
   addReply(reply: string) {

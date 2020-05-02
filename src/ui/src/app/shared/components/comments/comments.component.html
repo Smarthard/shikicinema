@@ -21,6 +21,7 @@
           trackBy: trackComment"
                  [id]="'comment-' + comment.id"
                  [comment]="comment"
+                 (quote)="quote.emit($event)"
                  (reply)="reply.emit($event)"></app-comment>
   </ng-container>
   <ng-template #noComments>

@@ -20,6 +20,9 @@ export class BubbleViewComponent implements OnChanges {
   hide = new EventEmitter();
 
   @Output()
+  quote = new EventEmitter<string>();
+
+  @Output()
   reply = new EventEmitter<string>();
 
   @HostBinding('style.left.px')

@@ -39,6 +39,10 @@
         </ng-template>
       </div>
       <div *ngIf="showTooltips">
+        <button (click)="addQuote(comment)"
+                mat-icon-button>
+          <mat-icon class="text medium">format_quote</mat-icon>
+        </button>
         <button (click)="addReply(comment)"
                 mat-icon-button>
           <mat-icon class="text medium">reply</mat-icon>
