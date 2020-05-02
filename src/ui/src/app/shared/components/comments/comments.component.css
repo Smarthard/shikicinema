@@ -1,3 +1,20 @@
+
+.dark-theme :host #comments-section {
+  background-color: #2e2e2e;
+}
+
+.hidden {
+  display: none;
+}
+
+app-comment {
+  display: block;
+  border-top: 1px dashed #777;
+}
+
+button {
+  background-color: #f9f9f9;
+}
 @keyframes flash-background {
   0% {
     background-color: #0000;
@@ -14,50 +31,8 @@
   animation: flash-background 1s ease-in-out;
 }
 
-.dark-theme :host #comments-section {
-  background-color: #2e2e2e;
-}
-
-.comment {
-  min-width: 100px;
-  min-height: 50px;
-  display: flex;
-  flex-direction: row;
-  background-color: transparent;
-  border-top: 1px dashed #777;
-  padding: 15px 0;
-}
-
-.comment-avatar {
-  padding: 5px;
-  width: 48px;
-  height: 48px;
-  background-color: transparent;
-}
-
-.comment-avatar img {
-  border-radius: 53px;
-}
-
-.comment-info {
-  padding: 5px;
-  height: 48px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  background-color: transparent;
-}
-
-.hidden {
-  display: none;
-}
-
-.smaller {
-  font-size: smaller;
-}
-
-.small {
-  font-size: small;
+.dark-theme button {
+  background-color: #7777;
 }
 
 div.view-img {
@@ -84,12 +59,4 @@ div.view-img img {
 div.view-img * {
   color: white;
   text-align: center;
-}
-
-button {
-  background-color: #f9f9f9;
-}
-
-.dark-theme button {
-  background-color: #7777;
 }

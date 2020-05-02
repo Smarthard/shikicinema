@@ -62,6 +62,7 @@ import {BubbleViewComponent} from './shared/components/bubble-view/bubble-view.c
 import {SafeHtmlPipe} from './shared/pipes/safe-html-pipe/safe-html.pipe';
 import {CommentFormComponent} from './shared/components/comment-form/comment-form.component';
 import {SmilleyComponent} from './shared/components/smilley/smilley.component';
+import {CommentComponent} from './shared/components/comment/comment.component';
 
 registerLocaleData(localeRu, 'ru');
 
@@ -94,7 +95,8 @@ registerLocaleData(localeRu, 'ru');
     BubbleViewComponent,
     SafeHtmlPipe,
     CommentFormComponent,
-    SmilleyComponent
+    SmilleyComponent,
+    CommentComponent
   ],
   imports: [
     AppRoutingModule,

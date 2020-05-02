@@ -11,47 +11,6 @@
   background-color: #424242;
 }
 
-.comment {
-  min-width: 100px;
-  min-height: 50px;
-  display: flex;
-  flex-direction: row;
-  background-color: transparent;
-  padding: 15px 0;
-}
-
-.comment-avatar {
-  padding: 5px;
-  width: 48px;
-  height: 48px;
-  background-color: transparent;
-}
-
-.comment-avatar img {
-  border-radius: 53px;
-}
-
-.comment-info {
-  padding: 5px;
-  height: 48px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  background-color: transparent;
-}
-
-.comment-content {
-  padding-right: 3px;
-}
-
-.smaller {
-  font-size: smaller;
-}
-
-.small {
-  font-size: small;
-}
-
 .close {
   position: absolute;
   cursor: pointer;

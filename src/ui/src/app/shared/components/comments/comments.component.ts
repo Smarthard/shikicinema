@@ -201,6 +201,7 @@ export class CommentsComponent implements AfterViewChecked {
   }
 
   openImg(src: string) {
+    console.debug('???', `'${src}'`);
     document.body.style.overflow = 'hidden';
     this.imgLink = src;
   }
@@ -213,10 +214,6 @@ export class CommentsComponent implements AfterViewChecked {
 
   imgNotLoaded() {
     this.imgBroken = true;
-  }
-
-  userExists(nickname: string): boolean {
-    return !!nickname;
   }
 
   trackComment(index: number, item: Shikimori.Comment) {
