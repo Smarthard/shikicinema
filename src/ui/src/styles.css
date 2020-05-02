@@ -252,6 +252,10 @@ a.shc-links.bubbled img {
   display: none;
 }
 
+.shc-quote a {
+  margin-right: 5px;
+}
+
 img.smiley {
   margin: 0 5px;
   width: auto;

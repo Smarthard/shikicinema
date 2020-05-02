@@ -175,6 +175,9 @@ export class CommentsService {
     PARSED_COMMENTS
       .querySelectorAll('.b-quote')
       .forEach((elem) => elem.classList.replace('b-quote', 'shc-quote'));
+    PARSED_COMMENTS
+      .querySelectorAll('.quoteable a')
+      .forEach((a: HTMLLinkElement) => a.classList.add('shc-links', 'bubbled'));
 
     PARSED_COMMENTS
       .querySelectorAll('.inner')
