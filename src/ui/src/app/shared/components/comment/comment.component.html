@@ -47,6 +47,9 @@
                 mat-icon-button>
           <mat-icon class="text medium">reply</mat-icon>
         </button>
+        <div *ngIf="preview"
+             class="badge preview"
+             title="Это демонстрация комментария, который вы пишите">превью</div>
       </div>
     </div>
     <div [innerHTML]="comment?.html | safeHtml"

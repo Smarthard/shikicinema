@@ -14,6 +14,9 @@ export class CommentComponent {
   @Input()
   showTooltips = true;
 
+  @Input()
+  preview = false;
+
   @Output()
   quote = new EventEmitter<string>();
 

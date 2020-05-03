@@ -42,3 +42,14 @@
 .small {
   font-size: small;
 }
+
+.badge {
+  display: inline-block;
+}
+
+.preview {
+  padding: 0 5px;
+  color: hsl(209, 100%, 65.1%);
+  background-color: hsl(209, 100%, 90%);
+  border: 1px solid hsl(209, 100%, 40%);
+}
