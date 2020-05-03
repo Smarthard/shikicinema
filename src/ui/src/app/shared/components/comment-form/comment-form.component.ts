@@ -1,5 +1,7 @@
 import {Component, ElementRef, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {Shikimori} from '../../../types/shikimori';
+import {CommentsService} from '../../../services/comments/comments.service';
 
 @Component({
   selector: 'app-comment-form',
@@ -7,6 +9,9 @@ import {FormControl, FormGroup, Validators} from '@angular/forms';
   styleUrls: ['./comment-form.component.css']
 })
 export class CommentFormComponent implements OnInit, OnChanges {
+
+  @Input()
+  commentator: Shikimori.User;
 
   @Input()
   users: string[];
@@ -17,15 +22,22 @@ export class CommentFormComponent implements OnInit, OnChanges {
   @Input()
   reply: string;
 
+  @Input()
+  topic: Shikimori.ITopic;
+
   @ViewChild('userComment', { static: true })
   _textareaRef: ElementRef<HTMLTextAreaElement>;
+
+  bbComment: string;
 
   addLinkForm: FormGroup;
   addImageForm: FormGroup;
   addQuotesForm: FormGroup;
+  commentForm: FormGroup;
 
   isImageSectionOpen = false;
   isLinkSectionOpen = false;
+  isShowPreview = true;
   isQuotesSectionOpen = false;
   isSmileysSectionOpen = false;
 
@@ -61,7 +73,7 @@ export class CommentFormComponent implements OnInit, OnChanges {
     textarea.setSelectionRange(NEW_CURSOR_POSITION, NEW_CURSOR_POSITION);
   }
 
-  constructor() { }
+  constructor(private commentsService: CommentsService) { }
 
   private _closeAllSections() {
     this.isImageSectionOpen = false;
@@ -92,15 +104,24 @@ export class CommentFormComponent implements OnInit, OnChanges {
        Validators.minLength(1)
      ])
    });
+
+   this.commentForm = new FormGroup({
+     comment: new FormControl(this._textareaRef.nativeElement.value, [
+       Validators.required,
+       Validators.minLength(1)
+     ])
+   })
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes?.reply?.currentValue) {
+    if (changes?.reply?.currentValue && this?._textareaRef) {
       CommentFormComponent._insertAtCursor(this._textareaRef.nativeElement, this.reply);
+      this.resize();
     }
 
-    if (changes?.quote?.currentValue) {
+    if (changes?.quote?.currentValue && this?._textareaRef) {
       CommentFormComponent._insertAtCursor(this._textareaRef.nativeElement, this.quote);
+      this.resize();
     }
   }
 
@@ -171,7 +192,7 @@ export class CommentFormComponent implements OnInit, OnChanges {
   resize() {
     this._textareaRef.nativeElement.style.height = 'auto';
     this._textareaRef.nativeElement.style.height = `${this._textareaRef.nativeElement.scrollHeight}px`;
-    this._textareaRef.nativeElement.scrollIntoView({ block: 'end' });
+    this.bbComment = this._textareaRef.nativeElement.value;
   }
 
   strike() {
@@ -182,6 +203,33 @@ export class CommentFormComponent implements OnInit, OnChanges {
   spoiler() {
     CommentFormComponent._insertBeforeAfterCursor(this._textareaRef.nativeElement, '[spoiler=спойлер]', '[/spoiler]');
     this.resize();
+  }
+
+  comment(bbcode: string) {
+    const COMMENT = bbcode || '[i]Здесь стоит что-нибудь написать...[/i]';
+    const PARSED_COMMENT = this.commentsService.parseBBComment(COMMENT);
+
+    return new Shikimori.Comment(
+      -1000,
+      this.topic.id,
+      'Topic',
+      COMMENT,
+      PARSED_COMMENT,
+      new Date(),
+      new Date(),
+      false,
+      false,
+      true,
+      this.commentator
+    );
+  }
+
+  togglePreview() {
+    if (!this.isShowPreview) {
+      this.bbComment = this._textareaRef.nativeElement.value;
+    }
+
+    this.isShowPreview = !this.isShowPreview;
   }
 
   underline() {

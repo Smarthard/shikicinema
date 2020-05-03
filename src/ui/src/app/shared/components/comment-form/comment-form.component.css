@@ -16,6 +16,11 @@ mat-form-field.textarea textarea {
   border-radius: 5px;
 }
 
+app-comment {
+  display: block;
+  border-top: 1px dashed #777;
+}
+
 .smileys-row * {
   display: inline-block;
   margin: 0 0 7px 0;

@@ -1,3 +1,6 @@
+<app-comment *ngIf="commentForm.dirty && isShowPreview"
+             [comment]="comment(bbComment)"
+             preview="true"></app-comment>
 <div>
   <div id="format-tools">
     <div class="flex flex-start">
@@ -336,13 +339,22 @@
       </div>
     </ng-container>
   </div>
-  <form>
+  <form [formGroup]="commentForm">
     <mat-form-field class="textarea">
-
       <textarea #userComment
                 (input)="resize()"
                 rows="10"
-                matNativeControl></textarea>
+                formControlName="comment"
+                matInput required></textarea>
+      <mat-error>Комментарий не может быть пустым</mat-error>
     </mat-form-field>
   </form>
+
+  <div class="flex flex-end">
+    <button *ngIf="commentForm.dirty"
+            (click)="togglePreview()"
+            mat-flat-button>
+      {{ isShowPreview ? 'Скрыть превью' : 'Показать превью' }}
+    </button>
+  </div>
 </div>

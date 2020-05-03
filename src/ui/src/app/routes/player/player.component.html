@@ -184,8 +184,10 @@
                   [hasNextPage]="commentsService.hasNextPage"
                   [newCommentsCount]="commentsService.pageSize"
                   [totalCommentsRemaining]="commentsService.commentsRemaining"></app-comments>
-    <app-comment-form [quote]="quotes$ | async"
+    <app-comment-form [commentator]="whoami$ | async"
+                      [quote]="quotes$ | async"
                       [reply]="replies$ | async"
+                      [topic]="commentsService.topic$ | async"
                       [users]="commentsService.users$ | async"></app-comment-form>
 
   </ng-container>
