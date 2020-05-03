@@ -39,6 +39,12 @@
         </ng-template>
       </div>
       <div *ngIf="showTooltips">
+        <a *ngIf="!preview"
+           [href]="'https://shikimori.one/comments/' + comment.id"
+           target="_blank"
+           mat-icon-button>
+          <span class="text medium">#</span>
+        </a>
         <button (click)="addQuote(comment)"
                 mat-icon-button>
           <mat-icon class="text medium">format_quote</mat-icon>
