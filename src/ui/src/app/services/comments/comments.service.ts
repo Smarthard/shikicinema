@@ -74,7 +74,7 @@ export class CommentsService {
   readonly users$ = this.comments$
     .pipe(
       map((comments) => comments.map((c) => c.user.nickname)),
-      map((nicknames: string[]) => [ ...new Set(nicknames) ])
+      map((nicknames: string[]) => [...new Set(nicknames)])
     );
 
   constructor(
@@ -86,6 +86,88 @@ export class CommentsService {
       this._pageSubject.next(1);
     });
     this.limit$.subscribe((limit) => this.limit = limit);
+  }
+
+  parseBBComment(bbComment: string): string {
+    let parsed = bbComment;
+    const SEARCH = [
+      /\n/g,
+
+      / (:-[DP(]) /g,
+      / :-o /g,
+      / :\) /g,
+      / :(.*?): /g,
+
+      /\[b](.*?)\[\/b]/ig,
+      /\[i](.*?)\[\/i]/ig,
+      /\[u](.*?)\[\/u]/ig,
+      /\[s](.*?)\[\/s]/ig,
+
+      /\[url='?(.*?)'?](.*?)\[\/url]/ig,
+
+      /\[img](.*?)\[\/img]/ig,
+
+      /\[spoiler='?(.*?)'?](.*?)\[\/spoiler]/ig,
+
+      /\[comment='?(.*?)'?](.*?)\[\/comment]/ig,
+
+      /\[quote=c(.*?);(.*?);(.*?)](.*?)\[\/quote]/ig,
+
+      /\[quote=(.*?)](.*?)\[\/quote]/ig
+    ];
+    const REPLACE = [
+      '<br>',
+
+      '<img class="smiley" title="$1" alt="$1" src="https://shikimori.one/images/smileys/$1.gif">',
+      '<img class="smiley" title=":-o" alt=":-o" src="https://shikimori.one/images/smileys/:-o.gif">',
+      '<img class="smiley" title=":)" alt=":)" src="https://shikimori.one/images/smileys/:).gif">',
+      '<img class="smiley" title=":$1:" alt=":$1:" src="https://shikimori.one/images/smileys/:$1:.gif">',
+
+      '<b>$1</b>',
+      '<i>$1</i>',
+      '<u>$1</u>',
+      '<s>$1</s>',
+
+      '<a class="shc-links" href="$1">$2</a>',
+
+      `<a class="shc-image">
+        <img src="$1" alt="$1">
+      </a>`,
+
+      `<div class="shc-spoiler" onclick="">
+        <label>$1</label>
+        <div class="content">
+            <div class="before"></div>
+            <div class="inner text">$2</div>
+            <div class="after"></div>
+        </div>
+      </div>`,
+
+      '<a class="shc-links bubbled" href="https://shikimori.one/comments/$1">@$2</a>',
+
+      `<div class="shc-quote">
+        <div class="quoteable">
+            <a class="shc-links bubbled b-user16" href="https://shikimori.one/comments/$1">
+                <img src="https://shikimori.one/system/users/x16/$2.png" alt="$3">
+                <span>$3</span>
+            </a>
+        </div>$4
+      </div>`,
+
+      `<div class="shc-quote">
+        <div class="quoteable">
+            <a class="shc-links bubbled b-user16">
+                <span>$1</span>
+            </a> написал:
+        </div>$2
+      </div>`
+    ];
+
+    for (let i = 0; i < SEARCH.length; i++) {
+      parsed = parsed.replace(SEARCH[i], REPLACE[i]);
+    }
+
+    return parsed;
   }
 
   public setAnime(anime: Shikimori.Anime) {
@@ -191,10 +273,10 @@ export class CommentsService {
 
     PARSED_COMMENTS
       .querySelectorAll('a[href]')
-      .forEach((link: HTMLLinkElement) => link.href = this.cleanUrl(link.href))
+      .forEach((link: HTMLLinkElement) => link.href = this.cleanUrl(link.href));
     PARSED_COMMENTS
       .querySelectorAll('*[src]')
-      .forEach((resource: HTMLSourceElement) => resource.src = this.cleanUrl(resource.src))
+      .forEach((resource: HTMLSourceElement) => resource.src = this.cleanUrl(resource.src));
 
     comment.html = PARSED_COMMENTS.documentElement.innerHTML;
     return comment;
