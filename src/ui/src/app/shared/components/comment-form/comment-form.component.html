@@ -5,6 +5,7 @@
   <div id="format-tools">
     <div class="flex flex-start">
       <button (click)="bold()"
+              [disabled]="commentForm.disabled"
               class="text"
               matTooltip="Жирный"
               matTooltipPosition="above"
@@ -12,6 +13,7 @@
         <mat-icon>format_bold</mat-icon>
       </button>
       <button (click)="italic()"
+              [disabled]="commentForm.disabled"
               class="text"
               matTooltip="Курсив"
               matTooltipPosition="above"
@@ -19,6 +21,7 @@
         <mat-icon>format_italic</mat-icon>
       </button>
       <button (click)="underline()"
+              [disabled]="commentForm.disabled"
               class="text"
               matTooltip="Подчеркнутый"
               matTooltipPosition="above"
@@ -26,6 +29,7 @@
         <mat-icon>format_underlined</mat-icon>
       </button>
       <button (click)="strike()"
+              [disabled]="commentForm.disabled"
               class="text"
               matTooltip="Зачеркнутый"
               matTooltipPosition="above"
@@ -37,6 +41,7 @@
 
       <button (click)="isLinkSectionOpen ? close() : openLinkSection()"
               [color]="isLinkSectionOpen ? 'accent' : 'primary'"
+              [disabled]="commentForm.disabled"
               class="text"
               matTooltip="Вставить ссылку"
               matTooltipPosition="above"
@@ -45,6 +50,7 @@
       </button>
       <button (click)="isImageSectionOpen ? close() : openImageSection()"
               [color]="isImageSectionOpen ? 'accent' : 'primary'"
+              [disabled]="commentForm.disabled"
               class="text"
               matTooltip="Вставить картинку"
               matTooltipPosition="above"
@@ -53,6 +59,7 @@
       </button>
       <button (click)="isQuotesSectionOpen ? close() : openQuotesSection()"
               [color]="isQuotesSectionOpen ? 'accent' : 'primary'"
+              [disabled]="commentForm.disabled"
               class="text"
               matTooltip="Вставить цитату"
               matTooltipPosition="above"
@@ -60,6 +67,7 @@
         <mat-icon>format_quote</mat-icon>
       </button>
       <button (click)="spoiler()"
+              [disabled]="commentForm.disabled"
               class="text"
               matTooltip="Спойлер"
               matTooltipPosition="above"
@@ -68,6 +76,7 @@
       </button>
       <button (click)="isSmileysSectionOpen ? close() : openSmileys()"
               [color]="isSmileysSectionOpen ? 'accent' : 'primary'"
+              [disabled]="commentForm.disabled"
               class="text"
               matTooltip="Смайлик"
               matTooltipPosition="above"
@@ -348,13 +357,21 @@
                 matInput required></textarea>
       <mat-error>Комментарий не может быть пустым</mat-error>
     </mat-form-field>
-  </form>
 
-  <div class="flex flex-end">
-    <button *ngIf="commentForm.dirty"
-            (click)="togglePreview()"
-            mat-flat-button>
-      {{ isShowPreview ? 'Скрыть превью' : 'Показать превью' }}
-    </button>
-  </div>
+
+    <div class="flex flex-end">
+      <button *ngIf="commentForm.dirty"
+              (click)="togglePreview()"
+              mat-flat-button>
+        {{ isShowPreview ? 'Скрыть превью' : 'Показать превью' }}
+      </button>
+      <div class="separator"></div>
+      <button [disabled]="commentForm.invalid || commentForm.disabled"
+              [color]="commentForm.enabled && commentForm.valid ? 'accent' : 'primary'"
+              type="submit"
+              mat-flat-button>
+        Написать
+      </button>
+    </div>
+  </form>
 </div>

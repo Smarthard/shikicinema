@@ -42,35 +42,39 @@ export class CommentFormComponent implements OnInit, OnChanges {
   isSmileysSectionOpen = false;
 
   static _insertBeforeAfterCursor(textarea: HTMLTextAreaElement, before = '', after = '') {
-    let newCursorPosition = +textarea.selectionStart + before.length + after.length;
+    if (!textarea.disabled) {
+      let newCursorPosition = +textarea.selectionStart + before.length + after.length;
 
-    if (textarea.selectionStart || textarea.selectionStart === 0) {
-      const BEFORE_TEXT = textarea.value.substring(0, textarea.selectionStart);
-      const TEXT = before + textarea.value.substring(textarea.selectionStart, textarea.selectionEnd) + after;
-      const AFTER_TEXT = textarea.value.substring(textarea.selectionEnd, textarea.value.length);
+      if (textarea.selectionStart || textarea.selectionStart === 0) {
+        const BEFORE_TEXT = textarea.value.substring(0, textarea.selectionStart);
+        const TEXT = before + textarea.value.substring(textarea.selectionStart, textarea.selectionEnd) + after;
+        const AFTER_TEXT = textarea.value.substring(textarea.selectionEnd, textarea.value.length);
 
-      newCursorPosition = +textarea.selectionStart + TEXT.length;
-      textarea.value = BEFORE_TEXT + TEXT + AFTER_TEXT;
-    } else {
-      textarea.value += before + after;
+        newCursorPosition = +textarea.selectionStart + TEXT.length;
+        textarea.value = BEFORE_TEXT + TEXT + AFTER_TEXT;
+      } else {
+        textarea.value += before + after;
+      }
+
+      textarea.setSelectionRange(newCursorPosition, newCursorPosition);
     }
-
-    textarea.setSelectionRange(newCursorPosition, newCursorPosition);
   }
 
   static _insertAtCursor(textarea: HTMLTextAreaElement, text: string) {
-    const NEW_CURSOR_POSITION = +textarea.selectionStart + text.length;
+    if (!textarea.disabled) {
+      const NEW_CURSOR_POSITION = +textarea.selectionStart + text.length;
 
-    if (textarea.selectionStart || textarea.selectionStart === 0) {
-      const BEFORE_TEXT = textarea.value.substring(0, textarea.selectionStart);
-      const AFTER_TEXT = textarea.value.substring(textarea.selectionEnd, textarea.value.length);
+      if (textarea.selectionStart || textarea.selectionStart === 0) {
+        const BEFORE_TEXT = textarea.value.substring(0, textarea.selectionStart);
+        const AFTER_TEXT = textarea.value.substring(textarea.selectionEnd, textarea.value.length);
 
-      textarea.value = BEFORE_TEXT + text + AFTER_TEXT;
-    } else {
-      textarea.value += text;
+        textarea.value = BEFORE_TEXT + text + AFTER_TEXT;
+      } else {
+        textarea.value += text;
+      }
+
+      textarea.setSelectionRange(NEW_CURSOR_POSITION, NEW_CURSOR_POSITION);
     }
-
-    textarea.setSelectionRange(NEW_CURSOR_POSITION, NEW_CURSOR_POSITION);
   }
 
   constructor(private commentsService: CommentsService) { }
@@ -110,7 +114,15 @@ export class CommentFormComponent implements OnInit, OnChanges {
        Validators.required,
        Validators.minLength(1)
      ])
-   })
+   });
+
+    if (this.commentator && this.commentator.id) {
+      this.commentForm.controls.comment.setValue('');
+      this.commentForm.enable();
+    } else {
+      this.commentForm.controls.comment.setValue('Для комментирования необходимо авторизоваться');
+      this.commentForm.disable();
+    }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
