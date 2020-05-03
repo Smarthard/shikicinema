@@ -96,6 +96,7 @@ export class CommentsService {
       / (:-[DP(]) /g,
       / :-o /g,
       / :\) /g,
+      / \+_\+ /g,
       / :(.*?): /g,
 
       /\[b](.*?)\[\/b]/ig,
@@ -121,6 +122,7 @@ export class CommentsService {
       '<img class="smiley" title="$1" alt="$1" src="https://shikimori.one/images/smileys/$1.gif">',
       '<img class="smiley" title=":-o" alt=":-o" src="https://shikimori.one/images/smileys/:-o.gif">',
       '<img class="smiley" title=":)" alt=":)" src="https://shikimori.one/images/smileys/:).gif">',
+      '<img class="smiley" title="+_+" alt="+_+" src="https://shikimori.one/images/smileys/+_+.gif">',
       '<img class="smiley" title=":$1:" alt=":$1:" src="https://shikimori.one/images/smileys/:$1:.gif">',
 
       '<b>$1</b>',
