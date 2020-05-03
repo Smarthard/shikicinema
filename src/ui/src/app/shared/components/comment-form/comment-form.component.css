@@ -2,6 +2,10 @@
   width: 100%;
 }
 
+:host > div {
+  margin-bottom: 20px;
+}
+
 div.separator {
   width: 15px;
 }
