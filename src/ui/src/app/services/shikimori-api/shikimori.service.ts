@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpErrorResponse, HttpHeaders, HttpParams} from '@angular/common/http';
+import {HttpClient, HttpErrorResponse, HttpHeaders, HttpParams, HttpResponse} from '@angular/common/http';
 import {Shikimori} from '../../types/shikimori';
 import {Observable, of, throwError} from 'rxjs';
-import {catchError, exhaustMap, map} from 'rxjs/operators';
+import {catchError, exhaustMap, map, timeout} from 'rxjs/operators';
 import {environment} from '../../../environments/environment';
 
 @Injectable({
@@ -162,6 +162,14 @@ export class ShikimoriService {
           })
         );
     }
+  }
+
+  public deleteComment(id: number) {
+    return this.http.delete(`${this.SHIKIMORI_URL}/api/comments/${id}`, { observe: 'response' })
+      .pipe(
+        timeout(3000),
+        map((res: HttpResponse<any>) => res.ok)
+      );
   }
 
   public getComment(id: number) {

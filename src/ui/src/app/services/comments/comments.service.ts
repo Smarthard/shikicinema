@@ -99,6 +99,10 @@ export class CommentsService {
     }
   }
 
+  public deleteComment(id: number) {
+    return this.shikimori.deleteComment(id);
+  }
+
   parseBBComment(bbComment: string): string {
     let parsed = bbComment;
     const SEARCH = [

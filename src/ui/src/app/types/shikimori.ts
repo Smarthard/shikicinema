@@ -103,7 +103,8 @@ export namespace Shikimori {
       public isOfftopic?: boolean,
       public isSummary?: boolean,
       public canBeEdited?: boolean,
-      public user?: User
+      public user?: User,
+      public deleted?: boolean
     ) {}
 
     public get isEdited(): boolean {
