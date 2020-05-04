@@ -273,9 +273,10 @@ export class CommentFormComponent implements OnInit, OnChanges {
     this.commentsService.createComment(ANIME, EPISODE, COMMENT)
       .subscribe(
         () => {
-          this.commentForm.controls.comment.reset();
+          this.commentForm.get('comment').reset();
+          this.commentForm.get('comment').setErrors(null);
           this.commentForm.markAsUntouched();
-          this.notifications.add(new Notification(NotificationType.OK, 'Комментарий отправлен'))
+          this.notifications.add(new Notification(NotificationType.OK, 'Комментарий отправлен'));
         },
         (err) => this.notifications.add(new Notification(NotificationType.WARNING, err.message))
       );
