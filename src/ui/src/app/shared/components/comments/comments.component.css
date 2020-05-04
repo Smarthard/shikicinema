@@ -1,4 +1,8 @@
 
+#no-comments {
+  padding: 15px 10px;
+}
+
 .dark-theme :host #comments-section {
   background-color: #2e2e2e;
 }

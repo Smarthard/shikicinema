@@ -27,7 +27,10 @@
                  (reply)="reply.emit($event)"></app-comment>
   </ng-container>
   <ng-template #noComments>
-    <div class="comment text">Нет комментариев</div>
+    <div id="no-comments"
+         class="comment text">
+      Нет комментариев <app-smilley smiley=":Im dead:"></app-smilley>
+    </div>
   </ng-template>
 </div>
 
