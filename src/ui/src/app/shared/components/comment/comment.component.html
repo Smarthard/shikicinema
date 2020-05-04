@@ -59,16 +59,10 @@
             <mat-icon class="text medium red">delete</mat-icon>
           </button>
         </ng-container>
-        <div *ngIf="preview"
-             class="badge preview"
-             title="Это демонстрация комментария, который вы пишите">
-          превью
-        </div>
-        <div *ngIf="comment.isOfftopic"
-             class="badge offtop"
-             title="Комментарий не относится к теме">
-          оффтоп
-        </div>
+        <app-comment-badge *ngIf="preview"
+                           type="preview"></app-comment-badge>
+        <app-comment-badge *ngIf="comment.isOfftopic"
+                           type="offtop"></app-comment-badge>
       </div>
     </div>
     <div [innerHTML]="comment?.html | safeHtml"

@@ -46,21 +46,3 @@
 .small {
   font-size: small;
 }
-
-.badge {
-  display: inline-block;
-  cursor: default;
-  padding: 0 5px;
-}
-
-.preview {
-  color: hsl(209, 100%, 65.1%);
-  background-color: hsl(209, 100%, 90%);
-  border: 1px solid hsl(209, 100%, 40%);
-}
-
-.offtop {
-  color: hsl(334, 83.7%, 75.9%);
-  background-color: hsl(334, 83.7%, 90%);
-  border: 1px solid hsl(334, 83.7%, 60%);
-}

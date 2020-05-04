@@ -63,6 +63,7 @@ import {SafeHtmlPipe} from './shared/pipes/safe-html-pipe/safe-html.pipe';
 import {CommentFormComponent} from './shared/components/comment-form/comment-form.component';
 import {SmilleyComponent} from './shared/components/smilley/smilley.component';
 import {CommentComponent} from './shared/components/comment/comment.component';
+import {CommentBadgeComponent} from './shared/components/comment-badge/comment-badge.component';
 
 registerLocaleData(localeRu, 'ru');
 
@@ -96,7 +97,8 @@ registerLocaleData(localeRu, 'ru');
     SafeHtmlPipe,
     CommentFormComponent,
     SmilleyComponent,
-    CommentComponent
+    CommentComponent,
+    CommentBadgeComponent
   ],
   imports: [
     AppRoutingModule,
