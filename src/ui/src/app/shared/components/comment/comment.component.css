@@ -46,3 +46,8 @@
 .small {
   font-size: small;
 }
+
+.flex.flex-end {
+  align-items: center;
+  justify-items: center;
+}

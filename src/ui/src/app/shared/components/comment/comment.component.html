@@ -38,7 +38,8 @@
           <a class="shc-links">DELETED USER</a>
         </ng-template>
       </div>
-      <div *ngIf="showTooltips">
+      <div *ngIf="showTooltips"
+           class="flex flex-end">
         <a *ngIf="!preview"
            [href]="'https://shikimori.one/comments/' + comment.id"
            target="_blank"
