@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
-import {BehaviorSubject, combineLatest, iif, Observable, of, ReplaySubject} from 'rxjs';
+import {BehaviorSubject, combineLatest, iif, Observable, of, ReplaySubject, throwError} from 'rxjs';
 import {Shikimori} from '../../types/shikimori';
 import {ShikimoriService} from '../shikimori-api/shikimori.service';
-import {distinctUntilChanged, map, mergeMap, scan, shareReplay, switchMap} from 'rxjs/operators';
+import {distinctUntilChanged, map, mergeMap, scan, shareReplay, switchMap, tap} from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -27,10 +27,7 @@ export class CommentsService {
       distinctUntilChanged((a, b) => a.id === b.id)
     );
 
-  readonly episode$ = this._episodeSubject
-    .pipe(
-      distinctUntilChanged()
-    );
+  readonly episode$ = this._episodeSubject.asObservable();
 
   readonly limit$ = this._limitSubject
     .pipe(
@@ -86,6 +83,20 @@ export class CommentsService {
       this._pageSubject.next(1);
     });
     this.limit$.subscribe((limit) => this.limit = limit);
+  }
+
+  public createComment(anime: Shikimori.Anime, episode: number, comment: Shikimori.Comment): Observable<Shikimori.Comment> {
+    const ANIME_RELEASED = anime.status === 'released';
+    const COMMENTING_ONGONING_AIRED_EPISODE = anime.status === 'ongoing' && anime.episodes_aired >= episode;
+
+    if (ANIME_RELEASED || COMMENTING_ONGONING_AIRED_EPISODE) {
+      return this.shikimori.createComment(anime.id, episode, comment)
+        .pipe(
+          tap(() => this._episodeSubject.next(episode))
+        );
+    } else {
+      return throwError(new Error('Нельзя комментировать еще невышедшие серии!'))
+    }
   }
 
   parseBBComment(bbComment: string): string {

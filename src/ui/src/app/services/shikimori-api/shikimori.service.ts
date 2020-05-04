@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpErrorResponse, HttpHeaders, HttpParams} from '@angular/common/http';
 import {Shikimori} from '../../types/shikimori';
 import {Observable, of, throwError} from 'rxjs';
-import {catchError, map} from 'rxjs/operators';
+import {catchError, exhaustMap, map} from 'rxjs/operators';
 import {environment} from '../../../environments/environment';
 
 @Injectable({
@@ -10,7 +10,7 @@ import {environment} from '../../../environments/environment';
 })
 export class ShikimoriService {
 
-  private SHIKIMORI_URL: string = 'https://shikimori.one';
+  private SHIKIMORI_URL = 'https://shikimori.one';
 
   constructor(
     private http: HttpClient
@@ -67,8 +67,9 @@ export class ShikimoriService {
     return this.http.get<Shikimori.Anime>(`${this.SHIKIMORI_URL}/api/animes/${animeId}`);
   }
 
-  public getAnimeTopics(animeId: number, kind?: string, episode?: number): Observable<Shikimori.ITopic[]> {
+  public getAnimeTopics(animeId: number, kind?: string, episode?: number, revalidate = false): Observable<Shikimori.ITopic[]> {
     let params = new HttpParams();
+    let headers = new HttpHeaders();
 
     if (kind) {
       params = params.set('kind', kind);
@@ -78,7 +79,89 @@ export class ShikimoriService {
       params = params.set('episode', `${episode}`);
     }
 
-    return this.http.get<Shikimori.ITopic[]>(`${this.SHIKIMORI_URL}/api/animes/${animeId}/topics`, { params });
+    if (revalidate) {
+      headers = headers
+        .set('Cache-Control', 'no-cache, no-store, must-revalidate')
+        .set('Pragma', 'no-cache')
+    }
+
+    return this.http.get<Shikimori.ITopic[]>(`${this.SHIKIMORI_URL}/api/animes/${animeId}/topics`, { params, headers });
+  }
+
+  private _createComment(comment: Shikimori.IComment): Observable<Shikimori.Comment> {
+    return this.http.post<Shikimori.IComment>(`${this.SHIKIMORI_URL}/api/comments`, { comment })
+      .pipe(
+        map((c) => new Shikimori.Comment(
+          c.id,
+          c.commentable_id,
+          c.commentable_type,
+          c.body,
+          c.html_body,
+          new Date(Date.parse(c.created_at)),
+          new Date(Date.parse(c.updated_at)),
+          c.is_offtopic,
+          c.is_summary,
+          c.can_be_edited,
+          new Shikimori.User(c.user)
+        ))
+      );
+  }
+
+  public createEpisodeTopic(notification: Shikimori.IEpisodeNotification) {
+    return this.http.post<Shikimori.IEpisodeNotificationResponse>(`${this.SHIKIMORI_URL}/api/v2/episode_notifications`, notification);
+  }
+
+  public createComment(animeId: number, episode: number, comment: Shikimori.Comment): Observable<Shikimori.Comment> {
+    const EPISODE_NOTIFICATION_BODY: Shikimori.IEpisodeNotification = {
+      episode_notification: {
+        aired_at: new Date(),
+        anime_id: animeId,
+        is_anime365: '0',
+        is_fandub: '0',
+        is_raw: '1',
+        is_subtitles: '0',
+        episode
+      },
+      token: environment.EPISODE_NOTIFICATION_TOKEN
+    }
+
+    if (comment.commentableId) {
+      return this._createComment({
+        body: comment.body,
+        commentable_id: comment.commentableId,
+        commentable_type: comment.commentableType,
+        is_offtopic: comment.isOfftopic,
+        is_summary: comment.isSummary
+      });
+    } else {
+      return this.getAnimeTopics(animeId, 'episode', episode, true)
+        .pipe(
+          exhaustMap((topics) => {
+            if (topics && topics[0] && !!topics[0].id) {
+              // if topic created before comment creation
+              return this._createComment({
+                body: comment.body,
+                commentable_id: topics[0].id,
+                commentable_type: comment.commentableType,
+                is_offtopic: comment.isOfftopic,
+                is_summary: comment.isSummary
+              });
+            } else {
+              // else create topic and post comment
+              return this.createEpisodeTopic(EPISODE_NOTIFICATION_BODY)
+                .pipe(
+                  exhaustMap((topic) => this._createComment({
+                    body: comment.body,
+                    commentable_id: topic.topic_id,
+                    commentable_type: comment.commentableType,
+                    is_offtopic: comment.isOfftopic,
+                    is_summary: comment.isSummary
+                  }))
+                );
+            }
+          })
+        );
+    }
   }
 
   public getComment(id: number) {
