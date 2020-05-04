@@ -53,6 +53,12 @@
                 mat-icon-button>
           <mat-icon class="text medium">reply</mat-icon>
         </button>
+        <ng-container *ngIf="comment.canBeEdited">
+          <button (click)="delete.emit(comment)"
+                  mat-icon-button>
+            <mat-icon class="text medium red">delete</mat-icon>
+          </button>
+        </ng-container>
         <div *ngIf="preview"
              class="badge preview"
              title="Это демонстрация комментария, который вы пишите">

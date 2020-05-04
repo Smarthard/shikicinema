@@ -31,6 +31,10 @@
   background-color: transparent;
 }
 
+.red {
+  color: orangered;
+}
+
 .medium {
   font-size: medium;
 }

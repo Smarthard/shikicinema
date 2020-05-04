@@ -23,6 +23,9 @@ export class CommentComponent {
   @Output()
   reply = new EventEmitter<string>();
 
+  @Output()
+  delete = new EventEmitter<Shikimori.Comment>()
+
   constructor() {}
 
   userExists(nickname: string): boolean {

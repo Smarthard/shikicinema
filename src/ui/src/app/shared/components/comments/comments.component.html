@@ -1,5 +1,5 @@
 <div id="comments-section">
-  <ng-container *ngIf="comments?.length > 0; else noComments">
+  <ng-container *ngIf="anyVisibleComment; else noComments">
     <button *ngIf="comments?.length >= newCommentsCount"
             (click)="hasNextPage ? nextPage.emit() : toggleComments()"
             class="max-width text"
@@ -21,6 +21,8 @@
           trackBy: trackComment"
                  [id]="'comment-' + comment.id"
                  [comment]="comment"
+                 [class.hidden]="deletedCommentsIds.has(comment.id)"
+                 (delete)="delete($event)"
                  (quote)="quote.emit($event)"
                  (reply)="reply.emit($event)"></app-comment>
   </ng-container>

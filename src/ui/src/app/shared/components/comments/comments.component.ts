@@ -2,6 +2,8 @@ import {AfterViewChecked, Component, ElementRef, EventEmitter, Input, Output} fr
 import {Shikimori} from '../../../types/shikimori';
 import {Bubble} from 'src/app/types/bubble';
 import {CommentsService} from '../../../services/comments/comments.service';
+import {NotificationsService} from '../../../services/notifications/notifications.service';
+import {Notification, NotificationType} from '../../../types/notification';
 import Timeout = NodeJS.Timeout;
 
 @Component({
@@ -39,10 +41,12 @@ export class CommentsComponent implements AfterViewChecked {
   bubbledCommentsCache = new Map<number, Bubble<Shikimori.Comment>>();
   bubbledInTimeout: Timeout;
   bubbledOutTimeout: Timeout;
+  deletedCommentsIds = new Set<number>();
 
   constructor(
     private _comments: CommentsService,
-    private _elementRef: ElementRef
+    private _elementRef: ElementRef,
+    private _notifications: NotificationsService
   ) {}
 
   ngAfterViewChecked(): void {
@@ -87,6 +91,25 @@ export class CommentsComponent implements AfterViewChecked {
       this.bubbledComments.push(bubble);
       this.bubbledCommentsCache.set(bubble.data.id, bubble);
     }
+  }
+
+  get anyVisibleComment() {
+    return this.comments.length > 0 && this.comments.some((c) => !c.deleted);
+  }
+
+  delete(comment: Shikimori.Comment) {
+    this._comments.deleteComment(comment.id)
+      .subscribe(
+        (deleted) => {
+          const NOTIFICATION = deleted
+            ? new Notification(NotificationType.OK, 'Комментарий удалён')
+            : new Notification(NotificationType.WARNING, 'Комментарий не был удалён');
+
+          this.deletedCommentsIds.add(comment.id);
+          this._notifications.add(NOTIFICATION);
+        },
+        (err) => this._notifications.add(new Notification(NotificationType.ERROR, 'Ошибка при удалении комментария', err))
+      )
   }
 
   toggleSpoiler(element: Element) {
@@ -207,7 +230,6 @@ export class CommentsComponent implements AfterViewChecked {
   }
 
   openImg(src: string) {
-    console.debug('???', `'${src}'`);
     document.body.style.overflow = 'hidden';
     this.imgLink = src;
   }
