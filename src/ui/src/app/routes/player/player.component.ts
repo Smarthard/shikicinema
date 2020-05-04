@@ -224,6 +224,7 @@ export class PlayerComponent implements OnInit, OnDestroy {
 
   async changeEpisode(episode: number | string) {
     if (episode != '') {
+      this.episodeSubject.next(+episode);
       await this.router.navigate([`../${episode}`], { relativeTo:  this.route });
     }
   }
