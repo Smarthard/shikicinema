@@ -49,6 +49,7 @@
 
 .badge {
   display: inline-block;
+  cursor: default;
   padding: 0 5px;
 }
 
