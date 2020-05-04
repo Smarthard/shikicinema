@@ -349,7 +349,8 @@
       </div>
     </ng-container>
   </div>
-  <form [formGroup]="commentForm">
+  <form [formGroup]="commentForm"
+        (ngSubmit)="onCommentSubmit()">
     <mat-form-field class="textarea">
       <textarea #userComment
                 (input)="resize()"

@@ -184,7 +184,9 @@
                   [hasNextPage]="commentsService.hasNextPage"
                   [newCommentsCount]="commentsService.pageSize"
                   [totalCommentsRemaining]="commentsService.commentsRemaining"></app-comments>
-    <app-comment-form [commentator]="whoami$ | async"
+    <app-comment-form [anime]="anime$ | async"
+                      [episode]="episode$ | async"
+                      [commentator]="whoami$ | async"
                       [quote]="quotes$ | async"
                       [reply]="replies$ | async"
                       [topic]="commentsService.topic$ | async"

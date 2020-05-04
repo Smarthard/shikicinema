@@ -2,6 +2,8 @@ import {Component, ElementRef, Input, OnChanges, OnInit, SimpleChanges, ViewChil
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {Shikimori} from '../../../types/shikimori';
 import {CommentsService} from '../../../services/comments/comments.service';
+import {NotificationsService} from '../../../services/notifications/notifications.service';
+import {Notification, NotificationType} from '../../../types/notification';
 
 @Component({
   selector: 'app-comment-form',
@@ -11,7 +13,13 @@ import {CommentsService} from '../../../services/comments/comments.service';
 export class CommentFormComponent implements OnInit, OnChanges {
 
   @Input()
+  anime: Shikimori.Anime;
+
+  @Input()
   commentator: Shikimori.User;
+
+  @Input()
+  episode: number;
 
   @Input()
   users: string[];
@@ -77,7 +85,10 @@ export class CommentFormComponent implements OnInit, OnChanges {
     }
   }
 
-  constructor(private commentsService: CommentsService) { }
+  constructor(
+    private commentsService: CommentsService,
+    private notifications: NotificationsService
+  ) { }
 
   private _closeAllSections() {
     this.isImageSectionOpen = false;
@@ -223,7 +234,7 @@ export class CommentFormComponent implements OnInit, OnChanges {
 
     return new Shikimori.Comment(
       -1000,
-      this.topic.id,
+      this.topic?.id || null,
       'Topic',
       COMMENT,
       PARSED_COMMENT,
@@ -234,6 +245,35 @@ export class CommentFormComponent implements OnInit, OnChanges {
       true,
       this.commentator
     );
+  }
+
+  onCommentSubmit() {
+    const FORM = this.commentForm.value;
+    const ANIME = this.anime;
+    const EPISODE = this.episode;
+    const COMMENT: Shikimori.Comment = new Shikimori.Comment(
+      null,
+      this.topic?.id || null,
+      'Topic',
+      FORM.comment,
+      null,
+      new Date(),
+      new Date(),
+      false,
+      false,
+      true,
+      this.commentator
+    );
+
+    this.commentsService.createComment(ANIME, EPISODE, COMMENT)
+      .subscribe(
+        () => {
+          this.commentForm.controls.comment.reset();
+          this.commentForm.markAsUntouched();
+          this.notifications.add(new Notification(NotificationType.OK, 'Комментарий отправлен'))
+        },
+        (err) => this.notifications.add(new Notification(NotificationType.WARNING, err.message))
+      );
   }
 
   togglePreview() {
