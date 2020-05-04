@@ -353,7 +353,7 @@
         (ngSubmit)="onCommentSubmit()">
     <mat-form-field class="textarea">
       <textarea #userComment
-                (input)="resize()"
+                (input)="updateCommentForm()"
                 rows="10"
                 formControlName="comment"
                 matInput required></textarea>
@@ -364,6 +364,7 @@
     <div class="flex flex-end">
       <button *ngIf="commentForm.dirty"
               (click)="togglePreview()"
+              type="button"
               mat-flat-button>
         {{ isShowPreview ? 'Скрыть превью' : 'Показать превью' }}
       </button>

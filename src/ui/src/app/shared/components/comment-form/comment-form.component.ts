@@ -139,23 +139,23 @@ export class CommentFormComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes?.reply?.currentValue && this?._textareaRef) {
       CommentFormComponent._insertAtCursor(this._textareaRef.nativeElement, this.reply);
-      this.resize();
+      this.updateCommentForm();
     }
 
     if (changes?.quote?.currentValue && this?._textareaRef) {
       CommentFormComponent._insertAtCursor(this._textareaRef.nativeElement, this.quote);
-      this.resize();
+      this.updateCommentForm();
     }
   }
 
   addSmiley(smiley: string) {
     CommentFormComponent._insertAtCursor(this._textareaRef.nativeElement, ` ${smiley} `);
-    this.resize();
+    this.updateCommentForm();
   }
 
   bold() {
     CommentFormComponent._insertBeforeAfterCursor(this._textareaRef.nativeElement,'[b]', '[/b]');
-    this.resize();
+    this.updateCommentForm();
   }
 
   close() {
@@ -165,13 +165,13 @@ export class CommentFormComponent implements OnInit, OnChanges {
   image(form: { imageSrc: string }) {
     if (form.imageSrc) {
       CommentFormComponent._insertAtCursor(this._textareaRef.nativeElement, `[img]${form.imageSrc}[/img]`);
-      this.resize();
+      this.updateCommentForm();
     }
   }
 
   italic() {
     CommentFormComponent._insertBeforeAfterCursor(this._textareaRef.nativeElement, '[i]', '[/i]');
-    this.resize();
+    this.updateCommentForm();
   }
 
   link(form: { href: string, name: string }) {
@@ -183,7 +183,7 @@ export class CommentFormComponent implements OnInit, OnChanges {
       }
 
       CommentFormComponent._insertAtCursor(this._textareaRef.nativeElement, `[url=${form.href}]${form.name}[/url]`);
-      this.resize();
+      this.updateCommentForm();
     }
   }
 
@@ -209,23 +209,24 @@ export class CommentFormComponent implements OnInit, OnChanges {
 
   addQuote(form: { nickname: string }) {
     CommentFormComponent._insertAtCursor(this._textareaRef.nativeElement, `[quote=${form.nickname}][/quote]`);
-    this.resize();
+    this.updateCommentForm();
   }
 
-  resize() {
+  updateCommentForm() {
     this._textareaRef.nativeElement.style.height = 'auto';
     this._textareaRef.nativeElement.style.height = `${this._textareaRef.nativeElement.scrollHeight}px`;
     this.bbComment = this._textareaRef.nativeElement.value;
+    this.commentForm.controls.comment.setValue(this.bbComment);
   }
 
   strike() {
     CommentFormComponent._insertBeforeAfterCursor(this._textareaRef.nativeElement, '[s]', '[/s]');
-    this.resize();
+    this.updateCommentForm();
   }
 
   spoiler() {
     CommentFormComponent._insertBeforeAfterCursor(this._textareaRef.nativeElement, '[spoiler=спойлер]', '[/spoiler]');
-    this.resize();
+    this.updateCommentForm();
   }
 
   comment(bbcode: string) {
@@ -277,16 +278,12 @@ export class CommentFormComponent implements OnInit, OnChanges {
   }
 
   togglePreview() {
-    if (!this.isShowPreview) {
-      this.bbComment = this._textareaRef.nativeElement.value;
-    }
-
     this.isShowPreview = !this.isShowPreview;
   }
 
   underline() {
     CommentFormComponent._insertBeforeAfterCursor(this._textareaRef.nativeElement, '[u]', '[/u]');
-    this.resize();
+    this.updateCommentForm();
   }
 
 }
