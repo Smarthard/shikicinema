@@ -246,7 +246,7 @@ export class CommentFormComponent implements OnInit, OnChanges {
       PARSED_COMMENT,
       new Date(),
       new Date(),
-      false,
+      this.isOfftop,
       false,
       true,
       this.commentator
