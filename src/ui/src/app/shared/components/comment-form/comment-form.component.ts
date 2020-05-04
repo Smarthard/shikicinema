@@ -36,6 +36,9 @@ export class CommentFormComponent implements OnInit, OnChanges {
   @ViewChild('userComment', { static: true })
   _textareaRef: ElementRef<HTMLTextAreaElement>;
 
+  @ViewChild('commentFormElement', { static: true })
+  _commentFormRef: ElementRef<HTMLFormElement>;
+
   bbComment: string;
 
   addLinkForm: FormGroup;
@@ -217,6 +220,7 @@ export class CommentFormComponent implements OnInit, OnChanges {
     this._textareaRef.nativeElement.style.height = `${this._textareaRef.nativeElement.scrollHeight}px`;
     this.bbComment = this._textareaRef.nativeElement.value;
     this.commentForm.controls.comment.setValue(this.bbComment);
+    this._commentFormRef.nativeElement.scrollIntoView({ block: 'end' });
   }
 
   strike() {

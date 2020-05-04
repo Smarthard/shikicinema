@@ -350,7 +350,8 @@
     </ng-container>
   </div>
   <form [formGroup]="commentForm"
-        (ngSubmit)="onCommentSubmit()">
+        (ngSubmit)="onCommentSubmit()"
+        #commentFormElement>
     <mat-form-field class="textarea">
       <textarea #userComment
                 (input)="updateCommentForm()"
