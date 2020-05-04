@@ -51,6 +51,7 @@ export class CommentFormComponent implements OnInit, OnChanges {
   isShowPreview = true;
   isQuotesSectionOpen = false;
   isSmileysSectionOpen = false;
+  isOfftop = false;
 
   static _insertBeforeAfterCursor(textarea: HTMLTextAreaElement, before = '', after = '') {
     if (!textarea.disabled) {
@@ -264,7 +265,7 @@ export class CommentFormComponent implements OnInit, OnChanges {
       null,
       new Date(),
       new Date(),
-      false,
+      this.isOfftop,
       false,
       true,
       this.commentator
@@ -284,6 +285,10 @@ export class CommentFormComponent implements OnInit, OnChanges {
 
   togglePreview() {
     this.isShowPreview = !this.isShowPreview;
+  }
+
+  toggleOfftop() {
+    this.isOfftop = !this.isOfftop;
   }
 
   underline() {

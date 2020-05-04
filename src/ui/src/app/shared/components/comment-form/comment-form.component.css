@@ -46,6 +46,10 @@ app-comment {
   width: 45%;
 }
 
+#format-tools-buttons *:last-child {
+  margin-left: auto;
+}
+
 .bb-helpers {
   align-items: center;
   margin-left: 10px;

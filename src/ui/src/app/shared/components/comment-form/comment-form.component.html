@@ -3,7 +3,8 @@
              preview="true"></app-comment>
 <div>
   <div id="format-tools">
-    <div class="flex flex-start">
+    <div id="format-tools-buttons"
+         class="flex flex-start">
       <button (click)="bold()"
               [disabled]="commentForm.disabled"
               class="text"
@@ -84,6 +85,10 @@
               mat-icon-button>
         <mat-icon>sentiment_satisfied_alt</mat-icon>
       </button>
+      <app-comment-badge type="offtop"
+                         (click)="toggleOfftop()"
+                         [toggleable]="true"
+                         [on]="isOfftop"></app-comment-badge>
     </div>
 
     <!-- LINK INSERTION -->
