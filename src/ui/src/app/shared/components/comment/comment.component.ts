@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {AfterViewChecked, Component, ElementRef, EventEmitter, Input, Output} from '@angular/core';
 import {Shikimori} from '../../../types/shikimori';
 
 @Component({
@@ -6,7 +6,7 @@ import {Shikimori} from '../../../types/shikimori';
   templateUrl: './comment.component.html',
   styleUrls: ['./comment.component.css']
 })
-export class CommentComponent {
+export class CommentComponent implements AfterViewChecked {
 
   @Input()
   comment: Shikimori.Comment;
@@ -26,7 +26,30 @@ export class CommentComponent {
   @Output()
   delete = new EventEmitter<Shikimori.Comment>()
 
-  constructor() {}
+  constructor(private _elementRef: ElementRef) {}
+
+  ngAfterViewChecked() {
+    const SPOILERS = this._elementRef.nativeElement.querySelectorAll('.shc-spoiler');
+
+    SPOILERS.forEach((spoiler) => spoiler.onclick = (evt) => {
+      evt.preventDefault();
+      evt.stopPropagation();
+      this.toggleSpoiler(spoiler);
+    });
+  }
+
+  toggleSpoiler(element: Element) {
+    const label = element.querySelector('label');
+    const content = element.querySelector('div.content') as HTMLDivElement;
+
+    if (label.style.display !== 'none') {
+      label.style.display = 'none';
+      content.style.display = 'inline';
+    } else {
+      label.style.display = 'inline';
+      content.style.display = 'none';
+    }
+  }
 
   userExists(nickname: string): boolean {
     return !!nickname;

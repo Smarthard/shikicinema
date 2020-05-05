@@ -112,19 +112,6 @@ export class CommentsComponent implements AfterViewChecked {
       )
   }
 
-  toggleSpoiler(element: Element) {
-    const label = element.querySelector('label');
-    const content = element.querySelector('div.content') as HTMLDivElement;
-
-    if (label.style.display !== 'none') {
-      label.style.display = 'none';
-      content.style.display = 'inline';
-    } else {
-      label.style.display = 'inline';
-      content.style.display = 'none';
-    }
-  }
-
   toggleComments() {
     this.commentsHidden = !this.commentsHidden;
   }
@@ -138,15 +125,8 @@ export class CommentsComponent implements AfterViewChecked {
   }
 
   updateEventListeners() {
-    const SPOILERS = this._elementRef.nativeElement.querySelectorAll('.shc-spoiler');
     const IMAGES = this._elementRef.nativeElement.querySelectorAll('.shc-image img');
     const BUBBLED_COMMENTS = this._elementRef.nativeElement.querySelectorAll('a.shc-links.bubbled');
-
-    SPOILERS.forEach((spoiler) => spoiler.onclick = (evt) => {
-      evt.preventDefault();
-      evt.stopPropagation();
-      this.toggleSpoiler(spoiler);
-    });
 
     IMAGES.forEach((img) => {
       const PARENT = img.parentElement;

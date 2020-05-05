@@ -119,11 +119,11 @@ export class CommentsService {
       /\[u](.*?)\[\/u]/ig,
       /\[s](.*?)\[\/s]/ig,
 
+      /\[spoiler='?(.*?)'?](.*)\[\/spoiler]/ig,
+
       /\[url='?(.*?)'?](.*?)\[\/url]/ig,
 
       /\[img](.*?)\[\/img]/ig,
-
-      /\[spoiler='?(.*?)'?](.*?)\[\/spoiler]/ig,
 
       /\[comment='?(.*?)'?](.*?)\[\/comment]/ig,
 
@@ -145,12 +145,6 @@ export class CommentsService {
       '<u>$1</u>',
       '<s>$1</s>',
 
-      '<a class="shc-links" href="$1">$2</a>',
-
-      `<a class="shc-image">
-        <img src="$1" alt="$1">
-      </a>`,
-
       `<div class="shc-spoiler" onclick="">
         <label>$1</label>
         <div class="content">
@@ -159,6 +153,12 @@ export class CommentsService {
             <div class="after"></div>
         </div>
       </div>`,
+
+      '<a class="shc-links" href="$1">$2</a>',
+
+      `<a class="shc-image">
+        <img src="$1" alt="$1">
+      </a>`,
 
       '<a class="shc-links bubbled" href="https://shikimori.one/comments/$1">@$2</a>',
 
@@ -181,7 +181,9 @@ export class CommentsService {
     ];
 
     for (let i = 0; i < SEARCH.length; i++) {
-      parsed = parsed.replace(SEARCH[i], REPLACE[i]);
+      while (SEARCH[i].test(parsed)) {
+        parsed = parsed.replace(SEARCH[i], REPLACE[i]);
+      }
     }
 
     return parsed;
