@@ -46,10 +46,11 @@
   ],
 
   "permissions": [
-    "*://shikimori.org/*",
-    "*://shikimori.one/*",
-    "*://smarthard.net/*",
-    "*://kodikapi.com/*",
+    "https://shikimori.org/*",
+    "https://shikimori.one/*",
+    "https://smarthard.net/*",
+    "https://kodikapi.com/*",
+    "https://smotret-anime.online/*",
     "storage",
     "unlimitedStorage",
     "tabs"
