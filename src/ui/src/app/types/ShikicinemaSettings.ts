@@ -1,5 +1,7 @@
 export class ShikicinemaSettings {
 
+  public displayComments = true;
+  public displayCommentPreview = true;
   public oldFagApproves: boolean = true;
   public episodeListType: EpisodesListTypes = EpisodesListTypes.SCROLLABLE;
   public extraButtons: boolean = false;

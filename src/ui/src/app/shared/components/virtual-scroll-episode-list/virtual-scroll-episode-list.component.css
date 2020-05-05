@@ -1,7 +1,6 @@
 
 cdk-virtual-scroll-viewport {
   margin: 10px 0 30px 30px;
-  height: 930px; /* 31px * 30 visible episodes */
   overflow-x: hidden;
   overflow-y: scroll;
   scrollbar-width: none; /* Firefox 64+, mobile 68+ */

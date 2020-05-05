@@ -177,6 +177,23 @@
         </div>
       </ng-container>
     </div>
+    <ng-container *ngIf="settings.displayComments">
+      <app-comments (nextPage)="nextCommentsPage()"
+                    (quote)="addQuote($event)"
+                    (reply)="addReply($event)"
+                    [comments]="commentsService.comments$ | async"
+                    [hasNextPage]="commentsService.hasNextPage"
+                    [newCommentsCount]="commentsService.pageSize"
+                    [totalCommentsRemaining]="commentsService.commentsRemaining"></app-comments>
+      <app-comment-form [anime]="anime$ | async"
+                        [commentator]="whoami$ | async"
+                        [episode]="episode$ | async"
+                        [preview]="settings.displayCommentPreview"
+                        [quote]="quotes$ | async"
+                        [reply]="replies$ | async"
+                        [topic]="commentsService.topic$ | async"
+                        [users]="commentsService.users$ | async"></app-comment-form>
+    </ng-container>
 
   </ng-container>
 

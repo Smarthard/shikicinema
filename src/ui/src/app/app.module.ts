@@ -1,5 +1,6 @@
-import {NgModule} from '@angular/core';
-import {CommonModule, HashLocationStrategy, LocationStrategy} from '@angular/common';
+import {LOCALE_ID, NgModule} from '@angular/core';
+import localeRu from '@angular/common/locales/ru';
+import {CommonModule, HashLocationStrategy, LocationStrategy, registerLocaleData} from '@angular/common';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {NgxResponsiveEmbedModule} from 'ngx-responsive-embed';
 
@@ -10,7 +11,7 @@ import {VideoPlayerComponent} from './shared/components/video-player/video-playe
 import {SafeVideoUrlPipe} from './shared/pipes/safe-video-url-pipe/safe-video-url.pipe';
 import {ShikivideosService} from './services/shikivideos-api/shikivideos.service';
 import {BrowserModule} from '@angular/platform-browser';
-import {FormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {VideoListComponent} from './shared/components/video-list/video-list.component';
 import {EpisodesListComponent} from './shared/components/episodes-list/episodes-list.component';
 import {KindRemoteComponent} from './shared/components/kind-remote/kind-remote.component';
@@ -56,6 +57,15 @@ import {MatBadgeModule} from '@angular/material/badge';
 import {NotificationsBadgeComponent} from './shared/components/notifications-badge/notifications-badge.component';
 import {MatDividerModule} from '@angular/material/divider';
 import {RemoteNotificationsService} from './services/remote-notifications/remote-notifications.service';
+import {CommentsComponent} from './shared/components/comments/comments.component';
+import {BubbleViewComponent} from './shared/components/bubble-view/bubble-view.component';
+import {SafeHtmlPipe} from './shared/pipes/safe-html-pipe/safe-html.pipe';
+import {CommentFormComponent} from './shared/components/comment-form/comment-form.component';
+import {SmilleyComponent} from './shared/components/smilley/smilley.component';
+import {CommentComponent} from './shared/components/comment/comment.component';
+import {CommentBadgeComponent} from './shared/components/comment-badge/comment-badge.component';
+
+registerLocaleData(localeRu, 'ru');
 
 @NgModule({
   declarations: [
@@ -81,7 +91,14 @@ import {RemoteNotificationsService} from './services/remote-notifications/remote
     ButtonScrollEpisodeListComponent,
     OldfagEpisodesListSkeletonComponent,
     HeaderComponent,
-    NotificationsBadgeComponent
+    NotificationsBadgeComponent,
+    CommentsComponent,
+    BubbleViewComponent,
+    SafeHtmlPipe,
+    CommentFormComponent,
+    SmilleyComponent,
+    CommentComponent,
+    CommentBadgeComponent
   ],
   imports: [
     AppRoutingModule,
@@ -111,12 +128,14 @@ import {RemoteNotificationsService} from './services/remote-notifications/remote
     ScrollingModule,
     NgxSkeletonLoaderModule,
     MatBadgeModule,
-    MatDividerModule
+    MatDividerModule,
+    ReactiveFormsModule
   ],
   providers: [
     { provide: LocationStrategy, useClass: HashLocationStrategy },
     { provide: HTTP_INTERCEPTORS, useClass: ShikivideosRequestsInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ShikimoriRequestsInterceptor, multi: true },
+    { provide: LOCALE_ID, useValue: 'ru' },
     ShikivideosService,
     ShikimoriService,
     RemoteNotificationsService

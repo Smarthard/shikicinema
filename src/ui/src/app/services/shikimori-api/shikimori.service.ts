@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
+import {HttpClient, HttpErrorResponse, HttpHeaders, HttpParams, HttpResponse} from '@angular/common/http';
 import {Shikimori} from '../../types/shikimori';
-import {Observable, of} from 'rxjs';
-import {catchError, map} from 'rxjs/operators';
+import {Observable, of, throwError} from 'rxjs';
+import {catchError, exhaustMap, map, timeout} from 'rxjs/operators';
 import {environment} from '../../../environments/environment';
 
 @Injectable({
@@ -10,7 +10,7 @@ import {environment} from '../../../environments/environment';
 })
 export class ShikimoriService {
 
-  private SHIKIMORI_URL: string = 'https://shikimori.one';
+  private SHIKIMORI_URL = 'https://shikimori.one';
 
   constructor(
     private http: HttpClient
@@ -53,11 +53,179 @@ export class ShikimoriService {
       params = new HttpParams().set('is_nickname', '1');
     }
 
-    return this.http.get<Shikimori.User>(`${this.SHIKIMORI_URL}/api/users/${user}`, { params });
+    return this.http.get<Shikimori.User>(`${this.SHIKIMORI_URL}/api/users/${user}`, { params })
+      .pipe(
+        catchError((err: HttpErrorResponse) => {
+          const deletedOrRenamedUser = new Shikimori.User({ avatar: 'https://shikimori.one/favicon.ico', nickname: user});
+
+          return err.status === 404 ? of(deletedOrRenamedUser) : throwError(err)
+        })
+      );
   }
 
   public getAnime(animeId: number): Observable<Shikimori.Anime> {
     return this.http.get<Shikimori.Anime>(`${this.SHIKIMORI_URL}/api/animes/${animeId}`);
+  }
+
+  public getAnimeTopics(animeId: number, kind?: string, episode?: number, revalidate = false): Observable<Shikimori.ITopic[]> {
+    let params = new HttpParams();
+    let headers = new HttpHeaders();
+
+    if (kind) {
+      params = params.set('kind', kind);
+    }
+
+    if (episode) {
+      params = params.set('episode', `${episode}`);
+    }
+
+    if (revalidate) {
+      headers = headers
+        .set('Cache-Control', 'no-cache, no-store, must-revalidate')
+        .set('Pragma', 'no-cache')
+    }
+
+    return this.http.get<Shikimori.ITopic[]>(`${this.SHIKIMORI_URL}/api/animes/${animeId}/topics`, { params, headers });
+  }
+
+  private _createComment(comment: Shikimori.IComment): Observable<Shikimori.Comment> {
+    return this.http.post<Shikimori.IComment>(`${this.SHIKIMORI_URL}/api/comments`, { comment })
+      .pipe(
+        map((c) => new Shikimori.Comment(
+          c.id,
+          c.commentable_id,
+          c.commentable_type,
+          c.body,
+          c.html_body,
+          new Date(Date.parse(c.created_at)),
+          new Date(Date.parse(c.updated_at)),
+          c.is_offtopic,
+          c.is_summary,
+          c.can_be_edited,
+          new Shikimori.User(c.user)
+        ))
+      );
+  }
+
+  public createEpisodeTopic(notification: Shikimori.IEpisodeNotification) {
+    return this.http.post<Shikimori.IEpisodeNotificationResponse>(`${this.SHIKIMORI_URL}/api/v2/episode_notifications`, notification);
+  }
+
+  public createComment(animeId: number, episode: number, comment: Shikimori.Comment): Observable<Shikimori.Comment> {
+    const EPISODE_NOTIFICATION_BODY: Shikimori.IEpisodeNotification = {
+      episode_notification: {
+        aired_at: new Date(),
+        anime_id: animeId,
+        is_anime365: '0',
+        is_fandub: '0',
+        is_raw: '1',
+        is_subtitles: '0',
+        episode
+      },
+      token: environment.EPISODE_NOTIFICATION_TOKEN
+    }
+
+    if (comment.commentableId) {
+      return this._createComment({
+        body: comment.body,
+        commentable_id: comment.commentableId,
+        commentable_type: comment.commentableType,
+        is_offtopic: comment.isOfftopic,
+        is_summary: comment.isSummary
+      });
+    } else {
+      return this.getAnimeTopics(animeId, 'episode', episode, true)
+        .pipe(
+          exhaustMap((topics) => {
+            if (topics && topics[0] && !!topics[0].id) {
+              // if topic created before comment creation
+              return this._createComment({
+                body: comment.body,
+                commentable_id: topics[0].id,
+                commentable_type: comment.commentableType,
+                is_offtopic: comment.isOfftopic,
+                is_summary: comment.isSummary
+              });
+            } else {
+              // else create topic and post comment
+              return this.createEpisodeTopic(EPISODE_NOTIFICATION_BODY)
+                .pipe(
+                  exhaustMap((topic) => this._createComment({
+                    body: comment.body,
+                    commentable_id: topic.topic_id,
+                    commentable_type: comment.commentableType,
+                    is_offtopic: comment.isOfftopic,
+                    is_summary: comment.isSummary
+                  }))
+                );
+            }
+          })
+        );
+    }
+  }
+
+  public deleteComment(id: number) {
+    return this.http.delete(`${this.SHIKIMORI_URL}/api/comments/${id}`, { observe: 'response' })
+      .pipe(
+        timeout(3000),
+        map((res: HttpResponse<any>) => res.ok)
+      );
+  }
+
+  public getComment(id: number) {
+    return this.http.get<Shikimori.IComment>(`${this.SHIKIMORI_URL}/api/comments/${id}`)
+      .pipe(
+        map((c) => new Shikimori.Comment(
+          c.id,
+          c.commentable_id,
+          c.commentable_type,
+          c.body,
+          c.html_body,
+          new Date(Date.parse(c.created_at)),
+          new Date(Date.parse(c.updated_at)),
+          c.is_offtopic,
+          c.is_summary,
+          c.can_be_edited,
+          new Shikimori.User(c.user)
+        ))
+      );
+  }
+
+  public getComments(
+    commentableId: number, type: Shikimori.CommentableType, page: number = 1, limit: number = 20, desc?: '0' | '1', isSumary?: boolean
+  ) {
+    let params = new HttpParams()
+      .set('commentable_id', `${commentableId}`)
+      .set('commentable_type', `${type}`)
+      .set('page', `${page}`)
+      .set('limit', `${limit}`);
+
+    if (desc) {
+      params = params.set('desc', desc)
+    }
+
+    if (isSumary) {
+      params = params.set('is_summary', `${isSumary}`);
+    }
+
+    return this.http.get<Shikimori.IComment[]>(`${this.SHIKIMORI_URL}/api/comments`, { params })
+      .pipe(
+        map((comments) => comments
+          .map(c => new Shikimori.Comment(
+            c.id,
+            c.commentable_id,
+            c.commentable_type,
+            c.body,
+            c.html_body,
+            new Date(Date.parse(c.created_at)),
+            new Date(Date.parse(c.updated_at)),
+            c.is_offtopic,
+            c.is_summary,
+            c.can_be_edited,
+            new Shikimori.User(c.user)
+          ))
+        )
+      );
   }
 
   public async getNewToken(): Promise<Shikimori.Token> {

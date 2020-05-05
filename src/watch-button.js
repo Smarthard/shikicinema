@@ -1,5 +1,7 @@
 'use strict';
 
+import { FETCH_RESOURCE_TIMEOUT, fetch } from './fetch-timeout';
+
 let timeout = null;
 const PLAYER_URL = chrome.runtime.getURL('/index.html');
 const SHIKIVIDEOS_API = 'https://smarthard.net/api/shikivideos';
@@ -7,10 +9,10 @@ const KODIK_TOKEN = `${process.env.KODIK_TOKEN}`;
 const PLAYER_BUTTON = document.createElement('a');
 const INFO_DIV = document.createElement('div');
 const ON_WATCH_CLICK = async (anime) => {
-  const userRate = await _getAnimeInfo(anime.id)
+  const userRate = await _getAnimeInfo(anime.id, 500)
     .then((updatedAnime) => updatedAnime.user_rate)
     .catch(() => null);
-  const episode = await _getEpisode(anime, userRate ? userRate.episodes : 0);
+  const episode = await _getEpisode(anime, userRate ? userRate.episodes : 0, 500) || 1;
 
   chrome.runtime.sendMessage({ openUrl: `${PLAYER_URL}#/${anime.id}/${episode}` });
 };
@@ -25,30 +27,30 @@ const OBSERVER = new MutationObserver(() => {
     clearTimeout(timeout);
 
   timeout = setTimeout(async () => {
-    let anime = await _getAnimeInfo(animeId);
+    let anime = isAnimePage ? await _getAnimeInfo(animeId) : {};
 
     if (divInfo && isAnimePage && !watchButton) {
-      appendWatchButtonTo(divInfo, anime);
-    } else {
+      await appendWatchButtonTo(divInfo, anime);
+    } else if (isAnimePage && watchButton) {
       watchButton.onclick = () => ON_WATCH_CLICK(anime);
     }
   }, 100);
 });
 
-OBSERVER.observe(document, {childList: true, subtree: true});
+OBSERVER.observe(window.document, {childList: true, subtree: true});
 
-function _getUploadedEpisodes(animeId) {
-  return fetch(`${SHIKIVIDEOS_API}/${animeId}/length`)
+function _getUploadedEpisodes(animeId, timeout = FETCH_RESOURCE_TIMEOUT) {
+  return fetch(`${SHIKIVIDEOS_API}/${animeId}/length`, {}, timeout)
     .then((res) => res.json())
     .then((res) => res.length)
     .catch(() => 0);
 }
 
-function _getKodikEpisodes(anime) {
+function _getKodikEpisodes(anime, timeout = FETCH_RESOURCE_TIMEOUT) {
   const type = anime.kind === 'movie' || anime.episodes === 1 ? 'anime' : 'anime-serial';
   const query = `strict=true&types=${type}&with_episodes=true&title=${anime.name}&token=${KODIK_TOKEN}`;
 
-  return fetch(`https://kodikapi.com/search?${query}`)
+  return fetch(`https://kodikapi.com/search?${query}`, {}, timeout)
     .then((res) => res.json())
     .then((res) => {
       let episodes;
@@ -66,15 +68,16 @@ function _getKodikEpisodes(anime) {
     .catch(() => 0);
 }
 
-function _getAnimeInfo(animeId) {
-  return fetch(`https://shikimori.one/api/animes/${animeId}`)
-    .then((res) => res.json());
+function _getAnimeInfo(animeId, timeout = FETCH_RESOURCE_TIMEOUT) {
+  return fetch(`https://shikimori.one/api/animes/${animeId}`, {}, timeout)
+    .then((res) => res.json())
+    .catch(() => ({ id: animeId }));
 }
 
-async function _getEpisode(anime, watchedEpisode) {
+async function _getEpisode(anime, watchedEpisode, timeout = FETCH_RESOURCE_TIMEOUT) {
   const targetEpisode = watchedEpisode ? +watchedEpisode + 1 : 1;
-  const mainArchiveMax = await _getUploadedEpisodes(anime.id);
-  const kodikMax = await _getKodikEpisodes(anime);
+  const mainArchiveMax = await _getUploadedEpisodes(anime.id, timeout);
+  const kodikMax = await _getKodikEpisodes(anime, timeout);
   const maxAvailable = Math.max(mainArchiveMax, kodikMax);
 
   return Math.min(targetEpisode, +maxAvailable);

@@ -51,10 +51,15 @@ div.empty {
   scrollbar-width: none;
 }
 
-mat-icon {
-  left: 3px;
-  position: absolute;
-  top: 2px;
+div.text-wrapper {
+  width: 100%;
+  height: 100%;
+}
+
+div mat-icon {
+  margin-right: 4px;
+  width: 100%;
+  height: 100%;
 }
 
 mat-card {

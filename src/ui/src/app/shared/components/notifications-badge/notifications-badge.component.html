@@ -1,12 +1,13 @@
-<div class="notification-badge"
+<div class="notification-badge flex"
      #trigger="matMenuTrigger"
      (mouseenter)="trigger.openMenu()"
      (click)="trigger.openMenu()"
      [class.white]="!hasUnread(notifications)"
      [matMenuTriggerFor]="notificationsMenu">
-  <b *ngIf="hasUnread(notifications)">
-    {{ unread(notifications) >= 10 ? '!' : unread(notifications) }}
-  </b>
+  <div *ngIf="hasUnread(notifications)"
+       class="text-wrapper">
+    <b>{{ unread(notifications) >= 10 ? '!' : unread(notifications) }}</b>
+  </div>
   <mat-icon *ngIf="!hasUnread(notifications)"
             inline="true">
     notifications

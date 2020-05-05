@@ -8,6 +8,7 @@
     <table *ngIf="(contributions$ | async | orderBy: sortDirection + sortedColumn) as contributions"
            (matSortChange)="sortData($event)"
            mat-table matSort
+           matSortActive="id" matSortDirection="desc" matSortDisableClear
            [dataSource]="contributions">
       <ng-container matColumnDef="id">
         <th mat-header-cell mat-sort-header="id" *matHeaderCellDef> ID </th>

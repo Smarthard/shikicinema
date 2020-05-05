@@ -5,3 +5,8 @@ b {
 .episodes-container {
   margin: 10px 0 30px 30px;
 }
+
+.dark-theme :host ngx-skeleton-loader ::ng-deep .loader {
+  background-color: #555;
+  background-image: linear-gradient(90deg, #555, #777D, #555);
+}

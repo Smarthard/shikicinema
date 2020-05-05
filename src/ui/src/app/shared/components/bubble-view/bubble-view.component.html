@@ -1,0 +1,10 @@
+<div class="bubble text">
+  <div (click)="hide.emit()"
+          class="close text">
+    🞪
+  </div>
+  <app-comment [comment]="comment"
+               [showTooltips]="false"
+               (quote)="quote.emit($event)"
+               (reply)="reply.emit($event)"></app-comment>
+</div>

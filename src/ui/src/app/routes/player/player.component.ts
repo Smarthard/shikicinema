@@ -13,12 +13,13 @@ import {ShikicinemaSettings} from '../../types/ShikicinemaSettings';
 import {SettingsService} from '../../services/settings/settings.service';
 import {UserPreferencesService} from '../../services/user-preferences/user-preferences.service';
 import {catchError, debounceTime, distinctUntilChanged, map, publishReplay, refCount, switchMap, takeWhile} from 'rxjs/operators';
-import {BehaviorSubject, combineLatest, EMPTY, iif, Observable, of} from 'rxjs';
+import {BehaviorSubject, combineLatest, EMPTY, iif, Observable, of, Subject} from 'rxjs';
 import {Notification, NotificationType} from '../../types/notification';
 import {MatDialog} from '@angular/material/dialog';
 import {IRequestDialogData, RequestDialogComponent} from '../../shared/components/request-dialog/request-dialog.component';
 import {KodikService} from '../../services/kodik-api/kodik.service';
 import {RemoteNotificationsService} from '../../services/remote-notifications/remote-notifications.service';
+import {CommentsService} from '../../services/comments/comments.service';
 
 @Component({
   selector: 'app-player',
@@ -44,6 +45,8 @@ export class PlayerComponent implements OnInit, OnDestroy {
   public currentVideo: SmarthardNet.Shikivideo;
 
   readonly episodeSubject = new BehaviorSubject<number>(1);
+  readonly quotesSubject = new Subject<string>();
+  readonly repliesSubject = new Subject<string>();
   readonly uploaderSubject = new BehaviorSubject<string>(null);
 
   readonly animeId$ = this.route.params.pipe(
@@ -106,6 +109,9 @@ export class PlayerComponent implements OnInit, OnDestroy {
       switchMap((anime: Shikimori.Anime) => this.kodikService.getUnique(anime)),
     );
 
+  readonly quotes$ = this.quotesSubject.asObservable();
+  readonly replies$ = this.repliesSubject.asObservable();
+
   readonly unique$ = this.anime$
     .pipe(
       switchMap(() => this.shikivideosUnique$),
@@ -121,22 +127,9 @@ export class PlayerComponent implements OnInit, OnDestroy {
     refCount()
   );
 
-  readonly userRates$ = this.animeId$.pipe(
-    switchMap(animeId => {
-      return this.whoami$.pipe(
-        map(user => { return {user, animeId} })
-      );
-    }),
-    switchMap(query => this.shikimori.getUserRates(
-      new HttpParams()
-        .set('user_id', `${query.user.id}`)
-        .set('target_type', 'Anime')
-        .set('target_id', `${query.animeId}`)
-    )),
-    catchError(() => {
-      console.warn('Вы не авторизованы');
-      return of(<Shikimori.UserRate[]> [])
-    }),
+  readonly userRate$ = this.anime$.pipe(
+    map((anime) => anime.user_rate),
+    catchError(() => of(null)),
     publishReplay(1),
     refCount()
   );
@@ -154,6 +147,7 @@ export class PlayerComponent implements OnInit, OnDestroy {
     private kodikService: KodikService,
     private shikimori: ShikimoriService,
     private settingsService: SettingsService,
+    readonly commentsService: CommentsService,
     private title: Title,
     private dialog: MatDialog
   ) {}
@@ -186,6 +180,8 @@ export class PlayerComponent implements OnInit, OnDestroy {
       )
       .subscribe(([episode, anime]) => {
         const title = anime.russian || anime.name;
+        this.commentsService.setAnime(anime);
+        this.commentsService.setEpisode(episode);
         this.title.setTitle(`${title} - эпизод ${episode}`)
       });
 
@@ -203,12 +199,12 @@ export class PlayerComponent implements OnInit, OnDestroy {
       }
     );
 
-    this.userRates$
+    this.userRate$
       .pipe(
         takeWhile(() => this.isAlive)
       )
       .subscribe(
-        userRates => this.userRate = new Shikimori.UserRate(userRates[0] ? userRates[0] : {})
+        userRates => this.userRate = new Shikimori.UserRate(userRates ? userRates : {})
     );
 
     this.uploaderSubject
@@ -228,8 +224,17 @@ export class PlayerComponent implements OnInit, OnDestroy {
 
   async changeEpisode(episode: number | string) {
     if (episode != '') {
+      this.episodeSubject.next(+episode);
       await this.router.navigate([`../${episode}`], { relativeTo:  this.route });
     }
+  }
+
+  addQuote(quote: string) {
+    this.quotesSubject.next(quote);
+  }
+
+  addReply(reply: string) {
+    this.repliesSubject.next(reply);
   }
 
   changeVideo(video: SmarthardNet.Shikivideo) {
@@ -303,6 +308,10 @@ export class PlayerComponent implements OnInit, OnDestroy {
         () => this.notify.add(new Notification(NotificationType.OK, 'Запрос успешно отправлен!')),
         () => this.notify.add(new Notification(NotificationType.ERROR, 'Не удалось отправить'))
       )
+  }
+
+  nextCommentsPage() {
+    this.commentsService.nextPage();
   }
 
   private _chooseFavourite(videos: SmarthardNet.Shikivideo[]): SmarthardNet.Shikivideo[] {

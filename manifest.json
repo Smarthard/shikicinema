@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "shikicinema",
-  "version": "0.8.0",
+  "version": "0.8.1",
 
   "icons": {
     "64": "assets/icon64.png",
@@ -46,10 +46,11 @@
   ],
 
   "permissions": [
-    "*://shikimori.org/*",
-    "*://shikimori.one/*",
-    "*://smarthard.net/*",
-    "*://kodikapi.com/*",
+    "https://shikimori.org/*",
+    "https://shikimori.one/*",
+    "https://smarthard.net/*",
+    "https://kodikapi.com/*",
+    "https://smotret-anime.online/*",
     "storage",
     "unlimitedStorage",
     "tabs"

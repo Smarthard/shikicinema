@@ -28,8 +28,95 @@ export namespace Shikimori {
     readonly anons: boolean,
     readonly ongoing: boolean,
     readonly thread_id: number,
-    readonly topic_id: number
+    readonly topic_id: number,
+    readonly user_rate: UserRate
   }
+
+  export interface ITopic {
+    id: number,
+    topic_title: string,
+    body: string,
+    html_body: string,
+    html_footer: string,
+    created_at: string,
+    comments_count: number,
+    forum: {
+      id: number,
+      position: number,
+      name: string,
+      permalink: string,
+      url: string
+    },
+    user: User,
+    type: CommentableType,
+    linked_id: number,
+    linked_type: string,
+    linked: {
+      id: number,
+      name: string,
+      russian: string,
+      image: {
+        original: string,
+        preview: string,
+        x96: string,
+        x48: string
+      },
+      url: string,
+      kind: string,
+      score: string,
+      status: string,
+      episodes: number,
+      episodes_aired: number,
+      aired_on: string,
+      released_on: string
+    },
+    viewed: boolean,
+    last_comment_viewed: boolean,
+    event: string,
+    episode: number
+  }
+
+  export interface IComment {
+    readonly id?: number,
+    readonly user_id?: number,
+    readonly commentable_id?: number,
+    readonly commentable_type?: string,
+    readonly body?: string,
+    readonly html_body?: string,
+    readonly created_at?: string,
+    readonly updated_at?: string,
+    readonly is_offtopic?: boolean,
+    readonly is_summary?: boolean,
+    readonly can_be_edited?: boolean,
+    readonly user?: User
+  }
+
+  export class Comment {
+    constructor(
+      public id?: number,
+      public commentableId?: number,
+      public commentableType?: string,
+      public body?: string,
+      public html?: string,
+      public created?: Date,
+      public updated?: Date,
+      public isOfftopic?: boolean,
+      public isSummary?: boolean,
+      public canBeEdited?: boolean,
+      public user?: User,
+      public deleted?: boolean
+    ) {}
+
+    public get isEdited(): boolean {
+      return this.created && this.updated && this.created.getDate() !== this.updated.getDate();
+    }
+
+    public get lastUpdated(): Date {
+      return !this.isEdited ? this.created : this.updated;
+    }
+  }
+
+  export type CommentableType = 'Topic' | 'User';
 
   export class User {
 
@@ -95,5 +182,21 @@ export namespace Shikimori {
       return this.refresh_token;
     }
 
+  }
+
+  export interface IEpisodeNotificationResponse {
+    readonly anime_id: number,
+    readonly episode: number,
+    readonly aired_at: string | Date,
+    readonly is_fandub?: '1' | '0',
+    readonly is_raw?: '1' | '0',
+    readonly is_subtitles?: '1' | '0',
+    readonly is_anime365?: '1' | '0',
+    readonly topic_id?: number
+  }
+
+  export interface IEpisodeNotification {
+    readonly episode_notification: IEpisodeNotificationResponse,
+    readonly token: string
   }
 }

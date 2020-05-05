@@ -1,0 +1,75 @@
+:host {
+  width: 100%;
+}
+
+:host > div {
+  margin-bottom: 20px;
+}
+
+div.separator {
+  width: 15px;
+}
+
+mat-form-field.textarea {
+  width: 100%;
+}
+
+mat-form-field.textarea textarea {
+  padding: 5px 10px;
+  box-sizing: border-box;
+  border-radius: 5px;
+}
+
+app-comment {
+  display: block;
+  border-top: 1px dashed #777;
+}
+
+.smileys-row * {
+  display: inline-block;
+  margin: 0 0 7px 0;
+}
+
+::ng-deep .textarea .mat-form-field-label {
+  margin-left: 10px;
+}
+
+#format-tools {
+  margin-bottom: -15px;
+}
+
+#add-link-form mat-form-field {
+  width: 30%;
+}
+
+#add-image-section mat-form-field, #add-quotes-section mat-form-field {
+  width: 45%;
+}
+
+#format-tools-buttons *:nth-last-child(2) {
+  margin-left: auto;
+}
+
+.bb-helpers {
+  align-items: center;
+  margin-left: 10px;
+}
+
+.bb-helpers mat-form-field {
+  margin-right: 10px;
+}
+
+.bb-helpers button.mat-warn {
+  background-color: #f44336;
+  color: white;
+}
+
+mat-form-field.textarea textarea {
+  resize: none;
+  overflow: hidden;
+}
+
+.dark-theme :host textarea {
+  background-color:#7777;
+  color: white;
+}

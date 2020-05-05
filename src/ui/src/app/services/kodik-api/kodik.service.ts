@@ -1,10 +1,11 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
-import {shareReplay} from 'rxjs/operators';
+import {catchError, shareReplay, timeout} from 'rxjs/operators';
 import {SmarthardNet} from '../../types/smarthard-net';
 import {Shikimori} from '../../types/shikimori';
 import {Kodik} from '../../types/kodik';
 import {environment} from '../../../environments/environment';
+import {of} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -98,6 +99,11 @@ export class KodikService {
         .set('title', anime.name)
     })
       .pipe(
+        timeout(3000),
+        catchError(() => {
+          console.error('Unable to retrieve data from Kodik API');
+          return of({ time: null, total: 0, results: [] } as Kodik.ISearchResponse)
+        }),
         shareReplay(1)
       );
   }

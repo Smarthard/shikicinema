@@ -1,0 +1,38 @@
+:host {
+  position: absolute;
+  min-width: 35%;
+  min-height: 100px;
+  max-width: 40%;
+  background-color: white;
+  border: 1px solid #7777;
+}
+
+.dark-theme :host {
+  background-color: #424242;
+}
+
+.close {
+  position: absolute;
+  cursor: pointer;
+  background-color: #eeee;
+  border-radius: 100%;
+  width: 25px;
+  height: 25px;
+  text-align: center;
+  vertical-align: middle;
+  top: 5px;
+  right: 5px;
+}
+
+.close:hover {
+  color: var(--shc-interactive-text-color-hover);
+  background-color: #dddd;
+}
+
+.dark-theme :host .close {
+  background-color: #7777;
+}
+
+.dark-theme :host .close:hover {
+  background-color: #8888;
+}

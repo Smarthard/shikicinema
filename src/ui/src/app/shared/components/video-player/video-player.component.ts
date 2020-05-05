@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {SafeUrl} from "@angular/platform-browser";
+import {SafeUrl} from '@angular/platform-browser';
 import {interval} from 'rxjs';
 import {SmarthardNet} from '../../../types/smarthard-net';
 
@@ -10,7 +10,7 @@ import {SmarthardNet} from '../../../types/smarthard-net';
 })
 export class VideoPlayerComponent implements OnInit {
 
-  readonly timeout$ = interval(1000);
+  readonly timeout$ = interval(3500);
 
   @Input()
   public videoUrl: SafeUrl;
