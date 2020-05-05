@@ -85,6 +85,11 @@
               mat-icon-button>
         <mat-icon>sentiment_satisfied_alt</mat-icon>
       </button>
+
+      <app-comment-badge type="preview"
+                         (click)="togglePreview()"
+                         [toggleable]="true"
+                         [on]="isShowPreview"></app-comment-badge>
       <app-comment-badge type="offtop"
                          (click)="toggleOfftop()"
                          [toggleable]="true"
@@ -368,13 +373,6 @@
 
 
     <div class="flex flex-end">
-      <button *ngIf="commentForm.dirty"
-              (click)="togglePreview()"
-              type="button"
-              mat-flat-button>
-        {{ isShowPreview ? 'Скрыть превью' : 'Показать превью' }}
-      </button>
-      <div class="separator"></div>
       <button [disabled]="commentForm.invalid || commentForm.disabled"
               [color]="commentForm.enabled && commentForm.valid ? 'accent' : 'primary'"
               type="submit"

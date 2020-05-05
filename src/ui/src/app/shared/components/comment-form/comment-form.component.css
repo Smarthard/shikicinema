@@ -46,7 +46,7 @@ app-comment {
   width: 45%;
 }
 
-#format-tools-buttons *:last-child {
+#format-tools-buttons *:nth-last-child(2) {
   margin-left: auto;
 }
 
