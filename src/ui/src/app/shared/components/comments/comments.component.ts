@@ -94,7 +94,7 @@ export class CommentsComponent implements AfterViewChecked {
   }
 
   get anyVisibleComment() {
-    return this.comments.length > 0 && this.comments.some((c) => !c.deleted);
+    return this.comments?.length > 0 && this.comments.some((c) => !c.deleted);
   }
 
   delete(comment: Shikimori.Comment) {
