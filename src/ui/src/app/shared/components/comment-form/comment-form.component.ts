@@ -22,6 +22,9 @@ export class CommentFormComponent implements OnInit, OnChanges {
   episode: number;
 
   @Input()
+  preview = true;
+
+  @Input()
   users: string[];
 
   @Input()
@@ -102,6 +105,8 @@ export class CommentFormComponent implements OnInit, OnChanges {
   }
 
   ngOnInit(): void {
+    this.isShowPreview = this.preview;
+
    this.addLinkForm = new FormGroup({
      href: new FormControl('', [
        Validators.required,

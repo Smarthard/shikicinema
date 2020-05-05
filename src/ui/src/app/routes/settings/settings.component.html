@@ -54,12 +54,28 @@
     <h4>Комментарии</h4>
     <section>
       <mat-form-field class="max-width">
+        <mat-label>Блок с комментариями к серии</mat-label>
         <mat-select [(ngModel)]="settings.displayComments" (ngModelChange)="update()">
           <mat-option [value]="true">
             Показывать
           </mat-option>
           <mat-option [value]="false">
             Скрывать
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </section>
+    <section>
+      <mat-form-field class="max-width">
+        <mat-label>Превью комментария</mat-label>
+        <mat-select [(ngModel)]="settings.displayCommentPreview" (ngModelChange)="update()">
+          <mat-option [value]="true"
+                      title="Будет показываться всегда, если Вы не скрыли блок">
+            Показывать всегда
+          </mat-option>
+          <mat-option [value]="false"
+                      title="Будет скрыт, пока Вы не переключите режим отображения">
+            Показывать по требованию
           </mat-option>
         </mat-select>
       </mat-form-field>

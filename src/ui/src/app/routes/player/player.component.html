@@ -186,8 +186,9 @@
                     [newCommentsCount]="commentsService.pageSize"
                     [totalCommentsRemaining]="commentsService.commentsRemaining"></app-comments>
       <app-comment-form [anime]="anime$ | async"
-                        [episode]="episode$ | async"
                         [commentator]="whoami$ | async"
+                        [episode]="episode$ | async"
+                        [preview]="settings.displayCommentPreview"
                         [quote]="quotes$ | async"
                         [reply]="replies$ | async"
                         [topic]="commentsService.topic$ | async"
