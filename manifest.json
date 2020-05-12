@@ -9,7 +9,7 @@
   },
 
   "description": "Returns video player on Shikimori",
-  "content_security_policy": "default-src 'self'; img-src *; frame-src *; font-src *; style-src 'unsafe-inline' https://*.googleapis.com; connect-src https://kodikapi.com https://smarthard.net https://shikimori.org https://shikimori.one; script-src 'self' 'unsafe-eval'",
+  "content_security_policy": "default-src 'self'; img-src *; frame-src *; font-src *; style-src 'unsafe-inline' https://*.googleapis.com; connect-src https://kodikapi.com https://smarthard.net https://shikimori.org https://shikimori.one; script-src 'self'",
 
   "browser_specific_settings": {
     "gecko": {
