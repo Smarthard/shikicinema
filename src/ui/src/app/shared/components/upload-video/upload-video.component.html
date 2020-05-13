@@ -1,4 +1,14 @@
 <form id="video-upload-form" novalidate (ngSubmit)="onSubmit(videoForm)" #videoForm="ngForm">
+  <div class="text">
+    <h3>Перед загрузкой ознакомьтесь с инструкцией
+      <a class="shc-links"
+         target="_blank"
+         href="https://github.com/Smarthard/shikicinema/wiki/Как-загружать-видео">
+        как загружать видео
+      </a>!
+    </h3>
+  </div>
+
   <div id="fields">
     <mat-form-field>
       <input matInput class="text" placeholder="URL проигрывателя" name="url" type="url"
