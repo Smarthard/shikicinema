@@ -5,6 +5,13 @@ const webpack = require('webpack');
 
 const IS_PRODUCTION = process.env.NODE_ENV === 'production';
 
+function processManifest(content) {
+    const PROCESSED_MANIFEST = JSON.parse(content.toString());
+
+    PROCESSED_MANIFEST.content_security_policy += IS_PRODUCTION ? '' : ' \'unsafe-eval\'';
+    return JSON.stringify(PROCESSED_MANIFEST);
+}
+
 module.exports = {
     context: path.resolve(__dirname, ''),
     entry: {
@@ -36,8 +43,14 @@ module.exports = {
     },
     plugins: [
         new CopyPlugin([
-            { from: 'manifest.json' },
-            { from: './src/watch-button.css' }
+            { from: './src/watch-button.css' },
+            {
+                from: 'manifest.json',
+                to: './',
+                transform(content, path) {
+                    return processManifest(content);
+                }
+            }
         ]),
         new webpack.DefinePlugin({
             'process.env.KODIK_TOKEN': JSON.stringify(process.env.KODIK_TOKEN)
