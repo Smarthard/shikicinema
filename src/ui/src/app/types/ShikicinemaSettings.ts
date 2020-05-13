@@ -2,12 +2,12 @@ export class ShikicinemaSettings {
 
   public displayComments = true;
   public displayCommentPreview = true;
-  public oldFagApproves: boolean = true;
+  public oldFagApproves = true;
   public episodeListType: EpisodesListTypes = EpisodesListTypes.SCROLLABLE;
-  public extraButtons: boolean = false;
+  public extraButtons = false;
   public theme: 'light' | 'dark' | 'custom' = 'dark';
   public playerTabOpens: 'new' | 'same' = 'new';
-  public playerFiltersEnabled: boolean = true;
+  public playerFiltersEnabled = true;
   public playerFilters: Array<IFilter> = [
     {
       enabled: true,
