@@ -11,7 +11,7 @@ msg() {
 }
 
 archive() {
-    version=$(grep \"version < bin/manifest.json | cut -d\" -f4)
+    version=$(jq -r '.version' < bin/manifest.json)
     path="${1:-releases}/shikicinema-$version.zip"
 
     [[ -e "${path}" ]] && \
