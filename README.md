@@ -76,13 +76,23 @@ Shikicinema и сайт Smarthard.net не располагают физичес
 -   [Node.js & npm](https://nodejs.org/)
 -   [Angular CLI](https://www.npmjs.com/package/@angular/cli)
 -   Ваш браузер
- 
+
 ### Подготовка к запуску
 
-1.  `npm i`;
-2.  `npm run bundle`;
+Для полностью функциональной сборки необходимы следующие переменные окружения:
 
-Также вместо `npm run bundle` можно использовать `npm run watch`, если вы активно вносите изменения в код UI.
+`shell
+export KODIK_TOKEN=                 # Токен для использования Kodikapi
+export EPISODE_NOTIFICATION_TOKEN=  # Токен для создания уведомлений о новой серии (https://shikimori.one/api/doc/2.0/episode_notifications/create)
+export SHIKIVIDEOS_CLIENT_ID=       # SmarthardNet OAuth client id
+export SHIKIVIDEOS_CLIENT_SECRET=   # SmarthardNet OAuth client secret
+export SHIKIMORI_CLIENT_ID=         # Shikimori OAuth client id
+export SHIKIMORI_CLIENT_SECRET=`    # Shikimori OAuth client secret
+
+1.  `npm run install-deps`;
+2.  `npm run release` или `npm run bundle`;
+
+Также можно использовать `npm run watch`, если вы активно вносите изменения в код UI.
 
 ### Загрузка временного плагина в Firefox
 
