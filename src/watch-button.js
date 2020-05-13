@@ -47,8 +47,7 @@ function _getUploadedEpisodes(animeId, timeout = FETCH_RESOURCE_TIMEOUT) {
 }
 
 function _getKodikEpisodes(anime, timeout = FETCH_RESOURCE_TIMEOUT) {
-  const type = anime.kind === 'movie' || anime.episodes === 1 ? 'anime' : 'anime-serial';
-  const query = `strict=true&types=${type}&with_episodes=true&title=${anime.name}&token=${KODIK_TOKEN}`;
+  const query = `with_episodes=true&shikimori_id=${anime.id}&token=${KODIK_TOKEN}`;
 
   return fetch(`https://kodikapi.com/search?${query}`, {}, timeout)
     .then((res) => res.json())
