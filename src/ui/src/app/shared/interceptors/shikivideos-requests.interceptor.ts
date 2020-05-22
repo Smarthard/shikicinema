@@ -21,10 +21,6 @@ export class ShikivideosRequestsInterceptor implements HttpInterceptor {
     private notify: NotificationsService
   ) {}
 
-  private _updateToken(): Observable<SmarthardNet.Token> {
-    return this.auth.shikivideosSync();
-  }
-
   private _appendHeaders(request: HttpRequest<any>, token?: SmarthardNet.Token): HttpRequest<any> {
     const headers = { 'User-Agent': `Shikicinema ${this.EXTENSION_VERSION}${this.IS_PRODUCTION ? '' : ' DEV'}`};
     const shikivideos = token || this.auth.shikivideos;
@@ -56,8 +52,15 @@ export class ShikivideosRequestsInterceptor implements HttpInterceptor {
             if (err.status === 403) {
               return this.auth.shikimoriSync()
                 .pipe(
-                  exhaustMap(() => this.auth.shikivideosSync()),
-                  exhaustMap(() => next.handle(req))
+                  exhaustMap(() => {
+                    if (/token/i.test(req.url)) {
+                      req = req.clone({ body: { shikimori_token: this.auth.shikimori.token } });
+                      return next.handle(req);
+                    } else {
+                      return exhaustMap(() => this.auth.shikivideosSync()
+                        .pipe(exhaustMap(() => next.handle(req))));
+                    }
+                  })
                 );
             }
 
@@ -71,7 +74,7 @@ export class ShikivideosRequestsInterceptor implements HttpInterceptor {
             if (err.status === 401 && req.method === 'POST') {
               this._showWarningNotification();
 
-              return this._updateToken()
+              return this.auth.shikivideosSync()
                 .pipe(
                   switchMap((token) => {
                     req = this._appendHeaders(req, token);
