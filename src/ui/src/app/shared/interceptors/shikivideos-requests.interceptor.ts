@@ -49,6 +49,8 @@ export class ShikivideosRequestsInterceptor implements HttpInterceptor {
         .pipe(
           catchError((err: HttpErrorResponse) => {
 
+            // Update shikimori token and retry
+            // or update it with shikivideos token and retry
             if (err.status === 403) {
               return this.auth.shikimoriSync()
                 .pipe(
@@ -72,6 +74,7 @@ export class ShikivideosRequestsInterceptor implements HttpInterceptor {
                 );
             }
 
+            // Show notification, update shikivideos token and retry
             if (err.status === 401 && req.method === 'POST') {
               this._showWarningNotification();
 
