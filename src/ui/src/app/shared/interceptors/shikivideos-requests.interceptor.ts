@@ -74,12 +74,15 @@ export class ShikivideosRequestsInterceptor implements HttpInterceptor {
                 );
             }
 
-            // Show notification, update shikivideos token and retry
+            // Update shikivideos token and retry
+            // Show notification on error
             if (err.status === 401 && req.method === 'POST') {
-              this._showWarningNotification();
-
               return this.auth.shikivideosSync()
                 .pipe(
+                  catchError(() => {
+                    this._showWarningNotification();
+                    return EMPTY;
+                  }),
                   switchMap((token) => {
                     req = this._appendHeaders(req, token);
                     return next.handle(req);
