@@ -1,4 +1,4 @@
-import {Observable, throwError} from 'rxjs';
+import {EMPTY, Observable, throwError} from 'rxjs';
 import {HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
 import {SmarthardNet} from '../../types/smarthard-net';
 import {AuthService} from '../../services/auth/auth.service';
@@ -64,10 +64,11 @@ export class ShikivideosRequestsInterceptor implements HttpInterceptor {
                 );
             }
 
+            // Forcefully update shikivideos token and drop previous request
             if (err.status === 401 && req.params.get('grant_type') === 'refresh_token') {
               return this.auth.shikivideosSync(true)
                 .pipe(
-                  exhaustMap(() => next.handle(req))
+                  exhaustMap(() => EMPTY)
                 );
             }
 
