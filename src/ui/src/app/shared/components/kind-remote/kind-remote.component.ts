@@ -1,4 +1,4 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {SmarthardNet} from '../../../types/smarthard-net';
 
 @Component({
@@ -9,6 +9,9 @@ import {SmarthardNet} from '../../../types/smarthard-net';
 export class KindRemoteComponent implements OnInit {
 
   readonly KINDS = SmarthardNet.Kind;
+
+  @Input()
+  videos: SmarthardNet.Shikivideo[];
 
   @Output()
   public kind: EventEmitter<SmarthardNet.Kind> = new EventEmitter<SmarthardNet.Kind>();
@@ -26,6 +29,10 @@ export class KindRemoteComponent implements OnInit {
 
   public isChosen(kind: SmarthardNet.Kind) {
     return this.chosenKind === kind;
+  }
+
+  hasAnyOfKind(kind: SmarthardNet.Kind) {
+    return this?.videos?.some(v => v.kind.toLowerCase() === kind.toLowerCase());
   }
 
 }

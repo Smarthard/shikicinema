@@ -1,4 +1,5 @@
-<app-kind-remote (kind)="chosenKind = $event"></app-kind-remote>
+<app-kind-remote [videos]="videos"
+                 (kind)="chosenKind = $event"></app-kind-remote>
 
 <ul>
   <li *ngFor="let video of filteredByKind()"

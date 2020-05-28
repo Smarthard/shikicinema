@@ -2,6 +2,22 @@ b {
   font-size: 11pt;
 }
 
+:active {
+  border: none;
+}
+
+button {
+  background-color: transparent;
+  border: none;
+  padding: 0 2px;
+  margin: 0;
+}
+
+button:disabled, button:disabled:hover {
+  color: #777;
+  cursor: default;
+}
+
 ul {
   list-style-type: none;
   display: inline;
