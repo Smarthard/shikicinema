@@ -148,13 +148,12 @@
                           [episode]="urlParams.episode"></app-upload-video>
       </div>
 
-      <ng-container *ngIf="videos.length > 0 && settings && videos
+      <ng-container *ngIf="settings && videos
               | filterBy:['language']:filter.language
               | filterBy:['author']:filter.author
               | filterBy:['quality']:filter.quality
               | filterBy:['url']:filter.player
-             as filteredVideos
-             else videosEmpty">
+             as filteredVideos">
         <div id="series" *ngIf="settings.oldFagApproves">
           <app-episodes-list *ngIf="unique$ | async as unique; else episodesGhost"
             [unique]="unique"
@@ -196,10 +195,6 @@
     </ng-container>
 
   </ng-container>
-
-  <ng-template #videosEmpty>
-    <div class="centered note">В нашем архиве не нашлось ни одного видео T_T</div>
-  </ng-template>
 </div>
 
 <app-notify></app-notify>
