@@ -6,11 +6,16 @@ b {
   border: none;
 }
 
-button {
+button, button:focus {
   background-color: transparent;
   border: none;
+  outline: none;
   padding: 0 2px;
   margin: 0;
+}
+
+button::-moz-focus-inner {
+  border: 0;
 }
 
 button:disabled, button:disabled:hover {
