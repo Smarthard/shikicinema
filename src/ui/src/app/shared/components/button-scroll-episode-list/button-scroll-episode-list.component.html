@@ -6,19 +6,34 @@
     <mat-icon>keyboard_arrow_up</mat-icon>
   </button>
   <ul>
-    <li *ngFor="let episode of (unique | keys | slice: offset: limit)"
+    <li *ngFor="let episode of (episodes | slice: offset: limit)"
         (click)="change.emit(+episode)"
         [class.selected]="chosen && episode == chosen.episode"
-        class="shc-links">
+        [class.shc-links]="episode <= maxEpisodeAired"
+        [matTooltip]="getEpisodeTooltip(episode)"
+        matTooltipPosition="left">
       <span class="text">
         #{{ episode }}
       </span>
 
-      {{ unique[episode].kind.sort().join(', ') }}
+      <ng-container *ngIf="unique[episode]; else emptyEpisode">
+        {{ unique[episode].kind.sort().join(', ') }}
 
-      <span class="hostname">
+        <span class="hostname">
           ({{ getUrlsSecondLvlDomain(unique[episode].url).sort().join(', ') }})
-      </span>
+        </span>
+      </ng-container>
+
+      <ng-template #emptyEpisode>
+        <span *ngIf="episode <= maxEpisodeAired">
+          нет видео
+        </span>
+
+        <span *ngIf="episode > maxEpisodeAired"
+              class="text">
+          еще не вышло
+        </span>
+      </ng-template>
     </li>
   </ul>
   <button *ngIf="limit < (unique | keys).length"
