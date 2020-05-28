@@ -10,15 +10,15 @@
         (click)="change.emit(+episode)"
         [class.selected]="chosen && episode == chosen.episode"
         class="shc-links">
-        <span class="text">
-          #{{ episode }}
-        </span>
+      <span class="text">
+        #{{ episode }}
+      </span>
 
       {{ unique[episode].kind.sort().join(', ') }}
 
       <span class="hostname">
           ({{ getUrlsSecondLvlDomain(unique[episode].url).sort().join(', ') }})
-        </span>
+      </span>
     </li>
   </ul>
   <button *ngIf="limit < (unique | keys).length"
