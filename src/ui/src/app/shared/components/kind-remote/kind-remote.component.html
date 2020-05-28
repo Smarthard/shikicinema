@@ -3,32 +3,36 @@
   <ul>
     <li>
       <button class="shc-links"
-        [disabled]="!hasAnyOfKind(KINDS.Dub)"
-        [class.selected]="isChosen(KINDS.Dub)"
-        (click)="switchKindSelection(KINDS.Dub)">
+              [matTooltip]="hasAnyOfKind(KINDS.Dub) ? 'Показать видео в озвучке' : 'Видео в озвучке нет'"
+              [disabled]="!hasAnyOfKind(KINDS.Dub)"
+              [class.selected]="isChosen(KINDS.Dub)"
+              (click)="switchKindSelection(KINDS.Dub)">
         озвучка
       </button>
     </li>
     <li>
       <button class="shc-links"
-        [disabled]="!hasAnyOfKind(KINDS.Sub)"
-        [class.selected]="isChosen(KINDS.Sub)"
-        (click)="switchKindSelection(KINDS.Sub)">
+              [matTooltip]="hasAnyOfKind(KINDS.Sub) ? 'Показать видео в субтитрах' : 'Видео с субтитрами нет'"
+              [disabled]="!hasAnyOfKind(KINDS.Sub)"
+              [class.selected]="isChosen(KINDS.Sub)"
+              (click)="switchKindSelection(KINDS.Sub)">
         субтитры
       </button>
     </li>
     <li>
       <button class="shc-links"
-        [disabled]="!hasAnyOfKind(KINDS.Raw)"
-        [class.selected]="isChosen(KINDS.Raw)"
-        (click)="switchKindSelection(KINDS.Raw)">
+              [matTooltip]="hasAnyOfKind(KINDS.Raw) ? 'Показать видео в оригинале' : 'Видео в оригинале нет'"
+              [disabled]="!hasAnyOfKind(KINDS.Raw)"
+              [class.selected]="isChosen(KINDS.Raw)"
+              (click)="switchKindSelection(KINDS.Raw)">
         оригинал
       </button>
     </li>
     <li>
       <button class="shc-links"
-        [class.selected]="isChosen(KINDS.Unknown)"
-        (click)="switchKindSelection(KINDS.Unknown)">
+              matTooltip="Показать всё"
+              [class.selected]="isChosen(KINDS.Unknown)"
+              (click)="switchKindSelection(KINDS.Unknown)">
         все
       </button>
     </li>
