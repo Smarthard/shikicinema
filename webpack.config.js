@@ -42,16 +42,18 @@ module.exports = {
         ]
     },
     plugins: [
-        new CopyPlugin([
-            { from: './src/watch-button.css' },
-            {
-                from: 'manifest.json',
-                to: './',
-                transform(content, path) {
-                    return processManifest(content);
+        new CopyPlugin({
+            patterns: [
+                { from: './src/watch-button.css' },
+                {
+                    from: 'manifest.json',
+                    to: './',
+                    transform(content, path) {
+                        return processManifest(content);
+                    }
                 }
-            }
-        ]),
+            ]
+        }),
         new webpack.DefinePlugin({
             'process.env.KODIK_TOKEN': JSON.stringify(process.env.KODIK_TOKEN)
         })
