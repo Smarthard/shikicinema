@@ -2,6 +2,7 @@ import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges
 import {SmarthardNet} from '../../../types/smarthard-net';
 import {SettingsService} from '../../../services/settings/settings.service';
 import {EpisodesListTypes, ShikicinemaSettings} from '../../../types/ShikicinemaSettings';
+import {Shikimori} from '../../../types/shikimori';
 
 @Component({
   selector: 'app-episodes-list',
@@ -11,6 +12,9 @@ import {EpisodesListTypes, ShikicinemaSettings} from '../../../types/Shikicinema
 export class EpisodesListComponent implements OnInit, OnChanges {
 
   readonly EPISODES_LIST_TYPES = EpisodesListTypes;
+
+  @Input()
+  public anime: Shikimori.Anime;
 
   @Input()
   public unique: SmarthardNet.Unique;

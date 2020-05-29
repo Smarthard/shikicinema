@@ -1,27 +1,39 @@
-<app-kind-remote (kind)="chosenKind = $event"></app-kind-remote>
+<app-kind-remote [videos]="videos"
+                 (kind)="chosenKind = $event"></app-kind-remote>
 
 <ul>
-  <li *ngFor="let video of filteredByKind()"
-      class="shc-links"
-      (click)="change.emit(video)"
-      title="{{ video.author }} - {{ video.url }}"
-      [class.selected]="chosen && video.id === chosen.id">
-    <span class="hostname">({{ video.getSecondLvlDomain() }})</span>
+  <ng-container *ngIf="filteredByKind()?.length > 0; else noVideos">
+    <li *ngFor="let video of filteredByKind()"
+        class="shc-links"
+        (click)="change.emit(video)"
+        title="{{ video.author }} - {{ video.url }}"
+        [class.selected]="chosen && video.id === chosen.id">
+      <span class="hostname">({{ video.getSecondLvlDomain() }})</span>
 
-    {{ !video.hasUnknownAttribute('author') ? video.author : 'неизвестно' }}
+      {{ !video.hasUnknownAttribute('author') ? video.author : 'неизвестно' }}
 
-    <span class="text" *ngIf="!video.hasHighQuality() && !video.hasUnknownAttribute('quality')">
-      {{ video.quality | uppercase }}
-    </span>
+      <span class="text" *ngIf="!video.hasHighQuality() && !video.hasUnknownAttribute('quality')">
+        {{ video.quality | uppercase }}
+      </span>
 
-    <img *ngIf="video.hasHighQuality()"
-         height="16px"
-         src="assets/{{video.quality | lowercase }}.png"
-         alt="{{ video.quality }}">
+      <img *ngIf="video.hasHighQuality()"
+           height="16px"
+           src="assets/{{video.quality | lowercase }}.png"
+           alt="{{ video.quality }}">
 
-    <mat-icon *ngIf="!!video.foreign"
-              class="small-icon">
-      launch
-    </mat-icon>
-  </li>
+      <mat-icon *ngIf="!!video.foreign"
+                class="small-icon">
+        launch
+      </mat-icon>
+    </li>
+  </ng-container>
+
+  <ng-template #noVideos>
+    <ul>
+      <li class="text">
+        Здесь ничего нет...
+        <app-smilley smiley=":disappointment:"></app-smilley>
+      </li>
+    </ul>
+  </ng-template>
 </ul>

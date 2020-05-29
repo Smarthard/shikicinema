@@ -183,6 +183,7 @@ export class PlayerComponent implements OnInit, OnDestroy {
         this.commentsService.setAnime(anime);
         this.commentsService.setEpisode(episode);
         this.title.setTitle(`${title} - эпизод ${episode}`)
+        this.EMPTY_VIDEO.episode = episode;
       });
 
     this.videos$

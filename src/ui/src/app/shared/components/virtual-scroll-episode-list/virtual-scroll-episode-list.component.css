@@ -15,3 +15,11 @@ cdk-virtual-scroll-viewport::-webkit-scrollbar {
 cdk-virtual-scroll-viewport div {
   padding: 6px 0;
 }
+
+.text {
+  cursor: pointer;
+}
+
+.selected .text.highlighted {
+  color: var(--shc-interactive-text-color-selected);
+}

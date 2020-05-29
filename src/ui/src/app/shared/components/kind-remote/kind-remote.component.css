@@ -2,6 +2,27 @@ b {
   font-size: 11pt;
 }
 
+:active {
+  border: none;
+}
+
+button, button:focus {
+  background-color: transparent;
+  border: none;
+  outline: none;
+  padding: 0 2px;
+  margin: 0;
+}
+
+button::-moz-focus-inner {
+  border: 0;
+}
+
+button:disabled:not(.selected), button:disabled:not(.selected):hover {
+  color: #777;
+  cursor: default;
+}
+
 ul {
   list-style-type: none;
   display: inline;
