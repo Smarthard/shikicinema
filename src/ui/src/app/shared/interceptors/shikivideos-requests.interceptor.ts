@@ -1,4 +1,4 @@
-import {Observable, throwError} from 'rxjs';
+import {EMPTY, Observable, throwError} from 'rxjs';
 import {HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
 import {SmarthardNet} from '../../types/smarthard-net';
 import {AuthService} from '../../services/auth/auth.service';
@@ -20,10 +20,6 @@ export class ShikivideosRequestsInterceptor implements HttpInterceptor {
     private auth: AuthService,
     private notify: NotificationsService
   ) {}
-
-  private _updateToken(): Observable<SmarthardNet.Token> {
-    return this.auth.shikivideosSync();
-  }
 
   private _appendHeaders(request: HttpRequest<any>, token?: SmarthardNet.Token): HttpRequest<any> {
     const headers = { 'User-Agent': `Shikicinema ${this.EXTENSION_VERSION}${this.IS_PRODUCTION ? '' : ' DEV'}`};
@@ -53,26 +49,40 @@ export class ShikivideosRequestsInterceptor implements HttpInterceptor {
         .pipe(
           catchError((err: HttpErrorResponse) => {
 
+            // Update shikimori token and retry
+            // or update it with shikivideos token and retry
             if (err.status === 403) {
               return this.auth.shikimoriSync()
                 .pipe(
-                  exhaustMap(() => this.auth.shikivideosSync()),
-                  exhaustMap(() => next.handle(req))
+                  exhaustMap(() => {
+                    if (/token/i.test(req.url)) {
+                      req = req.clone({ body: { shikimori_token: this.auth.shikimori.token } });
+                      return next.handle(req);
+                    } else {
+                      return exhaustMap(() => this.auth.shikivideosSync()
+                        .pipe(exhaustMap(() => next.handle(req))));
+                    }
+                  })
                 );
             }
 
+            // Forcefully update shikivideos token and drop previous request
             if (err.status === 401 && req.params.get('grant_type') === 'refresh_token') {
               return this.auth.shikivideosSync(true)
                 .pipe(
-                  exhaustMap(() => next.handle(req))
+                  exhaustMap(() => EMPTY)
                 );
             }
 
+            // Update shikivideos token and retry
+            // Show notification on error
             if (err.status === 401 && req.method === 'POST') {
-              this._showWarningNotification();
-
-              return this._updateToken()
+              return this.auth.shikivideosSync()
                 .pipe(
+                  catchError(() => {
+                    this._showWarningNotification();
+                    return EMPTY;
+                  }),
                   switchMap((token) => {
                     req = this._appendHeaders(req, token);
                     return next.handle(req);
