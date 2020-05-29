@@ -18,7 +18,7 @@ button::-moz-focus-inner {
   border: 0;
 }
 
-button:disabled, button:disabled:hover {
+button:disabled:not(.selected), button:disabled:not(.selected):hover {
   color: #777;
   cursor: default;
 }
