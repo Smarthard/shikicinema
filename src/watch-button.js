@@ -12,7 +12,7 @@ const ON_WATCH_CLICK = async (anime) => {
   const userRate = await _getAnimeInfo(anime.id, 500)
     .then((updatedAnime) => updatedAnime.user_rate)
     .catch(() => null);
-  const episode = await _getEpisode(anime, userRate ? userRate.episodes : 0, 500) || 1;
+  const episode = +(userRate ? userRate.episodes : 0) + 1;
 
   chrome.runtime.sendMessage({ openUrl: `${PLAYER_URL}#/${anime.id}/${episode}` });
 };
@@ -73,17 +73,16 @@ function _getAnimeInfo(animeId, timeout = FETCH_RESOURCE_TIMEOUT) {
     .catch(() => ({ id: animeId }));
 }
 
-async function _getEpisode(anime, watchedEpisode, timeout = FETCH_RESOURCE_TIMEOUT) {
-  const targetEpisode = watchedEpisode ? +watchedEpisode + 1 : 1;
+async function _getMaxUploadedEpisode(anime, timeout = FETCH_RESOURCE_TIMEOUT) {
   const mainArchiveMax = await _getUploadedEpisodes(anime.id, timeout);
   const kodikMax = await _getKodikEpisodes(anime, timeout);
   const maxAvailable = Math.max(mainArchiveMax, kodikMax);
 
-  return Math.min(targetEpisode, +maxAvailable);
+  return Math.min(1, +maxAvailable);
 }
 
 async function appendWatchButtonTo(element, anime) {
-  const lastOrMaxEpisodeAvailable = await _getEpisode(anime);
+  const lastOrMaxEpisodeAvailable = await _getMaxUploadedEpisode(anime);
 
   PLAYER_BUTTON.id = 'watch_button';
   PLAYER_BUTTON.classList.add('b-link_button', 'dark', 'watch-online');
