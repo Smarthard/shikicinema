@@ -11,3 +11,11 @@ button {
 button:hover {
   background-color: #9999995A;
 }
+
+.text {
+  cursor: pointer;
+}
+
+.selected .text.highlighted {
+  color: var(--shc-interactive-text-color-selected);
+}
