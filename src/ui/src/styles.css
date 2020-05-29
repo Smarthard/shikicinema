@@ -6,6 +6,7 @@ body {
   --shc-interactive-text-color: #176093;
   --shc-interactive-text-color-lighter: #317AAD;
   --shc-interactive-text-color-hover: #DD5202;
+  --shc-interactive-text-color-selected: #B34100;
 }
 
 .shc-links,
@@ -89,7 +90,7 @@ body {
 
 .selected,
 .dark-theme .selected {
-  color: #B34100;
+  color: var(--shc-interactive-text-color-selected);
 }
 
 .text {
