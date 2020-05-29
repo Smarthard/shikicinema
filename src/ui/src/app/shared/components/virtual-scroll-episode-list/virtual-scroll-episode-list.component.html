@@ -2,20 +2,35 @@
                              itemSize="31"
                              minBufferPx="300"
                              maxBufferPx="600">
-  <div *cdkVirtualFor="let episode of (unique | keys)"
+  <div *cdkVirtualFor="let episode of episodes"
        (click)="change.emit(+episode)"
        [class.selected]="chosen && episode == chosen.episode"
-       class="shc-links episodes">
-    <span *ngIf="episode">
+       [class.shc-links]="episode <= maxEpisodeAired"
+       [matTooltip]="getEpisodeTooltip(episode)"
+       matTooltipPosition="left">
+    <span>
       <span class="text">
         #{{ episode }}
       </span>
 
-      {{ unique[episode].kind.sort().join(', ') }}
+      <ng-container *ngIf="unique[episode]; else emptyEpisode">
+        {{ unique[episode].kind.sort().join(', ') }}
 
-      <span class="hostname">
-        ({{ getUrlsSecondLvlDomain(unique[episode].url).sort().join(', ') }})
-      </span>
+        <span class="hostname">
+          ({{ getUrlsSecondLvlDomain(unique[episode].url).sort().join(', ') }})
+        </span>
+      </ng-container>
+
+      <ng-template #emptyEpisode>
+        <span *ngIf="episode <= maxEpisodeAired">
+          нет видео
+        </span>
+
+        <span *ngIf="episode > maxEpisodeAired"
+              class="text">
+          еще не вышло
+        </span>
+      </ng-template>
     </span>
   </div>
 </cdk-virtual-scroll-viewport>

@@ -156,9 +156,10 @@
              as filteredVideos">
         <div id="series" *ngIf="settings.oldFagApproves">
           <app-episodes-list *ngIf="unique$ | async as unique; else episodesGhost"
-            [unique]="unique"
-            (change)="changeEpisode($event)"
-            [chosen]="currentVideo"></app-episodes-list>
+                             (change)="changeEpisode($event)"
+                             [anime]="anime"
+                             [unique]="unique"
+                             [chosen]="currentVideo"></app-episodes-list>
           <app-video-list
             [videos]="filteredVideos"
             (change)="changeVideo($event)"

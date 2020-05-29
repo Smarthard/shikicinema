@@ -10,6 +10,7 @@
 
   <app-virtual-scroll-episode-list *ngIf="settings && settings.episodeListType === EPISODES_LIST_TYPES.SCROLLABLE"
                                    (change)="change.emit($event)"
+                                   [anime]="anime"
                                    [unique]="unique"
                                    [chosen]="chosen"
                                    [offset]="offset"></app-virtual-scroll-episode-list>
