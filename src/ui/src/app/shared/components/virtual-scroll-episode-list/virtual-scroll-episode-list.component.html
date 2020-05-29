@@ -14,7 +14,7 @@
       </span>
 
       <ng-container *ngIf="unique[episode]; else emptyEpisode">
-        {{ unique[episode].kind.sort().join(', ') }}
+        {{ getOldFagSortedKind(episode).join(', ') }}
 
         <span class="hostname">
           ({{ getUrlsSecondLvlDomain(unique[episode].url).sort().join(', ') }})

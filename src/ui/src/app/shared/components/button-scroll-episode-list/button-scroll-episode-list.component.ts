@@ -51,6 +51,19 @@ export class ButtonScrollEpisodeListComponent {
     return urls.map(url => url.split('.').slice(-2).join('.'));
   }
 
+  getOldFagSortedKind(episode: number): string[] {
+    return this?.unique[episode].kind.sort((a, b) => {
+      switch (true) {
+        case (a === 'озвучка') || (a === 'субтитры') && (b === 'оригинал'):
+          return -1;
+        case (a === 'оригинал') || (a === 'субтитры') && (b === 'озвучка'):
+          return 1;
+        default:
+          return 0;
+      }
+    })
+  }
+
   getEpisodeTooltip(episode) {
     const isAired = episode <= this?.maxEpisodeAired;
     const isUploaded = this?.unique[episode];
