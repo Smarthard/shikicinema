@@ -4,6 +4,7 @@ shopt -s nocasematch;
 
 mkdir -p releases
 mkdir -p dev-builds
+mkdir -p sources
 version=""
 
 msg() {
@@ -34,7 +35,8 @@ case "$1" in
         npm run release && archive ;;
 esac
 
-zip -qr -9 "./shikicinema-src-$version.zip" \
+[[ -e "sources/shikicinema-src-${version}.zip" ]] && rm "sources/shikicinema-src-${version}.zip"
+zip -qr -9 "sources/shikicinema-src-$version.zip" \
     -x node_modules/\* \
     -x bin/\* \
     -x dev-builds/\* \
