@@ -12,7 +12,12 @@ const ON_WATCH_CLICK = async (anime) => {
   const userRate = await _getAnimeInfo(anime.id, 500)
     .then((updatedAnime) => updatedAnime.user_rate)
     .catch(() => null);
-  const episode = +(userRate ? userRate.episodes : 0) + 1;
+  const maxEpisode = anime.episodes || anime.episodes_aired || 1;
+  let episode = +(userRate ? userRate.episodes : 0) + 1;
+
+  if (episode > maxEpisode) {
+    episode = maxEpisode;
+  }
 
   chrome.runtime.sendMessage({ openUrl: `${PLAYER_URL}#/${anime.id}/${episode}` });
 };
