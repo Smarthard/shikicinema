@@ -56,19 +56,7 @@ function _getKodikEpisodes(anime, timeout = FETCH_RESOURCE_TIMEOUT) {
 
   return fetch(`https://kodikapi.com/search?${query}`, {}, timeout)
     .then((res) => res.json())
-    .then((res) => {
-      let episodes;
-
-      try {
-        const seasonNo = Object.keys(res.results[0].seasons)[0];
-        const season = res.results[0].seasons[seasonNo].episodes;
-        episodes = Math.max.apply(null, Object.keys(season));
-      } catch (e) {
-        episodes = 0;
-      }
-
-      return episodes;
-    })
+    .then((res) => res.total)
     .catch(() => 0);
 }
 
