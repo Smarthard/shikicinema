@@ -49,8 +49,9 @@ export class VirtualScrollEpisodeListComponent implements AfterViewInit, OnInit,
   private _getEpisodeElementMaxHeight() {
     const DIV_EPISODES = [ ...this._elementRef.nativeElement.querySelectorAll('.episodes') ];
     const HEIGHT_OF_EACH_DIV = DIV_EPISODES.map((div) => div.getBoundingClientRect().height);
+    const AVG_HEIGHT = HEIGHT_OF_EACH_DIV.reduce((a, b) => a + b, 0) / HEIGHT_OF_EACH_DIV.length;
 
-    this._episodeElemMaxHeight = Math.max.apply(null, [31, ...HEIGHT_OF_EACH_DIV]);
+    this._episodeElemMaxHeight = Math.max(31, AVG_HEIGHT);
   }
 
   ngAfterViewInit(): void {
@@ -62,7 +63,7 @@ export class VirtualScrollEpisodeListComponent implements AfterViewInit, OnInit,
 
   ngOnInit(): void {
     this.episodeViewPort.elementScrolled()
-      .pipe(debounceTime(100))
+      .pipe(debounceTime(500))
       .subscribe(() => this._getEpisodeElementMaxHeight())
   }
 
