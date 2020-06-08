@@ -55,7 +55,7 @@ export class VirtualScrollEpisodeListComponent implements AfterViewInit, OnInit,
 
   ngAfterViewInit(): void {
     setTimeout(() => {
-      this.episodeViewPort.scrollToIndex(this.offset);
+      this.episodeViewPort.scrollToIndex(this?.chosen?.episode - 1);
       this._getEpisodeElementMaxHeight();
     }, 50);
   }
@@ -67,7 +67,7 @@ export class VirtualScrollEpisodeListComponent implements AfterViewInit, OnInit,
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    this.episodeViewPort.scrollToIndex(this.offset, 'smooth');
+    this.episodeViewPort.scrollToIndex(this?.chosen?.episode - 1, 'smooth');
   }
 
   get maxEpisodeAired() {
