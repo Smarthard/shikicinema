@@ -158,6 +158,7 @@
           <app-episodes-list *ngIf="unique$ | async as unique; else episodesGhost"
                              (change)="changeEpisode($event)"
                              [anime]="anime"
+                             [episode]="urlParams.episode"
                              [unique]="unique"
                              [chosen]="currentVideo"></app-episodes-list>
           <app-video-list

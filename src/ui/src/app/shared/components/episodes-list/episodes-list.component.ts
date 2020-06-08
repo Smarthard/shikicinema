@@ -17,6 +17,9 @@ export class EpisodesListComponent implements OnInit, OnChanges {
   public anime: Shikimori.Anime;
 
   @Input()
+  public episode: number;
+
+  @Input()
   public unique: SmarthardNet.Unique;
 
   @Input()
@@ -25,8 +28,8 @@ export class EpisodesListComponent implements OnInit, OnChanges {
   @Output()
   public change: EventEmitter<number> = new EventEmitter<number>();
 
-  offset: number = 0;
-  limit: number = 30;
+  offset = 0;
+  limit = 30;
   settings: ShikicinemaSettings;
 
   constructor(
@@ -43,13 +46,13 @@ export class EpisodesListComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (this.chosen && (this.chosen.episode >= this.limit || this.chosen.episode <= this.offset)) {
-      if (this.chosen.episode < 30) {
+    if (this?.episode >= this?.limit || this?.episode <= this?.offset) {
+      if (this?.episode < 30) {
         this.offset = 0;
         this.limit = 30;
       } else {
-        this.offset = +this.chosen.episode - 1;
-        this.limit = +this.chosen.episode + 29;
+        this.offset = Math.floor(this?.episode / 30) * 30 - 1;
+        this.limit = +this?.offset + 30;
       }
     }
   }
