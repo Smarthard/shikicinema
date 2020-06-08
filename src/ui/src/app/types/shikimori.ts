@@ -29,6 +29,7 @@ export namespace Shikimori {
     readonly ongoing: boolean,
     readonly thread_id: number,
     readonly topic_id: number,
+    readonly next_episode_at: string,
     readonly user_rate: UserRate
   }
 
