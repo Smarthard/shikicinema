@@ -79,6 +79,10 @@ export class VirtualScrollEpisodeListComponent implements AfterViewInit, OnInit,
     return (this?.maxEpisodeAired < this?.anime.episodes ? this?.anime?.episodes : this?.maxEpisodeAired) || 1;
   }
 
+  get isAnimeReleased() {
+    return this?.anime?.status === 'released';
+  }
+
   get episodes() {
     return this._episodes.length === this?.maxEpisode
       ? this._episodes
@@ -88,8 +92,8 @@ export class VirtualScrollEpisodeListComponent implements AfterViewInit, OnInit,
   }
 
   getEpisodeTooltip(episode) {
-    const isAired = episode <= this?.maxEpisodeAired;
-    const isUploaded = this?.unique[episode];
+    const isAired = this?.isAnimeReleased || episode <= this?.maxEpisodeAired;
+    const isUploaded = !!this?.unique[episode];
 
     return isAired
       ? (isUploaded ? `Смотреть ${episode} эпизод` : `Эпизод ${episode} еще не загружен`)

@@ -39,6 +39,10 @@ export class ButtonScrollEpisodeListComponent {
     return (this?.maxEpisodeAired < this?.anime.episodes ? this?.anime?.episodes : this?.maxEpisodeAired) || 1;
   }
 
+  get isAnimeReleased() {
+    return this?.anime?.status === 'released';
+  }
+
   get episodes() {
     return this._episodes.length === this?.maxEpisode
       ? this._episodes

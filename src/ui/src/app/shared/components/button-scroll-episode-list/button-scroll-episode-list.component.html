@@ -9,7 +9,7 @@
     <li *ngFor="let episode of (episodes | slice: offset: limit)"
         (click)="change.emit(+episode)"
         [class.selected]="chosen && episode == chosen.episode"
-        [class.shc-links]="episode <= maxEpisodeAired"
+        [class.shc-links]="isAnimeReleased || episode <= maxEpisodeAired"
         [matTooltip]="getEpisodeTooltip(episode)"
         matTooltipPosition="left">
       <span class="text">
@@ -25,11 +25,11 @@
       </ng-container>
 
       <ng-template #emptyEpisode>
-        <span *ngIf="episode <= maxEpisodeAired">
+        <span *ngIf="isAnimeReleased || episode <= maxEpisodeAired">
           нет видео
         </span>
 
-        <span *ngIf="episode > maxEpisodeAired"
+        <span *ngIf="!isAnimeReleased && episode > maxEpisodeAired"
               class="text highlighted">
           еще не вышло
         </span>
