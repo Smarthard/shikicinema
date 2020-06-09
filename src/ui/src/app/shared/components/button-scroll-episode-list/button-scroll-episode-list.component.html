@@ -34,7 +34,8 @@
           выйдет {{ anime?.next_episode_at | date: 'dd MMMM' }}
         </span>
 
-        <span *ngIf="!isAnimeReleased && (episode > +maxEpisodeAired + 1 || !anime?.next_episode_at)"
+        <span *ngIf="!isAnimeReleased && episode > +maxEpisodeAired + 1
+                  || !anime?.next_episode_at && episode === +maxEpisodeAired + 1"
               class="text highlighted">
           еще не вышло
         </span>
