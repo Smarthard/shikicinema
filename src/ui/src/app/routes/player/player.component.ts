@@ -12,8 +12,8 @@ import {NotificationsService} from '../../services/notifications/notifications.s
 import {ShikicinemaSettings} from '../../types/ShikicinemaSettings';
 import {SettingsService} from '../../services/settings/settings.service';
 import {UserPreferencesService} from '../../services/user-preferences/user-preferences.service';
-import {catchError, distinctUntilChanged, map, publishReplay, refCount, switchMap, takeWhile, tap} from 'rxjs/operators';
-import {BehaviorSubject, combineLatest, EMPTY, of, Subject} from 'rxjs';
+import {catchError, debounceTime, distinctUntilChanged, map, publishReplay, refCount, switchMap, takeWhile, tap} from 'rxjs/operators';
+import {BehaviorSubject, combineLatest, EMPTY, of, ReplaySubject, Subject} from 'rxjs';
 import {Notification, NotificationType} from '../../types/notification';
 import {MatDialog} from '@angular/material/dialog';
 import {IRequestDialogData, RequestDialogComponent} from '../../shared/components/request-dialog/request-dialog.component';
@@ -35,10 +35,10 @@ export class PlayerComponent implements OnInit, OnDestroy {
   public filter = new SmarthardNet.VideoFilter();
   public isUploadOpened = false;
   public settings: ShikicinemaSettings;
-  public urlParams: { animeId?: number, episode?: number } = {};
   public userRate: Shikimori.UserRate;
 
   readonly episodeSubject = new BehaviorSubject<number>(1);
+  readonly episodeEventSubject = new ReplaySubject<string>(1);
   readonly quotesSubject = new Subject<string>();
   readonly repliesSubject = new Subject<string>();
 
@@ -113,17 +113,6 @@ export class PlayerComponent implements OnInit, OnDestroy {
       data => this.settings = new ShikicinemaSettings(data)
     );
 
-    this.route.params
-      .pipe(
-        takeWhile(() => this.isAlive)
-      )
-      .subscribe(
-      params => this.urlParams = {
-        animeId: params['animeId'],
-        episode: params['episode']
-      }
-    );
-
     this.episode$
       .pipe(
         takeWhile(() => this.isAlive),
@@ -158,6 +147,17 @@ export class PlayerComponent implements OnInit, OnDestroy {
       .subscribe(
         userRates => this.userRate = new Shikimori.UserRate(userRates ? userRates : {})
     );
+
+    this.episodeEventSubject
+      .pipe(
+        distinctUntilChanged(),
+        debounceTime(300)
+      )
+      .subscribe((episode) => this.changeEpisode(episode))
+  }
+
+  onEpisodeInput(evt: any) {
+    this.episodeEventSubject.next(evt.target.value);
   }
 
   async changeEpisode(episode: number | string) {

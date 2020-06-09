@@ -23,8 +23,8 @@
     <div id="controls">
       <app-control-box subtext="Предыдущий">
         <button mat-button
-                [disabled]="+urlParams.episode - 1 < 1"
-                (click)="changeEpisode(+urlParams.episode - 1)">
+                [disabled]="+videosService.episode - 1 < 1"
+                (click)="changeEpisode(+videosService.episode - 1)">
           <mat-icon>fast_rewind</mat-icon>
         </button>
       </app-control-box>
@@ -34,29 +34,28 @@
         <input id="shikicinema-episode"
                class="text"
                maxlength="5"
-               [(ngModel)]="urlParams.episode"
-               (ngModelChange)="changeEpisode($event)"
-               value="1">
+               (input)="onEpisodeInput($event)"
+               [value]="episode$ | async">
       </app-control-box>
       <app-control-box subtext="Следующий">
         <button mat-button
-                [disabled]="+urlParams.episode + 1 > (anime.episodes || anime.episodes_aired)"
-                (click)="changeEpisode(+urlParams.episode + 1)">
+                [disabled]="+videosService.episode + 1 > (anime.episodes || anime.episodes_aired)"
+                (click)="changeEpisode(+videosService.episode + 1)">
           <mat-icon>fast_forward</mat-icon>
         </button>
       </app-control-box>
       <app-control-box subtext="Просмотрено"
                        *ngIf="(whoami$ | async) as user else sync"
-                       [matTooltip]="watched(urlParams.episode)
+                       [matTooltip]="watched(videosService.episode)
                                       ? 'Убрать отметку о просмотре'
                                       : 'Отметить как просмотренную'"
                        matTooltipPosition="after"
                        matTooltipShowDelay="1000"
-                       (click)="watched(urlParams.episode)
+                       (click)="watched(videosService.episode)
                                 ? watch(anime, +videosService.currentVideo?.episode - 1, user, 'Просмотр отменен')
                                 : watch(anime, +videosService.currentVideo?.episode, user, 'Просмотрено')">
         <button mat-button
-                [class.watched]="watched(urlParams.episode)">
+                [class.watched]="watched(videosService.episode)">
           <mat-icon>done</mat-icon>
         </button>
       </app-control-box>
@@ -145,8 +144,8 @@
                           (check)="changeVideo($event)"
                           (close)="closeUploadForm()"
                           [uploaderId]="user.id"
-                          [animeId]="urlParams.animeId"
-                          [episode]="urlParams.episode"></app-upload-video>
+                          [animeId]="animeId$ | async"
+                          [episode]="episode$ | async"></app-upload-video>
       </div>
 
       <ng-container *ngIf="settings && videos
@@ -159,7 +158,7 @@
           <app-episodes-list *ngIf="videosService.unique$ | async as unique; else episodesGhost"
                              (change)="changeEpisode($event)"
                              [anime]="anime"
-                             [episode]="urlParams.episode"
+                             [episode]="episode$ | async"
                              [unique]="unique"
                              [chosen]="videosService.currentVideo"></app-episodes-list>
           <app-video-list

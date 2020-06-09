@@ -94,7 +94,9 @@ export class VideosService {
       })
     );
 
+  private _anime: Shikimori.Anime = null;
   private _currentVideo: SmarthardNet.Shikivideo = null;
+  private _episode = 1;
 
   private _shikivideosErrorHandler = (err) => {
     console.error(err);
@@ -108,7 +110,10 @@ export class VideosService {
     private preferenses: UserPreferencesService,
     private shikimori: ShikimoriService,
     private shikivideos: ShikivideosService
-  ) {}
+  ) {
+    this.anime$.subscribe((anime) => this._anime = anime);
+    this.episode$.subscribe((episode) => this._episode = episode);
+  }
 
   public setAnimeId(animeId: number) {
     this._animeIdSubject.next(animeId);
@@ -116,6 +121,10 @@ export class VideosService {
 
   public setEpisode(episode: number) {
     this._episodeSubject.next(episode);
+  }
+
+  public get anime() {
+    return this._anime;
   }
 
   public set currentVideo(video: SmarthardNet.Shikivideo) {
@@ -127,5 +136,9 @@ export class VideosService {
 
   public get currentVideo(): SmarthardNet.Shikivideo {
     return this._currentVideo;
+  }
+
+  public get episode() {
+    return this._episode;
   }
 }
