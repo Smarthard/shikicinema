@@ -5,21 +5,22 @@ import {ShikimoriService} from '../../services/shikimori-api/shikimori.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Title} from '@angular/platform-browser';
 import {Shikimori} from '../../types/shikimori';
-import {HttpHeaders, HttpParams} from '@angular/common/http';
+import {HttpHeaders} from '@angular/common/http';
 import {SmarthardNet} from '../../types/smarthard-net';
 import {AuthService} from '../../services/auth/auth.service';
 import {NotificationsService} from '../../services/notifications/notifications.service';
 import {ShikicinemaSettings} from '../../types/ShikicinemaSettings';
 import {SettingsService} from '../../services/settings/settings.service';
 import {UserPreferencesService} from '../../services/user-preferences/user-preferences.service';
-import {catchError, debounceTime, distinctUntilChanged, map, publishReplay, refCount, switchMap, takeWhile} from 'rxjs/operators';
-import {BehaviorSubject, combineLatest, EMPTY, iif, Observable, of, Subject} from 'rxjs';
+import {catchError, distinctUntilChanged, map, publishReplay, refCount, switchMap, takeWhile, tap} from 'rxjs/operators';
+import {BehaviorSubject, combineLatest, EMPTY, of, Subject} from 'rxjs';
 import {Notification, NotificationType} from '../../types/notification';
 import {MatDialog} from '@angular/material/dialog';
 import {IRequestDialogData, RequestDialogComponent} from '../../shared/components/request-dialog/request-dialog.component';
 import {KodikService} from '../../services/kodik-api/kodik.service';
 import {RemoteNotificationsService} from '../../services/remote-notifications/remote-notifications.service';
 import {CommentsService} from '../../services/comments/comments.service';
+import {VideosService} from '../../services/videos/videos.service';
 
 @Component({
   selector: 'app-player',
@@ -29,95 +30,42 @@ import {CommentsService} from '../../services/comments/comments.service';
 export class PlayerComponent implements OnInit, OnDestroy {
 
   private isAlive = true;
-  private _httpErrorHandler = (err) => {
-    console.error(err);
-    this.notify.add(new Notification(NotificationType.ERROR, 'Не удалось загрузить видео!', err));
-    return of(<SmarthardNet.Shikivideo[]> []);
-  };
 
   public readonly EMPTY_VIDEO = new SmarthardNet.Shikivideo({ id: -666 });
   public filter = new SmarthardNet.VideoFilter();
-  public isUploadOpened: boolean = false;
+  public isUploadOpened = false;
   public settings: ShikicinemaSettings;
   public urlParams: { animeId?: number, episode?: number } = {};
   public userRate: Shikimori.UserRate;
-  public uploader: Shikimori.User;
-  public currentVideo: SmarthardNet.Shikivideo;
 
   readonly episodeSubject = new BehaviorSubject<number>(1);
   readonly quotesSubject = new Subject<string>();
   readonly repliesSubject = new Subject<string>();
-  readonly uploaderSubject = new BehaviorSubject<string>(null);
 
   readonly animeId$ = this.route.params.pipe(
-    map((params) => +params['animeId']),
+    map((params) => params?.animeId as number),
     distinctUntilChanged()
   );
 
-  readonly anime$: Observable<Shikimori.Anime> = this.animeId$.pipe(
-    switchMap(animeId => this.shikimori.getAnime(animeId)),
-    publishReplay(1),
-    refCount()
-  );
+  readonly anime$ = this.animeId$
+    .pipe(
+      tap((animeId: number) => this.videosService.setAnimeId(animeId)),
+      switchMap(() => this.videosService.anime$)
+    );
 
   readonly episode$ = this.episodeSubject.pipe(
-    switchMap(episode => {
-      return episode !== 1 ? of(episode) : this.route.params.pipe(map(params => <number> params.episode || 1));
-    })
+    switchMap(episode => episode !== 1
+      ? of(episode)
+      : this.route.params
+        .pipe(
+          map(params => (params.episode as number) || 1)
+        )
+    ),
+    tap((episode: number) => this.videosService.setEpisode(episode))
   );
-
-  readonly shikivideos$ = this.episode$
-    .pipe(
-      (episode$) => combineLatest([this.anime$, episode$]),
-      switchMap(([anime, episode]) => this.videosApi.findById(anime.id, new HttpParams()
-        .set('limit', 'all')
-        .set('episode', `${episode}`)
-      ))
-    );
-
-  readonly kodikvideos$ = this.episode$
-    .pipe(
-      (episode$) => combineLatest([this.anime$, episode$]),
-      switchMap(([anime, episode]) => this.kodikService.search(anime, episode)),
-      publishReplay(1),
-      refCount()
-    );
-
-  readonly videos$ = this.shikivideos$
-    .pipe(
-      (shikivideos$) => combineLatest([shikivideos$, this.kodikvideos$]),
-      map(([shikivideos, kodikvideos]) => [...shikivideos, ...kodikvideos]),
-      map((videos: SmarthardNet.Shikivideo[]) => videos.sort((a, b) => `${a.author}`.localeCompare(`${b.author}`))),
-      catchError(err => this._httpErrorHandler(err)),
-      publishReplay(1),
-      refCount()
-    );
-
-  readonly shikivideosUnique$: Observable<SmarthardNet.Unique> = this.animeId$.pipe(
-    switchMap(animeId => this.videosApi.getUniqueValues(new HttpParams()
-      .set('anime_id', `${animeId}`)
-      .set('column', 'author+kind+language+url+quality')
-      .set('limit', 'all')
-    )),
-    publishReplay(1),
-    refCount()
-  );
-
-  readonly kodikUnique$ = this.kodikvideos$
-    .pipe(
-      switchMap(() => this.anime$),
-      switchMap((anime: Shikimori.Anime) => this.kodikService.getUnique(anime)),
-    );
 
   readonly quotes$ = this.quotesSubject.asObservable();
   readonly replies$ = this.repliesSubject.asObservable();
-
-  readonly unique$ = this.anime$
-    .pipe(
-      switchMap(() => this.shikivideosUnique$),
-      (shikivideosUnique) => combineLatest([shikivideosUnique, this.kodikUnique$]),
-      map((uniques: SmarthardNet.Unique[]) => SmarthardNet.mergeUniques(uniques))
-    );
 
   readonly whoami$ = this.shikimori.whoAmI(new HttpHeaders()
     .set('Cache-Control', 'no-cache, no-store, must-revalidate')
@@ -127,12 +75,14 @@ export class PlayerComponent implements OnInit, OnDestroy {
     refCount()
   );
 
-  readonly userRate$ = this.anime$.pipe(
+  readonly userRate$ = this.videosService.anime$.pipe(
     map((anime) => anime.user_rate),
     catchError(() => of(null)),
     publishReplay(1),
     refCount()
   );
+
+  readonly uploader$ = this.videosService.uploader$;
 
   readonly notifications$ = this.remoteNotifications.notifications$;
 
@@ -148,6 +98,7 @@ export class PlayerComponent implements OnInit, OnDestroy {
     private shikimori: ShikimoriService,
     private settingsService: SettingsService,
     readonly commentsService: CommentsService,
+    readonly videosService: VideosService,
     private title: Title,
     private dialog: MatDialog
   ) {}
@@ -186,14 +137,14 @@ export class PlayerComponent implements OnInit, OnDestroy {
         this.EMPTY_VIDEO.episode = episode;
       });
 
-    this.videos$
+    this.videosService.videos$
       .pipe(
         takeWhile(() => this.isAlive),
       )
       .subscribe(
-        videos => {
+        (videos) => {
         const query = this.route.snapshot.queryParams;
-        const videoById = videos.filter(vid => query && query.id && vid.id == query.id)[0];
+        const videoById = videos.filter((vid) => vid.id === (query?.id as number))[0];
         const favVideos = this._chooseFavourite(videos);
 
         this.changeVideo( videos.length === 0 ? this.EMPTY_VIDEO : (videoById ? videoById : favVideos[0]) );
@@ -207,24 +158,10 @@ export class PlayerComponent implements OnInit, OnDestroy {
       .subscribe(
         userRates => this.userRate = new Shikimori.UserRate(userRates ? userRates : {})
     );
-
-    this.uploaderSubject
-      .pipe(
-        takeWhile(() => this.isAlive),
-        debounceTime(250),
-        switchMap(uploader => iif(
-          () => !!uploader,
-          this.shikimori.getUserInfo(uploader),
-          of(null)
-        ))
-      )
-      .subscribe(
-      uploader => this.uploader = uploader
-    );
   }
 
   async changeEpisode(episode: number | string) {
-    if (episode != '') {
+    if (episode !== '' && !isNaN(episode as number)) {
       this.episodeSubject.next(+episode);
       await this.router.navigate([`../${episode}`], { relativeTo:  this.route });
     }
@@ -239,10 +176,7 @@ export class PlayerComponent implements OnInit, OnDestroy {
   }
 
   changeVideo(video: SmarthardNet.Shikivideo) {
-    const fav = new SmarthardNet.VideoFilter(video.author, null, null, video.url, video.quality);
-    this.currentVideo = video;
-    this.preferenses.set(+video.anime_id, fav);
-    this.uploaderSubject.next(video.uploader);
+    this.videosService.currentVideo = video;
   }
 
   async synchronize() {
@@ -274,7 +208,7 @@ export class PlayerComponent implements OnInit, OnDestroy {
     }
 
     if (animeEpisodes >= episode + 1) {
-      this.changeEpisode(episode + 1);
+      await this.changeEpisode(episode + 1);
     }
 
     this.notify.add(new Notification(NotificationType.OK, message));
@@ -295,7 +229,7 @@ export class PlayerComponent implements OnInit, OnDestroy {
   async openRequestsDialog() {
     const user = await this.whoami$.toPromise();
     const data: IRequestDialogData = {
-      video: this.currentVideo,
+      video: this.videosService.currentVideo,
       requester: `https://shikimori.one/${user.nickname}`
     };
     const requestDialogRef = this.dialog.open(RequestDialogComponent, { minWidth: '50%', disableClose: true, data });

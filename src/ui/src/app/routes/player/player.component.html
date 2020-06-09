@@ -1,14 +1,15 @@
 <app-header [anime]="anime$ | async"
             [user]="whoami$ | async"
             [notifications]="notifications$ | async">
-  <app-uploader [uploadedByUser]="uploader"
-                [isForeignSource]="currentVideo && currentVideo.foreign"></app-uploader>
+  <app-uploader [uploadedByUser]="uploader$ | async"
+                [isForeignSource]="videosService.currentVideo?.foreign"></app-uploader>
 </app-header>
 <div id="player" *ngIf="settings && (anime$ | async) as anime">
-  <app-video-player [video]="currentVideo"></app-video-player>
+  <app-video-player [video]="videosService.currentVideo"></app-video-player>
 
-  <ng-container *ngIf="(videos$ | async) as videos">
-    <div id="filters" *ngIf="videos.length > 0 && settings.playerFiltersEnabled && unique$ | async as unique">
+  <ng-container *ngIf="(videosService.videos$ | async) as videos">
+    <div id="filters"
+         *ngIf="videos.length > 0 && settings.playerFiltersEnabled && (videosService.unique$ | async) as unique">
       <app-dropdown-filters *ngFor="let f of settings.playerFilters
                               | filterBy: ['enabled']:true as enabledFilters"
                             [unique]="unique"
@@ -28,7 +29,7 @@
         </button>
       </app-control-box>
       <app-control-box subtext="прямая ссылка"
-                       [href]="(currentVideo)?.url || '#'">
+                       [href]="videosService.currentVideo?.url || '#'">
         <label for="shikicinema-episode"></label>
         <input id="shikicinema-episode"
                class="text"
@@ -52,8 +53,8 @@
                        matTooltipPosition="after"
                        matTooltipShowDelay="1000"
                        (click)="watched(urlParams.episode)
-                                ? watch(anime, +currentVideo.episode - 1, user, 'Просмотр отменен')
-                                : watch(anime, +currentVideo.episode, user, 'Просмотрено')">
+                                ? watch(anime, +videosService.currentVideo?.episode - 1, user, 'Просмотр отменен')
+                                : watch(anime, +videosService.currentVideo?.episode, user, 'Просмотрено')">
         <button mat-button
                 [class.watched]="watched(urlParams.episode)">
           <mat-icon>done</mat-icon>
@@ -116,7 +117,7 @@
           </ng-container>
 
           <button mat-menu-item
-                  [disabled]="!(whoami$ | async)?.id || currentVideo.id === EMPTY_VIDEO.id"
+                  [disabled]="!(whoami$ | async)?.id || videosService.currentVideo?.id === EMPTY_VIDEO.id"
                   (click)="openRequestsDialog()">
             Жалоба
           </button>
@@ -155,16 +156,16 @@
               | filterBy:['url']:filter.player
              as filteredVideos">
         <div id="series" *ngIf="settings.oldFagApproves">
-          <app-episodes-list *ngIf="unique$ | async as unique; else episodesGhost"
+          <app-episodes-list *ngIf="videosService.unique$ | async as unique; else episodesGhost"
                              (change)="changeEpisode($event)"
                              [anime]="anime"
                              [episode]="urlParams.episode"
                              [unique]="unique"
-                             [chosen]="currentVideo"></app-episodes-list>
+                             [chosen]="videosService.currentVideo"></app-episodes-list>
           <app-video-list
             [videos]="filteredVideos"
             (change)="changeVideo($event)"
-            [chosen]="currentVideo"></app-video-list>
+            [chosen]="videosService.currentVideo"></app-video-list>
 
           <ng-template #episodesGhost>
             <app-oldfag-episodes-list-skeleton></app-oldfag-episodes-list-skeleton>
@@ -174,7 +175,7 @@
           <app-compact-video-list
             [videos]="filteredVideos"
             (change)="changeVideo($event)"
-            [chosenId]="currentVideo.id"></app-compact-video-list>
+            [chosenId]="videosService.currentVideo?.id"></app-compact-video-list>
         </div>
       </ng-container>
     </div>
