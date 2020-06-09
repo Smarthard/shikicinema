@@ -31,6 +31,10 @@ export class ButtonScrollEpisodeListComponent {
 
   constructor() {}
 
+  get isEndlessAnime() {
+    return this?.anime?.episodes === 0;
+  }
+
   get maxEpisodeAired() {
     return this?.anime?.episodes_aired || this?.anime?.episodes || 0;
   }
@@ -46,7 +50,7 @@ export class ButtonScrollEpisodeListComponent {
   get episodes() {
     return this._episodes.length === this?.maxEpisode
       ? this._episodes
-      : new Array<number>(this?.maxEpisode)
+      : new Array<number>(!this.isEndlessAnime ? this?.maxEpisode : +this?.maxEpisode + 1)
         .fill(0)
         .map((value, index) => +index + 1)
   }

@@ -29,7 +29,12 @@
           нет видео
         </span>
 
-        <span *ngIf="!isAnimeReleased && episode > maxEpisodeAired"
+        <span *ngIf="!isAnimeReleased && episode === +maxEpisodeAired + 1 && !!anime?.next_episode_at"
+              class="text highlighted">
+          выйдет {{ anime?.next_episode_at | date: 'dd MMMM' }}
+        </span>
+
+        <span *ngIf="!isAnimeReleased && (episode > +maxEpisodeAired + 1 || !anime?.next_episode_at)"
               class="text highlighted">
           еще не вышло
         </span>
