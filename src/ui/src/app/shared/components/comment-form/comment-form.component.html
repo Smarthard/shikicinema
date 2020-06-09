@@ -41,7 +41,7 @@
       <div class="separator"></div>
 
       <button (click)="isLinkSectionOpen ? close() : openLinkSection()"
-              [color]="isLinkSectionOpen ? 'accent' : 'primary'"
+              [color]="isLinkSectionOpen ? 'accent' : undefined"
               [disabled]="commentForm.disabled"
               class="text"
               matTooltip="Вставить ссылку"
@@ -50,7 +50,7 @@
         <mat-icon>insert_link</mat-icon>
       </button>
       <button (click)="isImageSectionOpen ? close() : openImageSection()"
-              [color]="isImageSectionOpen ? 'accent' : 'primary'"
+              [color]="isImageSectionOpen ? 'accent' : undefined"
               [disabled]="commentForm.disabled"
               class="text"
               matTooltip="Вставить картинку"
@@ -59,7 +59,7 @@
         <mat-icon>insert_photo</mat-icon>
       </button>
       <button (click)="isQuotesSectionOpen ? close() : openQuotesSection()"
-              [color]="isQuotesSectionOpen ? 'accent' : 'primary'"
+              [color]="isQuotesSectionOpen ? 'accent' : undefined"
               [disabled]="commentForm.disabled"
               class="text"
               style="display: none"
@@ -77,7 +77,7 @@
         <mat-icon>error_outline</mat-icon>
       </button>
       <button (click)="isSmileysSectionOpen ? close() : openSmileys()"
-              [color]="isSmileysSectionOpen ? 'accent' : 'primary'"
+              [color]="isSmileysSectionOpen ? 'accent' : undefined"
               [disabled]="commentForm.disabled"
               class="text"
               matTooltip="Смайлик"
