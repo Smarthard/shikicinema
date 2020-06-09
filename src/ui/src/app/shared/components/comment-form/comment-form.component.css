@@ -20,6 +20,10 @@ mat-form-field.textarea textarea {
   border-radius: 5px;
 }
 
+textarea {
+  background-color: #EEE;
+}
+
 app-comment {
   display: block;
   border-top: 1px dashed #777;
