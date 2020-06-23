@@ -1,12 +1,13 @@
+import {Injectable} from '@angular/core';
+import {HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpParams, HttpRequest} from '@angular/common/http';
 import {EMPTY, Observable, throwError} from 'rxjs';
-import {HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
+import {catchError, delay, exhaustMap, switchMap} from 'rxjs/operators';
 import {SmarthardNet} from '../../types/smarthard-net';
 import {AuthService} from '../../services/auth/auth.service';
 import {NotificationsService} from '../../services/notifications/notifications.service';
 import {environment} from '../../../environments/environment';
-import {catchError, delay, exhaustMap, switchMap} from 'rxjs/operators';
-import {Injectable} from '@angular/core';
 import {Notification, NotificationType} from '../../types/notification';
+import {Shikimori} from '../../types/shikimori';
 
 @Injectable({
   providedIn: 'root'
@@ -20,6 +21,26 @@ export class ShikivideosRequestsInterceptor implements HttpInterceptor {
     private auth: AuthService,
     private notify: NotificationsService
   ) {}
+
+  private static _updateTokenReq(req: HttpRequest<any>, shikimoriToken: Shikimori.Token): HttpRequest<any> {
+    const body: any = { shikimori_token: shikimoriToken.token };
+
+    return req.clone({ body });
+  }
+
+  private static _switchTokenReq(req: HttpRequest<any>, shikimoriToken: Shikimori.Token): HttpRequest<any> {
+    const params = new HttpParams()
+      .set('grant_type', 'shikimori_token')
+      .set('client_id', environment.SHIKIVIDEOS_CLIENT_ID)
+      .set('client_secret', environment.SHIKIVIDEOS_CLIENT_SECRET)
+      .set('scopes', 'database:shikivideos_create');
+
+    return req.clone({
+      method: 'PUT',
+      params,
+      body: { shikimori_token: shikimoriToken.token }
+    });
+  }
 
   private _appendHeaders(request: HttpRequest<any>, token?: SmarthardNet.Token): HttpRequest<any> {
     const headers = { 'User-Agent': `Shikicinema ${this.EXTENSION_VERSION}${this.IS_PRODUCTION ? '' : ' DEV'}`};
@@ -54,16 +75,25 @@ export class ShikivideosRequestsInterceptor implements HttpInterceptor {
               return this.auth.shikimoriSync()
                 .pipe(
                   delay(200),
-                  exhaustMap(() => this.auth.shikivideosSync()),
-                  exhaustMap(() => (/token/i.test(req.url)) ? EMPTY : next.handle(req))
+                  exhaustMap((token: Shikimori.Token) => {
+                    if (/token/i.test(req.url)) {
+                      return next.handle(ShikivideosRequestsInterceptor._updateTokenReq(req, token))
+                    } else {
+                      return this.auth.shikivideosSync()
+                        .pipe(
+                          exhaustMap(() => next.handle(req))
+                        )
+                    }
+                  })
                 );
             }
 
-            // Forcefully update shikivideos token and drop previous request
+            // Forcefully update shikimori token and retry
             if (err.status === 401 && req.params.get('grant_type') === 'refresh_token') {
-              return this.auth.shikivideosSync(true)
+              return this.auth.shikimoriSync()
                 .pipe(
-                  exhaustMap(() => EMPTY)
+                  delay(200),
+                  exhaustMap((token: Shikimori.Token) => next.handle(ShikivideosRequestsInterceptor._switchTokenReq(req, token))),
                 );
             }
 
