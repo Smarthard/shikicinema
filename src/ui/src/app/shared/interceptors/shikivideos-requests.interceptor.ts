@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpParams, HttpRequest} from '@angular/common/http';
+import {HttpErrorResponse, HttpEvent, HttpHandler, HttpHeaders, HttpInterceptor, HttpParams, HttpRequest} from '@angular/common/http';
 import {EMPTY, Observable, throwError} from 'rxjs';
 import {catchError, delay, exhaustMap, switchMap} from 'rxjs/operators';
 import {SmarthardNet} from '../../types/smarthard-net';
@@ -43,14 +43,16 @@ export class ShikivideosRequestsInterceptor implements HttpInterceptor {
   }
 
   private _appendHeaders(request: HttpRequest<any>, token?: SmarthardNet.Token): HttpRequest<any> {
-    const headers = { 'User-Agent': `Shikicinema ${this.EXTENSION_VERSION}${this.IS_PRODUCTION ? '' : ' DEV'}`};
+    const EXTENSION_VERSION = this.EXTENSION_VERSION;
+    const DEV_LABEL = this.IS_PRODUCTION ? '' : ' DEV';
     const shikivideos = token || this.auth.shikivideos;
+    let headers = new HttpHeaders({ 'User-Agent': `Shikicinema ${EXTENSION_VERSION}${DEV_LABEL}`});
 
     if (request.method === 'POST' && shikivideos && shikivideos.token) {
-      headers['Authorization'] = `Bearer ${shikivideos.token}`;
+      headers = headers.append('Authorization', `Bearer ${shikivideos.token}`);
     }
 
-    return request.clone({ setHeaders: headers, withCredentials: false });
+    return request.clone({ headers, withCredentials: false });
   }
 
   private _showWarningNotification() {
