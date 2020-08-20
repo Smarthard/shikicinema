@@ -30,6 +30,24 @@
     margin: 5px;
   }
 
+  :host footer {
+    margin: 0;
+    padding: 0;
+    text-align: center;
+  }
+
+  :host footer ul {
+    margin: 2px auto;
+    padding: 0;
+    line-height: 1.4;
+    font-size: smaller;
+  }
+
+  :host footer ul li {
+    display: inline;
+    text-align: center;
+  }
+
 }
 
 @media (max-width: 1024px) and (orientation: portrait) {
@@ -52,6 +70,45 @@
     margin: 0;
   }
 
+  :host footer {
+    margin: 0;
+    padding: 0;
+    text-align: center;
+  }
+
+  :host footer ul {
+    margin: 2px auto;
+    padding: 0;
+    line-height: 1.4;
+    font-size: smaller;
+  }
+
+  :host footer ul li {
+    display: inline;
+    text-align: center;
+  }
+
+}
+
+footer {
+  margin: 0;
+  padding: 0 13%;
+}
+
+footer ul {
+  width: 100%;
+  padding: 6px 0;
+  list-style: none;
+}
+
+footer ul li {
+  display: inline-block;
+  vertical-align: middle;
+  padding: 0 20px 0 0;
+}
+
+.dark-theme :host footer, .dark-theme :host footer * {
+  background-color: #333;
 }
 
 .dark-theme :host, .dark-theme :host * {
