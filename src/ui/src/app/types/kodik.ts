@@ -31,7 +31,8 @@ export namespace Kodik {
 
   export interface ITranslation {
     readonly id: number,
-    readonly title: string
+    readonly title: string,
+    readonly type: 'voice' | 'subtitles'
   }
 
   export interface ISeasons {

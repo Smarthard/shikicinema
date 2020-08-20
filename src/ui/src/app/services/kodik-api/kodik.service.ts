@@ -35,18 +35,7 @@ export class KodikService {
   }
 
   private static _isSubtitles(video: Kodik.IVideo) {
-    if (video && video.translation && video.translation.id) {
-      switch (video.translation.id) {
-        case 869:
-        case 1070:
-        case 1071:
-          return true;
-        default:
-          return false;
-      }
-    } else {
-      return false;
-    }
+    return video.translation.type === 'subtitles';
   }
 
   private static _castToShikivideo(animeId: number, season: string, episode: number, kodikvideo: Kodik.IVideo) {
@@ -58,8 +47,7 @@ export class KodikService {
     return new SmarthardNet.Shikivideo({
       id: url,
       anime_id: animeId,
-      url: url,
-      episode: episode,
+      url, episode,
       quality: KodikService._translateQuality(kodikvideo.quality),
       anime_russian: kodikvideo.title,
       anime_english: kodikvideo.title_orig,
@@ -132,7 +120,7 @@ export class KodikService {
     const season = await this._getSeason(anime);
 
     return response.results
-      .filter(video => video && video.seasons && video.seasons[season] && video.seasons[season].episodes[episode] || KodikService._isMovie(video))
+      .filter(video => video?.seasons && video.seasons[season] && video.seasons[season].episodes[episode] || KodikService._isMovie(video))
       .map(v => KodikService._castToShikivideo(anime.id, season, episode, v));
   }
 
