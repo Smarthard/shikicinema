@@ -1,3 +1,12 @@
+@font-face {
+  font-family: "shikimori";
+  src: url("https://shikimori.one/assets/shikimori-44b23b6b9dffa034a9e2cd64b897c2c8ec90e2e204ae19e01d4c88c26092de8b.eot?") format("eot"),
+       url("https://shikimori.one/assets/shikimori-8bf936322c4dce28cc4da03714264626f6e70822800ed2adde30408885579eda.woff2") format("woff2"),
+       url("https://shikimori.one/assets/shikimori-9b1b2180c046a3351513f55d7e8c449eeb4b2b55255619e4c0a6020e418c4de4.woff") format("woff"),
+       url("https://shikimori.one/assets/shikimori-f9e0ba0284218c33cb187378b458cf112f9ab817a278acff59da41dc6574551b.ttf") format("truetype"),
+       url("https://shikimori.one/assets/shikimori-53d6f4353851d3cf9076879f72044efab5f8a15f7585ccfa140c8f5b1cfdc57f.svg#shikimori") format("svg");
+}
+
 body {
   margin: 0;
   padding: 0;
@@ -82,6 +91,69 @@ body {
 .shc-spoiler .content .after,
 .shc-spoiler .content .inner {
   display: inline;
+}
+
+.shc-inline-spoiler:not(.is-opened) {
+  background-color: #678;
+  cursor: pointer;
+}
+
+.shc-inline-spoiler:not(.is-opened) > span {
+  opacity: 0;
+  user-select: none;
+  pointer-events: none;
+}
+
+.shc-inline-spoiler {
+  background-color: #7777;
+  padding: 2px 3px;
+  transition: background-color .25s ease;
+}
+
+.shc-inline-spoiler > span {
+  transition: opacity .25s ease;
+}
+
+.shc-block-spoiler > button {
+  background-color: #456;
+  border: 0;
+  clear: right;
+  color: #fff;
+  cursor: pointer;
+  display: inline-block;
+  font-size: 13px;
+  line-height: 23px;
+  padding: 0 28px 0 10px;
+  transition: background-color 0.3s ease,
+              color 0.3s ease;
+  user-select: none;
+}
+
+.shc-block-spoiler > button::after {
+  font-family: shikimori, serif;
+  font-feature-settings: 'liga';
+  text-transform: none;
+  letter-spacing: normal;
+  content: "";
+  font-size: 17px;
+  font-weight: bold;
+  margin: 1px 0 0 8px;
+  position: absolute;
+  transition: transform .25s, margin .25s;
+}
+
+.shc-block-spoiler.is-opened > button::after {
+  transform: rotate(180deg);
+  margin-top: 0;
+}
+
+.shc-block-spoiler:not(.is-opened) > div {
+  display: none;
+}
+
+.shc-block-spoiler > div {
+  border-left: 4px solid #456;
+  padding: 3px 3px 3px 14px;
 }
 
 .inline {

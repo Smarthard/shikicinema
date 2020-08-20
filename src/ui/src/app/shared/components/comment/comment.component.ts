@@ -30,11 +30,18 @@ export class CommentComponent implements AfterViewChecked {
 
   ngAfterViewChecked() {
     const SPOILERS = this._elementRef.nativeElement.querySelectorAll('.shc-spoiler');
+    const NEW_SPOILERS = this._elementRef.nativeElement.querySelectorAll('.shc-inline-spoiler, .shc-block-spoiler');
 
     SPOILERS.forEach((spoiler) => spoiler.onclick = (evt) => {
       evt.preventDefault();
       evt.stopPropagation();
       this.toggleSpoiler(spoiler);
+    });
+
+    NEW_SPOILERS.forEach((spoiler) => spoiler.onclick = (evt) => {
+      evt.preventDefault();
+      evt.stopPropagation();
+      spoiler.classList.toggle('is-opened');
     });
   }
 
