@@ -9,7 +9,7 @@ const KODIK_TOKEN = `${process.env.KODIK_TOKEN}`;
 const PLAYER_BUTTON = document.createElement('a');
 const INFO_DIV = document.createElement('div');
 const ON_WATCH_CLICK = async (anime) => {
-  const userRate = await _getAnimeInfo(anime.id, 500)
+  const userRate = await _getAnimeInfo(anime.id, 800)
     .then((updatedAnime) => updatedAnime.user_rate)
     .catch(() => null);
   const maxEpisode = anime.episodes || anime.episodes_aired || 1;
