@@ -119,6 +119,12 @@ export class CommentsService {
       /\[u](.*?)\[\/u]/ig,
       /\[s](.*?)\[\/s]/ig,
 
+      /\[spoiler_v1='?(.*?)'?](.*)\[\/spoiler_v1]/ig,
+
+      /\|\|(.*?)\|\|/ig,
+
+      /\[spoiler](.*)\[\/spoiler]/ig,
+
       /\[spoiler='?(.*?)'?](.*)\[\/spoiler]/ig,
 
       /\[url='?(.*?)'?](.*?)\[\/url]/ig,
@@ -152,6 +158,15 @@ export class CommentsService {
             <div class="inner text">$2</div>
             <div class="after"></div>
         </div>
+      </div>`,
+
+      `<span class="shc-inline-spoiler" onclick=""><span>$1</span></span>`,
+
+      `<span class="shc-inline-spoiler" onclick=""><span>$1</span></span>`,
+
+      `<div class="shc-block-spoiler" onclick="">
+        <button>$1</button>
+        <div>$2</div>
       </div>`,
 
       '<a class="shc-links" href="$1">$2</a>',
@@ -273,6 +288,12 @@ export class CommentsService {
     PARSED_COMMENTS
       .querySelectorAll('.b-spoiler')
       .forEach((elem) => elem.classList.replace('b-spoiler', 'shc-spoiler'));
+    PARSED_COMMENTS
+      .querySelectorAll('.b-spoiler_inline')
+      .forEach((elem) => elem.classList.replace('b-spoiler_inline', 'shc-inline-spoiler'));
+    PARSED_COMMENTS
+      .querySelectorAll('.b-spoiler_block')
+      .forEach((elem) => elem.classList.replace('b-spoiler_block', 'shc-block-spoiler'));
     PARSED_COMMENTS
       .querySelectorAll('.b-quote')
       .forEach((elem) => elem.classList.replace('b-quote', 'shc-quote'));
