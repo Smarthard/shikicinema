@@ -108,7 +108,7 @@ export class CommentsService {
     const SEARCH = [
       /\n/g,
 
-      / (:-[DP(]) /g,
+      / (:-?[DP(]) /g,
       / :-o /g,
       / :\) /g,
       / \+_\+ /g,
