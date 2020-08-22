@@ -106,7 +106,8 @@ body {
 
 .shc-inline-spoiler {
   background-color: #7777;
-  padding: 2px 3px;
+  border: 0;
+  padding: 0;
   transition: background-color .25s ease;
 }
 
