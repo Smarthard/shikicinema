@@ -107,6 +107,11 @@ footer ul li {
   padding: 0 20px 0 0;
 }
 
+li a img {
+  display: inline-block;
+  vertical-align: middle;
+}
+
 .dark-theme :host footer, .dark-theme :host footer * {
   background-color: #333;
 }
