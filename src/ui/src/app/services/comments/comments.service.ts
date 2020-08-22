@@ -160,9 +160,9 @@ export class CommentsService {
         </div>
       </div>`,
 
-      `<span class="shc-inline-spoiler" onclick=""><span>$1</span></span>`,
+      `<button class="shc-inline-spoiler" onclick=""><span>$1</span></button>`,
 
-      `<span class="shc-inline-spoiler" onclick=""><span>$1</span></span>`,
+      `<button class="shc-inline-spoiler" onclick=""><span>$1</span></button>`,
 
       `<div class="shc-block-spoiler" onclick="">
         <button>$1</button>
