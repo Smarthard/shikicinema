@@ -1,3 +1,14 @@
+.watch-button-div {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+}
+
+#watch_button {
+    margin: 0 auto;
+    display: inline-block;
+}
+
 a.watch-online:before {
     font-family: shikimori, serif;
     content: "\e831";
