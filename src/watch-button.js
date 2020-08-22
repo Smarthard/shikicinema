@@ -81,10 +81,11 @@ async function appendWatchButtonTo(element, anime) {
   PLAYER_BUTTON.classList.add('b-link_button', 'dark', 'watch-online');
   PLAYER_BUTTON.classList.remove('upload-video');
   PLAYER_BUTTON.textContent = 'Смотреть онлайн';
-  PLAYER_BUTTON.style.margin = '0 10%';
   PLAYER_BUTTON.onclick = () => ON_WATCH_CLICK(anime);
 
-  element.appendChild(PLAYER_BUTTON);
+  INFO_DIV.classList.add('watch-button-div');
+
+  INFO_DIV.appendChild(PLAYER_BUTTON);
   element.appendChild(INFO_DIV);
 
   if (lastOrMaxEpisodeAvailable === 0 || anime.status === 'anons') {
