@@ -42,6 +42,7 @@ zip -qr -9 "sources/shikicinema-src-$version.zip" \
     -x dev-builds/\* \
     -x releases/\* \
     -x screenshots/\* \
+    -x sources/\* \
     -x "src/ui/node_modules/*" \
     -x "src/ui/dist/*" \
     -x videos.csv \
