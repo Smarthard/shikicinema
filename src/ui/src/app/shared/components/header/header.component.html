@@ -15,29 +15,29 @@
     </button>
     <app-notifications-badge [notifications]="notifications"></app-notifications-badge>
     <mat-menu #extraButtonsMenu="matMenu">
-      <button mat-menu-item
-              (click)="openUrl(SHIKIMORI_URL + (anime ? anime.url : ''))"
-              [title]="'Перейти на ' + (anime && anime.name ? 'страницу ' + anime.name : 'Shikimori')">
+      <a mat-menu-item
+              [href]="SHIKIMORI_URL + (anime?.url || '')"
+              [title]="'Перейти на ' + (anime?.name ? 'страницу ' + anime.name : 'Shikimori')">
         {{ anime?.name || 'Shikimori' }}
-      </button>
-      <button mat-menu-item
+      </a>
+      <a mat-menu-item
               *ngIf="user"
-              (click)="openUrl(SHIKIMORI_URL + '/' + user.nickname + '/list/anime')">
+              [href]="SHIKIMORI_URL + '/' + user.nickname + '/list/anime'">
         Список аниме
-      </button>
-      <button mat-menu-item
+      </a>
+      <a mat-menu-item
               *ngIf="user"
-              (click)="openUrl(SHIKIMORI_URL + '/' + user.nickname + '/list/manga')">
+              [href]="SHIKIMORI_URL + '/' + user.nickname + '/list/manga'">
         Список манги
-      </button>
-      <button mat-menu-item
-              (click)="openUrl('https://stats.uptimerobot.com/1Vq2RhpMyQ', '_blank')">
+      </a>
+      <a mat-menu-item
+              href="https://stats.uptimerobot.com/1Vq2RhpMyQ">
         Статус сервера
-      </button>
-      <button mat-menu-item
+      </a>
+      <a mat-menu-item
               routerLink="/settings">
         Настройки
-      </button>
+      </a>
     </mat-menu>
   </div>
 </div>
