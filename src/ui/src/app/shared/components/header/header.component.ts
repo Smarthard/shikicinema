@@ -21,11 +21,4 @@ export class HeaderComponent {
 
   @Input()
   public notifications: SmarthardNet.Notification[];
-
-  constructor() {}
-
-  openUrl(url: string, target: '_self' | '_blank' = '_self') {
-    window.open(url, target)
-  }
-
 }
