@@ -13,6 +13,17 @@ import Timeout = NodeJS.Timeout;
 })
 export class CommentsComponent implements AfterViewChecked {
 
+  constructor(
+    private _comments: CommentsService,
+    private _elementRef: ElementRef,
+    private _notifications: NotificationsService
+  ) {}
+
+
+  get anyVisibleComment() {
+    return this.comments?.length > 0 && this.comments.some((c) => !this.deletedCommentsIds.has(c.id));
+  }
+
   @Input()
   comments: Shikimori.Comment[] = [];
 
@@ -43,14 +54,32 @@ export class CommentsComponent implements AfterViewChecked {
   bubbledOutTimeout: Timeout;
   deletedCommentsIds = new Set<number>();
 
-  constructor(
-    private _comments: CommentsService,
-    private _elementRef: ElementRef,
-    private _notifications: NotificationsService
-  ) {}
+
+  static _transformVideoLinkToIframe(videoLink: HTMLLinkElement) {
+    const videoUrl = videoLink.getAttribute('data-href');
+    const parent = videoLink.parentElement;
+
+    if (parent) {
+      const iframe = document.createElement('iframe');
+
+      while (parent.lastChild) {
+        parent.removeChild(parent.lastChild);
+      }
+
+      parent.appendChild(iframe);
+
+      iframe.allowFullscreen = true;
+      iframe.classList.add('shc-iframe');
+      iframe.setAttribute('loading', 'lazy');
+      setTimeout(() => iframe.src = videoUrl, 100);
+    }
+  }
 
   ngAfterViewChecked(): void {
     this.updateEventListeners();
+    this._elementRef.nativeElement
+      .querySelectorAll('a.video-link')
+      .forEach((videoLink: HTMLLinkElement) => CommentsComponent._transformVideoLinkToIframe(videoLink));
   }
 
   private async _getComment(id: number): Promise<Shikimori.Comment> {
@@ -91,10 +120,6 @@ export class CommentsComponent implements AfterViewChecked {
       this.bubbledComments.push(bubble);
       this.bubbledCommentsCache.set(bubble.data.id, bubble);
     }
-  }
-
-  get anyVisibleComment() {
-    return this.comments?.length > 0 && this.comments.some((c) => !this.deletedCommentsIds.has(c.id));
   }
 
   delete(comment: Shikimori.Comment) {

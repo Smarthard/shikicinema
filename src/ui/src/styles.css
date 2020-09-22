@@ -338,6 +338,32 @@ a.shc-links.bubbled img {
   text-decoration: line-through;
 }
 
+.shc-iframe {
+  background-color: #7777;
+  border: 0;
+}
+
+@media (min-width: 1025px) {
+  .shc-iframe {
+    width: 1024px;
+    height: 576px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .shc-iframe {
+    width: 500px;
+    height: 280px;
+  }
+}
+
+@media (max-width: 500px) {
+  .shc-iframe {
+    width: 200px;
+    height: 115px;
+  }
+}
+
 img.smiley {
   margin: 0 5px;
   width: auto;
