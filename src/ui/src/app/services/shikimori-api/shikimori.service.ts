@@ -175,6 +175,14 @@ export class ShikimoriService {
   public getComment(id: number) {
     return this.http.get<Shikimori.IComment>(`${this.SHIKIMORI_URL}/api/comments/${id}`)
       .pipe(
+        catchError(async (err) => ({
+          id,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+          html_body: 'Сообщение удалено',
+          body: 'Сообщение удалено',
+          can_be_edited: false,
+        } as Shikimori.IComment)),
         map((c) => new Shikimori.Comment(
           c.id,
           c.commentable_id,

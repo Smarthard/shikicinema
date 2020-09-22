@@ -330,6 +330,14 @@ a.shc-links.bubbled img {
   margin-right: 5px;
 }
 
+.b-entry-404 del {
+  padding: 0 0 0 5px;
+  color: #444;
+  cursor: default;
+  display: inline-block;
+  text-decoration: line-through;
+}
+
 img.smiley {
   margin: 0 5px;
   width: auto;
