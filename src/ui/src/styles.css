@@ -313,6 +313,12 @@ a.shc-links.bubbled img {
   margin: 0 5px 2px 0;
 }
 
+a.shc-links s {
+  color: #6d9fc2;
+  text-decoration: none;
+  display: inline-block;
+}
+
 .shc-image {
   cursor: zoom-in;
 }
