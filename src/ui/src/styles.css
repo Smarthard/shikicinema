@@ -115,7 +115,8 @@ body {
   transition: opacity .25s ease;
 }
 
-.shc-block-spoiler > button {
+.shc-block-spoiler > button,
+.shc-block-spoiler > span {
   background-color: #456;
   border: 0;
   clear: right;
@@ -130,7 +131,8 @@ body {
   user-select: none;
 }
 
-.shc-block-spoiler > button::after {
+.shc-block-spoiler > button::after,
+.shc-block-spoiler > span::after {
   font-family: shikimori, serif;
   font-feature-settings: 'liga';
   text-transform: none;
@@ -143,7 +145,8 @@ body {
   transition: transform .25s, margin .25s;
 }
 
-.shc-block-spoiler.is-opened > button::after {
+.shc-block-spoiler.is-opened > button::after,
+.shc-block-spoiler.is-opened > span::after {
   transform: rotate(180deg);
   margin-top: 0;
 }
