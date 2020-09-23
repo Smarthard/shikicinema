@@ -115,6 +115,12 @@ body {
   transition: opacity .25s ease;
 }
 
+/* remove chrome defaults */
+.shc-inline-spoiler,
+.shc-block-spoiler  :focus {
+  outline: 0;
+}
+
 .shc-block-spoiler > button,
 .shc-block-spoiler > span {
   background-color: #456;
