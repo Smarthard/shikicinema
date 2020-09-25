@@ -15,7 +15,6 @@
   .control-box {
     margin: 20px;
   }
-
 }
 
 @media (max-width: 1024px) and (orientation: landscape) {
@@ -48,6 +47,10 @@
     text-align: center;
   }
 
+  footer ul.footer-links {
+    justify-content: center;
+    padding: 15px;
+  }
 }
 
 @media (max-width: 1024px) and (orientation: portrait) {
@@ -88,6 +91,10 @@
     text-align: center;
   }
 
+  footer ul.footer-links {
+    justify-content: center;
+    padding: 15px;
+  }
 }
 
 footer {
@@ -95,10 +102,21 @@ footer {
   padding: 0 13%;
 }
 
-footer ul {
+ul.footer-links {
   width: 100%;
+  display: flex;
+  justify-content: left;
+  align-items: center;
   padding: 6px 0;
   list-style: none;
+}
+
+.vk-logo {
+  height: 19px;
+}
+
+.telegram-logo {
+  height: 22px;
 }
 
 footer ul li {
@@ -112,7 +130,11 @@ li a img {
   vertical-align: middle;
 }
 
-.dark-theme :host footer, .dark-theme :host footer * {
+:host footer * {
+  background-color: inherit;
+}
+
+.dark-theme :host footer {
   background-color: #333;
 }
 
