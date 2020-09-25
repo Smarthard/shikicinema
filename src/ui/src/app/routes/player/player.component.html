@@ -200,19 +200,23 @@
 </div>
 <footer *ngIf="videos$ | async"
         class="text flex flex-start">
-  <ul>
+  <ul class="footer-links">
     <li>
       <a class="shc-links"
+         title="Сообщество ВКонтакте"
          href="https://vk.com/shikicinema">
-        <img src="/assets/vk.png" height="16">
-        Группа ВКонтакте
+        <img class="vk-logo"
+             src="assets/vk.svg"
+             alt="vk">
       </a>
     </li>
     <li>
       <a class="shc-links"
+         title="Мы в Telegram"
          href="https://t.me/shikicinema">
-        <img src="https://t.me/favicon.ico" height="16">
-        Чат в Telegram
+        <img class="telegram-logo"
+             src="assets/telegram.svg"
+             alt="telegram">
       </a>
     </li>
     <li>
