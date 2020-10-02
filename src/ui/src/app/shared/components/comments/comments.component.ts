@@ -56,8 +56,18 @@ export class CommentsComponent implements AfterViewChecked {
 
 
   static _transformVideoLinkToIframe(videoLink: HTMLLinkElement) {
-    const videoUrl = videoLink.getAttribute('data-href');
     const parent = videoLink.parentElement;
+    let videoUrl;
+
+    try {
+      videoUrl = new URL(videoLink.getAttribute('data-href'));
+
+      // disabling autoplaying for youtube, coubs, whatever...
+      videoUrl.searchParams.set('autoplay', 'false');
+      videoUrl.searchParams.set('autostart', 'false');
+    } catch (e) {
+      console.error(e);
+    }
 
     if (parent) {
       const iframe = document.createElement('iframe');
