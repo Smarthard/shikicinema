@@ -98,6 +98,7 @@
 }
 
 footer {
+  background-color: #eee;
   margin: 0;
   padding: 0 13%;
 }
@@ -109,14 +110,6 @@ ul.footer-links {
   align-items: center;
   padding: 6px 0;
   list-style: none;
-}
-
-.vk-logo {
-  height: 19px;
-}
-
-.telegram-logo {
-  height: 22px;
 }
 
 footer ul li {

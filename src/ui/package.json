@@ -25,6 +25,7 @@
     "@exalif/ngx-skeleton-loader": "^2.0.0",
     "hammerjs": "^2.0.8",
     "material-design-icons": "^3.0.1",
+    "ng-inline-svg": "^11.0.0",
     "ngx-pipes": "^2.7.5",
     "ngx-responsive-embed": "^1.0.0",
     "rxjs": "~6.6.3",

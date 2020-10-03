@@ -64,6 +64,7 @@ import {CommentFormComponent} from './shared/components/comment-form/comment-for
 import {SmilleyComponent} from './shared/components/smilley/smilley.component';
 import {CommentComponent} from './shared/components/comment/comment.component';
 import {CommentBadgeComponent} from './shared/components/comment-badge/comment-badge.component';
+import {InlineSVGModule} from 'ng-inline-svg';
 
 registerLocaleData(localeRu, 'ru');
 
@@ -129,7 +130,8 @@ registerLocaleData(localeRu, 'ru');
     NgxSkeletonLoaderModule,
     MatBadgeModule,
     MatDividerModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    InlineSVGModule.forRoot({ baseUrl: chrome.runtime.getURL('/') }),
   ],
   providers: [
     { provide: LocationStrategy, useClass: HashLocationStrategy },
