@@ -1,11 +1,12 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
+import {of} from 'rxjs';
 import {catchError, shareReplay, timeout} from 'rxjs/operators';
 import {SmarthardNet} from '../../types/smarthard-net';
 import {Shikimori} from '../../types/shikimori';
 import {Kodik} from '../../types/kodik';
 import {environment} from '../../../environments/environment';
-import {of} from 'rxjs';
+import {ShikimoriService} from '../shikimori-api/shikimori.service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,9 +14,11 @@ import {of} from 'rxjs';
 export class KodikService {
 
   private _kodikResponseCache: Kodik.ISearchResponse;
+  private _franchise: Shikimori.IFranchiseResponse;
 
   constructor(
-    private http: HttpClient
+    private http: HttpClient,
+    private shikimori: ShikimoriService,
   ) {}
 
   private static _translateQuality(quality: string) {
@@ -94,14 +97,26 @@ export class KodikService {
   }
 
   private async _getSeason(anime: Shikimori.Anime) {
-    const response = await this.getVideos(anime);
-    const season = null;
+    if (!this._franchise || this._franchise.current_id !== anime.id) {
+      this._franchise = await this.shikimori.getFranchise(anime).toPromise();
+    }
 
-    if (response.results[0] && response.results[0].seasons && !response.results[0].seasons[season]) {
+    const response = await this.getVideos(anime);
+    const animeLinksInFranchise = this._franchise.links.filter((value) => value.source_id === anime.id);
+    const hasSpecials = animeLinksInFranchise.some((link) => link.relation === 'other');
+
+    /* if there are specials remove them */
+    if (hasSpecials && response?.results?.[0]?.seasons?.[0]) {
+      for (let i = 0; i < response.results.length; i++) {
+        delete this._kodikResponseCache.results[i].seasons[0];
+      }
+    }
+
+    if (response?.results?.[0]?.seasons && !response?.results?.[0]?.seasons?.[0]) {
       return Object.keys(response.results[0].seasons)[0];
     }
 
-    return season;
+    return null;
   }
 
   public async getVideos(anime: Shikimori.Anime) {
