@@ -214,7 +214,8 @@ export class PlayerComponent implements OnInit, OnDestroy {
         debounceTime(250),
         switchMap(uploader => iif(
           () => !!uploader,
-          this.shikimori.getUserInfo(uploader),
+          this.shikimori.getUserInfo(uploader)
+            .pipe(catchError(() => null)),
           of(null)
         ))
       )

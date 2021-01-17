@@ -4,6 +4,7 @@ import {Shikimori} from '../../types/shikimori';
 import {Observable, of, throwError} from 'rxjs';
 import {catchError, exhaustMap, map, timeout} from 'rxjs/operators';
 import {environment} from '../../../environments/environment';
+import IShikimoriFranchiseResponse = Shikimori.IFranchiseResponse;
 
 @Injectable({
   providedIn: 'root'
@@ -273,6 +274,10 @@ export class ShikimoriService {
       ).toPromise();
   }
 
+  public getFranchise(anime: Shikimori.Anime): Observable<IShikimoriFranchiseResponse> {
+    return this.http.get<IShikimoriFranchiseResponse>(`https://shikimori.one/api/animes/${anime.id}/franchise`);
+  }
+
   private _getShikimoriAuthCode(): Promise<any> {
     return new Promise(async (resolve, reject) => {
       let codeUrl = new URL('https://shikimori.one/oauth/authorize?');
@@ -327,5 +332,4 @@ export class ShikimoriService {
       );
     });
   }
-
 }

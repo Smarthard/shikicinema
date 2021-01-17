@@ -200,4 +200,28 @@ export namespace Shikimori {
     readonly episode_notification: IEpisodeNotificationResponse,
     readonly token: string
   }
+
+  export interface IFranchiseResponse {
+    current_id: number;
+    links: Array<{
+      id: number,
+      source_id: number;
+      target_id: number;
+      source: number;
+      target: number;
+      weight: number;
+      relation: string;
+    }>;
+    nodes: Array<{
+      id: number;
+      date: number;
+      name: string;
+      image_url: string;
+      url: string;
+      year: number;
+      kind: string;
+      weight: number;
+    }>;
+  }
+
 }

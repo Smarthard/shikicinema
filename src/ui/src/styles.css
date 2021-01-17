@@ -1,10 +1,10 @@
 @font-face {
   font-family: "shikimori";
-  src: url("https://shikimori.one/assets/shikimori-44b23b6b9dffa034a9e2cd64b897c2c8ec90e2e204ae19e01d4c88c26092de8b.eot?") format("eot"),
-       url("https://shikimori.one/assets/shikimori-8bf936322c4dce28cc4da03714264626f6e70822800ed2adde30408885579eda.woff2") format("woff2"),
-       url("https://shikimori.one/assets/shikimori-9b1b2180c046a3351513f55d7e8c449eeb4b2b55255619e4c0a6020e418c4de4.woff") format("woff"),
-       url("https://shikimori.one/assets/shikimori-f9e0ba0284218c33cb187378b458cf112f9ab817a278acff59da41dc6574551b.ttf") format("truetype"),
-       url("https://shikimori.one/assets/shikimori-53d6f4353851d3cf9076879f72044efab5f8a15f7585ccfa140c8f5b1cfdc57f.svg#shikimori") format("svg");
+  src: url("https://shikimori.one/assets/shikimori.eot?") format("eot"),
+       url("https://shikimori.one/assets/shikimori.woff2") format("woff2"),
+       url("https://shikimori.one/assets/shikimori.woff") format("woff"),
+       url("https://shikimori.one/assets/shikimori.ttf") format("truetype"),
+       url("https://shikimori.one/assets/shikimori.svg#shikimori") format("svg");
 }
 
 body {
