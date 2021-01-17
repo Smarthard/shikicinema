@@ -63,7 +63,7 @@ export class CommentsComponent implements AfterViewChecked {
       videoUrl = new URL(videoLink.getAttribute('data-href'));
 
       // disabling autoplaying for youtube, coubs, whatever...
-      videoUrl.searchParams.set('autoplay', 'false');
+      videoUrl.searchParams.set('autoplay', '0');
       videoUrl.searchParams.set('autostart', 'false');
     } catch (e) {
       console.error(e);
