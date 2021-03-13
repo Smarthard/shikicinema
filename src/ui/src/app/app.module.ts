@@ -65,6 +65,7 @@ import {SmilleyComponent} from './shared/components/smilley/smilley.component';
 import {CommentComponent} from './shared/components/comment/comment.component';
 import {CommentBadgeComponent} from './shared/components/comment-badge/comment-badge.component';
 import {InlineSVGModule} from 'ng-inline-svg';
+import {ShikimoriApiThrottleInterceptor} from './shared/interceptors/shikimori-api-throttle.interceptor';
 
 registerLocaleData(localeRu, 'ru');
 
@@ -135,6 +136,7 @@ registerLocaleData(localeRu, 'ru');
   ],
   providers: [
     { provide: LocationStrategy, useClass: HashLocationStrategy },
+    { provide: HTTP_INTERCEPTORS, useClass: ShikimoriApiThrottleInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ShikivideosRequestsInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ShikimoriAuthRequestsInterceptor, multi: true },
     { provide: LOCALE_ID, useValue: 'ru' },
