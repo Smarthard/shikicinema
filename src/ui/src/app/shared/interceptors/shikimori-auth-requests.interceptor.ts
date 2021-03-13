@@ -3,11 +3,13 @@ import {HttpErrorResponse, HttpEvent, HttpHandler, HttpHeaders, HttpInterceptor,
 import {AuthService} from '../../services/auth/auth.service';
 import {NotificationsService} from '../../services/notifications/notifications.service';
 import {environment} from '../../../environments/environment';
-import {catchError, switchMap} from 'rxjs/operators';
+import {catchError, switchMap, take} from 'rxjs/operators';
 import {Injectable} from '@angular/core';
 import {Notification, NotificationType} from '../../types/notification';
 import {Shikimori} from '../../types/shikimori';
 import {Platform} from '@angular/cdk/platform';
+import {SettingsService} from '../../services/settings/settings.service';
+import {ShikicinemaSettings} from '../../types/ShikicinemaSettings';
 
 @Injectable({
   providedIn: 'root'
@@ -16,11 +18,13 @@ export class ShikimoriAuthRequestsInterceptor implements HttpInterceptor {
 
   private EXTENSION_VERSION = chrome.runtime.getManifest().version;
   private IS_PRODUCTION = environment.production;
+  private settings = new ShikicinemaSettings();
 
   constructor(
     private auth: AuthService,
     private notify: NotificationsService,
     private platform: Platform,
+    public settingsService: SettingsService
   ) {}
 
   private _updateToken(): Observable<Shikimori.Token> {
@@ -52,7 +56,18 @@ export class ShikimoriAuthRequestsInterceptor implements HttpInterceptor {
   }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    this.settingsService.get()
+      .pipe(take(1))
+      .subscribe((settings) => this.settings = new ShikicinemaSettings(settings));
+
     if (/shikimori/i.test(req.url) && !req.url.match(/oauth/i)) {
+      if (this.settings.forceToUseShikimoriTokens && /user_rates/i.test(req.url) && !this.auth.shikimori?.resfresh) {
+        return this.auth.shikimoriSync()
+          .pipe(
+            switchMap(() => next.handle(req))
+          );
+      }
+
       req = this._appendHeaders(req);
 
       return next.handle(req)
