@@ -1,5 +1,5 @@
 import {Observable, throwError} from 'rxjs';
-import {HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
+import {HttpErrorResponse, HttpEvent, HttpHandler, HttpHeaders, HttpInterceptor, HttpRequest} from '@angular/common/http';
 import {AuthService} from '../../services/auth/auth.service';
 import {NotificationsService} from '../../services/notifications/notifications.service';
 import {environment} from '../../../environments/environment';
@@ -7,18 +7,20 @@ import {catchError, switchMap} from 'rxjs/operators';
 import {Injectable} from '@angular/core';
 import {Notification, NotificationType} from '../../types/notification';
 import {Shikimori} from '../../types/shikimori';
+import {Platform} from '@angular/cdk/platform';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ShikimoriRequestsInterceptor implements HttpInterceptor {
+export class ShikimoriAuthRequestsInterceptor implements HttpInterceptor {
 
   private EXTENSION_VERSION = chrome.runtime.getManifest().version;
   private IS_PRODUCTION = environment.production;
 
   constructor(
     private auth: AuthService,
-    private notify: NotificationsService
+    private notify: NotificationsService,
+    private platform: Platform,
   ) {}
 
   private _updateToken(): Observable<Shikimori.Token> {
@@ -26,14 +28,18 @@ export class ShikimoriRequestsInterceptor implements HttpInterceptor {
   }
 
   private _appendHeaders(request: HttpRequest<any>, token?: Shikimori.Token): HttpRequest<any> {
-    const headers = { 'User-Agent': `Shikicinema ${this.EXTENSION_VERSION}${this.IS_PRODUCTION ? '' : ' DEV'}`};
     const shikimori = token || this.auth.shikimori;
+    let headers = new HttpHeaders();
 
     if (shikimori && shikimori.token) {
-      headers['Authorization'] = `Bearer ${shikimori.token}`;
+      headers = headers.append('Authorization', `Bearer ${shikimori.token}`);
     }
 
-    return request.clone({ setHeaders: headers, withCredentials: false });
+    if (this.platform.FIREFOX) {
+      headers = headers.append('User-Agent', `Shikicinema ${this.EXTENSION_VERSION}${this.IS_PRODUCTION ? '' : ' DEV'}`);
+    }
+
+    return request.clone({ headers, withCredentials: false });
   }
 
   private _showWarningNotification() {
