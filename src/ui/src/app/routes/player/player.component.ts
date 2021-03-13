@@ -61,6 +61,8 @@ export class PlayerComponent implements OnInit, OnDestroy {
   );
 
   readonly episode$ = this.episodeSubject.pipe(
+    distinctUntilChanged(),
+    debounceTime(300),
     switchMap(episode => {
       return episode !== 1 ? of(episode) : this.route.params.pipe(map(params => <number> params.episode || 1));
     })

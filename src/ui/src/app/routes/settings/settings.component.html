@@ -191,6 +191,19 @@
           <span *ngIf="!shikimori.expired">{{ shikimori.expireDate | date: 'MMM d, HH:mm' }}</span>
       </div>
     </div>
+
+    <div>
+      <h4>
+        Использовать токены
+        <mat-icon class="help"
+           [title]="'Использование токенов авторизации безопаснее и позволяет контроллировать доступ Shikicinema к Вашим данным'">
+          help
+        </mat-icon>
+        <mat-slide-toggle [checked]="settings.forceToUseShikimoriTokens"
+                          (toggleChange)="settings.forceToUseShikimoriTokens = !settings.forceToUseShikimoriTokens; update()"
+                          [matTooltip]="settings.forceToUseShikimoriTokens ? 'Отключить' : 'Включить'"></mat-slide-toggle>
+      </h4>
+    </div>
   </mat-card-content>
 </mat-card>
 

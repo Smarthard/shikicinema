@@ -8,6 +8,7 @@ import {NotificationsService} from '../../services/notifications/notifications.s
 import {environment} from '../../../environments/environment';
 import {Notification, NotificationType} from '../../types/notification';
 import {Shikimori} from '../../types/shikimori';
+import {Platform} from '@angular/cdk/platform';
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +20,8 @@ export class ShikivideosRequestsInterceptor implements HttpInterceptor {
 
   constructor(
     private auth: AuthService,
-    private notify: NotificationsService
+    private notify: NotificationsService,
+    private platform: Platform,
   ) {}
 
   private static _updateTokenReq(req: HttpRequest<any>, shikimoriToken: Shikimori.Token): HttpRequest<any> {
@@ -43,13 +45,15 @@ export class ShikivideosRequestsInterceptor implements HttpInterceptor {
   }
 
   private _appendHeaders(request: HttpRequest<any>, token?: SmarthardNet.Token): HttpRequest<any> {
-    const EXTENSION_VERSION = this.EXTENSION_VERSION;
-    const DEV_LABEL = this.IS_PRODUCTION ? '' : ' DEV';
     const shikivideos = token || this.auth.shikivideos;
-    let headers = new HttpHeaders({ 'User-Agent': `Shikicinema ${EXTENSION_VERSION}${DEV_LABEL}`});
+    let headers = new HttpHeaders();
 
     if (request.method === 'POST' && shikivideos && shikivideos.token) {
       headers = headers.append('Authorization', `Bearer ${shikivideos.token}`);
+    }
+
+    if (this.platform.FIREFOX) {
+      headers = headers.append('User-Agent', `Shikicinema ${this.EXTENSION_VERSION}${this.IS_PRODUCTION ? '' : ' DEV'}`);
     }
 
     return request.clone({ headers, withCredentials: false });

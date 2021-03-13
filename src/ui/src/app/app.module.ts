@@ -44,7 +44,7 @@ import {ControlBoxComponent} from './shared/components/control-box/control-box.c
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {DragDropModule} from '@angular/cdk/drag-drop';
 import {ShikivideosRequestsInterceptor} from './shared/interceptors/shikivideos-requests.interceptor';
-import {ShikimoriRequestsInterceptor} from './shared/interceptors/shikimori-requests.interceptor';
+import {ShikimoriAuthRequestsInterceptor} from './shared/interceptors/shikimori-auth-requests.interceptor';
 import {AboutDialogComponent} from './shared/components/about-dialog/about-dialog.component';
 import {RequestDialogComponent} from './shared/components/request-dialog/request-dialog.component';
 import {ScrollingModule} from '@angular/cdk/scrolling';
@@ -65,6 +65,7 @@ import {SmilleyComponent} from './shared/components/smilley/smilley.component';
 import {CommentComponent} from './shared/components/comment/comment.component';
 import {CommentBadgeComponent} from './shared/components/comment-badge/comment-badge.component';
 import {InlineSVGModule} from 'ng-inline-svg';
+import {ShikimoriApiThrottleInterceptor} from './shared/interceptors/shikimori-api-throttle.interceptor';
 
 registerLocaleData(localeRu, 'ru');
 
@@ -135,8 +136,9 @@ registerLocaleData(localeRu, 'ru');
   ],
   providers: [
     { provide: LocationStrategy, useClass: HashLocationStrategy },
+    { provide: HTTP_INTERCEPTORS, useClass: ShikimoriApiThrottleInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ShikivideosRequestsInterceptor, multi: true },
-    { provide: HTTP_INTERCEPTORS, useClass: ShikimoriRequestsInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: ShikimoriAuthRequestsInterceptor, multi: true },
     { provide: LOCALE_ID, useValue: 'ru' },
     ShikivideosService,
     ShikimoriService,

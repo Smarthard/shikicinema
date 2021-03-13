@@ -8,6 +8,7 @@ export class ShikicinemaSettings {
   public theme: 'light' | 'dark' | 'custom' = 'dark';
   public playerTabOpens: 'new' | 'same' = 'new';
   public playerFiltersEnabled = true;
+  public forceToUseShikimoriTokens = true;
   public playerFilters: Array<IFilter> = [
     {
       enabled: true,
