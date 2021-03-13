@@ -60,7 +60,7 @@ export class AuthService {
   }
 
   public shikimoriSync(): Observable<Shikimori.Token> {
-    if (!this.shikimori.resfresh) {
+    if (!this.shikimori.resfresh || this.shikimori.expired) {
       return from(this.shikimoriService.getNewToken())
         .pipe(
           tap((token) => this._updateShikimoriToken(token)),
@@ -85,7 +85,7 @@ export class AuthService {
   }
 
   public shikivideosSync(forcedNew: boolean = false): Observable<SmarthardNet.Token> {
-    if (!this.shikivideos.refresh || forcedNew) {
+    if (!this.shikivideos.refresh || this.shikivideos.expired || forcedNew) {
       return this.shikivideosService.getNewToken(this.shikimori)
         .pipe(
           tap(async (token) => {
