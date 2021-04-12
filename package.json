@@ -1,6 +1,6 @@
 {
   "name": "shikicinema",
-  "version": "0.8.12",
+  "version": "0.8.13",
   "description": "Returns video player on Shikimori",
   "main": "src/shikicinema.js",
   "scripts": {
@@ -24,7 +24,6 @@
     "url": "https://github.com/Smarthard/shikicinema/issues"
   },
   "homepage": "https://github.com/Smarthard/shikicinema",
-  "dependencies": {},
   "devDependencies": {
     "@babel/core": "^7.11.6",
     "babel-eslint": "^10.1.0",
