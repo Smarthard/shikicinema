@@ -135,7 +135,7 @@ li a img {
   background-color: #2e2e2e;
 }
 
-.dark-theme :host button:not(.watched) mat-icon {
+.dark-theme :host button:not(.watched, .rewatched) mat-icon {
   color: #AAA;
 }
 
@@ -200,6 +200,10 @@ mat-icon {
 
 .watched {
   color: green;
+}
+
+.rewatched {
+  color: #4AA6C9;
 }
 
 app-notify {

@@ -44,21 +44,39 @@
           <mat-icon>fast_forward</mat-icon>
         </button>
       </app-control-box>
-      <app-control-box subtext="Просмотрено"
-                       *ngIf="(whoami$ | async) as user else sync"
-                       [matTooltip]="watched(urlParams.episode)
+      <ng-container *ngIf="(whoami$ | async) as user else sync">
+        <app-control-box subtext="Просмотрено"
+                         *ngIf="!(isAnimeWatched$ | async)"
+                         [matTooltip]="watched(urlParams.episode)
                                       ? 'Убрать отметку о просмотре'
                                       : 'Отметить как просмотренную'"
-                       matTooltipPosition="after"
-                       matTooltipShowDelay="1000"
-                       (click)="watched(urlParams.episode)
+                         matTooltipPosition="after"
+                         matTooltipShowDelay="1000"
+                         (click)="watched(urlParams.episode)
                                 ? watch(anime, +currentVideo.episode - 1, user, 'Просмотр отменен')
                                 : watch(anime, +currentVideo.episode, user, 'Просмотрено')">
-        <button mat-button
-                [class.watched]="watched(urlParams.episode)">
-          <mat-icon>done</mat-icon>
-        </button>
-      </app-control-box>
+          <button mat-button
+                  [class.watched]="watched(urlParams.episode)">
+            <mat-icon>done</mat-icon>
+          </button>
+        </app-control-box>
+
+        <app-control-box *ngIf="(isAnimeWatched$ | async)"
+                         subtext="Пересмотреть"
+                         [matTooltip]="rewatched(urlParams.episode)
+                                      ? 'Убрать отметку о перепросмотре'
+                                      : 'Начать просмотр заново и отметить серию просмотренной'"
+                         matTooltipPosition="after"
+                         matTooltipShowDelay="1000"
+                         (click)="rewatched(urlParams.episode)
+                                ? rewatch(anime, +currentVideo.episode - 1, user, 'Просмотр отменен')
+                                : rewatch(anime, +currentVideo.episode, user, 'Просмотрено')">
+          <button mat-button
+                  [class.rewatched]="rewatched(urlParams.episode)">
+            <mat-icon>done_all</mat-icon>
+          </button>
+        </app-control-box>
+      </ng-container>
       <ng-template #sync>
         <app-control-box subtext="Шикимори"
                          matTooltip="Синхронизироваться с Шикимори"
