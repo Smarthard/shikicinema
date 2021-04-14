@@ -28,16 +28,27 @@ import {CommentsService} from '../../services/comments/comments.service';
 })
 export class PlayerComponent implements OnInit, OnDestroy {
 
+  constructor(
+    private router: Router,
+    private auth: AuthService,
+    private route: ActivatedRoute,
+    private notify: NotificationsService,
+    private remoteNotifications: RemoteNotificationsService,
+    private preferenses: UserPreferencesService,
+    private videosApi: ShikivideosService,
+    private kodikService: KodikService,
+    private shikimori: ShikimoriService,
+    private settingsService: SettingsService,
+    readonly commentsService: CommentsService,
+    private title: Title,
+    private dialog: MatDialog
+  ) {}
+
   private isAlive = true;
-  private _httpErrorHandler = (err) => {
-    console.error(err);
-    this.notify.add(new Notification(NotificationType.ERROR, 'Не удалось загрузить видео!', err));
-    return of(<SmarthardNet.Shikivideo[]> []);
-  };
 
   public readonly EMPTY_VIDEO = new SmarthardNet.Shikivideo({ id: -666 });
   public filter = new SmarthardNet.VideoFilter();
-  public isUploadOpened: boolean = false;
+  public isUploadOpened = false;
   public settings: ShikicinemaSettings;
   public urlParams: { animeId?: number, episode?: number } = {};
   public userRate: Shikimori.UserRate;
@@ -50,7 +61,7 @@ export class PlayerComponent implements OnInit, OnDestroy {
   readonly uploaderSubject = new BehaviorSubject<string>(null);
 
   readonly animeId$ = this.route.params.pipe(
-    map((params) => +params['animeId']),
+    map((params) => +params.animeId),
     distinctUntilChanged()
   );
 
@@ -64,7 +75,7 @@ export class PlayerComponent implements OnInit, OnDestroy {
     distinctUntilChanged(),
     debounceTime(300),
     switchMap(episode => {
-      return episode !== 1 ? of(episode) : this.route.params.pipe(map(params => <number> params.episode || 1));
+      return episode !== 1 ? of(episode) : this.route.params.pipe(map(params => (params.episode as number) || 1));
     })
   );
 
@@ -131,28 +142,21 @@ export class PlayerComponent implements OnInit, OnDestroy {
 
   readonly userRate$ = this.anime$.pipe(
     map((anime) => anime.user_rate),
-    catchError(() => of(null)),
+    catchError(() => of(null as Shikimori.UserRate)),
     publishReplay(1),
     refCount()
   );
 
-  readonly notifications$ = this.remoteNotifications.notifications$;
+  readonly isAnimeWatched$ = this.userRate$.pipe(
+    map((anime) => anime.status === 'completed' || anime.status === 'rewatching'),
+  );
 
-  constructor(
-    private router: Router,
-    private auth: AuthService,
-    private route: ActivatedRoute,
-    private notify: NotificationsService,
-    private remoteNotifications: RemoteNotificationsService,
-    private preferenses: UserPreferencesService,
-    private videosApi: ShikivideosService,
-    private kodikService: KodikService,
-    private shikimori: ShikimoriService,
-    private settingsService: SettingsService,
-    readonly commentsService: CommentsService,
-    private title: Title,
-    private dialog: MatDialog
-  ) {}
+  readonly notifications$ = this.remoteNotifications.notifications$;
+  private _httpErrorHandler = (err) => {
+    console.error(err);
+    this.notify.add(new Notification(NotificationType.ERROR, 'Не удалось загрузить видео!', err));
+    return of([] as SmarthardNet.Shikivideo[]);
+  };
 
   ngOnDestroy(): void {
     this.isAlive = false;
@@ -161,7 +165,7 @@ export class PlayerComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.settingsService.get()
       .subscribe(
-      data => this.settings = new ShikicinemaSettings(data)
+      (data) => this.settings = new ShikicinemaSettings(data)
     );
 
     this.route.params
@@ -169,9 +173,9 @@ export class PlayerComponent implements OnInit, OnDestroy {
         takeWhile(() => this.isAlive)
       )
       .subscribe(
-      params => this.urlParams = {
-        animeId: params['animeId'],
-        episode: params['episode']
+      (params) => this.urlParams = {
+        animeId: params.animeId,
+        episode: params.episode
       }
     );
 
@@ -193,9 +197,9 @@ export class PlayerComponent implements OnInit, OnDestroy {
         takeWhile(() => this.isAlive),
       )
       .subscribe(
-        videos => {
+        (videos) => {
         const query = this.route.snapshot.queryParams;
-        const videoById = videos.filter(vid => query && query.id && vid.id == query.id)[0];
+        const videoById = videos.filter((vid) => query && query.id && `${vid.id}` === `${query.id}`)[0];
         const favVideos = this._chooseFavourite(videos);
 
         this.changeVideo( videos.length === 0 ? this.EMPTY_VIDEO : (videoById ? videoById : favVideos[0]) );
@@ -204,7 +208,7 @@ export class PlayerComponent implements OnInit, OnDestroy {
 
     this.userRate$
       .pipe(
-        takeWhile(() => this.isAlive)
+        takeWhile(() => this.isAlive),
       )
       .subscribe(
         userRates => this.userRate = new Shikimori.UserRate(userRates ? userRates : {})
@@ -227,7 +231,7 @@ export class PlayerComponent implements OnInit, OnDestroy {
   }
 
   async changeEpisode(episode: number | string) {
-    if (episode != '') {
+    if (episode) {
       this.episodeSubject.next(+episode);
       await this.router.navigate([`../${episode}`], { relativeTo:  this.route });
     }
@@ -260,6 +264,10 @@ export class PlayerComponent implements OnInit, OnDestroy {
     return this.userRate && this.userRate.episodes >= episode;
   }
 
+  rewatched(episode: number): boolean {
+    return this.userRate?.status === 'rewatching' && this.userRate.episodes >= episode;
+  }
+
   async watch(anime: Shikimori.Anime, episode: number, user: Shikimori.User, message: string) {
     const animeEpisodes = anime.episodes || anime.episodes_aired;
     const userRate = new Shikimori.UserRate({
@@ -273,11 +281,35 @@ export class PlayerComponent implements OnInit, OnDestroy {
       userRate.id = this.userRate.id;
       this.userRate = await this.shikimori.setUserRates(userRate).toPromise();
     } else {
+      userRate.status = 'watching';
       this.userRate = await this.shikimori.createUserRates(userRate).toPromise();
     }
 
     if (animeEpisodes >= episode + 1) {
-      this.changeEpisode(episode + 1);
+      await this.changeEpisode(episode + 1);
+    }
+
+    this.notify.add(new Notification(NotificationType.OK, message));
+  }
+
+  async rewatch(anime: Shikimori.Anime, episode: number, user: Shikimori.User, message: string) {
+    const animeEpisodes = anime.episodes || anime.episodes_aired;
+    const userRate = new Shikimori.UserRate({
+      id: this.userRate.id,
+      user_id: user.id,
+      target_id: anime.id,
+      target_type: 'Anime',
+      status: 'rewatching',
+      episodes: episode
+    });
+    const newUserRate = await this.shikimori.setUserRates(userRate).toPromise();
+
+    // this will not change anime status immediately after rewatch is complete
+    if (animeEpisodes >= episode + 1) {
+      this.userRate = newUserRate;
+      await this.changeEpisode(episode + 1);
+    } else {
+      this.userRate.episodes = episode;
     }
 
     this.notify.add(new Notification(NotificationType.OK, message));

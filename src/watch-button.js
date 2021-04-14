@@ -13,7 +13,8 @@ const ON_WATCH_CLICK = async (anime) => {
     .then((updatedAnime) => updatedAnime.user_rate)
     .catch(() => null);
   const maxEpisode = anime.episodes || anime.episodes_aired || 1;
-  let episode = +(userRate ? userRate.episodes : 0) + 1;
+  const watched = +(userRate ? userRate.episodes : 0);
+  let episode = userRate && userRate.status === 'completed' ? 1 : watched + 1;
 
   if (episode > maxEpisode) {
     episode = maxEpisode;
