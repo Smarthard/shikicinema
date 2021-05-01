@@ -74,18 +74,20 @@ export class PlayerComponent implements OnInit, OnDestroy {
   readonly episode$ = this.episodeSubject.pipe(
     distinctUntilChanged(),
     debounceTime(300),
-    switchMap(episode => {
-      return episode !== 1 ? of(episode) : this.route.params.pipe(map(params => (params.episode as number) || 1));
-    })
+    switchMap((episode) => episode !== 1
+      ? of(episode)
+      : this.route.params.pipe(
+        map((params) => +params.episode || 1)
+      )
+    )
   );
 
-  readonly shikivideos$ = this.episode$
+  readonly shikivideos$ = combineLatest([this.anime$, this.episode$])
     .pipe(
-      (episode$) => combineLatest([this.anime$, episode$]),
       switchMap(([anime, episode]) => this.videosApi.findById(anime.id, new HttpParams()
         .set('limit', 'all')
         .set('episode', `${episode}`)
-      ))
+      )),
     );
 
   readonly kodikvideos$ = this.episode$
@@ -99,7 +101,10 @@ export class PlayerComponent implements OnInit, OnDestroy {
   readonly videos$ = this.shikivideos$
     .pipe(
       (shikivideos$) => combineLatest([shikivideos$, this.kodikvideos$]),
-      map(([shikivideos, kodikvideos]) => [...shikivideos, ...kodikvideos]),
+      map(([shikivideos, kodikvideos]) => [
+        ...shikivideos,
+        ...kodikvideos.filter((kv) => !shikivideos.some((sv) => sv.url.endsWith(kv.url))),
+      ]),
       map((videos: SmarthardNet.Shikivideo[]) => videos.sort((a, b) => `${a.author}`.localeCompare(`${b.author}`))),
       catchError(err => this._httpErrorHandler(err)),
       publishReplay(1),
@@ -148,7 +153,7 @@ export class PlayerComponent implements OnInit, OnDestroy {
   );
 
   readonly isAnimeWatched$ = this.userRate$.pipe(
-    map((anime) => anime.status === 'completed' || anime.status === 'rewatching'),
+    map((anime) => anime?.status === 'completed' || anime?.status === 'rewatching'),
   );
 
   readonly notifications$ = this.remoteNotifications.notifications$;
@@ -356,9 +361,16 @@ export class PlayerComponent implements OnInit, OnDestroy {
     }
 
     const preferences = this.preferenses.get(+videos[0].anime_id);
-    const byAuthor = videos.filter(value => value.author === preferences.author);
-    const byPlayer = byAuthor.filter(value => value.getSecondLvlDomain() === preferences.player);
-    const byQuality = byPlayer.filter(value => value.quality === preferences.quality);
+    const byAuthor = videos.filter((value) => {
+      const author = `${value.author}`.toLocaleLowerCase();
+      const prefAuthor = `${preferences.author}`.toLocaleLowerCase();
+
+      return author === prefAuthor
+        || !prefAuthor && author.includes(prefAuthor)
+        || !author && prefAuthor.includes(author);
+    });
+    const byPlayer = byAuthor.filter((value) => value.getSecondLvlDomain() === preferences.player);
+    const byQuality = byPlayer.filter((value) => value.quality === preferences.quality);
 
     if (byQuality.length > 0) {
       return byQuality;
