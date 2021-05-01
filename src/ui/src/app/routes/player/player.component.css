@@ -19,6 +19,10 @@
 
 @media (max-width: 1024px) and (orientation: landscape) {
 
+  #player {
+    overflow-x: hidden;
+  }
+
   mat-icon {
     font-size: 36px;
   }
@@ -57,6 +61,7 @@
 
   #player {
     display: block;
+    overflow-x: hidden;
   }
 
   input#shikicinema-episode {
@@ -94,6 +99,12 @@
   footer ul.footer-links {
     justify-content: center;
     padding: 15px;
+  }
+
+  app-comment-form {
+    display: block;
+    max-width: 95%;
+    margin: 0 auto;
   }
 }
 
@@ -167,6 +178,12 @@ mat-icon {
   width: 100%;
   justify-content: center;
   vertical-align: middle;
+}
+
+@media (max-width: 640px) {
+  #controls {
+    margin-top: 25px;
+  }
 }
 
 #series {

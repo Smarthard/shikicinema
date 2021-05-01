@@ -50,6 +50,70 @@ app-comment {
   width: 45%;
 }
 
+@media (max-width: 640px) {
+  #format-tools-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 3fr;
+    grid-template-rows: repeat(2, 1fr);
+    justify-items: center;
+    grid-template-areas:  "button-1 button-2 button-3 button-4 badge-1"
+                          "button-5 button-6 button-8 button-9 badge-2";
+  }
+
+  .separator {
+    display: none;
+  }
+
+  .grid-item-button-1 {
+    grid-area: button-1;
+  }
+
+  .grid-item-button-2 {
+    grid-area: button-2;
+  }
+
+  .grid-item-button-3 {
+    grid-area: button-3;
+  }
+
+  .grid-item-button-4 {
+    grid-area: button-4;
+  }
+
+  .grid-item-button-5 {
+    grid-area: button-5;
+  }
+
+  .grid-item-button-6 {
+    grid-area: button-6;
+  }
+
+  .grid-item-button-7 {
+    grid-area: button-7;
+  }
+
+  .grid-item-button-8 {
+    grid-area: button-8;
+  }
+
+  .grid-item-button-9 {
+    grid-area: button-9;
+  }
+
+  .grid-item-badge-1 {
+    margin-left: unset !important;
+    grid-area: badge-1;
+  }
+
+  .grid-item-badge-2 {
+    grid-area: badge-2;
+  }
+}
+
+#format-tools-buttons {
+
+}
+
 #format-tools-buttons *:nth-last-child(2) {
   margin-left: auto;
 }
