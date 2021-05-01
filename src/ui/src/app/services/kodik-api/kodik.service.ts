@@ -102,21 +102,18 @@ export class KodikService {
     }
 
     const response = await this.getVideos(anime);
-    const animeLinksInFranchise = this._franchise.links.filter((value) => value.source_id === anime.id);
+    const animeLinksInFranchise = this._franchise?.links.filter((value) => value.source_id === anime.id);
     const hasSpecials = animeLinksInFranchise.some((link) => link.relation === 'other');
+    const hasSpecialsInResults = response?.results?.some((result) => result?.seasons?.[0])
 
     /* if there are specials remove them */
-    if (hasSpecials && response?.results?.[0]?.seasons?.[0]) {
+    if (hasSpecials || hasSpecialsInResults) {
       for (let i = 0; i < response.results.length; i++) {
         delete this._kodikResponseCache.results[i].seasons[0];
       }
     }
 
-    if (response?.results?.[0]?.seasons && !response?.results?.[0]?.seasons?.[0]) {
-      return Object.keys(response.results[0].seasons)[0];
-    }
-
-    return null;
+    return Object.keys(response?.results?.[0]?.seasons || {})[0];
   }
 
   public async getVideos(anime: Shikimori.Anime) {
@@ -135,8 +132,8 @@ export class KodikService {
     const season = await this._getSeason(anime);
 
     return response.results
-      .filter(video => video?.seasons && video.seasons[season] && video.seasons[season].episodes[episode] || KodikService._isMovie(video))
-      .map(v => KodikService._castToShikivideo(anime.id, season, episode, v));
+      .filter((video) => video?.seasons?.[season]?.episodes?.[episode] || KodikService._isMovie(video))
+      .map((v) => KodikService._castToShikivideo(anime.id, season, episode, v));
   }
 
   public async getUnique(anime) {
