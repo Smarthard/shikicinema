@@ -12,7 +12,18 @@ import {NotificationsService} from '../../services/notifications/notifications.s
 import {ShikicinemaSettings} from '../../types/ShikicinemaSettings';
 import {SettingsService} from '../../services/settings/settings.service';
 import {UserPreferencesService} from '../../services/user-preferences/user-preferences.service';
-import {catchError, debounceTime, distinctUntilChanged, map, publishReplay, refCount, switchMap, takeWhile} from 'rxjs/operators';
+import {
+  catchError,
+  concatMap,
+  debounceTime,
+  delay,
+  distinctUntilChanged,
+  map,
+  publishReplay,
+  refCount,
+  switchMap,
+  takeWhile
+} from 'rxjs/operators';
 import {BehaviorSubject, combineLatest, EMPTY, iif, Observable, of, Subject} from 'rxjs';
 import {Notification, NotificationType} from '../../types/notification';
 import {MatDialog} from '@angular/material/dialog';
@@ -54,11 +65,13 @@ export class PlayerComponent implements OnInit, OnDestroy {
   public userRate: Shikimori.UserRate;
   public uploader: Shikimori.User;
   public currentVideo: SmarthardNet.Shikivideo;
+  public isWaitingUserRates: boolean;
 
   readonly episodeSubject = new BehaviorSubject<number>(1);
   readonly quotesSubject = new Subject<string>();
   readonly repliesSubject = new Subject<string>();
   readonly uploaderSubject = new BehaviorSubject<string>(null);
+  readonly isWaitingUserRatesSubject = new BehaviorSubject<boolean>(false);
 
   readonly animeId$ = this.route.params.pipe(
     map((params) => +params.animeId),
@@ -233,6 +246,16 @@ export class PlayerComponent implements OnInit, OnDestroy {
       .subscribe(
       uploader => this.uploader = uploader
     );
+
+    this.isWaitingUserRatesSubject
+      .pipe(
+        takeWhile(() => this.isAlive),
+        concatMap((isWaiting) => !isWaiting
+          ? of(isWaiting).pipe(delay(1000))
+          : of(isWaiting)
+        ),
+      )
+      .subscribe((isWaiting) => this.isWaitingUserRates = isWaiting)
   }
 
   async changeEpisode(episode: number | string) {
@@ -282,6 +305,8 @@ export class PlayerComponent implements OnInit, OnDestroy {
       episodes: episode
     });
 
+    this.isWaitingUserRatesSubject.next(true);
+
     if (this.userRate.id) {
       userRate.id = this.userRate.id;
       this.userRate = await this.shikimori.setUserRates(userRate).toPromise();
@@ -295,6 +320,7 @@ export class PlayerComponent implements OnInit, OnDestroy {
     }
 
     this.notify.add(new Notification(NotificationType.OK, message));
+    this.isWaitingUserRatesSubject.next(false);
   }
 
   async rewatch(anime: Shikimori.Anime, episode: number, user: Shikimori.User, message: string) {
@@ -307,6 +333,7 @@ export class PlayerComponent implements OnInit, OnDestroy {
       status: 'rewatching',
       episodes: episode
     });
+    this.isWaitingUserRatesSubject.next(true);
     const newUserRate = await this.shikimori.setUserRates(userRate).toPromise();
 
     // this will not change anime status immediately after rewatch is complete
@@ -318,6 +345,7 @@ export class PlayerComponent implements OnInit, OnDestroy {
     }
 
     this.notify.add(new Notification(NotificationType.OK, message));
+    this.isWaitingUserRatesSubject.next(false);
   }
 
   openUploadForm() {
