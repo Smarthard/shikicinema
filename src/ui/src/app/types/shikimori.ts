@@ -201,27 +201,31 @@ export namespace Shikimori {
     readonly token: string
   }
 
+  export interface IFranchiseLink {
+    id: number,
+    source_id: number;
+    target_id: number;
+    source: number;
+    target: number;
+    weight: number;
+    relation: string;
+  }
+
+  export interface IFranchiseNode {
+    id: number;
+    date: number;
+    name: string;
+    image_url: string;
+    url: string;
+    year: number;
+    kind: string;
+    weight: number;
+  }
+
   export interface IFranchiseResponse {
     current_id: number;
-    links: Array<{
-      id: number,
-      source_id: number;
-      target_id: number;
-      source: number;
-      target: number;
-      weight: number;
-      relation: string;
-    }>;
-    nodes: Array<{
-      id: number;
-      date: number;
-      name: string;
-      image_url: string;
-      url: string;
-      year: number;
-      kind: string;
-      weight: number;
-    }>;
+    links: Array<IFranchiseLink>;
+    nodes: Array<IFranchiseNode>;
   }
 
 }

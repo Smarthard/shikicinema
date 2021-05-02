@@ -52,7 +52,7 @@ div.view-img {
 
 div.view-img img {
   width: auto;
-  max-width: 100%;
+  max-width: 80%;
   height: auto;
   display: block;
   box-sizing: border-box;

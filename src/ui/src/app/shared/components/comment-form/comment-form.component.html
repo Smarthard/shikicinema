@@ -7,7 +7,7 @@
          class="flex flex-start">
       <button (click)="bold()"
               [disabled]="commentForm.disabled"
-              class="text"
+              class="text grid-item-button-1"
               matTooltip="Жирный"
               matTooltipPosition="above"
               mat-icon-button>
@@ -15,7 +15,7 @@
       </button>
       <button (click)="italic()"
               [disabled]="commentForm.disabled"
-              class="text"
+              class="text grid-item-button-2"
               matTooltip="Курсив"
               matTooltipPosition="above"
               mat-icon-button>
@@ -23,7 +23,7 @@
       </button>
       <button (click)="underline()"
               [disabled]="commentForm.disabled"
-              class="text"
+              class="text grid-item-button-3"
               matTooltip="Подчеркнутый"
               matTooltipPosition="above"
               mat-icon-button>
@@ -31,7 +31,7 @@
       </button>
       <button (click)="strike()"
               [disabled]="commentForm.disabled"
-              class="text"
+              class="text grid-item-button-4"
               matTooltip="Зачеркнутый"
               matTooltipPosition="above"
               mat-icon-button>
@@ -43,7 +43,7 @@
       <button (click)="isLinkSectionOpen ? close() : openLinkSection()"
               [color]="isLinkSectionOpen ? 'accent' : undefined"
               [disabled]="commentForm.disabled"
-              class="text"
+              class="text grid-item-button-5"
               matTooltip="Вставить ссылку"
               matTooltipPosition="above"
               mat-icon-button>
@@ -52,7 +52,7 @@
       <button (click)="isImageSectionOpen ? close() : openImageSection()"
               [color]="isImageSectionOpen ? 'accent' : undefined"
               [disabled]="commentForm.disabled"
-              class="text"
+              class="text grid-item-button-6"
               matTooltip="Вставить картинку"
               matTooltipPosition="above"
               mat-icon-button>
@@ -61,7 +61,7 @@
       <button (click)="isQuotesSectionOpen ? close() : openQuotesSection()"
               [color]="isQuotesSectionOpen ? 'accent' : undefined"
               [disabled]="commentForm.disabled"
-              class="text"
+              class="text grid-item-button-7"
               style="display: none"
               matTooltip="Вставить цитату"
               matTooltipPosition="above"
@@ -70,7 +70,7 @@
       </button>
       <button (click)="spoiler()"
               [disabled]="commentForm.disabled"
-              class="text"
+              class="text grid-item-button-8"
               matTooltip="Спойлер"
               matTooltipPosition="above"
               mat-icon-button>
@@ -79,7 +79,7 @@
       <button (click)="isSmileysSectionOpen ? close() : openSmileys()"
               [color]="isSmileysSectionOpen ? 'accent' : undefined"
               [disabled]="commentForm.disabled"
-              class="text"
+              class="text grid-item-button-9"
               matTooltip="Смайлик"
               matTooltipPosition="above"
               mat-icon-button>
@@ -87,10 +87,12 @@
       </button>
 
       <app-comment-badge type="preview"
+                         class="grid-item-badge-1"
                          (click)="togglePreview()"
                          [toggleable]="true"
                          [on]="isShowPreview"></app-comment-badge>
       <app-comment-badge type="offtop"
+                         class="grid-item-badge-2"
                          (click)="toggleOfftop()"
                          [toggleable]="true"
                          [on]="isOfftop"></app-comment-badge>

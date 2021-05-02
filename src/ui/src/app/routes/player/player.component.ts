@@ -12,7 +12,18 @@ import {NotificationsService} from '../../services/notifications/notifications.s
 import {ShikicinemaSettings} from '../../types/ShikicinemaSettings';
 import {SettingsService} from '../../services/settings/settings.service';
 import {UserPreferencesService} from '../../services/user-preferences/user-preferences.service';
-import {catchError, debounceTime, distinctUntilChanged, map, publishReplay, refCount, switchMap, takeWhile} from 'rxjs/operators';
+import {
+  catchError,
+  concatMap,
+  debounceTime,
+  delay,
+  distinctUntilChanged,
+  map,
+  publishReplay,
+  refCount,
+  switchMap,
+  takeWhile
+} from 'rxjs/operators';
 import {BehaviorSubject, combineLatest, EMPTY, iif, Observable, of, Subject} from 'rxjs';
 import {Notification, NotificationType} from '../../types/notification';
 import {MatDialog} from '@angular/material/dialog';
@@ -54,11 +65,13 @@ export class PlayerComponent implements OnInit, OnDestroy {
   public userRate: Shikimori.UserRate;
   public uploader: Shikimori.User;
   public currentVideo: SmarthardNet.Shikivideo;
+  public isWaitingUserRates: boolean;
 
   readonly episodeSubject = new BehaviorSubject<number>(1);
   readonly quotesSubject = new Subject<string>();
   readonly repliesSubject = new Subject<string>();
   readonly uploaderSubject = new BehaviorSubject<string>(null);
+  readonly isWaitingUserRatesSubject = new BehaviorSubject<boolean>(false);
 
   readonly animeId$ = this.route.params.pipe(
     map((params) => +params.animeId),
@@ -74,18 +87,20 @@ export class PlayerComponent implements OnInit, OnDestroy {
   readonly episode$ = this.episodeSubject.pipe(
     distinctUntilChanged(),
     debounceTime(300),
-    switchMap(episode => {
-      return episode !== 1 ? of(episode) : this.route.params.pipe(map(params => (params.episode as number) || 1));
-    })
+    switchMap((episode) => episode !== 1
+      ? of(episode)
+      : this.route.params.pipe(
+        map((params) => +params.episode || 1)
+      )
+    )
   );
 
-  readonly shikivideos$ = this.episode$
+  readonly shikivideos$ = combineLatest([this.anime$, this.episode$])
     .pipe(
-      (episode$) => combineLatest([this.anime$, episode$]),
       switchMap(([anime, episode]) => this.videosApi.findById(anime.id, new HttpParams()
         .set('limit', 'all')
         .set('episode', `${episode}`)
-      ))
+      )),
     );
 
   readonly kodikvideos$ = this.episode$
@@ -99,7 +114,10 @@ export class PlayerComponent implements OnInit, OnDestroy {
   readonly videos$ = this.shikivideos$
     .pipe(
       (shikivideos$) => combineLatest([shikivideos$, this.kodikvideos$]),
-      map(([shikivideos, kodikvideos]) => [...shikivideos, ...kodikvideos]),
+      map(([shikivideos, kodikvideos]) => [
+        ...shikivideos,
+        ...kodikvideos.filter((kv) => !shikivideos.some((sv) => sv.url.endsWith(kv.url))),
+      ]),
       map((videos: SmarthardNet.Shikivideo[]) => videos.sort((a, b) => `${a.author}`.localeCompare(`${b.author}`))),
       catchError(err => this._httpErrorHandler(err)),
       publishReplay(1),
@@ -148,7 +166,7 @@ export class PlayerComponent implements OnInit, OnDestroy {
   );
 
   readonly isAnimeWatched$ = this.userRate$.pipe(
-    map((anime) => anime.status === 'completed' || anime.status === 'rewatching'),
+    map((anime) => anime?.status === 'completed' || anime?.status === 'rewatching'),
   );
 
   readonly notifications$ = this.remoteNotifications.notifications$;
@@ -228,6 +246,16 @@ export class PlayerComponent implements OnInit, OnDestroy {
       .subscribe(
       uploader => this.uploader = uploader
     );
+
+    this.isWaitingUserRatesSubject
+      .pipe(
+        takeWhile(() => this.isAlive),
+        concatMap((isWaiting) => !isWaiting
+          ? of(isWaiting).pipe(delay(1000))
+          : of(isWaiting)
+        ),
+      )
+      .subscribe((isWaiting) => this.isWaitingUserRates = isWaiting)
   }
 
   async changeEpisode(episode: number | string) {
@@ -277,6 +305,8 @@ export class PlayerComponent implements OnInit, OnDestroy {
       episodes: episode
     });
 
+    this.isWaitingUserRatesSubject.next(true);
+
     if (this.userRate.id) {
       userRate.id = this.userRate.id;
       this.userRate = await this.shikimori.setUserRates(userRate).toPromise();
@@ -290,6 +320,7 @@ export class PlayerComponent implements OnInit, OnDestroy {
     }
 
     this.notify.add(new Notification(NotificationType.OK, message));
+    this.isWaitingUserRatesSubject.next(false);
   }
 
   async rewatch(anime: Shikimori.Anime, episode: number, user: Shikimori.User, message: string) {
@@ -302,6 +333,7 @@ export class PlayerComponent implements OnInit, OnDestroy {
       status: 'rewatching',
       episodes: episode
     });
+    this.isWaitingUserRatesSubject.next(true);
     const newUserRate = await this.shikimori.setUserRates(userRate).toPromise();
 
     // this will not change anime status immediately after rewatch is complete
@@ -313,6 +345,7 @@ export class PlayerComponent implements OnInit, OnDestroy {
     }
 
     this.notify.add(new Notification(NotificationType.OK, message));
+    this.isWaitingUserRatesSubject.next(false);
   }
 
   openUploadForm() {
@@ -356,9 +389,16 @@ export class PlayerComponent implements OnInit, OnDestroy {
     }
 
     const preferences = this.preferenses.get(+videos[0].anime_id);
-    const byAuthor = videos.filter(value => value.author === preferences.author);
-    const byPlayer = byAuthor.filter(value => value.getSecondLvlDomain() === preferences.player);
-    const byQuality = byPlayer.filter(value => value.quality === preferences.quality);
+    const byAuthor = videos.filter((value) => {
+      const author = `${value.author}`.toLocaleLowerCase();
+      const prefAuthor = `${preferences.author}`.toLocaleLowerCase();
+
+      return author === prefAuthor
+        || !prefAuthor && author.includes(prefAuthor)
+        || !author && prefAuthor.includes(author);
+    });
+    const byPlayer = byAuthor.filter((value) => value.getSecondLvlDomain() === preferences.player);
+    const byQuality = byPlayer.filter((value) => value.quality === preferences.quality);
 
     if (byQuality.length > 0) {
       return byQuality;
