@@ -104,12 +104,16 @@ export class KodikService {
     const response = await this.getVideos(anime);
     const animeLinksInFranchise = this._franchise?.links.filter((value) => value.source_id === anime.id);
     const hasSpecials = animeLinksInFranchise.some((link) => link.relation === 'other');
-    const hasSpecialsInResults = response?.results?.some((result) => result?.seasons?.[0])
+    const hasSpecialsInResults = response?.results?.some((result) => result?.seasons?.[0]);
 
     /* if there are specials remove them */
     if (hasSpecials || hasSpecialsInResults) {
       for (let i = 0; i < response.results.length; i++) {
-        delete this._kodikResponseCache.results[i].seasons[0];
+        if (this._kodikResponseCache?.results?.[i]?.seasons) {
+          delete this._kodikResponseCache.results[i].seasons[0];
+        } else {
+          return null;
+        }
       }
     }
 
@@ -119,7 +123,7 @@ export class KodikService {
   public async getVideos(anime: Shikimori.Anime) {
     let response = this._getCachedResponse();
 
-    if (!response) {
+    if (!response || response?.results?.[0]?.shikimori_id !== `${anime.id}`) {
       response = await this._getKodikvideos(anime).toPromise();
       this._kodikResponseCache = response;
     }
@@ -140,7 +144,7 @@ export class KodikService {
     const response = await this.getVideos(anime);
     const season = await this._getSeason(anime);
     const unique = new SmarthardNet.Unique();
-    const videos = response.results.filter(video => video && video.seasons && video.seasons[season] || KodikService._isMovie(video));
+    const videos = response.results.filter((video) => video?.seasons?.[season] || KodikService._isMovie(video));
 
     for (const video of videos) {
       const newValues = {

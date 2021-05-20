@@ -337,6 +337,12 @@ a.shc-links s {
   height: auto;
 }
 
+@media (max-width: 1024px) {
+  .shc-image img {
+    max-width: 80%;
+  }
+}
+
 .shc-image .marker {
   display: none;
 }
