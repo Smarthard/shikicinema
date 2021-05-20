@@ -26,6 +26,7 @@ export namespace Kodik {
     readonly blocked_seasons: object,
     readonly created_at: string,
     readonly updated_at: string,
+    readonly shikimori_id: string;
     readonly seasons: ISeasons,
   }
 

@@ -123,7 +123,7 @@ export class KodikService {
   public async getVideos(anime: Shikimori.Anime) {
     let response = this._getCachedResponse();
 
-    if (!response) {
+    if (!response || response?.results?.[0]?.shikimori_id !== `${anime.id}`) {
       response = await this._getKodikvideos(anime).toPromise();
       this._kodikResponseCache = response;
     }

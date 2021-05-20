@@ -1,17 +1,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {AboutDialogComponent} from '../../shared/components/about-dialog/about-dialog.component';
-import {ShikivideosService} from '../../services/shikivideos-api/shikivideos.service';
-import {ShikimoriService} from '../../services/shikimori-api/shikimori.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Title} from '@angular/platform-browser';
-import {Shikimori} from '../../types/shikimori';
 import {HttpHeaders, HttpParams} from '@angular/common/http';
-import {SmarthardNet} from '../../types/smarthard-net';
-import {AuthService} from '../../services/auth/auth.service';
-import {NotificationsService} from '../../services/notifications/notifications.service';
-import {ShikicinemaSettings} from '../../types/ShikicinemaSettings';
-import {SettingsService} from '../../services/settings/settings.service';
-import {UserPreferencesService} from '../../services/user-preferences/user-preferences.service';
 import {
   catchError,
   concatMap,
@@ -21,12 +11,25 @@ import {
   map,
   publishReplay,
   refCount,
+  shareReplay,
   switchMap,
-  takeWhile
+  takeWhile,
+  withLatestFrom
 } from 'rxjs/operators';
 import {BehaviorSubject, combineLatest, EMPTY, iif, Observable, of, Subject} from 'rxjs';
-import {Notification, NotificationType} from '../../types/notification';
 import {MatDialog} from '@angular/material/dialog';
+
+import {AboutDialogComponent} from '../../shared/components/about-dialog/about-dialog.component';
+import {ShikivideosService} from '../../services/shikivideos-api/shikivideos.service';
+import {ShikimoriService} from '../../services/shikimori-api/shikimori.service';
+import {Shikimori} from '../../types/shikimori';
+import {SmarthardNet} from '../../types/smarthard-net';
+import {AuthService} from '../../services/auth/auth.service';
+import {NotificationsService} from '../../services/notifications/notifications.service';
+import {ShikicinemaSettings} from '../../types/ShikicinemaSettings';
+import {SettingsService} from '../../services/settings/settings.service';
+import {UserPreferencesService} from '../../services/user-preferences/user-preferences.service';
+import {Notification, NotificationType} from '../../types/notification';
 import {IRequestDialogData, RequestDialogComponent} from '../../shared/components/request-dialog/request-dialog.component';
 import {KodikService} from '../../services/kodik-api/kodik.service';
 import {RemoteNotificationsService} from '../../services/remote-notifications/remote-notifications.service';
@@ -103,12 +106,11 @@ export class PlayerComponent implements OnInit, OnDestroy {
       )),
     );
 
-  readonly kodikvideos$ = this.episode$
+  readonly kodikvideos$ = combineLatest([this.anime$, this.episode$])
     .pipe(
-      (episode$) => combineLatest([this.anime$, episode$]),
+      distinctUntilChanged(([animeA, episodeA], [animeB, episodeB]) => animeA.id === animeB.id && episodeA === episodeB),
       switchMap(([anime, episode]) => this.kodikService.search(anime, episode)),
-      publishReplay(1),
-      refCount()
+      shareReplay(1),
     );
 
   readonly videos$ = this.shikivideos$
@@ -136,8 +138,8 @@ export class PlayerComponent implements OnInit, OnDestroy {
 
   readonly kodikUnique$ = this.kodikvideos$
     .pipe(
-      switchMap(() => this.anime$),
-      switchMap((anime: Shikimori.Anime) => this.kodikService.getUnique(anime)),
+      withLatestFrom(this.anime$),
+      switchMap(([_, anime]) => this.kodikService.getUnique(anime)),
     );
 
   readonly quotes$ = this.quotesSubject.asObservable();
