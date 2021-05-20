@@ -48,6 +48,7 @@ export class CommentsComponent implements AfterViewChecked {
   commentsHidden = false;
   imgLink: string = null;
   imgBroken = false;
+  isImgLoading = true;
   bubbledComments: Bubble<Shikimori.Comment>[] = [];
   bubbledCommentsCache = new Map<number, Bubble<Shikimori.Comment>>();
   bubbledInTimeout: Timeout;
@@ -247,6 +248,8 @@ export class CommentsComponent implements AfterViewChecked {
   openImg(src: string) {
     document.body.style.overflow = 'hidden';
     this.imgLink = src;
+    this.imgBroken = false;
+    this.isImgLoading = true;
   }
 
   closeImg() {
@@ -283,6 +286,10 @@ export class CommentsComponent implements AfterViewChecked {
   hideBubble(bubble: Bubble<Shikimori.Comment>) {
     bubble.hidden = true;
     bubble.zIndex = 1;
+  }
+
+  onImageLoad() {
+    this.isImgLoading = false;
   }
 
 }

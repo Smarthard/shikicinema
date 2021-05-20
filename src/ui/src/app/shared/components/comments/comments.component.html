@@ -49,8 +49,11 @@
     class="view-img flex flex-column">
     <img *ngIf="!imgBroken"
          [src]="imgLink"
+         (load)="onImageLoad()"
          (error)="imgNotLoaded()"
          alt="image viewer">
+    <mat-progress-spinner *ngIf="isImgLoading && !imgBroken"
+                          mode="indeterminate"></mat-progress-spinner>
     <div *ngIf="imgBroken"
          class="text">
       <b>Изображение было перемещено или удалено</b>
