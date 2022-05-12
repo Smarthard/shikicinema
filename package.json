@@ -31,8 +31,9 @@
     "copy-webpack-plugin": "^6.1.1",
     "eslint": "^7.9.0",
     "eslint-loader": "^4.0.2",
-    "terser-webpack-plugin": "^4.2.2",
+    "terser-webpack-plugin": "^4.2.3",
     "webpack": "^4.44.2",
     "webpack-cli": "^3.3.12"
-  }
+  },
+  "dependencies": {}
 }
