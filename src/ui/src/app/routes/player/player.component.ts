@@ -246,7 +246,7 @@ export class PlayerComponent implements OnInit, OnDestroy {
         ))
       )
       .subscribe(
-      uploader => this.uploader = uploader
+      uploader => this.uploader = uploader as Shikimori.User
     );
 
     this.isWaitingUserRatesSubject
