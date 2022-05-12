@@ -45,6 +45,7 @@ zip -qr -9 "sources/shikicinema-src-$version.zip" \
     -x sources/\* \
     -x "src/ui/node_modules/*" \
     -x "src/ui/dist/*" \
+    -x "src/ui/.angular/*" \
     -x videos.csv \
     -x archive.sh \
     -x shikicinema-src* \
