@@ -6,5 +6,6 @@ dev-builds/
 screenshots/
 sources/
 .idea/
+.angular/
 
 videos.csv
