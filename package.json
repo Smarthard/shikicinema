@@ -16,7 +16,8 @@
         "e2e": "ng e2e",
         "esrun": "esrun",
         "set-env": "esrun setup-env.ts",
-        "watch": "ionic build --watch"
+        "watch": "ionic build --watch",
+        "analyze-bundle": "ionic build -- --stats-json && webpack-bundle-analyzer dist/stats.json"
     },
     "private": true,
     "dependencies": {
