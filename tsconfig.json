@@ -20,6 +20,9 @@
             "@app-root/*": [
                 "<rootDir>/../src/*"
             ],
+            "@app-env/*": [
+                "<rootDir>/../src/environments/*"
+            ],
             "@app/*": [
                 "<rootDir>/../src/app/*"
             ],
