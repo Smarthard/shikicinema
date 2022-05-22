@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { getBrowserLang, TranslocoService } from '@ngneat/transloco';
-import { Storage } from '@ionic/storage-angular';
+import { getBrowserLang } from '@ngneat/transloco';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { tap } from 'rxjs/operators';
+import { select, Store } from '@ngrx/store';
+
+import { updateSettingsAction } from '@app/store/settings/actions/settings.actions';
+import { languageSelector } from '@app/store/settings/selectors/settings.selectors';
 
 @UntilDestroy()
 @Component({
@@ -11,37 +14,27 @@ import { tap } from 'rxjs/operators';
     styleUrls: ['app.component.scss'],
 })
 export class AppComponent implements OnInit {
+
     constructor(
-        private translate: TranslocoService,
-        private storage: Storage,
+        private store$: Store,
     ) {}
 
-    async ngOnInit(): Promise<void> {
-        await this.init();
-        await this.initializeLocale();
+    ngOnInit(): void {
+        this.initializeLocale();
     }
 
-    async init(): Promise<void> {
-        await this.storage.create();
-    }
+    initializeLocale(): void {
+        this.store$.pipe(
+            untilDestroyed(this),
+            select(languageSelector),
+            tap((storedLanguage) => {
+                const browserLang = getBrowserLang();
+                const language = storedLanguage || browserLang || 'en';
 
-    async initializeLocale(): Promise<void> {
-        const browserLang = getBrowserLang();
-        const supportedLangs = this.translate.getAvailableLangs() as string[];
-        let storedLanguage: string = await this.storage.get('Accept-Language');
-
-        if (!supportedLangs.includes(storedLanguage)) {
-            storedLanguage = null;
-        }
-
-        const language = storedLanguage || browserLang || 'en';
-
-        this.translate.setActiveLang(language);
-        this.translate.langChanges$
-            .pipe(
-                untilDestroyed(this),
-                tap((lang) => this.storage.set('Accept-Language', lang))
-            )
-            .subscribe();
+                if (language !== storedLanguage) {
+                    this.store$.dispatch(updateSettingsAction({ config: { language } }));
+                }
+            })
+        ).subscribe();
     }
 }

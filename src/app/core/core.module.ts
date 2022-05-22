@@ -6,6 +6,8 @@ import { IonicModule } from '@ionic/angular';
 import { IonicStorageModule } from '@ionic/storage-angular';
 
 import { TranslocoRootModule } from '@app/transloco-root.module';
+import { AppStateModule } from '@app/store/app-state.module';
+
 
 @NgModule({
     declarations: [],
@@ -16,6 +18,7 @@ import { TranslocoRootModule } from '@app/transloco-root.module';
         CommonModule,
         HttpClientModule,
         TranslocoRootModule,
+        AppStateModule,
     ],
     exports: [
         BrowserModule,

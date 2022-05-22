@@ -20,13 +20,15 @@ export class TranslocoHttpLoader implements TranslocoLoader {
     }
 }
 
+export const defaultAvailableLangs = ['en', 'ru'];
+
 @NgModule({
     exports: [TranslocoModule],
     providers: [
         {
             provide: TRANSLOCO_CONFIG,
             useValue: translocoConfig({
-                availableLangs: ['en', 'ru'],
+                availableLangs: defaultAvailableLangs,
                 defaultLang: 'en',
                 // Remove this option if your application doesn't support changing language in runtime.
                 reRenderOnLangChange: true,
