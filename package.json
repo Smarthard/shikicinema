@@ -25,6 +25,7 @@
         "ng": "ng",
         "cap": "cap",
         "start": "ionic serve",
+        "start:native": "npx cap open @capacitor-community/electron",
         "build": "ionic build",
         "build:prod": "ionic build --prod",
         "test": "ng test",
@@ -35,6 +36,9 @@
         "watch": "ionic build --watch",
         "analyze-bundle": "ionic build -- --stats-json && webpack-bundle-analyzer dist/stats.json"
     },
+    "workspaces": [
+        "electron"
+    ],
     "dependencies": {
         "@angular/common": "~13.2.2",
         "@angular/core": "~13.2.2",
@@ -42,6 +46,7 @@
         "@angular/platform-browser": "~13.2.2",
         "@angular/platform-browser-dynamic": "~13.2.2",
         "@angular/router": "~13.2.2",
+        "@capacitor-community/electron": "^4.1.0",
         "@capacitor/app": "1.1.1",
         "@capacitor/core": "3.5.1",
         "@capacitor/haptics": "1.1.4",
