@@ -6,6 +6,7 @@ import { select, Store } from '@ngrx/store';
 
 import { updateSettingsAction } from '@app/store/settings/actions/settings.actions';
 import { languageSelector } from '@app/store/settings/selectors/settings.selectors';
+import { getCurrentUserAction } from '@app/store/shikimori/actions/get-current-user.action';
 
 @UntilDestroy()
 @Component({
@@ -21,6 +22,7 @@ export class AppComponent implements OnInit {
 
     ngOnInit(): void {
         this.initializeLocale();
+        this.initializeUser();
     }
 
     initializeLocale(): void {
@@ -36,5 +38,9 @@ export class AppComponent implements OnInit {
                 }
             })
         ).subscribe();
+    }
+
+    initializeUser(): void {
+        this.store$.dispatch(getCurrentUserAction());
     }
 }

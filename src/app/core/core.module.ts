@@ -7,10 +7,14 @@ import { IonicStorageModule } from '@ionic/storage-angular';
 
 import { TranslocoRootModule } from '@app/transloco-root.module';
 import { AppStateModule } from '@app/store/app-state.module';
+import { ShikimoriClient } from '@app/shared/services/shikimori-client.service';
 
 
 @NgModule({
     declarations: [],
+    providers: [
+        ShikimoriClient,
+    ],
     imports: [
         BrowserModule,
         IonicModule.forRoot(),

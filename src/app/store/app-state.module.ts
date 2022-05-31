@@ -8,6 +8,9 @@ import { AppStoreInterface } from '@app/store/app-store.interface';
 import { settingsReducer } from '@app/store/settings/reducers/settings.reducer';
 import { SettingsEffects } from '@app/store/settings/effects/settings.effects';
 import { settingsLocalStorageSyncReducer } from '@app/store/settings/reducers/settings.meta-reducer';
+import { shikimoriReducer } from '@app/store/shikimori/reducers/shikimori.reducer';
+import { ShikimoriEffects } from '@app/store/shikimori/effects/shikimori.effects';
+import { ShikimoriClient } from '@app/shared/services/shikimori-client.service';
 
 const storeConfig: RootStoreConfig<AppStoreInterface> = {
     metaReducers: [
@@ -25,12 +28,16 @@ const storeDevtoolsConfig: StoreDevtoolsOptions = {
     imports: [
         StoreModule.forRoot<AppStoreInterface>({
             settings: settingsReducer,
+            shikimori: shikimoriReducer,
         }, storeConfig),
         EffectsModule.forRoot([
             SettingsEffects,
+            ShikimoriEffects,
         ]),
         StoreDevtoolsModule.instrument(storeDevtoolsConfig),
     ],
-    providers: [],
+    providers: [
+        ShikimoriClient,
+    ],
 })
 export class AppStateModule {}
