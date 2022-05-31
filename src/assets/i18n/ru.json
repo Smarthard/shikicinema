@@ -1,1 +1,10 @@
-{}
+{
+    "GLOBAL": {
+        "APP_NAME": "Shikicinema"
+    },
+    "HOME_MODULE": {
+        "HOME_PAGE": {
+            "ANIME_SEARCHBAR_PLACEHOLDER": "Поиск аниме..."
+        }
+    }
+}

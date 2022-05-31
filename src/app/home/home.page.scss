@@ -1,27 +1,35 @@
-#container {
-  text-align: center;
+@import 'src/scss/mixins';
 
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
+.toolbar {
+    display: flex;
+
+    &__search {
+        margin-right: auto;
+    }
 }
 
-#container strong {
-  font-size: 20px;
-  line-height: 26px;
-}
+.anime-grid {
+    padding: 0;
+    margin: 0;
 
-#container p {
-  font-size: 16px;
-  line-height: 22px;
+    @include media-breakpoint-up('sm') {
+        margin: .5rem;
+    }
 
-  color: #8c8c8c;
+    @include media-breakpoint-up('md') {
+        margin: 1.25rem;
+    }
 
-  margin: 0;
-}
+    @include media-breakpoint-up('lg') {
+        margin: 1.5rem 10%;
+    }
 
-#container a {
-  text-decoration: none;
+    &__row {
+        justify-content: space-evenly;
+    }
+
+    ::after {
+        content: '';
+        flex: auto;
+    }
 }

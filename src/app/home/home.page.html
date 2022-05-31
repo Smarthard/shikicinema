@@ -1,20 +1,36 @@
 <ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      Blank
-    </ion-title>
-  </ion-toolbar>
+    <ion-toolbar>
+        <div class="toolbar">
+            <ion-title class="toolbar__title ion-hide-sm-down">
+                {{ 'GLOBAL.APP_NAME' | transloco }}
+            </ion-title>
+
+            <ion-searchbar
+                class="toolbar__search"
+                [placeholder]="'HOME_MODULE.HOME_PAGE.ANIME_SEARCHBAR_PLACEHOLDER' | transloco"
+            ></ion-searchbar>
+        </div>
+    </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
-    </ion-toolbar>
-  </ion-header>
-
-  <div id="container">
-    <strong>Ready to create an app</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
-  </div>
+    <ion-grid class="anime-grid">
+        <ion-row class="anime-grid__row">
+            <ion-col
+                *ngFor="let rate of (userAnimeRates$ | async); trackBy: trackById"
+                class="anime-grid__col"
+                size-xs="4"
+                size-sm="3"
+                size-md="2"
+                size-lg="2"
+                size-xl="1"
+            >
+                <app-image-card
+                    [link]="'https://shikimori.one' + rate.anime.url"
+                    [imageUrl]="'https://nyaa.shikimori.one' + rate.anime.image.preview"
+                    class="anime-grid__item"
+                ></app-image-card>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
 </ion-content>
