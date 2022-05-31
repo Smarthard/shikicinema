@@ -26,6 +26,11 @@ export class HomePage implements OnInit {
     @Select(ShikimoriState.userAnimeRates)
     userAnimeRates$: Observable<UserAnimeRate[]>;
 
+    userAnimeRatesFake = new Array<number>(100).fill(0);
+
+    cardHeight = '10rem';
+    cardWidth = '7rem';
+
     trackById = trackById;
 
     @Dispatch()

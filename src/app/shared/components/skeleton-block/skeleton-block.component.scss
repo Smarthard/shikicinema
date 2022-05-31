@@ -1,0 +1,28 @@
+@keyframes shimmer {
+    0% {
+        background-position: -1000px 0;
+    }
+    100% {
+        background-position: 1000px 0;
+    }
+}
+
+$background-skeleton-color: var(--ion-color-light);
+$lighten-background-color: var(--ion-color-light-shade);
+
+.skeleton {
+    background-color: $background-skeleton-color;
+    background-image: linear-gradient(
+            to right,
+            $background-skeleton-color 0%,
+            $lighten-background-color 50%,
+            $background-skeleton-color 100%
+    );
+    background-size: 1000px;
+
+    animation-duration: 3s;
+    animation-fill-mode: forwards;
+    animation-iteration-count: infinite;
+    animation-name: shimmer;
+    animation-timing-function: ease-in-out;
+}

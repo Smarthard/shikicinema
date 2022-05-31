@@ -17,4 +17,10 @@ export class ImageCardComponent {
 
     @Input()
     width = '7rem';
+
+    isLoading = true;
+
+    onImageLoad(): void {
+        this.isLoading = false;
+    }
 }

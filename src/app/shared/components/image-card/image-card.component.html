@@ -1,9 +1,23 @@
-<a
-    class="image-card"
-    [href]="link"
-    [ngStyle]="{
-        'background-image': 'url(' + imageUrl + ')',
-        height: height,
-        width: width
-    }"
-></a>
+<div class="image-card">
+    <a
+        class="image-card__img"
+        [class.ion-hide]="isLoading"
+        [href]="link"
+        [ngStyle]="{
+            'background-image': 'url(' + imageUrl + ')',
+            height: height,
+            width: width
+        }"
+    ></a>
+    <app-skeleton-block
+        *ngIf="isLoading"
+        [height]="height"
+        [width]="width"
+    ></app-skeleton-block>
+    <img
+        class="ion-hide"
+        [src]="imageUrl"
+        [alt]="link"
+        (load)="onImageLoad()"
+    />
+</div>
