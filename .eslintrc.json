@@ -87,6 +87,14 @@
                 "plugin:@angular-eslint/template/recommended"
             ],
             "rules": {}
+        },
+        {
+            "files": [
+                "src/app/shared/types/shikimori/**"
+            ],
+            "rules": {
+                "@typescript-eslint/naming-convention": "off"
+            }
         }
     ]
 }
