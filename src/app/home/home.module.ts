@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
 import { TranslocoModule } from '@ngneat/transloco';
+import { LayoutModule } from '@angular/cdk/layout';
 
 import { HomePage } from '@app/home/home.page';
 import { HomePageRoutingModule } from '@app/home/home-routing.module';
@@ -17,6 +18,7 @@ import { SkeletonBlockComponent } from '@app/shared/components/skeleton-block/sk
         IonicModule,
         HomePageRoutingModule,
         TranslocoModule,
+        LayoutModule,
     ],
     declarations: [HomePage, ImageCardComponent, SkeletonBlockComponent]
 })

@@ -1,7 +1,7 @@
 <ion-header [translucent]="true">
     <ion-toolbar>
         <div class="toolbar">
-            <ion-title class="toolbar__title ion-hide-sm-down">
+            <ion-title class="toolbar__title ion-hide-lg-down">
                 {{ 'GLOBAL.APP_NAME' | transloco }}
             </ion-title>
 
@@ -17,20 +17,21 @@
     <ion-grid class="anime-grid">
         <ion-row
             *ngIf="userAnimeRates$ | async as userAnimeRates; else skeletonTemplate"
-            class="anime-grid__row">
+            class="anime-grid__row"
+        >
             <ion-col
                 *ngFor="let rate of userAnimeRates; trackBy: trackById"
                 class="anime-grid__col"
-                size-xs="4"
-                size-sm="3"
-                size-md="2"
-                size-lg="2"
-                size-xl="1"
+                size-xs="6"
+                size-sm="6"
+                size-md="4"
+                size-lg="3"
+                size-xl="2"
             >
                 <app-image-card
                     class="anime-grid__item"
                     [link]="'https://shikimori.one' + rate.anime.url"
-                    [imageUrl]="'https://nyaa.shikimori.one' + rate.anime.image.preview"
+                    [imageUrl]="'https://nyaa.shikimori.one' + rate.anime.image.original"
                     [height]="cardHeight"
                     [width]="cardWidth"
                 ></app-image-card>
@@ -42,11 +43,11 @@
                 <ion-col
                     *ngFor="let _ of userAnimeRatesFake"
                     class="anime-grid__col"
-                    size-xs="4"
-                    size-sm="3"
-                    size-md="2"
-                    size-lg="2"
-                    size-xl="1"
+                    size-xs="6"
+                    size-sm="6"
+                    size-md="4"
+                    size-lg="3"
+                    size-xl="2"
                 >
                     <app-skeleton-block
                         class="anime-grid__item"

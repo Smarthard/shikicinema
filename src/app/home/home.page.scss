@@ -5,6 +5,7 @@
 
     &__search {
         margin-right: auto;
+        padding: 15px 1.25rem;
     }
 }
 
@@ -21,11 +22,19 @@
     }
 
     @include media-breakpoint-up('lg') {
+        margin: 1.5rem 5%;
+    }
+
+    @include media-breakpoint-up('xl') {
         margin: 1.5rem 10%;
     }
 
     &__row {
         justify-content: space-evenly;
+    }
+
+    &__item {
+        margin: 0 auto;
     }
 
     ::after {
