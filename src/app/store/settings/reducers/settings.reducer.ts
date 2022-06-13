@@ -10,6 +10,7 @@ import {
 const initialState: SettingsStoreInterface = {
     language: '',
     availableLangs: defaultAvailableLangs,
+    animePaginationSize: 100,
 };
 
 const reducer = createReducer(

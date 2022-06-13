@@ -9,7 +9,7 @@
     }
 }
 
-.anime-grid {
+.anime-rates {
     padding: 0;
     margin: 0;
 
@@ -22,23 +22,31 @@
     }
 
     @include media-breakpoint-up('lg') {
-        margin: 1.5rem 5%;
+        margin: 1.5rem 5rem;
     }
 
     @include media-breakpoint-up('xl') {
-        margin: 1.5rem 10%;
+        margin: 1.5rem 10rem;
     }
 
-    &__row {
-        justify-content: space-evenly;
+    &__label {
+        margin: 0 0 1rem;
+        padding: 5px 1rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        color: var(--ion-color-dark-tint);
+        background-color: var(--ion-color-light-tint);
     }
 
-    &__item {
-        margin: 0 auto;
+    &__text {
+        font-weight: bold;
+        font-size: 15px;
     }
 
-    ::after {
-        content: '';
-        flex: auto;
+    &__icon {
+        font-size: 25px;
+        cursor: pointer;
     }
 }

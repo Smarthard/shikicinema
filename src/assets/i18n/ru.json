@@ -1,10 +1,28 @@
 {
     "GLOBAL": {
-        "APP_NAME": "Shikicinema"
+        "APP_NAME": "Shikicinema",
+        "SHIKIMORI": {
+            "ANIME_KINDS": {
+                "TV" : "TV сериал",
+                "OVA" : "OVA",
+                "ONA" : "ONA",
+                "MOVIE" : "Фильм",
+                "SPECIAL" : "Спешл",
+                "MUSIC": "Клип"
+            }
+        }
     },
     "HOME_MODULE": {
         "HOME_PAGE": {
-            "ANIME_SEARCHBAR_PLACEHOLDER": "Поиск аниме..."
+            "ANIME_SEARCHBAR_PLACEHOLDER": "Поиск аниме...",
+            "GRIDS": {
+                "PLANNED": "Запланировано",
+                "WATCHING": "Смотрю",
+                "REWATCHING": "Пересматриваю",
+                "COMPLETED": "Просмотрено",
+                "ON_HOLD": "Отложено",
+                "DROPPED": "Брошено"
+            }
         }
     }
 }

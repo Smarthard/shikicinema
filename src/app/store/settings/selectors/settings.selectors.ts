@@ -13,3 +13,8 @@ export const availableLanguagesSelector = createSelector(
     settingsFeatureSelector,
     (state) => state.availableLangs,
 );
+
+export const animePaginationSizeSelector = createSelector(
+    settingsFeatureSelector,
+    (state) => state.animePaginationSize,
+);

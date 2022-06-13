@@ -39,14 +39,7 @@
                         "style": "kebab-case"
                     }
                 ],
-                "@angular-eslint/directive-selector": [
-                    "error",
-                    {
-                        "type": "attribute",
-                        "prefix": "app",
-                        "style": "camelCase"
-                    }
-                ],
+                "@angular-eslint/directive-selector": "off",
                 "object-curly-spacing": [
                     "error",
                     "always"

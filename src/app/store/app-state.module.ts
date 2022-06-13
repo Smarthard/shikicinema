@@ -11,10 +11,12 @@ import { settingsLocalStorageSyncReducer } from '@app/store/settings/reducers/se
 import { shikimoriReducer } from '@app/store/shikimori/reducers/shikimori.reducer';
 import { ShikimoriEffects } from '@app/store/shikimori/effects/shikimori.effects';
 import { ShikimoriClient } from '@app/shared/services/shikimori-client.service';
+import { loggerMetaReducer } from '@app/store/logger/reducers/logger.meta-reducer';
 
 const storeConfig: RootStoreConfig<AppStoreInterface> = {
     metaReducers: [
         settingsLocalStorageSyncReducer,
+        loggerMetaReducer,
     ],
 };
 

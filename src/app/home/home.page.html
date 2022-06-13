@@ -14,48 +14,63 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-    <ion-grid class="anime-grid">
-        <ion-row
-            *ngIf="userAnimeRates$ | async as userAnimeRates; else skeletonTemplate"
-            class="anime-grid__row"
-        >
-            <ion-col
-                *ngFor="let rate of userAnimeRates; trackBy: trackById"
-                class="anime-grid__col"
-                size-xs="6"
-                size-sm="6"
-                size-md="4"
-                size-lg="3"
-                size-xl="2"
-            >
-                <app-image-card
-                    class="anime-grid__item"
-                    [link]="'https://shikimori.one' + rate.anime.url"
-                    [imageUrl]="'https://nyaa.shikimori.one' + rate.anime.image.original"
-                    [height]="cardHeight"
-                    [width]="cardWidth"
-                ></app-image-card>
-            </ion-col>
-        </ion-row>
-
-        <ng-template #skeletonTemplate>
-            <ion-row class="anime-grid__row">
-                <ion-col
-                    *ngFor="let _ of userAnimeRatesFake"
-                    class="anime-grid__col"
-                    size-xs="6"
-                    size-sm="6"
-                    size-md="4"
-                    size-lg="3"
-                    size-xl="2"
-                >
-                    <app-skeleton-block
-                        class="anime-grid__item"
-                        [height]="cardHeight"
-                        [width]="cardWidth"
-                    ></app-skeleton-block>
-                </ion-col>
-            </ion-row>
-        </ng-template>
-    </ion-grid>
+    <ng-template
+        *ngFor="let grid of animeGrids"
+        [ngTemplateOutlet]="animeRatesGrid"
+        [ngTemplateOutletContext]="{
+            label: 'HOME_MODULE.HOME_PAGE.GRIDS.' + (grid.status | uppercase),
+            status: grid.status,
+            rates$: grid.rates$,
+            isLoaded$: grid.isLoaded$
+        }"
+    ></ng-template>
 </ion-content>
+
+<ng-template
+    #animeRatesGrid
+    [templateType]="animeGrids[0]"
+    let-label="label"
+    let-status="status"
+    let-rates$="rates$"
+    let-isLoaded$="isLoaded$"
+>
+    <section
+        [id]="status"
+        (ngxVisibility)="onSectionVisibilityChange(status, $event)"
+        class="anime-rates"
+    >
+        <div class="anime-rates__label">
+            <ion-text class="anime-rates__text">
+                {{ label | transloco | uppercase }}
+                <span
+                    *ngIf="(isLoaded$ | async) === true"
+                    class="anime-rates__counter"
+                >
+                    ({{ (rates$ | async)?.length || 0 }})
+                </span>
+            </ion-text>
+
+            <ion-button
+                [fill]="'clear'"
+                [size]="'small'"
+                [color]="'medium'"
+                (click)="toggleHiddenGridStatus(status)"
+            >
+                <ion-icon
+                    class="anime-rates__icon"
+                    slot="icon-only"
+                    [name]="getHiddenGridStatus(status) ? 'chevron-down' : 'chevron-up'"
+                ></ion-icon>
+            </ion-button>
+        </div>
+
+        <app-card-grid
+            class="anime-rates__grid"
+            [class.ion-hide]="getHiddenGridStatus(status)"
+            [height]="cardHeight"
+            [width]="cardWidth"
+            [userAnimeRates]="rates$ | async"
+            [isLoading]="(isLoaded$ | async) === false"
+        ></app-card-grid>
+    </section>
+</ng-template>

@@ -69,6 +69,15 @@
                                 }
                             ]
                         },
+                        "development": {
+                            "optimization": false,
+                            "outputHashing": "none",
+                            "sourceMap": true,
+                            "namedChunks": false,
+                            "aot": true,
+                            "vendorChunk": false,
+                            "buildOptimizer": false
+                        },
                         "ci": {
                             "progress": false
                         }

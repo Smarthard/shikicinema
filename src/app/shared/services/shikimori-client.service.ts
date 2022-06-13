@@ -7,6 +7,8 @@ import { UserBriefInfoInterface } from '@app/shared/types/shikimori/user-brief-i
 import { UserBriefRateInterface } from '@app/shared/types/shikimori/user-brief-rate.interface';
 import { ResourceIdType } from '@app/shared/types/resource-id.type';
 import { UserAnimeRate } from '@app/shared/types/shikimori/user-anime-rate';
+import { UserAnimeRatesQuery } from '@app/shared/types/shikimori/queries/user-anime-rates-query';
+import { setPaginationToParams } from '@app/shared/types/shikimori/helpers/pagination-helper';
 
 @Injectable({
     providedIn: 'root'
@@ -65,11 +67,17 @@ export class ShikimoriClient {
         return this.http.get<UserBriefRateInterface[]>(url, { params });
     }
 
-    getUserAnimeRates(userId: ResourceIdType) {
+    getUserAnimeRates(userId: ResourceIdType, query?: UserAnimeRatesQuery) {
         const url = `${this.baseUri}/users/${userId}/anime_rates`;
-        const params = new HttpParams()
-            .set('limit', 1000)
-            .set('order', 'name');
+        let params = setPaginationToParams(query);
+
+        if (query?.censored) {
+            params = params.set('censored', query.censored);
+        }
+
+        if (query?.status) {
+            params = params.set('status', query.status);
+        }
 
         return this.http.get<UserAnimeRate[]>(url, { params });
     }

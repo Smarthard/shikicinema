@@ -1,10 +1,28 @@
 {
     "GLOBAL": {
-        "APP_NAME": "Shikicinema"
+        "APP_NAME": "Shikicinema",
+        "SHIKIMORI": {
+            "ANIME_KINDS": {
+                "TV" : "TV Series",
+                "OVA" : "OVA",
+                "ONA" : "ONA",
+                "MOVIE" : "Movie",
+                "SPECIAL" : "Special",
+                "MUSIC": "Music"
+            }
+        }
     },
     "HOME_MODULE": {
         "HOME_PAGE": {
-            "ANIME_SEARCHBAR_PLACEHOLDER": "Search anime..."
+            "ANIME_SEARCHBAR_PLACEHOLDER": "Search anime...",
+            "GRIDS": {
+                "PLANNED": "Planned to watch",
+                "WATCHING": "Watching",
+                "REWATCHING": "Rewatching",
+                "COMPLETED": "Completed",
+                "ON_HOLD": "On hold",
+                "DROPPED": "Dropped"
+            }
         }
     }
 }

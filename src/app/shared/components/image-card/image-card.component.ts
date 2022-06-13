@@ -1,5 +1,7 @@
 import { Component, Input } from '@angular/core';
 
+import { AnimeKindType } from '@app/shared/types/shikimori/anime-kind.type';
+
 @Component({
     selector: 'app-image-card',
     templateUrl: './image-card.component.html',
@@ -8,6 +10,15 @@ import { Component, Input } from '@angular/core';
 export class ImageCardComponent {
     @Input()
     imageUrl: string;
+
+    @Input()
+    name: string;
+
+    @Input()
+    kind: AnimeKindType;
+
+    @Input()
+    releaseDate: string | Date;
 
     @Input()
     link = '#';
