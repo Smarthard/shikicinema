@@ -2,10 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { getBrowserLang } from '@ngneat/transloco';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { tap } from 'rxjs/operators';
-import { select, Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 
 import { updateSettingsAction } from '@app/store/settings/actions/settings.actions';
-import { languageSelector } from '@app/store/settings/selectors/settings.selectors';
+import { selectLanguage } from '@app/store/settings/selectors/settings.selectors';
 import { getCurrentUserAction } from '@app/store/shikimori/actions/get-current-user.action';
 
 @UntilDestroy()
@@ -17,7 +17,7 @@ import { getCurrentUserAction } from '@app/store/shikimori/actions/get-current-u
 export class AppComponent implements OnInit {
 
     constructor(
-        private store$: Store,
+        private store: Store,
     ) {}
 
     ngOnInit(): void {
@@ -26,21 +26,20 @@ export class AppComponent implements OnInit {
     }
 
     initializeLocale(): void {
-        this.store$.pipe(
+        this.store.select(selectLanguage).pipe(
             untilDestroyed(this),
-            select(languageSelector),
             tap((storedLanguage) => {
                 const browserLang = getBrowserLang();
                 const language = storedLanguage || browserLang || 'en';
 
                 if (language !== storedLanguage) {
-                    this.store$.dispatch(updateSettingsAction({ config: { language } }));
+                    this.store.dispatch(updateSettingsAction({ config: { language } }));
                 }
             })
         ).subscribe();
     }
 
     initializeUser(): void {
-        this.store$.dispatch(getCurrentUserAction());
+        this.store.dispatch(getCurrentUserAction());
     }
 }

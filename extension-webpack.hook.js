@@ -1,5 +1,6 @@
 const webpack = require('webpack');
 const path = require('path');
+const ESLintPlugin = require('eslint-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 
@@ -26,15 +27,6 @@ const webpackConfig = {
     module: {
         rules: [
             {
-                enforce: 'pre',
-                test: /\.js$/,
-                exclude: /node_modules/,
-                loader: 'eslint-loader',
-                options: {
-                    failOnError: true
-                }
-            },
-            {
                 test: /\.js$/,
                 exclude: '/node_modules/',
                 loader: 'babel-loader'
@@ -42,6 +34,11 @@ const webpackConfig = {
         ]
     },
     plugins: [
+        new ESLintPlugin({
+            files: '**.js',
+            exclude: [ 'node_modules', 'dist' ],
+            failOnError: true,
+        }),
         new CopyPlugin({
             patterns: [
                 {

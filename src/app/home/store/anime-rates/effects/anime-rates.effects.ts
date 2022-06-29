@@ -3,6 +3,7 @@ import {
     Actions,
     createEffect,
     ofType,
+    concatLatestFrom,
 } from '@ngrx/effects';
 import {
     catchError,
@@ -28,15 +29,15 @@ import {
 } from '@app/home/store/anime-rates/helpers/anime-rates.helpers';
 import { Action, Store } from '@ngrx/store';
 import {
-    isRatesLoadedByStatusSelector,
-    ratesByStatusSelector,
-    ratesPageByStatusSelector,
+    selectIsRatesLoadedByStatus,
+    selectRatesByStatus,
+    selectRatesPageByStatus,
 } from '@app/home/store/anime-rates/selectors/anime-rates.selectors';
 import {
     allPagesLoadedForStatusAction,
     incrementPageForStatusAction
 } from '@app/home/store/anime-rates/actions/anime-rate-paging.actions';
-import { animePaginationSizeSelector } from '@app/store/settings/selectors/settings.selectors';
+import { selectAnimePaginationSize } from '@app/store/settings/selectors/settings.selectors';
 import { updateSettingsAction } from '@app/store/settings/actions/settings.actions';
 import { SettingsStoreInterface } from '@app/store/settings/types/settings-store.interface';
 
@@ -45,38 +46,35 @@ export class AnimeRatesEffects {
 
     loadAnimeRateByStatusEffect$ = createEffect(() => this.actions$.pipe(
         ofType(loadAnimeRateByStatusAction),
-        mergeMap((action) => of(action).pipe(
-            withLatestFrom(
-                this.store$.select(ratesPageByStatusSelector(action.status)),
-                this.store$.select(isRatesLoadedByStatusSelector(action.status)),
-                this.store$.select(animePaginationSizeSelector),
-            ),
-        )),
-        switchMap(([{ status, userId }, page, isLoad, limit]) => !isLoad ? this.shikimoriClient.getUserAnimeRates(userId, {
-            status, page, limit,
-        })
-            .pipe(
-                withLatestFrom(this.store$.select(ratesByStatusSelector(status))),
-                mergeMap(([newRates, oldRates]) => {
-                    const animeNameSortCfg: AnimeNameSortingConfig = { compareOriginalName: true, caseSensitive: false };
-                    const isAllRatesLoaded = newRates?.length < limit;
-                    const maxItemsLoaded = page * limit;
-                    const rates = [ ...oldRates, ...newRates ]
-                        .sort(sortAnimeRatesByUserRating(status, animeNameSortCfg))
-                        .filter(isDuplicateArrayFilter);
-                    const actions: Action[] = [
-                        loadAnimeRateByStatusSuccessAction({ status, rates, userId, newRates }),
-                    ];
+        concatLatestFrom(({ status }) => [
+            this.store.select(selectRatesPageByStatus(status)),
+            this.store.select(selectIsRatesLoadedByStatus(status)),
+            this.store.select(selectAnimePaginationSize),
+        ]),
+        switchMap(([{ status, userId }, page, isLoad, limit]) => !isLoad
+            ? this.shikimoriClient.getUserAnimeRates(userId, { status, page, limit })
+                .pipe(
+                    withLatestFrom(this.store.select(selectRatesByStatus(status))),
+                    mergeMap(([newRates, oldRates]) => {
+                        const animeNameSortCfg: AnimeNameSortingConfig = { compareOriginalName: true, caseSensitive: false };
+                        const isAllRatesLoaded = newRates?.length < limit;
+                        const maxItemsLoaded = page * limit;
+                        const rates = [ ...oldRates, ...newRates ]
+                            .sort(sortAnimeRatesByUserRating(status, animeNameSortCfg))
+                            .filter(isDuplicateArrayFilter);
+                        const actions: Action[] = [
+                            loadAnimeRateByStatusSuccessAction({ status, rates, userId, newRates }),
+                        ];
 
-                    actions.push(isAllRatesLoaded
-                        ? allPagesLoadedForStatusAction({ status, maxItemsLoaded })
-                        : incrementPageForStatusAction({ status })
-                    );
+                        actions.push(isAllRatesLoaded
+                            ? allPagesLoadedForStatusAction({ status, maxItemsLoaded })
+                            : incrementPageForStatusAction({ status })
+                        );
 
-                    return actions;
-                }),
-                catchError((errors) => of(loadAnimeRateByStatusFailureAction({ status, errors })))
-            )
+                        return actions;
+                    }),
+                    catchError((errors) => of(loadAnimeRateByStatusFailureAction({ status, errors })))
+                )
             : EMPTY)
     ));
 
@@ -85,7 +83,7 @@ export class AnimeRatesEffects {
         // schedule next page of rates if not all have loaded
         // it would dispatch an extra load action with delay
         // until items amount is more or equal than page limit
-        withLatestFrom(this.store$.select(animePaginationSizeSelector)),
+        concatLatestFrom(() => this.store.select(selectAnimePaginationSize)),
         filter(([{ newRates }, limit ]) => newRates?.length >= limit),
         delay(1000), // <-- Shikimori API is limited by 5 rps, 90 rpm!
         switchMap(([ action ]) => of(action).pipe(
@@ -96,7 +94,7 @@ export class AnimeRatesEffects {
 
     allPagesLoadedForStatus$ = createEffect(() => this.actions$.pipe(
         ofType(allPagesLoadedForStatusAction),
-        withLatestFrom(this.store$.select(animePaginationSizeSelector)),
+        concatLatestFrom(() => this.store.select(selectAnimePaginationSize)),
         filter(([{ maxItemsLoaded }, pageSize]) => maxItemsLoaded > pageSize),
         map(([{ maxItemsLoaded }]) => {
             const config: Pick<SettingsStoreInterface, 'animePaginationSize'> = { animePaginationSize: maxItemsLoaded };
@@ -107,7 +105,7 @@ export class AnimeRatesEffects {
 
     constructor(
         private actions$: Actions,
-        private store$: Store,
+        private store: Store,
         private shikimoriClient: ShikimoriClient,
     ) {}
 }

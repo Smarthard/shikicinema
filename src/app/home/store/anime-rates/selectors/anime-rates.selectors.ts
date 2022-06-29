@@ -8,10 +8,10 @@ import {
     getRateStoreKey
 } from '@app/home/store/anime-rates/helpers/anime-rates-store-key.helpers';
 
-export const animeRatesFeatureSelector = createFeatureSelector<AnimeRatesStoreInterface>('animeRates');
+export const selectAnimeRates = createFeatureSelector<AnimeRatesStoreInterface>('animeRates');
 
-export const ratesByStatusSelector = (status: UserRateStatusType) => createSelector(
-    animeRatesFeatureSelector,
+export const selectRatesByStatus = (status: UserRateStatusType) => createSelector(
+    selectAnimeRates,
     (state) => {
         const key = getRateStoreKey(status);
 
@@ -19,8 +19,8 @@ export const ratesByStatusSelector = (status: UserRateStatusType) => createSelec
     },
 );
 
-export const ratesPageByStatusSelector = (status: UserRateStatusType) => createSelector(
-    animeRatesFeatureSelector,
+export const selectRatesPageByStatus = (status: UserRateStatusType) => createSelector(
+    selectAnimeRates,
     (state) => {
         const key = getRatePageKey(status);
 
@@ -28,8 +28,8 @@ export const ratesPageByStatusSelector = (status: UserRateStatusType) => createS
     },
 );
 
-export const isRatesLoadedByStatusSelector = (status: UserRateStatusType) => createSelector(
-    animeRatesFeatureSelector,
+export const selectIsRatesLoadedByStatus = (status: UserRateStatusType) => createSelector(
+    selectAnimeRates,
     (state) => {
         const key = getRateLoadedKey(status);
 
