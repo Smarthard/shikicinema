@@ -39,6 +39,9 @@
     "workspaces": [
         "electron"
     ],
+    "pre-commit": [
+        "lint"
+    ],
     "dependencies": {
         "@angular/animations": "~13.2.2",
         "@angular/cdk": "^13.3.9",
@@ -61,8 +64,8 @@
         "@ngrx/effects": "^13.2.0",
         "@ngrx/store": "^13.2.0",
         "deep-object-diff": "^1.1.7",
-        "ngrx-store-localstorage": "^13.0.1",
         "ionic4-tooltips": "^2.0.2",
+        "ngrx-store-localstorage": "^13.0.1",
         "ngx-visibility": "^1.1.0",
         "rxjs": "~6.6.0",
         "tslib": "^2.2.0",
@@ -95,10 +98,10 @@
         "copy-webpack-plugin": "^10.2.1",
         "dotenv": "^16.0.1",
         "eslint": "^8.18.0",
-        "eslint-webpack-plugin": "^3.2.0",
         "eslint-plugin-import": "^2.26.0",
         "eslint-plugin-jsdoc": "^39.3.3",
         "eslint-plugin-prefer-arrow": "^1.2.3",
+        "eslint-webpack-plugin": "^3.2.0",
         "jasmine-core": "~3.8.0",
         "jasmine-spec-reporter": "~5.0.0",
         "karma": "~6.3.2",
@@ -107,6 +110,7 @@
         "karma-coverage-istanbul-reporter": "~3.0.2",
         "karma-jasmine": "~4.0.0",
         "karma-jasmine-html-reporter": "^1.5.0",
+        "pre-commit": "^1.2.2",
         "protractor": "~7.0.0",
         "terser-webpack-plugin": "^5.3.1",
         "ts-node": "^10.7.0",
