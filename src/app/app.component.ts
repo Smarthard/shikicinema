@@ -32,9 +32,7 @@ export class AppComponent implements OnInit {
                 const browserLang = getBrowserLang();
                 const language = storedLanguage || browserLang || 'en';
 
-                if (language !== storedLanguage) {
-                    this.store.dispatch(updateSettingsAction({ config: { language } }));
-                }
+                this.store.dispatch(updateSettingsAction({ config: { language } }));
             })
         ).subscribe();
     }
