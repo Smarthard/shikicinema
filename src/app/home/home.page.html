@@ -1,19 +1,4 @@
-<ion-header [translucent]="true">
-    <ion-toolbar>
-        <div class="toolbar">
-            <ion-title class="toolbar__title ion-hide-lg-down">
-                {{ 'GLOBAL.APP_NAME' | transloco }}
-            </ion-title>
-
-            <ion-searchbar
-                class="toolbar__search"
-                [placeholder]="'HOME_MODULE.HOME_PAGE.ANIME_SEARCHBAR_PLACEHOLDER' | transloco"
-            ></ion-searchbar>
-        </div>
-    </ion-toolbar>
-</ion-header>
-
-<ion-content [fullscreen]="true">
+<ion-content [fullscreen]="true" class="page-content">
     <ng-template
         *ngFor="let grid of animeGrids"
         [ngTemplateOutlet]="animeRatesGrid"

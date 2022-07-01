@@ -5,14 +5,23 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { IonicModule } from '@ionic/angular';
 import { IonicStorageModule } from '@ionic/storage-angular';
+import { RouterModule } from '@angular/router';
 
 import { TranslocoRootModule } from '@app/transloco-root.module';
 import { AppStateModule } from '@app/store/app-state.module';
 import { ShikimoriClient } from '@app/shared/services/shikimori-client.service';
+import { HeaderComponent } from '@app/core/components/header/header.component';
+import { B64encodePipe } from '@app/shared/pipes/b64encode.pipe';
 
+const components = [
+    HeaderComponent,
+    B64encodePipe,
+];
 
 @NgModule({
-    declarations: [],
+    declarations: [
+        ...components,
+    ],
     providers: [
         ShikimoriClient,
     ],
@@ -25,6 +34,7 @@ import { ShikimoriClient } from '@app/shared/services/shikimori-client.service';
         HttpClientModule,
         TranslocoRootModule,
         AppStateModule,
+        RouterModule,
     ],
     exports: [
         BrowserModule,
@@ -33,6 +43,7 @@ import { ShikimoriClient } from '@app/shared/services/shikimori-client.service';
         CommonModule,
         HttpClientModule,
         TranslocoRootModule,
+        ...components,
     ],
 })
 export class CoreModule {}

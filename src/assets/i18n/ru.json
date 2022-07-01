@@ -10,6 +10,16 @@
                 "SPECIAL" : "Спешл",
                 "MUSIC": "Клип"
             }
+        },
+        "HEADER": {
+            "TOOLBAR_MENU": {
+                "SIGN_IN": "Войти",
+                "TO_PROFILE": "В профиль",
+                "ANIME_LIST": "Список аниме",
+                "MANGA_LIST": "Список манги",
+                "SETTINGS": "Настройки",
+                "EXIT": "Выход"
+            }
         }
     },
     "HOME_MODULE": {

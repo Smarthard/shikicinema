@@ -16,7 +16,7 @@ import { CoreModule } from '@app/core/core.module';
     ],
     providers: [
         { provide: LocationStrategy, useClass: HashLocationStrategy },
-        { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
+        { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     ],
     bootstrap: [AppComponent],
 })
