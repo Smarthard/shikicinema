@@ -12,10 +12,14 @@ import { AppStateModule } from '@app/store/app-state.module';
 import { ShikimoriClient } from '@app/shared/services/shikimori-client.service';
 import { HeaderComponent } from '@app/core/components/header/header.component';
 import { B64encodePipe } from '@app/shared/pipes/b64encode.pipe';
+import { B64decodePipe } from '@app/shared/pipes/b64decode.pipe';
+import { GoExternalPage } from '@app/core/pages/go-external/go-external.page';
 
 const components = [
     HeaderComponent,
+    GoExternalPage,
     B64encodePipe,
+    B64decodePipe,
 ];
 
 @NgModule({

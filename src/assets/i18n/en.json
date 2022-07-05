@@ -20,6 +20,9 @@
                 "SETTINGS": "Settings",
                 "EXIT": "Exit"
             }
+        },
+        "GO_EXTERNAL_PAGE": {
+            "MESSAGE": "You're going outside of the Shikicinema, now redirecting to {{ link }}"
         }
     },
     "HOME_MODULE": {

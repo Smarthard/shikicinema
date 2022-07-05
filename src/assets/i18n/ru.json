@@ -20,6 +20,9 @@
                 "SETTINGS": "Настройки",
                 "EXIT": "Выход"
             }
+        },
+        "GO_EXTERNAL_PAGE": {
+            "MESSAGE": "Вы покидаете Shikicinema, редирект на страницу {{ link }}"
         }
     },
     "HOME_MODULE": {

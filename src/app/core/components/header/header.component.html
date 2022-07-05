@@ -87,8 +87,9 @@
                     expand="block"
                     fill="solid"
                     size="small"
-                    [routerLink]="[ 'external' ]"
+                    [routerLink]="[ '/external' ]"
                     [queryParams]="{ link: (currentUser.url + '/list/anime') | b64encode }"
+                    [skipLocationChange]="true"
                 >
                     <ion-icon
                         icon="open-outline"
@@ -111,8 +112,9 @@
                     expand="block"
                     fill="solid"
                     size="small"
-                    [routerLink]="['external']"
+                    [routerLink]="[ '/external' ]"
                     [queryParams]="{ link: (currentUser.url + '/list/manga') | b64encode }"
+                    [skipLocationChange]="true"
                 >
                     <ion-icon
                         icon="open-outline"
