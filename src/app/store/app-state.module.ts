@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { EffectsModule } from '@ngrx/effects';
+import { Actions, EffectsModule, USER_PROVIDED_EFFECTS } from '@ngrx/effects';
 import { RootStoreConfig, StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule, StoreDevtoolsOptions } from '@ngrx/store-devtools';
 
@@ -12,9 +12,16 @@ import { shikimoriReducer } from '@app/store/shikimori/reducers/shikimori.reduce
 import { ShikimoriEffects } from '@app/store/shikimori/effects/shikimori.effects';
 import { ShikimoriClient } from '@app/shared/services/shikimori-client.service';
 import { loggerMetaReducer } from '@app/store/logger/reducers/logger.meta-reducer';
+import { authReducer } from '@app/store/auth/reducers/auth.reducer';
+import { authEffectFactory } from '@app/store/auth/factories/auth-effects.factories';
+import { authLocalStorageSyncReducer } from '@app/store/auth/reducers/auth.meta-reducer';
+import { AuthWebExtensionEffects } from '@app/store/auth/effects/auth.web-extension.effects';
+import { AuthNativeAppEffects } from '@app/store/auth/effects/auth.native-app.effects';
+import { ElectronIpcProxyService } from '@app/shared/services/electron-ipc-proxy.service';
 
 const storeConfig: RootStoreConfig<AppStoreInterface> = {
     metaReducers: [
+        authLocalStorageSyncReducer,
         settingsLocalStorageSyncReducer,
         loggerMetaReducer,
     ],
@@ -29,6 +36,7 @@ const storeDevtoolsConfig: StoreDevtoolsOptions = {
 @NgModule({
     imports: [
         StoreModule.forRoot<AppStoreInterface>({
+            auth: authReducer,
             settings: settingsReducer,
             shikimori: shikimoriReducer,
         }, storeConfig),
@@ -39,7 +47,16 @@ const storeDevtoolsConfig: StoreDevtoolsOptions = {
         StoreDevtoolsModule.instrument(storeDevtoolsConfig),
     ],
     providers: [
+        Actions,
+        ElectronIpcProxyService,
         ShikimoriClient,
+        AuthWebExtensionEffects,
+        AuthNativeAppEffects,
+        {
+            provide: USER_PROVIDED_EFFECTS,
+            useFactory: authEffectFactory,
+            multi: true,
+        },
     ],
 })
 export class AppStateModule {}

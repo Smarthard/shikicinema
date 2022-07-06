@@ -25,7 +25,7 @@
         "ng": "ng",
         "cap": "cap",
         "start": "ionic serve",
-        "start:native": "npx cap open @capacitor-community/electron",
+        "start:native": "ionic cap sync && `npx cap sync @capacitor-community/electron` && npx cap open @capacitor-community/electron",
         "build": "ionic build",
         "build:prod": "ionic build --prod",
         "test": "ng test",

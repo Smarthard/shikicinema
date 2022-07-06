@@ -10,6 +10,7 @@ import {
 
 import { UserBriefInfoInterface } from '@app/shared/types/shikimori/user-brief-info.interface';
 import { selectShikimoriCurrentUser } from '@app/store/shikimori/selectors/shikimori.selectors';
+import { authShikimoriAction } from '@app/store/auth/actions/auth.actions';
 
 @Component({
     selector: 'app-header',
@@ -46,4 +47,7 @@ export class HeaderComponent implements OnInit {
         ).subscribe();
     }
 
+    shikimoriLogin(): void {
+        this.store.dispatch(authShikimoriAction());
+    }
 }

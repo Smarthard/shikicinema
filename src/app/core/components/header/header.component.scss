@@ -48,6 +48,7 @@ $grid-searchbar-column-width: 10fr;
 
     &--nolinks {
         cursor: default;
+        user-select: none;
     }
 
     &__icon {

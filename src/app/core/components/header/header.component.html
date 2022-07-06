@@ -156,8 +156,9 @@
     <ion-content>
         <ion-list>
             <ion-item
-                class="menu-item"
-                [routerLink]="['sign_in']"
+                class="menu-item menu-item--nolinks"
+                (click)="shikimoriLogin()"
+                routerLink="#"
             >
                 <ion-icon
                     class="menu-item__icon"

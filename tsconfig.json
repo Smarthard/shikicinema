@@ -28,6 +28,9 @@
             ],
             "@app-e2e/*": [
                 "<rootDir>/../e2e/*"
+            ],
+            "@app-electron/*": [
+                "<rootDir>/../electron/*"
             ]
         }
     },

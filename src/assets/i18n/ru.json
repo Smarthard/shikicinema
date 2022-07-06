@@ -23,6 +23,14 @@
         },
         "GO_EXTERNAL_PAGE": {
             "MESSAGE": "Вы покидаете Shikicinema, редирект на страницу {{ link }}"
+        },
+        "AUTH": {
+            "SHIKIMORI": {
+                "LOGIN": {
+                    "SUCCESS": "Успешно вошли как {{ nickname }}",
+                    "FAILURE": "Не удалось выполнить вход в Shikimori"
+                }
+            }
         }
     },
     "HOME_MODULE": {

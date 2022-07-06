@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
+import { map } from 'rxjs/operators';
 
 import { environment } from '@app-env/environment';
 import { UserInterface } from '@app/shared/types/shikimori/user.interface';
@@ -9,6 +10,8 @@ import { ResourceIdType } from '@app/shared/types/resource-id.type';
 import { UserAnimeRate } from '@app/shared/types/shikimori/user-anime-rate';
 import { UserAnimeRatesQuery } from '@app/shared/types/shikimori/queries/user-anime-rates-query';
 import { setPaginationToParams } from '@app/shared/types/shikimori/helpers/pagination-helper';
+import { Credentials } from '@app/shared/types/shikimori/credentials';
+import { toShikimoriCredentials } from '@app/shared/types/shikimori/mappers/auth.mappers';
 
 @Injectable({
     providedIn: 'root'
@@ -19,6 +22,29 @@ export class ShikimoriClient {
     constructor(
         private http: HttpClient,
     ) {}
+
+    getNewToken(authCode: string) {
+        const params = new HttpParams()
+            .set('grant_type', 'authorization_code')
+            .set('client_id', environment.shikimori.authClientId)
+            .set('client_secret', environment.shikimori.authClientSecret)
+            .set('code', authCode)
+            .set('redirect_uri', 'urn:ietf:wg:oauth:2.0:oob');
+
+        return this.http.post<Credentials>('https://shikimori.one/oauth/token', null, { params })
+            .pipe(map(toShikimoriCredentials));
+    }
+
+    refreshToken(refreshToken: string) {
+        const params = new HttpParams()
+            .set('grant_type', 'refresh_token')
+            .set('client_id', environment.shikimori.authClientId)
+            .set('client_secret', environment.shikimori.authClientSecret)
+            .set('refresh_token', refreshToken);
+
+        return this.http.post<Credentials>('https://shikimori.one/oauth/token', null,{ params })
+            .pipe(map(toShikimoriCredentials));
+    }
 
     getCurrentUser() {
         const url = `${this.baseUri}/users/whoami`;

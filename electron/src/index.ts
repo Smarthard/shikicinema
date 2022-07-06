@@ -1,12 +1,13 @@
 import type { CapacitorElectronConfig } from '@capacitor-community/electron';
 import { getCapacitorElectronConfig, setupElectronDeepLinking } from '@capacitor-community/electron';
 import type { MenuItemConstructorOptions } from 'electron';
-import { app, MenuItem } from 'electron';
+import { app, ipcMain, MenuItem } from 'electron';
 import electronIsDev from 'electron-is-dev';
 import unhandled from 'electron-unhandled';
 import { autoUpdater } from 'electron-updater';
 
 import { ElectronCapacitorApp, setupContentSecurityPolicy, setupReloadWatcher } from './setup';
+import shikimoriAuthCodeHandler from './ipc-handlers/shikimori/auth-code.handler';
 
 // Graceful handling of unhandled errors.
 unhandled();
@@ -68,3 +69,9 @@ app.on('activate', async function() {
 });
 
 // Place all ipc or other electron api calls and custom functionality under this line
+ipcMain.removeAllListeners('shikimori-auth-code');
+ipcMain.handle('shikimori-auth-code', async (evt, authUrl) => await shikimoriAuthCodeHandler(
+    authUrl,
+    myCapacitorApp.getMainWindow(),
+    electronIsDev
+));

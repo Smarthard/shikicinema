@@ -23,6 +23,14 @@
         },
         "GO_EXTERNAL_PAGE": {
             "MESSAGE": "You're going outside of the Shikicinema, now redirecting to {{ link }}"
+        },
+        "AUTH": {
+            "SHIKIMORI": {
+                "LOGIN": {
+                    "SUCCESS": "Logged in as {{ nickname }}",
+                    "FAILURE": "Couldn't login to Shikimori"
+                }
+            }
         }
     },
     "HOME_MODULE": {
