@@ -16,6 +16,7 @@ const envFileContent = `import { EnvironmentInterface } from '@app-root/environm
 
 export const environment: EnvironmentInterface = {
     isProduction: ${isProduction},
+    target: '${process.env.PLATFORM_TARGET}',
     kodik: {
         apiURI: '${process.env.KODIK_API_URI}',
         authToken: '${process.env.KODIK_AUTH_TOKEN}',

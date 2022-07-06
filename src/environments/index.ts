@@ -1,5 +1,8 @@
+export type PlatformTargetType = 'web-extension' | 'native-app';
+
 export interface EnvironmentInterface {
     isProduction: boolean;
+    target: PlatformTargetType;
     shikimori: {
         apiURI: string;
         authClientId: string;
