@@ -1,7 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { EMPTY, Observable } from 'rxjs';
-import { ActivatedRoute } from '@angular/router';
-import { Browser } from '@capacitor/browser';
+import { ActivatedRoute, Router } from '@angular/router';
 import {
     catchError,
     delay,
@@ -12,6 +11,8 @@ import {
 } from 'rxjs/operators';
 
 import { fromBase64 } from '@app/shared/utils/base64-utils';
+import { PlatformApi } from '@app/shared/types/platform/platform-api';
+import { PLATFORM_API_TOKEN } from '@app/shared/services/platform-api/platform-api.factory';
 
 @Component({
     selector: 'app-go-external',
@@ -25,6 +26,8 @@ export class GoExternalPage implements OnInit {
 
     constructor(
         private route: ActivatedRoute,
+        private router: Router,
+        @Inject(PLATFORM_API_TOKEN) private platformApi: PlatformApi,
     ) { }
 
     ngOnInit() {
@@ -48,7 +51,10 @@ export class GoExternalPage implements OnInit {
         this.exLink$.pipe(
             take(1),
             delay(3000),
-            tap((url) => Browser.open({ url, windowName: '_self' })),
+            tap(async (url) => {
+                this.platformApi.openInBrowser(url, '_blank');
+                await this.router.navigate([ '/home' ]);
+            }),
         ).subscribe();
     }
 

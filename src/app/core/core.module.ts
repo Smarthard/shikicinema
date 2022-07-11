@@ -14,6 +14,8 @@ import { HeaderComponent } from '@app/core/components/header/header.component';
 import { B64encodePipe } from '@app/shared/pipes/b64encode.pipe';
 import { B64decodePipe } from '@app/shared/pipes/b64decode.pipe';
 import { GoExternalPage } from '@app/core/pages/go-external/go-external.page';
+import { PLATFORM_API_TOKEN, platformApiFactory } from '@app/shared/services/platform-api/platform-api.factory';
+import { ElectronIpcProxyService } from '@app/shared/services/electron-ipc-proxy.service';
 
 const components = [
     HeaderComponent,
@@ -28,6 +30,7 @@ const components = [
     ],
     providers: [
         ShikimoriClient,
+        { provide: PLATFORM_API_TOKEN, useFactory: platformApiFactory, deps: [ ElectronIpcProxyService ] }
     ],
     imports: [
         BrowserModule,

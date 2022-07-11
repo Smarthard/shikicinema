@@ -1,7 +1,12 @@
 import type { CapacitorElectronConfig } from '@capacitor-community/electron';
 import { getCapacitorElectronConfig, setupElectronDeepLinking } from '@capacitor-community/electron';
 import type { MenuItemConstructorOptions } from 'electron';
-import { app, ipcMain, MenuItem } from 'electron';
+import {
+    app,
+    ipcMain,
+    MenuItem,
+    shell,
+} from 'electron';
 import electronIsDev from 'electron-is-dev';
 import unhandled from 'electron-unhandled';
 import { autoUpdater } from 'electron-updater';
@@ -75,3 +80,6 @@ ipcMain.handle('shikimori-auth-code', async (evt, authUrl) => await shikimoriAut
     myCapacitorApp.getMainWindow(),
     electronIsDev
 ));
+
+ipcMain.removeAllListeners('open-external-link');
+ipcMain.on('open-external-link', (evt, url) => shell.openExternal(url));
