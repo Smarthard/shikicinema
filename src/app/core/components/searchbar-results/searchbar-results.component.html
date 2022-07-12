@@ -2,7 +2,7 @@
     *ngIf="results !== null; else searchSomething"
     class="anime-search-list"
 >
-    <ng-container *ngIf="isLoading && results.length === 0">
+    <ng-container *ngIf="isLoading">
         <ng-template [ngTemplateOutlet]="loadingSkeleton"></ng-template>
     </ng-container>
 
@@ -34,7 +34,6 @@
                         >
                             {{ result | shikimoriMediaName: firstMediaName }}
                         </a>
-                        /
                         <a
                             (click)="onResultClick($event,  result, 'external')"
                             [title]="result | shikimoriMediaName: secondMediaName"
@@ -86,8 +85,39 @@
 
 <ng-template #loadingSkeleton>
     <ion-list class="anime-search-list">
-        <ion-item class="anime-search-list-item anime-search-list-item--info">
-            <app-skeleton-block></app-skeleton-block>
+        <ion-item
+            *ngFor="let _ of fakeResults"
+            class="anime-search-list-item"
+        >
+            <app-skeleton-block
+                [height]="'85px'"
+                [width]="'50px'"
+            ></app-skeleton-block>
+
+            <div class="anime-search-list-item__info anime-info">
+                <ion-label class="anime-info__title">
+                    <app-skeleton-block
+                        class="skeleton"
+                        [height]="'27px'"
+                        [width]="'100vw'"
+                    ></app-skeleton-block>
+                </ion-label>
+
+                <ion-note class="anime-info__kind">
+                    <app-skeleton-block
+                        class="skeleton"
+                        [height]="'20px'"
+                        [width]="'50px'"
+                    ></app-skeleton-block>
+                </ion-note>
+                <ion-text class="anime-info__year">
+                    <app-skeleton-block
+                        class="skeleton"
+                        [height]="'20px'"
+                        [width]="'80px'"
+                    ></app-skeleton-block>
+                </ion-text>
+            </div>
         </ion-item>
     </ion-list>
 </ng-template>

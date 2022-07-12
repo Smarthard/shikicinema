@@ -28,6 +28,8 @@ export class SearchbarResultsComponent {
     firstMediaName: ShikimoriMediaNameType;
     secondMediaName: ShikimoriMediaNameType;
 
+    fakeResults = new Array<number>(15).fill(0);
+
     trackById = trackById;
 
     @Input()

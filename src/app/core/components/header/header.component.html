@@ -70,6 +70,7 @@
             <ng-template>
                 <app-searchbar-results
                     [results]="foundAnimes$ | async"
+                    [isLoading]="isSearchResultsLoading$ | async"
                     [originalNameFirst]="!isSearchingInCyrillic"
                     (openResult)="openResult($event)"
                 ></app-searchbar-results>

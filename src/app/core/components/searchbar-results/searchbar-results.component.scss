@@ -1,3 +1,4 @@
+@import 'src/scss/mixins';
 
 .anime-search-list {
 
@@ -19,12 +20,11 @@
         }
 
         &__image {
-            width: 85px;
-            min-width: 85px;
             max-height: 6rem;
         }
 
         &__info {
+            flex: 1;
             margin-left: 12px;
         }
     }
@@ -32,6 +32,32 @@
 
 .anime-info {
     &__title {
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: repeat(2, 1fr);
+
         font-size: larger;
+
+        @include media-breakpoint-up('sm') {
+            display: flex;
+        }
+
+        & :not(:first-child) {
+            &::before {
+                display: inline-block;
+                content: '/';
+                color: var(--ion-text-color);
+                margin-left: 5px;
+            }
+        }
+    }
+
+    &__kind,
+    &__title,
+    &__year {
+        & .skeleton {
+            display: inline-block;
+            margin: 2px;
+        }
     }
 }
