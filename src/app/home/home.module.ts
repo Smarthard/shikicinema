@@ -9,11 +9,12 @@ import { TooltipsModule } from 'ionic4-tooltips';
 
 import { HomePage } from '@app/home/home.page';
 import { HomePageRoutingModule } from '@app/home/home-routing.module';
-import { ImageCardComponent } from '@app/shared/components/image-card/image-card.component';
 import { CardGridComponent } from '@app/home/components/card-grid/card-grid.component';
 import { TypedTemplateDirective } from '@app/shared/directives/typed-template.directive';
 import { HomeStateModule } from '@app/home/store/home-state.module';
 import { SkeletonBlockModule } from '@app/shared/components/skeleton-block/skeleton-block.module';
+import { ImageCardModule } from '@app/shared/components/image-card/image-card.module';
+import { CardGridItemComponent } from '@app/home/components/card-grid-item/card-grid-item.component';
 
 
 @NgModule({
@@ -28,11 +29,12 @@ import { SkeletonBlockModule } from '@app/shared/components/skeleton-block/skele
         TooltipsModule,
         HomeStateModule,
         SkeletonBlockModule,
+        ImageCardModule,
     ],
     declarations: [
         HomePage,
-        ImageCardComponent,
         CardGridComponent,
+        CardGridItemComponent,
         TypedTemplateDirective,
     ]
 })

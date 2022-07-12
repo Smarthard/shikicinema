@@ -1,6 +1,9 @@
-import { Component, Input } from '@angular/core';
-
-import { AnimeKindType } from '@app/shared/types/shikimori/anime-kind.type';
+import {
+    Component,
+    EventEmitter,
+    Input,
+    Output,
+} from '@angular/core';
 
 @Component({
     selector: 'app-image-card',
@@ -15,23 +18,18 @@ export class ImageCardComponent {
     name: string;
 
     @Input()
-    kind: AnimeKindType;
-
-    @Input()
-    releaseDate: string | Date;
-
-    @Input()
-    link = '#';
-
-    @Input()
     height = '10rem';
 
     @Input()
     width = '7rem';
 
+    @Output()
+    imageLoad = new EventEmitter<void>();
+
     isLoading = true;
 
     onImageLoad(): void {
         this.isLoading = false;
+        this.imageLoad.emit();
     }
 }

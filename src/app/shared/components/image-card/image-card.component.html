@@ -1,43 +1,23 @@
 <article class="image-card">
-    <a
+    <div
         class="image-card__img"
-        [title]="name"
         [class.ion-hide]="isLoading"
-        [href]="link"
         [ngStyle]="{
             'background-image': 'url(' + imageUrl + ')',
             height: height,
             width: width
         }"
-    ></a>
-    <h2
-        class="image-card__name"
-        [class.ion-hide]="isLoading"
-        [tooltip]="name"
-        [positionV]="'top'"
-        [arrow]="true"
-        [ngStyle]="{
-            'max-width': width
-        }"
-    >
-        {{ name }}
-    </h2>
-    <footer
-        class="image-card__other-info"
-        [class.ion-hide]="isLoading"
-    >
-        <span>{{ 'GLOBAL.SHIKIMORI.ANIME_KINDS.' + (kind | uppercase) | transloco }}</span>
-        <time [dateTime]="releaseDate">{{ releaseDate | date: 'YYYY' }}</time>
-    </footer>
+    ></div>
     <app-skeleton-block
         *ngIf="isLoading"
+        class="image-card__skeleton"
         [height]="height"
         [width]="width"
     ></app-skeleton-block>
     <img
         class="ion-hide"
         [src]="imageUrl"
-        [alt]="link"
+        [alt]="name"
         (load)="onImageLoad()"
     />
 </article>

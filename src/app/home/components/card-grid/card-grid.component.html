@@ -1,6 +1,6 @@
 <section class="anime-grid">
     <ng-container *ngIf="userAnimeRates?.length > 0; else skeletonTemplate">
-        <app-image-card
+        <app-card-grid-item
             *ngFor="let rate of userAnimeRates; trackBy: trackById"
             class="anime-grid__item"
             [link]="'https://shikimori.one' + rate.anime.url"
@@ -10,7 +10,7 @@
             [releaseDate]="rate.anime.released_on || rate.anime.aired_on"
             [height]="height"
             [width]="width"
-        ></app-image-card>
+        ></app-card-grid-item>
 
         <ng-container
             *ngIf="isLoading"
@@ -19,11 +19,20 @@
     </ng-container>
 
     <ng-template #skeletonTemplate>
-        <app-skeleton-block
+        <div
             *ngFor="let _ of userAnimeRatesFake"
-            class="anime-grid__item"
-            [height]="height"
-            [width]="width"
-        ></app-skeleton-block>
+            class="anime-grid__item skeleton-item"
+        >
+            <app-skeleton-block
+                class="skeleton-item__img"
+                [height]="height"
+                [width]="width"
+            ></app-skeleton-block>
+            <app-skeleton-block
+                class="skeleton-item__text"
+                [height]="'33px'"
+                [width]="width"
+            ></app-skeleton-block>
+        </div>
     </ng-template>
 </section>
