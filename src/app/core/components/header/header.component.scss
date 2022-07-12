@@ -7,9 +7,16 @@ $grid-searchbar-column-width: 10fr;
     display: grid;
     align-items: center;
     grid-template-columns: $grid-searchbar-column-width repeat(2, calc($grid-side-columns-width / 2));
+    min-height: 64px;
 
     &__search {
         padding: 0 10px;
+    }
+
+    @include media-breakpoint-down('md') {
+        &--searchbar_focused {
+            grid-template-columns: 1fr;
+        }
     }
 
     @include media-breakpoint-up('lg') {

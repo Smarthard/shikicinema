@@ -6,6 +6,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { IonicModule } from '@ionic/angular';
 import { IonicStorageModule } from '@ionic/storage-angular';
 import { RouterModule } from '@angular/router';
+import { TooltipsModule } from 'ionic4-tooltips';
 
 import { TranslocoRootModule } from '@app/transloco-root.module';
 import { AppStateModule } from '@app/store/app-state.module';
@@ -16,9 +17,13 @@ import { B64decodePipe } from '@app/shared/pipes/b64decode.pipe';
 import { GoExternalPage } from '@app/core/pages/go-external/go-external.page';
 import { PLATFORM_API_TOKEN, platformApiFactory } from '@app/shared/services/platform-api/platform-api.factory';
 import { ElectronIpcProxyService } from '@app/shared/services/electron-ipc-proxy.service';
+import { SearchbarResultsComponent } from '@app/core/components/searchbar-results/searchbar-results.component';
+import { SkeletonBlockModule } from '@app/shared/components/skeleton-block/skeleton-block.module';
+import { ShikimoriMediaNameModule } from '@app/shared/pipes/shikimori-media-name/shikimori-media-name.module';
 
 const components = [
     HeaderComponent,
+    SearchbarResultsComponent,
     GoExternalPage,
     B64encodePipe,
     B64decodePipe,
@@ -42,6 +47,9 @@ const components = [
         TranslocoRootModule,
         AppStateModule,
         RouterModule,
+        TooltipsModule,
+        SkeletonBlockModule,
+        ShikimoriMediaNameModule,
     ],
     exports: [
         BrowserModule,

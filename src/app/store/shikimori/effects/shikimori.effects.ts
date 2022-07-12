@@ -9,6 +9,11 @@ import {
     getCurrentUserFailureAction,
     getCurrentUserSuccessAction
 } from '@app/store/shikimori/actions/get-current-user.action';
+import {
+    findAnimeAction,
+    findAnimeFailureAction,
+    findAnimeSuccessAction,
+} from '@app/store/shikimori/actions/find-anime.action';
 
 @Injectable()
 export class ShikimoriEffects {
@@ -18,6 +23,14 @@ export class ShikimoriEffects {
         switchMap(() => this.shikimoriClient.getCurrentUser().pipe(
             map((currentUser) => getCurrentUserSuccessAction({ currentUser })),
             catchError((err) => of(getCurrentUserFailureAction(err)))
+        ))
+    ));
+
+    findAnimeEffect$ = createEffect(() => this.actions$.pipe(
+        ofType(findAnimeAction),
+        switchMap(({ searchStr }) => this.shikimoriClient.findAnimes({ search: searchStr, limit: 16 }).pipe(
+            map((animes) => findAnimeSuccessAction({ animes })),
+            catchError((errors) => of(findAnimeFailureAction({ errors })))
         ))
     ));
 

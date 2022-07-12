@@ -12,6 +12,10 @@
             }
         },
         "HEADER": {
+            "SEARCHBAR": {
+                "NOTHING_FOUND": "Ничего не найдено",
+                "SEARCH_SOMETHING": "Введите название для поиска"
+            },
             "TOOLBAR_MENU": {
                 "SIGN_IN": "Войти",
                 "TO_PROFILE": "В профиль",
@@ -30,6 +34,11 @@
                     "SUCCESS": "Успешно вошли как {{ nickname }}",
                     "FAILURE": "Не удалось выполнить вход в Shikimori"
                 }
+            }
+        },
+        "COMMON": {
+            "DATES": {
+                "YEAR": "{{ year }} год"
             }
         }
     },

@@ -12,6 +12,10 @@
             }
         },
         "HEADER": {
+            "SEARCHBAR": {
+                "NOTHING_FOUND": "Nothing found",
+                "SEARCH_SOMETHING": "Type something to search"
+            },
             "TOOLBAR_MENU": {
                 "SIGN_IN": "Sign In",
                 "TO_PROFILE": "Profile",
@@ -30,6 +34,11 @@
                     "SUCCESS": "Logged in as {{ nickname }}",
                     "FAILURE": "Couldn't login to Shikimori"
                 }
+            }
+        },
+        "COMMON": {
+            "DATES": {
+                "YEAR": "{{ year }}"
             }
         }
     },

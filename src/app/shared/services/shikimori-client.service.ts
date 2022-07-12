@@ -12,6 +12,8 @@ import { UserAnimeRatesQuery } from '@app/shared/types/shikimori/queries/user-an
 import { setPaginationToParams } from '@app/shared/types/shikimori/helpers/pagination-helper';
 import { Credentials } from '@app/shared/types/shikimori/credentials';
 import { toShikimoriCredentials } from '@app/shared/types/shikimori/mappers/auth.mappers';
+import { FindAnimeQuery } from '@app/shared/types/shikimori/queries/find-anime-query';
+import { AnimeBriefInfoInterface } from '@app/shared/types/shikimori/anime-brief-info.interface';
 
 @Injectable({
     providedIn: 'root'
@@ -106,5 +108,16 @@ export class ShikimoriClient {
         }
 
         return this.http.get<UserAnimeRate[]>(url, { params });
+    }
+
+    findAnimes(query?: FindAnimeQuery) {
+        const url = `${this.baseUri}/animes`;
+        let params = setPaginationToParams(query);
+
+        if (query?.search) {
+            params = params.set('search', query.search);
+        }
+
+        return this.http.get<AnimeBriefInfoInterface[]>(url, { params });
     }
 }

@@ -1,0 +1,37 @@
+
+.anime-search-list {
+
+    &-item {
+        max-height: 7rem;
+        margin: 5px;
+        border-left: 5px solid transparent;
+
+        &:hover {
+            border-left-color: var(--ion-color-primary);
+        }
+
+        &--info {
+            border-left-color: var(--ion-color-secondary) !important;
+        }
+
+        &--warning {
+            border-left-color: var(--ion-color-danger) !important;
+        }
+
+        &__image {
+            width: 85px;
+            min-width: 85px;
+            max-height: 6rem;
+        }
+
+        &__info {
+            margin-left: 12px;
+        }
+    }
+}
+
+.anime-info {
+    &__title {
+        font-size: larger;
+    }
+}
