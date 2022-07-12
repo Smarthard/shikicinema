@@ -52,6 +52,22 @@
         }
     }
 
+    &__status {
+        font-size: smaller;
+
+        &--anons {
+            color: var(--ion-color-danger);
+        }
+
+        &--ongoing {
+            color: var(--ion-color-secondary);
+        }
+
+        &--released {
+            color: var(--ion-color-success);
+        }
+    }
+
     &__kind,
     &__title,
     &__year {

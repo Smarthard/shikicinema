@@ -9,6 +9,11 @@
                 "MOVIE" : "Фильм",
                 "SPECIAL" : "Спешл",
                 "MUSIC": "Клип"
+            },
+            "ANIME_STATUSES": {
+                "ANONS": "анонс",
+                "ONGOING": "онгоинг",
+                "RELEASED": "вышло"
             }
         },
         "HEADER": {

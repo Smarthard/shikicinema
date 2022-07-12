@@ -54,6 +54,11 @@
                     >
                         {{ 'GLOBAL.COMMON.DATES.YEAR' | transloco: { year: (result.aired_on | date: 'YYYY') } }}
                     </ion-text>
+                    <ion-text
+                        class="anime-info__status anime-info__status--{{result.status}}"
+                    >
+                        {{ 'GLOBAL.SHIKIMORI.ANIME_STATUSES.' + (result.status | uppercase) | transloco }}
+                    </ion-text>
                 </div>
             </ion-item>
         </ng-container>

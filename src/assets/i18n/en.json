@@ -9,6 +9,11 @@
                 "MOVIE" : "Movie",
                 "SPECIAL" : "Special",
                 "MUSIC": "Music"
+            },
+            "ANIME_STATUSES": {
+                "ANONS": "planned",
+                "ONGOING": "airing",
+                "RELEASED": "released"
             }
         },
         "HEADER": {
