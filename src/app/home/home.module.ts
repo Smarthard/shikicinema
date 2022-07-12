@@ -10,10 +10,10 @@ import { TooltipsModule } from 'ionic4-tooltips';
 import { HomePage } from '@app/home/home.page';
 import { HomePageRoutingModule } from '@app/home/home-routing.module';
 import { ImageCardComponent } from '@app/shared/components/image-card/image-card.component';
-import { SkeletonBlockComponent } from '@app/shared/components/skeleton-block/skeleton-block.component';
 import { CardGridComponent } from '@app/home/components/card-grid/card-grid.component';
 import { TypedTemplateDirective } from '@app/shared/directives/typed-template.directive';
 import { HomeStateModule } from '@app/home/store/home-state.module';
+import { SkeletonBlockModule } from '@app/shared/components/skeleton-block/skeleton-block.module';
 
 
 @NgModule({
@@ -27,11 +27,11 @@ import { HomeStateModule } from '@app/home/store/home-state.module';
         NgxVisibilityModule,
         TooltipsModule,
         HomeStateModule,
+        SkeletonBlockModule,
     ],
     declarations: [
         HomePage,
         ImageCardComponent,
-        SkeletonBlockComponent,
         CardGridComponent,
         TypedTemplateDirective,
     ]
