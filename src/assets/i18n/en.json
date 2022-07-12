@@ -1,0 +1,63 @@
+{
+    "GLOBAL": {
+        "APP_NAME": "Shikicinema",
+        "SHIKIMORI": {
+            "ANIME_KINDS": {
+                "TV" : "TV Series",
+                "OVA" : "OVA",
+                "ONA" : "ONA",
+                "MOVIE" : "Movie",
+                "SPECIAL" : "Special",
+                "MUSIC": "Music"
+            },
+            "ANIME_STATUSES": {
+                "ANONS": "planned",
+                "ONGOING": "airing",
+                "RELEASED": "released"
+            }
+        },
+        "HEADER": {
+            "SEARCHBAR": {
+                "NOTHING_FOUND": "Nothing found",
+                "SEARCH_SOMETHING": "Type something to search"
+            },
+            "TOOLBAR_MENU": {
+                "SIGN_IN": "Sign In",
+                "TO_PROFILE": "Profile",
+                "ANIME_LIST": "Anime list",
+                "MANGA_LIST": "Manga list",
+                "SETTINGS": "Settings",
+                "EXIT": "Exit"
+            }
+        },
+        "GO_EXTERNAL_PAGE": {
+            "MESSAGE": "You're going outside of the Shikicinema, now redirecting to {{ link }}"
+        },
+        "AUTH": {
+            "SHIKIMORI": {
+                "LOGIN": {
+                    "SUCCESS": "Logged in as {{ nickname }}",
+                    "FAILURE": "Couldn't login to Shikimori"
+                }
+            }
+        },
+        "COMMON": {
+            "DATES": {
+                "YEAR": "{{ year }}"
+            }
+        }
+    },
+    "HOME_MODULE": {
+        "HOME_PAGE": {
+            "ANIME_SEARCHBAR_PLACEHOLDER": "Search anime...",
+            "GRIDS": {
+                "PLANNED": "Planned to watch",
+                "WATCHING": "Watching",
+                "REWATCHING": "Rewatching",
+                "COMPLETED": "Completed",
+                "ON_HOLD": "On hold",
+                "DROPPED": "Dropped"
+            }
+        }
+    }
+}

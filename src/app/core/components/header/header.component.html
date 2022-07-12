@@ -1,0 +1,231 @@
+<ion-header [translucent]="true">
+    <ion-toolbar>
+        <div
+            class="toolbar"
+            [class.toolbar--searchbar_focused]="(isSearchbarFocusedOnMobile$ | async) === true"
+        >
+            <ion-title class="toolbar__title ion-hide-lg-down">
+                {{ 'GLOBAL.APP_NAME' | transloco }}
+            </ion-title>
+
+            <ion-searchbar
+                id="anime-searchbar"
+                class="toolbar__search"
+                debounce="500"
+                (ionChange)="onAnimeSearch($event)"
+                (click)="isAnimeListPopoverOpen = true"
+                (ionFocus)="onSearchbarFocusChange(true)"
+                (ionBlur)="onSearchbarFocusChange(false)"
+                [placeholder]="'HOME_MODULE.HOME_PAGE.ANIME_SEARCHBAR_PLACEHOLDER' | transloco"
+            ></ion-searchbar>
+
+            <ion-button
+                expand="full"
+                fill="clear"
+                color="medium"
+                size="large"
+                [class.ion-hide-md-down]="(isSearchbarFocusedOnMobile$ | async) === true"
+            >
+                <ion-icon name="notifications"></ion-icon>
+            </ion-button>
+
+            <ion-button
+                id="menu-trigger"
+                expand="full"
+                fill="clear"
+                color="medium"
+                size="large"
+                class="toolbar__menu-btn user-item"
+                [class.ion-hide-md-down]="(isSearchbarFocusedOnMobile$ | async) === true"
+                (auxclick)="toShikimoriProfilePage()"
+            >
+                <img
+                    *ngIf="(avatarImg$ | async); else hasNoAvatar"
+                    [src]="avatarImg$ | async"
+                    [alt]="nickname$ | async"
+                    class="user-item__avatar"
+                />
+
+                <ng-template #hasNoAvatar>
+                    <ion-icon
+                        class="user-item__avatar"
+                        name="person-circle"
+                    ></ion-icon>
+                </ng-template>
+            </ion-button>
+        </div>
+
+        <ion-popover
+            trigger="anime-searchbar"
+            triggerAction="context-menu"
+            size="cover"
+            side="bottom"
+            alignment="center"
+            arrow="false"
+            keyboardClose="false"
+            [isOpen]="isAnimeListPopoverOpen"
+            [showBackdrop]="false"
+            (didDismiss)="isAnimeListPopoverOpen = false"
+        >
+            <ng-template>
+                <app-searchbar-results
+                    [results]="foundAnimes$ | async"
+                    [isLoading]="isSearchResultsLoading$ | async"
+                    [originalNameFirst]="!isSearchingInCyrillic"
+                    (openResult)="openResult($event)"
+                ></app-searchbar-results>
+            </ng-template>
+        </ion-popover>
+
+        <ion-popover
+            class="menu-popover"
+            trigger="menu-trigger"
+            triggerAction="click"
+            side="bottom"
+            alignment="end"
+        >
+            <ng-template>
+                <ng-container *ngIf="(currentUser$ | async) as currentUser; else noUserMenuTemplate">
+                    <ng-template
+                        [ngTemplateOutlet]="signedInUserMenuTemplate"
+                        [ngTemplateOutletContext]="{
+                        currentUser: currentUser
+                    }"
+                    ></ng-template>
+                </ng-container>
+            </ng-template>
+        </ion-popover>
+    </ion-toolbar>
+</ion-header>
+
+<ng-template
+    #signedInUserMenuTemplate
+    let-currentUser="currentUser"
+>
+    <ion-content>
+        <ion-list>
+            <ion-item
+                class="menu-item"
+                [routerLink]="['home']"
+            >
+                <ion-icon
+                    class="menu-item__icon"
+                    icon="film-outline"
+                ></ion-icon>
+                <ion-text class="menu-item__label menu-item__label--with-icon">
+                    {{ 'GLOBAL.HEADER.TOOLBAR_MENU.ANIME_LIST' | transloco }}
+                </ion-text>
+                <ion-button
+                    class="menu-item__icon menu-item__icon--pull-right"
+                    expand="block"
+                    fill="solid"
+                    size="small"
+                    [routerLink]="[ '/external' ]"
+                    [queryParams]="{ link: (currentUser.url + '/list/anime') | b64encode }"
+                    [skipLocationChange]="true"
+                >
+                    <ion-icon
+                        icon="open-outline"
+                    ></ion-icon>
+                </ion-button>
+            </ion-item>
+            <ion-item
+                class="menu-item menu-item--nolinks"
+                [routerLink]="null"
+            >
+                <ion-icon
+                    class="menu-item__icon"
+                    icon="library-outline"
+                ></ion-icon>
+                <ion-text class="menu-item__label menu-item__label--with-icon">
+                    {{ 'GLOBAL.HEADER.TOOLBAR_MENU.MANGA_LIST' | transloco }}
+                </ion-text>
+                <ion-button
+                    class="menu-item__icon menu-item__icon--pull-right"
+                    expand="block"
+                    fill="solid"
+                    size="small"
+                    [routerLink]="[ '/external' ]"
+                    [queryParams]="{ link: (currentUser.url + '/list/manga') | b64encode }"
+                    [skipLocationChange]="true"
+                >
+                    <ion-icon
+                        icon="open-outline"
+                    ></ion-icon>
+                </ion-button>
+            </ion-item>
+            <ion-item
+                class="menu-item"
+                [routerLink]="['settings']"
+            >
+                <ion-icon
+                    class="menu-item__icon"
+                    icon="settings-outline"
+                ></ion-icon>
+                <ion-text class="menu-item__label menu-item__label--with-icon">
+                    {{ 'GLOBAL.HEADER.TOOLBAR_MENU.SETTINGS' | transloco }}
+                </ion-text>
+            </ion-item>
+            <ion-item
+                color="danger"
+                class="menu-item"
+                [routerLink]="['exit']"
+            >
+                <ion-icon
+                    class="menu-item__icon"
+                    icon="close-outline"
+                ></ion-icon>
+                <ion-text class="menu-item__label menu-item__label--with-icon">
+                    {{ 'GLOBAL.HEADER.TOOLBAR_MENU.EXIT' | transloco }}
+                </ion-text>
+            </ion-item>
+        </ion-list>
+    </ion-content>
+</ng-template>
+
+<ng-template
+    #noUserMenuTemplate
+>
+    <ion-content>
+        <ion-list>
+            <ion-item
+                class="menu-item menu-item--nolinks"
+                (click)="shikimoriLogin()"
+                routerLink="#"
+            >
+                <ion-icon
+                    class="menu-item__icon"
+                    icon="log-in-outline"
+                ></ion-icon>
+                <ion-text class="menu-item__label menu-item__label--with-icon">
+                    {{ 'GLOBAL.HEADER.TOOLBAR_MENU.SIGN_IN' | transloco }}
+                </ion-text>
+            </ion-item>
+            <ion-item
+                class="menu-item"
+                [routerLink]="['settings']"
+            >
+                <ion-icon
+                    class="menu-item__icon"
+                    icon="settings-outline"
+                ></ion-icon>
+                <ion-text class="menu-item__label menu-item__label--with-icon">
+                    {{ 'GLOBAL.HEADER.TOOLBAR_MENU.SETTINGS' | transloco }}
+                </ion-text>
+            </ion-item>
+            <ion-item
+                color="danger"
+                class="menu-item"
+                [routerLink]="['exit']"
+            >
+                <ion-icon
+                    class="menu-item__icon"
+                    icon="close-outline"
+                ></ion-icon>
+                <ion-text class="menu-item__label menu-item__label--with-icon">
+                    {{ 'GLOBAL.HEADER.TOOLBAR_MENU.EXIT' | transloco }}
+                </ion-text>
+            </ion-item>
+        </ion-list>
+    </ion-content>
+</ng-template>

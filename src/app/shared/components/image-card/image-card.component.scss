@@ -1,0 +1,16 @@
+:host {
+    display: block;
+    width: fit-content;
+}
+
+.image-card {
+    width: fit-content;
+
+    &__img {
+        display: block;
+        position: relative;
+        background-repeat: no-repeat;
+        background-position: center;
+        background-color: var(--ion-color-step-100);
+    }
+}

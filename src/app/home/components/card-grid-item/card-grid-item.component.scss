@@ -1,0 +1,23 @@
+:host {
+    display: block;
+    width: fit-content;
+}
+
+.card-grid-item {
+
+    &__name {
+        margin: 5px 0 0;
+        font-size: .9rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    &__other-info {
+        font-size: .7rem;
+        color: var(--ion-color-medium);
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+}

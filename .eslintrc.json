@@ -1,23 +1,106 @@
 {
-    "env": {
-        "browser": true,
-        "es6": true,
-        "webextensions": true,
-        "node": true
-    },
-    "globals": {
-        "Atomics": "readonly",
-        "SharedArrayBuffer": "readonly"
-    },
-    "parserOptions": {
-        "ecmaVersion": 2018,
-        "sourceType": "module"
-    },
-    "rules": {
-        "semi": ["error", "always"],
-        "quotes": ["error", "single"],
-        "no-undef": "error",
-        "no-undefined": "error",
-        "max-len": ["warn", 120]
-    }
+    "root": true,
+    "ignorePatterns": [
+        "projects/**/*",
+        "*.js"
+    ],
+    "overrides": [
+        {
+            "files": [
+                "*.ts"
+            ],
+            "parserOptions": {
+                "project": [
+                    "tsconfig.json",
+                    "e2e/tsconfig.json"
+                ],
+                "createDefaultProgram": true
+            },
+            "extends": [
+                "plugin:@angular-eslint/ng-cli-compat",
+                "plugin:@angular-eslint/ng-cli-compat--formatting-add-on",
+                "plugin:@angular-eslint/template/process-inline-templates"
+            ],
+            "rules": {
+                "@angular-eslint/component-class-suffix": [
+                    "error",
+                    {
+                        "suffixes": [
+                            "Page",
+                            "Component"
+                        ]
+                    }
+                ],
+                "@angular-eslint/component-selector": [
+                    "error",
+                    {
+                        "type": "element",
+                        "prefix": "app",
+                        "style": "kebab-case"
+                    }
+                ],
+                "@angular-eslint/directive-selector": "off",
+                "object-curly-spacing": [
+                    "error",
+                    "always"
+                ],
+                "@typescript-eslint/indent": [
+                    "error",
+                    4,
+                    {
+                        "SwitchCase": 1,
+                        "ignoredNodes": [
+                            "FunctionExpression > .params[decorators.length > 0]",
+                            "FunctionExpression > .params > :matches(Decorator, :not(:first-child))",
+                            "ClassBody.body > PropertyDefinition[decorators.length > 0] > .key"
+                        ]
+                    }
+                ],
+                "no-restricted-imports": [
+                    "warn",
+                    {
+                        "patterns": [
+                            {
+                                "group": [
+                                    ".*"
+                                ],
+                                "message": "Use @app/ or @app-root/ instead. Don't use relative path imports!"
+                            }
+                        ]
+                    }
+                ],
+                "prefer-arrow/prefer-arrow-functions": "off"
+            }
+        },
+        {
+            "files": [
+                "*.html"
+            ],
+            "extends": [
+                "plugin:@angular-eslint/template/recommended"
+            ],
+            "rules": {}
+        },
+        {
+            "files": [
+                "src/app/shared/types/shikimori/**"
+            ],
+            "rules": {
+                "@typescript-eslint/naming-convention": "off"
+            }
+        },
+        {
+            "files": [
+                "*.ts"
+            ],
+            "extends": [
+                "plugin:@ngrx/recommended-requiring-type-checking"
+            ],
+            "rules": {
+                "@ngrx/prefer-effect-callback-in-block-statement": "off",   // arrow functions is ok for now
+                "@ngrx/no-multiple-actions-in-effects": "off",  // dispatch multiple from effects is ok for now
+                "@ngrx/on-function-explicit-return-type": "off" // state has generic type from initialization
+            }
+        }
+    ]
 }

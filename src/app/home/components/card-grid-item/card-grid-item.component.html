@@ -1,0 +1,35 @@
+<article class="card-grid-item">
+    <app-image-card
+        class="card-grid-item__image"
+        [height]="height"
+        [width]="width"
+        [name]="name"
+        [imageUrl]="imageUrl"
+        (imageLoad)="onImageLoad()"
+    ></app-image-card>
+    <app-skeleton-block
+        *ngIf="isLoading"
+        class="card-grid-item__name card-grid-item__name--skeleton"
+        [height]="'33px'"
+        [width]="width"
+    ></app-skeleton-block>
+    <h2
+        class="card-grid-item__name"
+        [class.ion-hide]="isLoading"
+        [tooltip]="name"
+        [positionV]="'top'"
+        [arrow]="true"
+        [ngStyle]="{
+            'max-width': width
+        }"
+    >
+        {{ name }}
+    </h2>
+    <footer
+        class="card-grid-item__other-info"
+        [class.ion-hide]="isLoading"
+    >
+        <span>{{ 'GLOBAL.SHIKIMORI.ANIME_KINDS.' + (kind | uppercase) | transloco }}</span>
+        <time [dateTime]="releaseDate">{{ releaseDate | date: 'YYYY' }}</time>
+    </footer>
+</article>

@@ -1,0 +1,61 @@
+<ion-content [fullscreen]="true" class="page-content">
+    <ng-template
+        *ngFor="let grid of animeGrids"
+        [ngTemplateOutlet]="animeRatesGrid"
+        [ngTemplateOutletContext]="{
+            label: 'HOME_MODULE.HOME_PAGE.GRIDS.' + (grid.status | uppercase),
+            status: grid.status,
+            rates$: grid.rates$,
+            isLoaded$: grid.isLoaded$
+        }"
+    ></ng-template>
+</ion-content>
+
+<ng-template
+    #animeRatesGrid
+    [templateType]="animeGrids[0]"
+    let-label="label"
+    let-status="status"
+    let-rates$="rates$"
+    let-isLoaded$="isLoaded$"
+>
+    <section
+        [id]="status"
+        (ngxVisibility)="onSectionVisibilityChange(status, $event)"
+        class="anime-rates"
+    >
+        <div class="anime-rates__label">
+            <ion-text class="anime-rates__text">
+                {{ label | transloco | uppercase }}
+                <span
+                    *ngIf="(isLoaded$ | async) === true"
+                    class="anime-rates__counter"
+                >
+                    ({{ (rates$ | async)?.length || 0 }})
+                </span>
+            </ion-text>
+
+            <ion-button
+                [fill]="'clear'"
+                [size]="'small'"
+                [color]="'medium'"
+                (click)="toggleHiddenGridStatus(status)"
+            >
+                <ion-icon
+                    class="anime-rates__icon"
+                    slot="icon-only"
+                    [name]="getHiddenGridStatus(status) ? 'chevron-down' : 'chevron-up'"
+                ></ion-icon>
+            </ion-button>
+        </div>
+
+        <app-card-grid
+            class="anime-rates__grid"
+            [class.ion-hide]="getHiddenGridStatus(status)"
+            [height]="cardHeight"
+            [width]="cardWidth"
+            [userAnimeRates]="rates$ | async"
+            [isLoading]="(isLoaded$ | async) === false"
+        ></app-card-grid>
+    </section>
+</ng-template>

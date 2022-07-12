@@ -1,5 +1,0 @@
-mat-form-field {
-  width: 100%;
-  /* workaround for unchangeable padding */
-  height: 0;
-}
