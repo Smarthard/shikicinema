@@ -101,6 +101,7 @@ export class HeaderComponent implements OnInit {
         const action = searchStr ? findAnimeAction({ searchStr }) : resetFoundAnimeAction();
 
         this.store.dispatch(action);
+        this.isAnimeListPopoverOpen = true;
         this.isSearchingInCyrillic = /[а-яё]+/i.test(searchStr);
     }
 
