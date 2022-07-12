@@ -17,11 +17,14 @@
                 [routerLink]="'#'"
                 (click)="onResultClick($event, result, 'internal')"
             >
-                <ion-img
+                <app-image-card
                     class="anime-search-list-item__image"
-                    [src]="'https://shikimori.one' + result.image.original"
-                    [alt]="result.name"
-                ></ion-img>
+                    [imageUrl]="'https://shikimori.one' + result.image.original"
+                    [name]="result.name"
+                    [backgroundSize]="'cover'"
+                    [height]="'85px'"
+                    [width]="'50px'"
+                ></app-image-card>
 
                 <div class="anime-search-list-item__info anime-info">
                     <ion-label class="anime-info__title">
@@ -75,7 +78,7 @@
 
 <ng-template #nothingFound>
     <ion-list class="anime-search-list">
-        <ion-item class="anime-search-list-item">
+        <ion-item class="anime-search-list-item anime-search-list-item--warning">
             {{ 'GLOBAL.HEADER.SEARCHBAR.NOTHING_FOUND' | transloco }}
         </ion-item>
     </ion-list>

@@ -23,6 +23,9 @@ export class ImageCardComponent {
     @Input()
     width = '7rem';
 
+    @Input()
+    backgroundSize = 'auto';
+
     @Output()
     imageLoad = new EventEmitter<void>();
 

@@ -19,6 +19,7 @@ import { SearchbarResultsComponent } from '@app/core/components/searchbar-result
 import { SkeletonBlockModule } from '@app/shared/components/skeleton-block/skeleton-block.module';
 import { ShikimoriMediaNameModule } from '@app/shared/pipes/shikimori-media-name/shikimori-media-name.module';
 import { Base64Module } from '@app/shared/pipes/base64/base64.module';
+import { ImageCardModule } from '@app/shared/components/image-card/image-card.module';
 
 const components = [
     HeaderComponent,
@@ -48,6 +49,7 @@ const components = [
         SkeletonBlockModule,
         ShikimoriMediaNameModule,
         Base64Module,
+        ImageCardModule,
     ],
     exports: [
         BrowserModule,
