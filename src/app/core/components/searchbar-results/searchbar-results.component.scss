@@ -35,11 +35,11 @@
         display: grid;
         grid-template-columns: 1fr;
         grid-template-rows: repeat(2, 1fr);
-
-        font-size: larger;
+        font-size: small;
 
         @include media-breakpoint-up('sm') {
             display: flex;
+            font-size: larger;
         }
 
         & :not(:first-child) {
