@@ -64,7 +64,7 @@
         "@ngneat/until-destroy": "^9.2.0",
         "@ngrx/effects": "^13.2.0",
         "@ngrx/store": "^13.2.0",
-        "deep-object-diff": "^1.1.7",
+        "deep-object-diff": "^1.1.9",
         "ionic4-tooltips": "^2.0.2",
         "ngrx-store-localstorage": "^13.0.1",
         "ngx-visibility": "^1.1.0",
