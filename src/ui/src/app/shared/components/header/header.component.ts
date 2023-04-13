@@ -8,7 +8,7 @@ import {SmarthardNet} from '../../../types/smarthard-net';
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent {
-  readonly SHIKIMORI_URL = 'https://shikimori.one';
+  readonly SHIKIMORI_URL = 'https://shikimori.me';
 
   @Input()
   public anime: Shikimori.Anime;

@@ -11,7 +11,7 @@ import IShikimoriFranchiseResponse = Shikimori.IFranchiseResponse;
 })
 export class ShikimoriService {
 
-  private SHIKIMORI_URL = 'https://shikimori.one';
+  private SHIKIMORI_URL = 'https://shikimori.me';
 
   constructor(
     private http: HttpClient
@@ -57,7 +57,7 @@ export class ShikimoriService {
     return this.http.get<Shikimori.User>(`${this.SHIKIMORI_URL}/api/users/${user}`, { params })
       .pipe(
         catchError((err: HttpErrorResponse) => {
-          const deletedOrRenamedUser = new Shikimori.User({ avatar: 'https://shikimori.one/favicon.ico', nickname: user});
+          const deletedOrRenamedUser = new Shikimori.User({ avatar: 'https://shikimori.me/favicon.ico', nickname: user});
 
           return err.status === 404 ? of(deletedOrRenamedUser) : throwError(err)
         })
@@ -248,7 +248,7 @@ export class ShikimoriService {
         .set('redirect_uri', 'urn:ietf:wg:oauth:2.0:oob');
 
       if (code) {
-        this.http.post<Shikimori.IToken>('https://shikimori.one/oauth/token', null, { params })
+        this.http.post<Shikimori.IToken>('https://shikimori.me/oauth/token', null, { params })
           .subscribe(
             async (token) => {
               const shikimoriToken = new Shikimori.Token(token.access_token, token.refresh_token, token.created_at, token.expires_in);
@@ -268,19 +268,19 @@ export class ShikimoriService {
       .set('client_secret', environment.SHIKIMORI_CLIENT_SECRET)
       .set('refresh_token', oldToken.resfresh);
 
-    return this.http.post<Shikimori.IToken>('https://shikimori.one/oauth/token', null,{ params })
+    return this.http.post<Shikimori.IToken>('https://shikimori.me/oauth/token', null,{ params })
       .pipe(
         map((token) => new Shikimori.Token(token.access_token, token.refresh_token, token.created_at, token.expires_in))
       ).toPromise();
   }
 
   public getFranchise(anime: Shikimori.Anime): Observable<IShikimoriFranchiseResponse> {
-    return this.http.get<IShikimoriFranchiseResponse>(`https://shikimori.one/api/animes/${anime.id}/franchise`);
+    return this.http.get<IShikimoriFranchiseResponse>(`https://shikimori.me/api/animes/${anime.id}/franchise`);
   }
 
   private _getShikimoriAuthCode(): Promise<any> {
     return new Promise(async (resolve, reject) => {
-      let codeUrl = new URL('https://shikimori.one/oauth/authorize?');
+      let codeUrl = new URL('https://shikimori.me/oauth/authorize?');
       codeUrl.searchParams.set('client_id', environment.SHIKIMORI_CLIENT_ID);
       codeUrl.searchParams.set('redirect_uri', 'urn:ietf:wg:oauth:2.0:oob');
       codeUrl.searchParams.set('response_type', 'code');

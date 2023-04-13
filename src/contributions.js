@@ -28,7 +28,7 @@ async function correctContributions(element) {
   let cInfoDiv = document.querySelector('div.c-info');
   let activityDiv = document.querySelector('div.c-additionals');
   let nickname = `${window.location}`.split('/').slice(-1)[0];
-  let user = await fetch(`https://shikimori.one/api/users/${nickname}?is_nickname=1`)
+  let user = await fetch(`/api/users/${nickname}?is_nickname=1`)
     .then(res => res.json());
 
   if (user && user.id) {

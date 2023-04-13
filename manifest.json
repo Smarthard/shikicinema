@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "shikicinema",
-  "version": "0.8.16",
+  "version": "0.8.17",
 
   "icons": {
     "64": "assets/icon64.png",
@@ -9,7 +9,7 @@
   },
 
   "description": "Returns video player on Shikimori",
-  "content_security_policy": "default-src 'self'; img-src *; frame-src *; font-src *; style-src 'unsafe-inline' https://*.googleapis.com; connect-src https://kodikapi.com https://smarthard.net https://shikimori.org https://shikimori.one; script-src 'self'",
+  "content_security_policy": "default-src 'self'; img-src *; frame-src *; font-src *; style-src 'unsafe-inline' https://*.googleapis.com; connect-src https://kodikapi.com https://smarthard.net https://shikimori.org https://shikimori.one https://shikimori.me; script-src 'self'",
 
   "browser_specific_settings": {
     "gecko": {
@@ -21,7 +21,8 @@
     {
       "matches": [
         "*://shikimori.org/*",
-        "*://shikimori.one/*"
+        "*://shikimori.one/*",
+        "*://shikimori.me/*"
       ],
       "js": [
         "shikicinema.js"
@@ -48,6 +49,7 @@
   "permissions": [
     "https://shikimori.org/*",
     "https://shikimori.one/*",
+    "https://shikimori.me/*",
     "https://smarthard.net/*",
     "https://kodikapi.com/*",
     "https://smotret-anime.online/*",

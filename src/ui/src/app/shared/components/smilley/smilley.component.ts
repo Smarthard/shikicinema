@@ -7,7 +7,7 @@ import {Component, EventEmitter, Input, Output} from '@angular/core';
 })
 export class SmilleyComponent {
 
-  readonly SMILEY_URL = 'https://shikimori.one/images/smileys/';
+  readonly SMILEY_URL = 'https://shikimori.me/images/smileys/';
 
   @Input()
   smiley: string;

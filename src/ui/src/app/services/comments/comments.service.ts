@@ -140,11 +140,11 @@ export class CommentsService {
     const REPLACE = [
       '<br>',
 
-      '<img class="smiley" title="$1" alt="$1" src="https://shikimori.one/images/smileys/$1.gif">',
-      '<img class="smiley" title=":-o" alt=":-o" src="https://shikimori.one/images/smileys/:-o.gif">',
-      '<img class="smiley" title=":)" alt=":)" src="https://shikimori.one/images/smileys/:).gif">',
-      '<img class="smiley" title="+_+" alt="+_+" src="https://shikimori.one/images/smileys/+_+.gif">',
-      '<img class="smiley" title=":$1:" alt=":$1:" src="https://shikimori.one/images/smileys/:$1:.gif">',
+      '<img class="smiley" title="$1" alt="$1" src="https://shikimori.me/images/smileys/$1.gif">',
+      '<img class="smiley" title=":-o" alt=":-o" src="https://shikimori.me/images/smileys/:-o.gif">',
+      '<img class="smiley" title=":)" alt=":)" src="https://shikimori.me/images/smileys/:).gif">',
+      '<img class="smiley" title="+_+" alt="+_+" src="https://shikimori.me/images/smileys/+_+.gif">',
+      '<img class="smiley" title=":$1:" alt=":$1:" src="https://shikimori.me/images/smileys/:$1:.gif">',
 
       '<b>$1</b>',
       '<i>$1</i>',
@@ -175,12 +175,12 @@ export class CommentsService {
         <img src="$1" alt="$1">
       </a>`,
 
-      '<a class="shc-links bubbled" href="https://shikimori.one/comments/$1">@$2</a>',
+      '<a class="shc-links bubbled" href="https://shikimori.me/comments/$1">@$2</a>',
 
       `<div class="shc-quote">
         <div class="quoteable">
-            <a class="shc-links bubbled b-user16" href="https://shikimori.one/comments/$1">
-                <img src="https://shikimori.one/system/users/x16/$2.png" alt="$3">
+            <a class="shc-links bubbled b-user16" href="https://shikimori.me/comments/$1">
+                <img src="https://shikimori.me/system/users/x16/$2.png" alt="$3">
                 <span>$3</span>
             </a>
         </div>$4
@@ -256,7 +256,7 @@ export class CommentsService {
 
   cleanUrl(url: string) {
     return url.startsWith(CommentsService.PLAYER_URL)
-      ? url.replace(CommentsService.PLAYER_URL, 'https://shikimori.one/')
+      ? url.replace(CommentsService.PLAYER_URL, 'https://shikimori.me/')
       : url;
   }
 

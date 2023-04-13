@@ -366,7 +366,7 @@ export class PlayerComponent implements OnInit, OnDestroy {
     const user = await this.whoami$.toPromise();
     const data: IRequestDialogData = {
       video: this.currentVideo,
-      requester: `https://shikimori.one/${user.nickname}`
+      requester: `https://shikimori.me/${user.nickname}`
     };
     const requestDialogRef = this.dialog.open(RequestDialogComponent, { minWidth: '50%', disableClose: true, data });
 

@@ -1,7 +1,7 @@
 <div *ngIf="uploadedByUser && !isForeignSource"
      [matTooltip]="'Видео загружено пользователем ' + uploadedByUser?.nickname">
   <img [src]="uploadedByUser.avatar" width="20" [alt]="uploadedByUser?.nickname">
-  <a class="shc-links" [href]="'https://shikimori.one/' + uploadedByUser?.nickname" target="_blank">
+  <a class="shc-links" [href]="'https://shikimori.me/' + uploadedByUser?.nickname" target="_blank">
     {{ uploadedByUser?.nickname }}
   </a>
 </div>
