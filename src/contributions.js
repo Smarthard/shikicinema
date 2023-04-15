@@ -5,6 +5,7 @@ import { fetch } from './fetch-timeout';
 let timeout = null;
 const PLAYER_URL = chrome.runtime.getURL('/index.html');
 const SHIKIVIDEOS_API = 'https://smarthard.net/api/shikivideos';
+const SHIKIMORI_API = `https://${document.domain}`;
 
 let observer = new MutationObserver(() => {
   let uploads = document.querySelector('div[data-type="video_uploads"]') || document.createElement('div');
@@ -28,7 +29,7 @@ async function correctContributions(element) {
   let cInfoDiv = document.querySelector('div.c-info');
   let activityDiv = document.querySelector('div.c-additionals');
   let nickname = `${window.location}`.split('/').slice(-1)[0];
-  let user = await fetch(`/api/users/${nickname}?is_nickname=1`)
+  let user = await fetch(`${SHIKIMORI_API}/api/users/${nickname}?is_nickname=1`)
     .then(res => res.json());
 
   if (user && user.id) {

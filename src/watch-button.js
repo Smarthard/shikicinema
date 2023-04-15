@@ -62,7 +62,7 @@ function _getKodikEpisodes(anime, timeout = FETCH_RESOURCE_TIMEOUT) {
 }
 
 function _getAnimeInfo(animeId, timeout = FETCH_RESOURCE_TIMEOUT) {
-  return fetch(`/api/animes/${animeId}`, {}, timeout)
+  return fetch(`https://${document.domain}/api/animes/${animeId}`, {}, timeout)
     .then((res) => res.json())
     .catch(() => ({ id: animeId }));
 }
