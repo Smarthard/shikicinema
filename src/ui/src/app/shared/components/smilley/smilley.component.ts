@@ -1,4 +1,11 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+} from '@angular/core';
+
+import { ShikimoriService } from '../../../services/shikimori-api/shikimori.service';
 
 @Component({
   selector: 'app-smilley',
@@ -7,7 +14,8 @@ import {Component, EventEmitter, Input, Output} from '@angular/core';
 })
 export class SmilleyComponent {
 
-  readonly SMILEY_URL = 'https://shikimori.me/images/smileys/';
+  readonly SHIKIMORI_DOMAIN$ = this.shikimoriService.domain$;
+  readonly SMILEY_URL = '/images/smileys/';
 
   @Input()
   smiley: string;
@@ -15,6 +23,7 @@ export class SmilleyComponent {
   @Output()
   pick = new EventEmitter<string>();
 
-  constructor() {}
-
+  constructor(
+    private readonly shikimoriService: ShikimoriService,
+  ) {}
 }

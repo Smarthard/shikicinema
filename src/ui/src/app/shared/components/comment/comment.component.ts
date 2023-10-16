@@ -1,5 +1,6 @@
 import {AfterViewChecked, Component, ElementRef, EventEmitter, Input, Output} from '@angular/core';
 import {Shikimori} from '../../../types/shikimori';
+import {ShikimoriService} from '../../../services/shikimori-api/shikimori.service';
 
 @Component({
   selector: 'app-comment',
@@ -7,6 +8,7 @@ import {Shikimori} from '../../../types/shikimori';
   styleUrls: ['./comment.component.css']
 })
 export class CommentComponent implements AfterViewChecked {
+  readonly shikimoriUrl$ = this._shikimori.domain$;
 
   @Input()
   comment: Shikimori.Comment;
@@ -26,7 +28,10 @@ export class CommentComponent implements AfterViewChecked {
   @Output()
   delete = new EventEmitter<Shikimori.Comment>()
 
-  constructor(private _elementRef: ElementRef) {}
+  constructor(
+    private _elementRef: ElementRef,
+    private _shikimori: ShikimoriService,
+  ) {}
 
   ngAfterViewChecked() {
     const SPOILERS = this._elementRef.nativeElement.querySelectorAll('.shc-spoiler');

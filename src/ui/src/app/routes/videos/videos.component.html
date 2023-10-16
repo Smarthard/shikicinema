@@ -22,7 +22,7 @@
       <ng-container matColumnDef="anime_id">
         <th mat-header-cell mat-sort-header="anime_id" *matHeaderCellDef> Anime </th>
         <td mat-cell *matCellDef="let element">
-          <a class="shc-links" href="https://shikimori.me/animes/{{element.anime_id}}">
+          <a class="shc-links" href="{{ shikimoriUrl$ | async }}/animes/{{element.anime_id}}">
             {{element.anime_russian || element.anime_english}}
           </a>
         </td>
@@ -57,7 +57,7 @@
     Загрузок
     <ng-container *ngIf="(uploader$ | async) as uploader">
       от
-      <a class="shc-links" href="https://shikimori.me/{{ uploader.nickname }}">{{ uploader.nickname }}</a>
+      <a class="shc-links" href="{{ shikimoriUrl$ | async }}/{{ uploader.nickname }}">{{ uploader.nickname }}</a>
     </ng-container>
     не найдено ¯\_(ツ)_/¯
   </div>

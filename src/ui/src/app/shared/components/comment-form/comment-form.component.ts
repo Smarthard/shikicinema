@@ -1,9 +1,19 @@
-import {Component, ElementRef, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {Shikimori} from '../../../types/shikimori';
-import {CommentsService} from '../../../services/comments/comments.service';
-import {NotificationsService} from '../../../services/notifications/notifications.service';
-import {Notification, NotificationType} from '../../../types/notification';
+import {
+  Component,
+  ElementRef,
+  Input,
+  OnChanges,
+  OnInit,
+  SimpleChanges,
+  ViewChild,
+} from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+
+import { Shikimori } from '../../../types/shikimori';
+import { CommentsService } from '../../../services/comments/comments.service';
+import { NotificationsService } from '../../../services/notifications/notifications.service';
+import { Notification, NotificationType } from '../../../types/notification';
+import { ShikimoriService } from '../../../services/shikimori-api/shikimori.service';
 
 @Component({
   selector: 'app-comment-form',
@@ -41,6 +51,8 @@ export class CommentFormComponent implements OnInit, OnChanges {
 
   @ViewChild('commentFormElement', { static: true })
   _commentFormRef: ElementRef<HTMLFormElement>;
+
+  readonly shikimoriUrl$ = this.shikimoriService.domain$;
 
   bbComment: string;
 
@@ -94,7 +106,8 @@ export class CommentFormComponent implements OnInit, OnChanges {
 
   constructor(
     private commentsService: CommentsService,
-    private notifications: NotificationsService
+    private shikimoriService: ShikimoriService,
+    private notifications: NotificationsService,
   ) { }
 
   private _closeAllSections() {
@@ -239,9 +252,9 @@ export class CommentFormComponent implements OnInit, OnChanges {
     this.updateCommentForm();
   }
 
-  comment(bbcode: string) {
+  comment(bbcode: string, shikimoriDomain: string) {
     const COMMENT = bbcode || '[i]Здесь стоит что-нибудь написать...[/i]';
-    const PARSED_COMMENT = this.commentsService.parseBBComment(COMMENT);
+    const PARSED_COMMENT = this.commentsService.parseBBComment(COMMENT, shikimoriDomain);
 
     return new Shikimori.Comment(
       -1000,

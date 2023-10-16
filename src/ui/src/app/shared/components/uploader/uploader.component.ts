@@ -1,12 +1,14 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {Shikimori} from '../../../types/shikimori';
+import { Component, Input } from '@angular/core';
+import { Shikimori } from '../../../types/shikimori';
+import { ShikimoriService } from '../../../services/shikimori-api/shikimori.service';
 
 @Component({
   selector: 'app-uploader',
   templateUrl: './uploader.component.html',
   styleUrls: ['./uploader.component.css']
 })
-export class UploaderComponent implements OnInit {
+export class UploaderComponent {
+  readonly shikimoriUrl$ = this.shikimori.domain$;
 
   @Input()
   public uploadedByUser: Shikimori.User;
@@ -14,8 +16,5 @@ export class UploaderComponent implements OnInit {
   @Input()
   public isForeignSource: boolean;
 
-  constructor() {}
-
-  ngOnInit() {}
-
+  constructor(private shikimori: ShikimoriService) {}
 }

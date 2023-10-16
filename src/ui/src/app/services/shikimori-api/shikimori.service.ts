@@ -1,48 +1,100 @@
-import {Injectable} from '@angular/core';
-import {HttpClient, HttpErrorResponse, HttpHeaders, HttpParams, HttpResponse} from '@angular/common/http';
-import {Shikimori} from '../../types/shikimori';
-import {Observable, of, throwError} from 'rxjs';
-import {catchError, exhaustMap, map, timeout} from 'rxjs/operators';
-import {environment} from '../../../environments/environment';
-import IShikimoriFranchiseResponse = Shikimori.IFranchiseResponse;
+import { Injectable } from '@angular/core';
+import {
+  HttpClient,
+  HttpErrorResponse,
+  HttpHeaders,
+  HttpParams,
+  HttpResponse,
+} from '@angular/common/http';
+import {
+  BehaviorSubject,
+  firstValueFrom,
+  Observable,
+  of,
+  ReplaySubject,
+  Subject,
+  switchMap,
+  throwError,
+} from 'rxjs';
+import {
+  catchError,
+  distinctUntilChanged,
+  exhaustMap,
+  map, shareReplay,
+  take,
+  timeout,
+} from 'rxjs/operators';
+
+import { environment } from '../../../environments/environment';
+import { Shikimori } from '../../types/shikimori';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ShikimoriService {
 
-  private SHIKIMORI_URL = 'https://shikimori.me';
+  private shikimoriDomainSubject: Subject<string> = new ReplaySubject<string>(1);
 
   constructor(
     private http: HttpClient
   ) {}
 
+  public setShikimoriDomain(domain: string): void {
+    this.shikimoriDomainSubject.next(domain);
+    this.shikimoriDomainSubject.complete();
+    this.shikimoriDomainSubject = new BehaviorSubject<string>(domain);
+  }
+
+  public get domain$(): Observable<string> {
+    return this.shikimoriDomainSubject.pipe(
+      distinctUntilChanged(),
+      shareReplay(1)
+    );
+  }
+
   public createUserRates(userRate: Shikimori.UserRate): Observable<Shikimori.UserRate> {
-    return this.http.post<Shikimori.UserRate>(`${this.SHIKIMORI_URL}/api/v2/user_rates`, userRate, { withCredentials: true });
+    return this.domain$.pipe(
+      take(1),
+      switchMap((domain) => this.http.post<Shikimori.UserRate>(`${domain}/api/v2/user_rates`, userRate, { withCredentials: true })),
+    );
   }
 
   public getUserRates(params: HttpParams): Observable<Shikimori.UserRate[]> {
-    return this.http.get<Shikimori.UserRate[]>(`${this.SHIKIMORI_URL}/api/v2/user_rates`, { params, withCredentials: true })
-      .pipe(
-        catchError(() => of([]))
-      );
+    return this.domain$.pipe(
+      take(1),
+      switchMap((domain) => this.http.get<Shikimori.UserRate[]>(`${domain}/api/v2/user_rates`, { params, withCredentials: true })
+        .pipe(
+          catchError(() => of([]))
+        ))
+    );
   }
 
   public setUserRates(userRate: Shikimori.UserRate): Observable<Shikimori.UserRate> {
     const id = userRate.id;
 
-    return this.http.put<Shikimori.UserRate>(`${this.SHIKIMORI_URL}/api/v2/user_rates/${id}`, userRate, { withCredentials: true })
-      .pipe(
-        catchError(err => { console.warn(err); return of({}) })
-      );
+    return this.domain$.pipe(
+      take(1),
+      switchMap((domain) => this.http.put<Shikimori.UserRate>(`${domain}/api/v2/user_rates/${id}`, userRate, { withCredentials: true })
+        .pipe(
+          catchError(err => { console.warn(err); return of({}) })
+        ))
+    );
   }
 
   public incUserRates(userRate: Shikimori.UserRate): Observable<Shikimori.UserRate> {
-    return this.http.post(`${this.SHIKIMORI_URL}/api/v2/user_rates/${userRate.id}/increment`, {}, { withCredentials: true });
+    return this.domain$.pipe(
+      take(1),
+      switchMap((domain) => this.http.post(`${domain}/api/v2/user_rates/${userRate.id}/increment`, {}, { withCredentials: true })
+      )
+    );
   }
 
   public whoAmI(headers: HttpHeaders): Observable<Shikimori.User> {
-    return this.http.get<Shikimori.User>(`${this.SHIKIMORI_URL}/api/users/whoami`, { headers, withCredentials: true });
+    return this.domain$.pipe(
+      take(1),
+      switchMap((domain) => this.http.get<Shikimori.User>(`${domain}/api/users/whoami`, { headers, withCredentials: true })
+      )
+    );
   }
 
   public getUserInfo(user: string | number, params?: HttpParams): Observable<Shikimori.User> {
@@ -54,18 +106,25 @@ export class ShikimoriService {
       params = new HttpParams().set('is_nickname', '1');
     }
 
-    return this.http.get<Shikimori.User>(`${this.SHIKIMORI_URL}/api/users/${user}`, { params })
-      .pipe(
-        catchError((err: HttpErrorResponse) => {
-          const deletedOrRenamedUser = new Shikimori.User({ avatar: 'https://shikimori.me/favicon.ico', nickname: user});
+    return this.domain$.pipe(
+      take(1),
+      switchMap((domain) => this.http.get<Shikimori.User>(`${domain}/api/users/${user}`, { params })
+        .pipe(
+          catchError((err: HttpErrorResponse) => {
+            const deletedOrRenamedUser = new Shikimori.User({ avatar: `${domain}/favicon.ico`, nickname: user});
 
-          return err.status === 404 ? of(deletedOrRenamedUser) : throwError(err)
-        })
-      );
+            return err.status === 404 ? of(deletedOrRenamedUser) : throwError(() => err)
+          })
+        )
+      )
+    );
   }
 
   public getAnime(animeId: number): Observable<Shikimori.Anime> {
-    return this.http.get<Shikimori.Anime>(`${this.SHIKIMORI_URL}/api/animes/${animeId}`);
+    return this.domain$.pipe(
+      take(1),
+      switchMap((domain) => this.http.get<Shikimori.Anime>(`${domain}/api/animes/${animeId}`))
+    );
   }
 
   public getAnimeTopics(animeId: number, kind?: string, episode?: number, revalidate = false): Observable<Shikimori.ITopic[]> {
@@ -86,30 +145,39 @@ export class ShikimoriService {
         .set('Pragma', 'no-cache')
     }
 
-    return this.http.get<Shikimori.ITopic[]>(`${this.SHIKIMORI_URL}/api/animes/${animeId}/topics`, { params, headers });
+    return this.domain$.pipe(
+      take(1),
+      switchMap((domain) => this.http.get<Shikimori.ITopic[]>(`${domain}/api/animes/${animeId}/topics`, { params, headers }))
+    );
   }
 
   private _createComment(comment: Shikimori.IComment): Observable<Shikimori.Comment> {
-    return this.http.post<Shikimori.IComment>(`${this.SHIKIMORI_URL}/api/comments`, { comment })
-      .pipe(
-        map((c) => new Shikimori.Comment(
-          c.id,
-          c.commentable_id,
-          c.commentable_type,
-          c.body,
-          c.html_body,
-          new Date(Date.parse(c.created_at)),
-          new Date(Date.parse(c.updated_at)),
-          c.is_offtopic,
-          c.is_summary,
-          c.can_be_edited,
-          new Shikimori.User(c.user)
+    return this.domain$.pipe(
+      take(1),
+      switchMap((domain) => this.http.post<Shikimori.IComment>(`${domain}/api/comments`, { comment })
+        .pipe(
+          map((c) => new Shikimori.Comment(
+            c.id,
+            c.commentable_id,
+            c.commentable_type,
+            c.body,
+            c.html_body,
+            new Date(Date.parse(c.created_at)),
+            new Date(Date.parse(c.updated_at)),
+            c.is_offtopic,
+            c.is_summary,
+            c.can_be_edited,
+            new Shikimori.User(c.user)
+          ))
         ))
-      );
+    );
   }
 
   public createEpisodeTopic(notification: Shikimori.IEpisodeNotification) {
-    return this.http.post<Shikimori.IEpisodeNotificationResponse>(`${this.SHIKIMORI_URL}/api/v2/episode_notifications`, notification);
+    return this.domain$.pipe(
+      take(1),
+      switchMap((domain) => this.http.post<Shikimori.IEpisodeNotificationResponse>(`${domain}/api/v2/episode_notifications`, notification))
+    );
   }
 
   public createComment(animeId: number, episode: number, comment: Shikimori.Comment): Observable<Shikimori.Comment> {
@@ -166,38 +234,45 @@ export class ShikimoriService {
   }
 
   public deleteComment(id: number) {
-    return this.http.delete(`${this.SHIKIMORI_URL}/api/comments/${id}`, { observe: 'response' })
+    return this.domain$.pipe(
+      take(1),
+      switchMap((domain) => this.http.delete(`${domain}/api/comments/${id}`, { observe: 'response' })
       .pipe(
         timeout(3000),
         map((res: HttpResponse<any>) => res.ok)
-      );
+      ))
+    );
   }
 
   public getComment(id: number) {
-    return this.http.get<Shikimori.IComment>(`${this.SHIKIMORI_URL}/api/comments/${id}`)
-      .pipe(
-        catchError(async (err) => ({
-          id,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-          html_body: 'Сообщение удалено',
-          body: 'Сообщение удалено',
-          can_be_edited: false,
-        } as Shikimori.IComment)),
-        map((c) => new Shikimori.Comment(
-          c.id,
-          c.commentable_id,
-          c.commentable_type,
-          c.body,
-          c.html_body,
-          new Date(Date.parse(c.created_at)),
-          new Date(Date.parse(c.updated_at)),
-          c.is_offtopic,
-          c.is_summary,
-          c.can_be_edited,
-          new Shikimori.User(c.user)
-        ))
-      );
+    return this.domain$.pipe(
+      take(1),
+      switchMap((domain) => this.http.get<Shikimori.IComment>(`${domain}/api/comments/${id}`)
+        .pipe(
+          catchError(async () => ({
+            id,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+            html_body: 'Сообщение удалено',
+            body: 'Сообщение удалено',
+            can_be_edited: false,
+          } as Shikimori.IComment)),
+          map((c) => new Shikimori.Comment(
+            c.id,
+            c.commentable_id,
+            c.commentable_type,
+            c.body,
+            c.html_body,
+            new Date(Date.parse(c.created_at)),
+            new Date(Date.parse(c.updated_at)),
+            c.is_offtopic,
+            c.is_summary,
+            c.can_be_edited,
+            new Shikimori.User(c.user)
+          ))
+        )
+      )
+    );
   }
 
   public getComments(
@@ -217,24 +292,28 @@ export class ShikimoriService {
       params = params.set('is_summary', `${isSumary}`);
     }
 
-    return this.http.get<Shikimori.IComment[]>(`${this.SHIKIMORI_URL}/api/comments`, { params })
-      .pipe(
-        map((comments) => comments
-          .map(c => new Shikimori.Comment(
-            c.id,
-            c.commentable_id,
-            c.commentable_type,
-            c.body,
-            c.html_body,
-            new Date(Date.parse(c.created_at)),
-            new Date(Date.parse(c.updated_at)),
-            c.is_offtopic,
-            c.is_summary,
-            c.can_be_edited,
-            new Shikimori.User(c.user)
-          ))
+    return this.domain$.pipe(
+      take(1),
+      switchMap((domain) => this.http.get<Shikimori.IComment[]>(`${domain}/api/comments`, { params })
+        .pipe(
+          map((comments) => comments
+            .map(c => new Shikimori.Comment(
+              c.id,
+              c.commentable_id,
+              c.commentable_type,
+              c.body,
+              c.html_body,
+              new Date(Date.parse(c.created_at)),
+              new Date(Date.parse(c.updated_at)),
+              c.is_offtopic,
+              c.is_summary,
+              c.can_be_edited,
+              new Shikimori.User(c.user)
+            ))
+          )
         )
-      );
+      )
+    );
   }
 
   public async getNewToken(): Promise<Shikimori.Token> {
@@ -248,7 +327,10 @@ export class ShikimoriService {
         .set('redirect_uri', 'urn:ietf:wg:oauth:2.0:oob');
 
       if (code) {
-        this.http.post<Shikimori.IToken>('https://shikimori.me/oauth/token', null, { params })
+        this.domain$.pipe(
+          take(1),
+          switchMap((domain) => this.http.post<Shikimori.IToken>(`${domain}/oauth/token`, null, { params }))
+        )
           .subscribe(
             async (token) => {
               const shikimoriToken = new Shikimori.Token(token.access_token, token.refresh_token, token.created_at, token.expires_in);
@@ -268,34 +350,39 @@ export class ShikimoriService {
       .set('client_secret', environment.SHIKIMORI_CLIENT_SECRET)
       .set('refresh_token', oldToken.resfresh);
 
-    return this.http.post<Shikimori.IToken>('https://shikimori.me/oauth/token', null,{ params })
-      .pipe(
-        map((token) => new Shikimori.Token(token.access_token, token.refresh_token, token.created_at, token.expires_in))
-      ).toPromise();
+    return firstValueFrom(this.domain$.pipe(
+      take(1),
+      switchMap((domain) => this.http.post<Shikimori.IToken>(`${domain}/oauth/token`, null,{ params })),
+      map((token) => new Shikimori.Token(token.access_token, token.refresh_token, token.created_at, token.expires_in))
+    ));
   }
 
-  public getFranchise(anime: Shikimori.Anime): Observable<IShikimoriFranchiseResponse> {
-    return this.http.get<IShikimoriFranchiseResponse>(`https://shikimori.me/api/animes/${anime.id}/franchise`);
+  public getFranchise(anime: Shikimori.Anime): Observable<Shikimori.IFranchiseResponse> {
+    return this.domain$.pipe(
+      take(1),
+      switchMap((domain) => this.http.get<Shikimori.IFranchiseResponse>(`${domain}/api/animes/${anime.id}/franchise`))
+    );
   }
 
   private _getShikimoriAuthCode(): Promise<any> {
     return new Promise(async (resolve, reject) => {
-      let codeUrl = new URL('https://shikimori.me/oauth/authorize?');
+      const domain = await firstValueFrom(this.domain$);
+      const codeUrl = new URL(`${domain}/oauth/authorize?`);
       codeUrl.searchParams.set('client_id', environment.SHIKIMORI_CLIENT_ID);
       codeUrl.searchParams.set('redirect_uri', 'urn:ietf:wg:oauth:2.0:oob');
       codeUrl.searchParams.set('response_type', 'code');
 
       chrome.tabs.query({active: true}, ([selectedTab]) =>
-        chrome.tabs.create({active: true, url: codeUrl.toString()}, new_tab => {
+        chrome.tabs.create({ active: true, url: codeUrl.toString() }, (newTab) => {
 
-          const onRemove = (tabId) => {
-            if (tabId === new_tab.id) {
+          const onRemove = (tabId: number) => {
+            if (tabId === newTab.id) {
               reject({error: 'tab-removed'});
               removeListeners();
             }
           };
 
-          const onUpdate = (tabId, changeInfo) => {
+          const onUpdate = (tabId: number, changeInfo: any) => {
             if (!changeInfo.url)
               return;
 
@@ -304,7 +391,7 @@ export class ShikimoriService {
             const message = tabUrl.searchParams.get('error_description');
             const code = tabUrl.toString().split('authorize/')[1];
 
-            if (tabId !== new_tab.id || !changeInfo.url || tabUrl.toString().includes('response_type'))
+            if (tabId !== newTab.id || !changeInfo.url || tabUrl.toString().includes('response_type'))
               return;
 
             if (error || message) {
@@ -317,7 +404,7 @@ export class ShikimoriService {
             chrome.tabs.update(
               selectedTab.id,
               { active: true },
-              () => chrome.tabs.remove(new_tab.id)
+              () => chrome.tabs.remove(newTab.id)
             );
           };
 

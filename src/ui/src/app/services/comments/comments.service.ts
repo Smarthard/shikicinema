@@ -1,8 +1,27 @@
-import {Injectable} from '@angular/core';
-import {BehaviorSubject, combineLatest, iif, Observable, of, ReplaySubject, throwError} from 'rxjs';
-import {Shikimori} from '../../types/shikimori';
-import {ShikimoriService} from '../shikimori-api/shikimori.service';
-import {distinctUntilChanged, map, mergeMap, scan, shareReplay, switchMap, tap} from 'rxjs/operators';
+import { Injectable} from '@angular/core';
+import {
+  BehaviorSubject,
+  combineLatest,
+  iif,
+  Observable,
+  of,
+  ReplaySubject,
+  throwError,
+} from 'rxjs';
+import {
+  distinctUntilChanged,
+  map,
+  mergeMap,
+  scan,
+  shareReplay,
+  switchMap,
+  tap,
+  withLatestFrom,
+} from 'rxjs/operators';
+
+import { Shikimori } from '../../types/shikimori';
+import { ShikimoriService } from '../shikimori-api/shikimori.service';
+
 
 @Injectable({
   providedIn: 'root'
@@ -57,9 +76,10 @@ export class CommentsService {
       (topic$) => combineLatest([topic$, this.page$, this.limit$, this.order$]),
       mergeMap(([topic, page, limit, order]) => iif(() => !!topic && !!topic.id,
         this.shikimori.getComments(topic.id, 'Topic', page, limit, order),
-        of([])
+        of([] as Shikimori.Comment[])
       )),
-      map((comments: Shikimori.Comment[]) => comments.map((c) => this.parseHtml(c))),
+      withLatestFrom(this.shikimori.domain$),
+      map(([comments, domain]) => comments.map((c) => this.parseHtml(c, domain))),
       shareReplay(1)
     );
 
@@ -95,7 +115,7 @@ export class CommentsService {
           tap(() => this._episodeSubject.next(episode))
         );
     } else {
-      return throwError(new Error('Нельзя комментировать еще невышедшие серии!'))
+      return throwError(() => new Error('Нельзя комментировать еще невышедшие серии!'))
     }
   }
 
@@ -103,7 +123,7 @@ export class CommentsService {
     return this.shikimori.deleteComment(id);
   }
 
-  parseBBComment(bbComment: string): string {
+  parseBBComment(bbComment: string, shikimoriDomain: string): string {
     let parsed = bbComment;
     const SEARCH = [
       /\n/g,
@@ -140,11 +160,11 @@ export class CommentsService {
     const REPLACE = [
       '<br>',
 
-      '<img class="smiley" title="$1" alt="$1" src="https://shikimori.me/images/smileys/$1.gif">',
-      '<img class="smiley" title=":-o" alt=":-o" src="https://shikimori.me/images/smileys/:-o.gif">',
-      '<img class="smiley" title=":)" alt=":)" src="https://shikimori.me/images/smileys/:).gif">',
-      '<img class="smiley" title="+_+" alt="+_+" src="https://shikimori.me/images/smileys/+_+.gif">',
-      '<img class="smiley" title=":$1:" alt=":$1:" src="https://shikimori.me/images/smileys/:$1:.gif">',
+      `<img class="smiley" title="$1" alt="$1" src="${shikimoriDomain}/images/smileys/$1.gif">`,
+      `<img class="smiley" title=":-o" alt=":-o" src="${shikimoriDomain}/images/smileys/:-o.gif">`,
+      `<img class="smiley" title=":)" alt=":)" src="${shikimoriDomain}/images/smileys/:).gif">`,
+      `<img class="smiley" title="+_+" alt="+_+" src="${shikimoriDomain}/images/smileys/+_+.gif">`,
+      `<img class="smiley" title=":$1:" alt=":$1:" src="${shikimoriDomain}/images/smileys/:$1:.gif">`,
 
       '<b>$1</b>',
       '<i>$1</i>',
@@ -175,12 +195,12 @@ export class CommentsService {
         <img src="$1" alt="$1">
       </a>`,
 
-      '<a class="shc-links bubbled" href="https://shikimori.me/comments/$1">@$2</a>',
+      `<a class="shc-links bubbled" href="${shikimoriDomain}/comments/$1">@$2</a>`,
 
       `<div class="shc-quote">
         <div class="quoteable">
-            <a class="shc-links bubbled b-user16" href="https://shikimori.me/comments/$1">
-                <img src="https://shikimori.me/system/users/x16/$2.png" alt="$3">
+            <a class="shc-links bubbled b-user16" href="${shikimoriDomain}/comments/$1">
+                <img src="${shikimoriDomain}/system/users/x16/$2.png" alt="$3">
                 <span>$3</span>
             </a>
         </div>$4
@@ -250,13 +270,14 @@ export class CommentsService {
   public getCommentById(id: number): Observable<Shikimori.Comment> {
     return this.shikimori.getComment(id)
       .pipe(
-        map((c) => this.parseHtml(c))
+        withLatestFrom(this.shikimori.domain$),
+        map(([comment, domain]) => this.parseHtml(comment, domain))
       );
   }
 
-  cleanUrl(url: string) {
+  cleanUrl(url: string, domain: string) {
     return url.startsWith(CommentsService.PLAYER_URL)
-      ? url.replace(CommentsService.PLAYER_URL, 'https://shikimori.me/')
+      ? url.replace(CommentsService.PLAYER_URL, `${domain}/`)
       : url;
   }
 
@@ -273,7 +294,7 @@ export class CommentsService {
     }
   }
 
-  parseHtml(comment: Shikimori.Comment): Shikimori.Comment {
+  parseHtml(comment: Shikimori.Comment, shikimoriDomain: string): Shikimori.Comment {
     const PARSED_COMMENTS = this._domParser.parseFromString(comment.html, 'text/html');
 
     PARSED_COMMENTS
@@ -313,10 +334,10 @@ export class CommentsService {
 
     PARSED_COMMENTS
       .querySelectorAll('a[href]')
-      .forEach((link: HTMLLinkElement) => link.href = this.cleanUrl(link.href));
+      .forEach((link: HTMLLinkElement) => link.href = this.cleanUrl(link.href, shikimoriDomain));
     PARSED_COMMENTS
       .querySelectorAll('*[src]')
-      .forEach((resource: HTMLSourceElement) => resource.src = this.cleanUrl(resource.src));
+      .forEach((resource: HTMLSourceElement) => resource.src = this.cleanUrl(resource.src, shikimoriDomain));
 
     comment.html = PARSED_COMMENTS.documentElement.innerHTML;
     return comment;

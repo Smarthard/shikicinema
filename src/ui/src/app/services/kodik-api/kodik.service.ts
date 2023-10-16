@@ -1,12 +1,13 @@
-import {Injectable} from '@angular/core';
-import {HttpClient, HttpParams} from '@angular/common/http';
-import {of} from 'rxjs';
-import {catchError, shareReplay, timeout} from 'rxjs/operators';
-import {SmarthardNet} from '../../types/smarthard-net';
-import {Shikimori} from '../../types/shikimori';
-import {Kodik} from '../../types/kodik';
-import {environment} from '../../../environments/environment';
-import {ShikimoriService} from '../shikimori-api/shikimori.service';
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { lastValueFrom, of } from 'rxjs';
+import { catchError, shareReplay, timeout } from 'rxjs/operators';
+
+import { SmarthardNet } from '../../types/smarthard-net';
+import { Shikimori } from '../../types/shikimori';
+import { Kodik } from '../../types/kodik';
+import { environment } from '../../../environments/environment';
+import { ShikimoriService } from '../shikimori-api/shikimori.service';
 
 @Injectable({
   providedIn: 'root'
@@ -98,7 +99,7 @@ export class KodikService {
 
   private async _getSeason(anime: Shikimori.Anime) {
     if (!this._franchise || this._franchise.current_id !== anime.id) {
-      this._franchise = await this.shikimori.getFranchise(anime).toPromise();
+      this._franchise = await lastValueFrom(this.shikimori.getFranchise(anime));
     }
 
     const response = await this.getVideos(anime);
@@ -124,7 +125,7 @@ export class KodikService {
     let response = this._getCachedResponse();
 
     if (!response || response?.results?.[0]?.shikimori_id !== `${anime.id}`) {
-      response = await this._getKodikvideos(anime).toPromise();
+      response = await lastValueFrom(this._getKodikvideos(anime));
       this._kodikResponseCache = response;
     }
 

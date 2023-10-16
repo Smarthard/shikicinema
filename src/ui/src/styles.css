@@ -1,10 +1,8 @@
 @font-face {
   font-family: "shikimori";
-  src: url("https://shikimori.me/assets/shikimori.eot?") format("eot"),
+  src: url("https://shikimori.one/assets/shikimori.woff2") format("woff2"),
        url("https://shikimori.me/assets/shikimori.woff2") format("woff2"),
-       url("https://shikimori.me/assets/shikimori.woff") format("woff"),
-       url("https://shikimori.me/assets/shikimori.ttf") format("truetype"),
-       url("https://shikimori.me/assets/shikimori.svg#shikimori") format("svg");
+       url("https://shikimori.org/assets/shikimori.woff2") format("woff2");
 }
 
 body {

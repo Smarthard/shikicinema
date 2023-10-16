@@ -1,4 +1,4 @@
-<img [src]="SMILEY_URL + smiley + '.gif'"
+<img [src]="(SHIKIMORI_DOMAIN$ | async) + SMILEY_URL + smiley + '.gif'"
      [alt]="smiley"
      [title]="smiley"
      (click)="pick.emit(smiley)"

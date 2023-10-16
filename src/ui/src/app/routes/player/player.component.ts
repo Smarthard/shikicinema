@@ -1,7 +1,7 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
-import {Title} from '@angular/platform-browser';
-import {HttpHeaders, HttpParams} from '@angular/common/http';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Title } from '@angular/platform-browser';
+import { HttpHeaders, HttpParams } from '@angular/common/http';
 import {
   catchError,
   concatMap,
@@ -9,31 +9,39 @@ import {
   delay,
   distinctUntilChanged,
   map,
-  publishReplay,
-  refCount,
   shareReplay,
   switchMap,
   takeWhile,
-  withLatestFrom
+  withLatestFrom,
 } from 'rxjs/operators';
-import {BehaviorSubject, combineLatest, EMPTY, iif, Observable, of, Subject} from 'rxjs';
-import {MatDialog} from '@angular/material/dialog';
+import {
+  BehaviorSubject,
+  combineLatest,
+  EMPTY,
+  firstValueFrom,
+  from,
+  iif,
+  Observable,
+  of,
+  Subject,
+} from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
 
-import {AboutDialogComponent} from '../../shared/components/about-dialog/about-dialog.component';
-import {ShikivideosService} from '../../services/shikivideos-api/shikivideos.service';
-import {ShikimoriService} from '../../services/shikimori-api/shikimori.service';
-import {Shikimori} from '../../types/shikimori';
-import {SmarthardNet} from '../../types/smarthard-net';
-import {AuthService} from '../../services/auth/auth.service';
-import {NotificationsService} from '../../services/notifications/notifications.service';
-import {ShikicinemaSettings} from '../../types/ShikicinemaSettings';
-import {SettingsService} from '../../services/settings/settings.service';
-import {UserPreferencesService} from '../../services/user-preferences/user-preferences.service';
-import {Notification, NotificationType} from '../../types/notification';
-import {IRequestDialogData, RequestDialogComponent} from '../../shared/components/request-dialog/request-dialog.component';
-import {KodikService} from '../../services/kodik-api/kodik.service';
-import {RemoteNotificationsService} from '../../services/remote-notifications/remote-notifications.service';
-import {CommentsService} from '../../services/comments/comments.service';
+import { AboutDialogComponent } from '../../shared/components/about-dialog/about-dialog.component';
+import { ShikivideosService } from '../../services/shikivideos-api/shikivideos.service';
+import { ShikimoriService } from '../../services/shikimori-api/shikimori.service';
+import { Shikimori } from '../../types/shikimori';
+import { SmarthardNet } from '../../types/smarthard-net';
+import { AuthService } from '../../services/auth/auth.service';
+import { NotificationsService } from '../../services/notifications/notifications.service';
+import { ShikicinemaSettings } from '../../types/ShikicinemaSettings';
+import { SettingsService } from '../../services/settings/settings.service';
+import { UserPreferencesService } from '../../services/user-preferences/user-preferences.service';
+import { Notification, NotificationType } from '../../types/notification';
+import { IRequestDialogData, RequestDialogComponent } from '../../shared/components/request-dialog/request-dialog.component';
+import { KodikService } from '../../services/kodik-api/kodik.service';
+import { RemoteNotificationsService } from '../../services/remote-notifications/remote-notifications.service';
+import { CommentsService } from '../../services/comments/comments.service';
 
 @Component({
   selector: 'app-player',
@@ -83,8 +91,7 @@ export class PlayerComponent implements OnInit, OnDestroy {
 
   readonly anime$: Observable<Shikimori.Anime> = this.animeId$.pipe(
     switchMap(animeId => this.shikimori.getAnime(animeId)),
-    publishReplay(1),
-    refCount()
+    shareReplay(1),
   );
 
   readonly episode$ = this.episodeSubject.pipe(
@@ -109,7 +116,7 @@ export class PlayerComponent implements OnInit, OnDestroy {
   readonly kodikvideos$ = combineLatest([this.anime$, this.episode$])
     .pipe(
       distinctUntilChanged(([animeA, episodeA], [animeB, episodeB]) => animeA.id === animeB.id && episodeA === episodeB),
-      switchMap(([anime, episode]) => this.kodikService.search(anime, episode)),
+      switchMap(([anime, episode]) => from(this.kodikService.search(anime, episode))),
       shareReplay(1),
     );
 
@@ -122,8 +129,7 @@ export class PlayerComponent implements OnInit, OnDestroy {
       ]),
       map((videos: SmarthardNet.Shikivideo[]) => videos.sort((a, b) => `${a.author}`.localeCompare(`${b.author}`))),
       catchError(err => this._httpErrorHandler(err)),
-      publishReplay(1),
-      refCount()
+      shareReplay(1),
     );
 
   readonly shikivideosUnique$: Observable<SmarthardNet.Unique> = this.animeId$.pipe(
@@ -132,8 +138,7 @@ export class PlayerComponent implements OnInit, OnDestroy {
       .set('column', 'author+kind+language+url+quality')
       .set('limit', 'all')
     )),
-    publishReplay(1),
-    refCount()
+    shareReplay(1),
   );
 
   readonly kodikUnique$ = this.kodikvideos$
@@ -155,16 +160,12 @@ export class PlayerComponent implements OnInit, OnDestroy {
   readonly whoami$ = this.shikimori.whoAmI(new HttpHeaders()
     .set('Cache-Control', 'no-cache, no-store, must-revalidate')
     .set('Pragma', 'no-cache')
-  ).pipe(
-    publishReplay(1),
-    refCount()
-  );
+  ).pipe(shareReplay(1));
 
   readonly userRate$ = this.anime$.pipe(
     map((anime) => anime.user_rate),
     catchError(() => of(null as Shikimori.UserRate)),
-    publishReplay(1),
-    refCount()
+    shareReplay(1),
   );
 
   readonly isAnimeWatched$ = this.userRate$.pipe(
@@ -363,10 +364,11 @@ export class PlayerComponent implements OnInit, OnDestroy {
   }
 
   async openRequestsDialog() {
-    const user = await this.whoami$.toPromise();
+    const user = await firstValueFrom(this.whoami$);
+    const shikimoriDomain = await firstValueFrom(this.shikimori.domain$);
     const data: IRequestDialogData = {
       video: this.currentVideo,
-      requester: `https://shikimori.me/${user.nickname}`
+      requester: `${shikimoriDomain}/${user.nickname}`
     };
     const requestDialogRef = this.dialog.open(RequestDialogComponent, { minWidth: '50%', disableClose: true, data });
 

@@ -4,7 +4,7 @@
     <button mat-icon-button
             [matMenuTriggerFor]="extraButtonsMenu">
       <img *ngIf="!user"
-           src="https://shikimori.me/favicons/favicon-32x32.png"
+           src="{{ SHIKIMORI_URL$ | async }}/favicons/favicon-32x32.png"
            alt="to_shikimori"
            height="24px">
       <img *ngIf="user"
@@ -16,18 +16,18 @@
     <app-notifications-badge [notifications]="notifications"></app-notifications-badge>
     <mat-menu #extraButtonsMenu="matMenu">
       <a mat-menu-item
-              [href]="SHIKIMORI_URL + (anime?.url || '')"
+              [href]="(SHIKIMORI_URL$ | async) + (anime?.url || '')"
               [title]="'Перейти на ' + (anime?.name ? 'страницу ' + anime.name : 'Shikimori')">
         {{ anime?.name || 'Shikimori' }}
       </a>
       <a mat-menu-item
               *ngIf="user"
-              [href]="SHIKIMORI_URL + '/' + user.nickname + '/list/anime'">
+              [href]="(SHIKIMORI_URL$ | async) + '/' + user.nickname + '/list/anime'">
         Список аниме
       </a>
       <a mat-menu-item
               *ngIf="user"
-              [href]="SHIKIMORI_URL + '/' + user.nickname + '/list/manga'">
+              [href]="(SHIKIMORI_URL$ | async) + '/' + user.nickname + '/list/manga'">
         Список манги
       </a>
       <a mat-menu-item

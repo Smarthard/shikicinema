@@ -27,6 +27,8 @@ export class VideosComponent implements OnInit {
 
   public displayedColumns: string[] = ['id', 'anime_id', 'episode', 'author', 'uploader'];
 
+  readonly shikimoriUrl$ = this.shikimori.domain$;
+
   readonly uploader$: Observable<Shikimori.User> = this.route.queryParams.pipe(
     switchMap(query => this.shikimori.getUserInfo(query.uploader)),
     publishReplay(1),

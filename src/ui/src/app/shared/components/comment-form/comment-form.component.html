@@ -1,5 +1,5 @@
 <app-comment *ngIf="commentForm.dirty && isShowPreview"
-             [comment]="comment(bbComment)"
+             [comment]="comment(bbComment, shikimoriUrl$ | async)"
              preview="true"></app-comment>
 <div>
   <div id="format-tools">

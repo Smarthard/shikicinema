@@ -1,6 +1,7 @@
 import {Component, Input} from '@angular/core';
 import {Shikimori} from '../../../types/shikimori';
 import {SmarthardNet} from '../../../types/smarthard-net';
+import {ShikimoriService} from '../../../services/shikimori-api/shikimori.service';
 
 @Component({
   selector: 'app-header',
@@ -8,7 +9,7 @@ import {SmarthardNet} from '../../../types/smarthard-net';
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent {
-  readonly SHIKIMORI_URL = 'https://shikimori.me';
+  readonly SHIKIMORI_URL$ = this.shikimoriService.domain$;
 
   @Input()
   public anime: Shikimori.Anime;
@@ -21,4 +22,8 @@ export class HeaderComponent {
 
   @Input()
   public notifications: SmarthardNet.Notification[];
+
+  constructor(
+    private readonly shikimoriService: ShikimoriService,
+  ) {}
 }

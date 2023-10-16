@@ -2,7 +2,7 @@
             [user]="whoami$ | async"
             [notifications]="notifications$ | async">
   <app-uploader [uploadedByUser]="uploader"
-                [isForeignSource]="currentVideo && currentVideo.foreign"></app-uploader>
+                [isForeignSource]="currentVideo?.foreign"></app-uploader>
 </app-header>
 <div id="player" *ngIf="settings && (anime$ | async) as anime">
   <app-video-player [video]="currentVideo"></app-video-player>
