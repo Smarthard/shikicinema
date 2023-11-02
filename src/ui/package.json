@@ -59,5 +59,15 @@
   },
   "optionalDependencies": {
     "fsevents": "^2.3.2"
+  },
+  "overrides": {
+    "ngx-responsive-embed": {
+      "@angular/common": "^13.0.0",
+      "@angular/core": "^13.0.0"
+    },
+    "ng-inline-svg": {
+      "@angular/common": "^13.0.0",
+      "@angular/core": "^13.0.0"
+    }
   }
 }
