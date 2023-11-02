@@ -7,7 +7,7 @@ import {
   take,
   timeout,
 } from 'rxjs/operators';
-import { of, race } from 'rxjs';
+import { EMPTY, merge, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -22,12 +22,12 @@ export class ShikimoriDomainsService {
       .map((domain) => this.http.get(`${domain}/api/constants/anime`, { observe: 'response' })
         .pipe(
           timeout(5000),
-          switchMap(({ ok = false }) => ok ? of(domain) : of(null)),
-          catchError(() => of(null))
+          switchMap(({ ok = false }) => ok ? of(domain) : EMPTY),
+          catchError(() => EMPTY)
         )
       );
 
-    return race(...domainsRequests)
+    return merge(...domainsRequests)
       .pipe(
         skipWhile((domain) => domain === null),
         take(1),
