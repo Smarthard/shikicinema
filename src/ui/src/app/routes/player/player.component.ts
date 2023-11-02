@@ -116,6 +116,7 @@ export class PlayerComponent implements OnInit, OnDestroy {
   readonly kodikvideos$ = combineLatest([this.anime$, this.episode$])
     .pipe(
       distinctUntilChanged(([animeA, episodeA], [animeB, episodeB]) => animeA.id === animeB.id && episodeA === episodeB),
+      delay(1000),
       switchMap(([anime, episode]) => from(this.kodikService.search(anime, episode))),
       shareReplay(1),
     );
