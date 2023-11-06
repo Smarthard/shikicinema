@@ -17,7 +17,8 @@
         {
             "matches": [
                 "*://shikimori.org/*",
-                "*://shikimori.one/*"
+                "*://shikimori.one/*",
+                "*://shikimori.me/*"
             ],
             "js": [
                 "shikicinema.js"
@@ -41,6 +42,7 @@
     "permissions": [
         "https://shikimori.org/*",
         "https://shikimori.one/*",
+        "https://shikimori.me/*",
         "https://smarthard.net/*",
         "https://kodikapi.com/*",
         "https://smotret-anime.online/*",
