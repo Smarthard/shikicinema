@@ -49,7 +49,7 @@ export class ShikimoriClient {
     }
 
     getCurrentUser() {
-        const url = `${this.baseUri}/users/whoami`;
+        const url = `${this.baseUri}/api/users/whoami`;
 
         return this.http.get<UserBriefInfoInterface>(url);
     }
@@ -59,7 +59,7 @@ export class ShikimoriClient {
      * @see less info about user here - [getUserBriefInfo]{@link ShikimoriClient#getUserBriefInfo}
      */
     getUser(idOrUsername: ResourceIdType) {
-        const url = `${this.baseUri}/users/${idOrUsername}`;
+        const url = `${this.baseUri}/api/users/${idOrUsername}`;
 
         return this.http.get<UserInterface>(url);
     }
@@ -79,24 +79,24 @@ export class ShikimoriClient {
      * @see more info about user here - [getUser]{@link ShikimoriClient#getUser}
      */
     getUserBriefInfo(idOrUsername: ResourceIdType) {
-        const url = `${this.baseUri}/users/${idOrUsername}/info`;
+        const url = `${this.baseUri}/api/users/${idOrUsername}/info`;
 
         return this.http.get<UserBriefInfoInterface>(url);
     }
 
     getUserRates(userId?: ResourceIdType) {
-        const url = `${this.baseUri}/v2/user_rates`;
+        const url = `${this.baseUri}/api/v2/user_rates`;
         let params = new HttpParams();
 
         if (userId) {
-            params = params.set('user_id ', userId);
+            params = params.set('user_id', userId);
         }
 
         return this.http.get<UserBriefRateInterface[]>(url, { params });
     }
 
     getUserAnimeRates(userId: ResourceIdType, query?: UserAnimeRatesQuery) {
-        const url = `${this.baseUri}/users/${userId}/anime_rates`;
+        const url = `${this.baseUri}/api/users/${userId}/anime_rates`;
         let params = setPaginationToParams(query);
 
         if (query?.censored) {
@@ -111,7 +111,7 @@ export class ShikimoriClient {
     }
 
     findAnimes(query?: FindAnimeQuery) {
-        const url = `${this.baseUri}/animes`;
+        const url = `${this.baseUri}/api/animes`;
         let params = setPaginationToParams(query);
 
         if (query?.search) {
