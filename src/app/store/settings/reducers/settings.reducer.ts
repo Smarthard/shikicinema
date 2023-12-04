@@ -1,7 +1,7 @@
 import { createReducer, on } from '@ngrx/store';
 
-import { defaultAvailableLangs } from '@app/transloco-root.module';
 import { SettingsStoreInterface } from '@app/store/settings/types/settings-store.interface';
+import { defaultAvailableLangs } from '@app/transloco-root.module';
 import {
     resetSettingsAction,
     updateSettingsAction,
@@ -25,7 +25,7 @@ const reducer = createReducer(
     on(
         resetSettingsAction,
         () => ({ ...initialState }),
-    )
+    ),
 );
 
 export function settingsReducer(state, action) {

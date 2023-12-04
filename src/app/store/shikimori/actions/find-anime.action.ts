@@ -14,7 +14,7 @@ export const findAnimeSuccessAction = createAction(
 
 export const findAnimeFailureAction = createAction(
     '[Shikimori API] find anime failure',
-    props<{ errors: any }>(),
+    props<{ errors: unknown }>(),
 );
 
 export const resetFoundAnimeAction = createAction(

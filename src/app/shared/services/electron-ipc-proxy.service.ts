@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 
-import { environment } from '@app-env/environment';
 import { IpcApiInterface } from '@app-electron/types/ipc-api.interface';
+import { environment } from '@app-env/environment';
 
 @Injectable()
 export class ElectronIpcProxyService implements IpcApiInterface {
     #electronApi: IpcApiInterface;
 
     constructor() {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         this.#electronApi = (window as any).electron;
     }
 
@@ -20,7 +21,7 @@ export class ElectronIpcProxyService implements IpcApiInterface {
         return this.#electronApi.getShikimoriAuthCode(codeUrl.toString());
     }
 
-    openInBrowser(url: string): void {
-        this.#electronApi.openInBrowser(url);
+    openInBrowser(url: string, target: string): void {
+        this.#electronApi.openInBrowser(url, target);
     }
 }

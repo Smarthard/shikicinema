@@ -1,11 +1,11 @@
 import { createReducer, on } from '@ngrx/store';
 
+import AuthStoreInterface, { ShikimoriCredentials } from '@app/store/auth/types/auth-store.interface';
 import {
     authShikimoriSuccessAction,
     changeShikimoriCredentialsAction,
     logoutShikimoriAction,
 } from '@app/store/auth/actions/auth.actions';
-import AuthStoreInterface, { ShikimoriCredentials } from '@app/store/auth/types/auth-store.interface';
 
 const initialShikimoriCredentialsState: ShikimoriCredentials = {
     shikimoriBearerToken: '',

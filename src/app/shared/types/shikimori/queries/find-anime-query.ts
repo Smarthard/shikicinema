@@ -1,5 +1,5 @@
-import { PaginationRequest } from '@app/shared/types/shikimori/queries/pagination-request';
 import { AnimeKindType } from '@app/shared/types/shikimori/anime-kind.type';
+import { PaginationRequest } from '@app/shared/types/shikimori/queries/pagination-request';
 import { UserRateStatusType } from '@app/shared/types/shikimori/user-rate-status.type';
 
 type AnimeOrderType = 'id'

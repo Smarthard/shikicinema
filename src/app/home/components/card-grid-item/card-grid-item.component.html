@@ -16,9 +16,10 @@
     <h2
         class="card-grid-item__name"
         [class.ion-hide]="isLoading"
-        [tooltip]="name"
-        [positionV]="'top'"
-        [arrow]="true"
+        [ngxTippy]="name"
+        [tippyProps]="{
+            'placement': 'top'
+        }"
         [ngStyle]="{
             'max-width': width
         }"

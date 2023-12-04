@@ -1,8 +1,8 @@
-import { NgModule } from '@angular/core';
-import { RouteReuseStrategy } from '@angular/router';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 import { IonicRouteStrategy } from '@ionic/angular';
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { NgModule } from '@angular/core';
+import { RouteReuseStrategy } from '@angular/router';
 
 import { AppComponent } from '@app/app.component';
 import { AppRoutingModule } from '@app/app-routing.module';
@@ -11,7 +11,6 @@ import { ShikimoriApiInterceptor } from '@app/shared/interceptors/shikimori-api.
 
 @NgModule({
     declarations: [AppComponent],
-    entryComponents: [],
     imports: [
         CoreModule,
         AppRoutingModule,

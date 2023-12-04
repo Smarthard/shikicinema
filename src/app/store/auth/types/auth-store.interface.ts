@@ -6,4 +6,4 @@ export interface ShikimoriCredentials {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-export default interface AuthStoreInterface extends ShikimoriCredentials {};
+export default interface AuthStoreInterface extends ShikimoriCredentials {}

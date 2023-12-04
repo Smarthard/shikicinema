@@ -1,35 +1,34 @@
-import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
+import { ToastController } from '@ionic/angular';
+import { TranslocoService } from '@ngneat/transloco';
 import {
     catchError,
     exhaustMap,
-    switchMap,
     map,
+    switchMap,
 } from 'rxjs/operators';
 import { from, of } from 'rxjs';
-import { TranslocoService } from '@ngneat/transloco';
-import { ToastController } from '@ionic/angular';
 
-import { environment } from '@app-env/environment';
 import { AuthEffects } from '@app/store/auth/effects/auth.effects';
+import { ShikimoriClient } from '@app/shared/services/shikimori-client.service';
 import {
     authShikimoriAction,
     authShikimoriFailureAction,
-    authShikimoriSuccessAction
+    authShikimoriSuccessAction,
 } from '@app/store/auth/actions/auth.actions';
+import { environment } from '@app-env/environment';
 import { getAuthorizationCode } from '@app/shared/utils/shikimori-api.web-extension.utils';
-import { ShikimoriClient } from '@app/shared/services/shikimori-client.service';
 
 @Injectable()
 export class AuthWebExtensionEffects extends AuthEffects {
-
     override oauthShikimori$ = createEffect(() => this.actions$.pipe(
         ofType(authShikimoriAction),
         exhaustMap(() => from(getAuthorizationCode(environment.shikimori.authClientId))),
         switchMap((code) => this.shikimoriClient.getNewToken(code)),
         map((credentials) => authShikimoriSuccessAction({ credentials })),
-        catchError((errors) => of(authShikimoriFailureAction({ errors })))
+        catchError((errors) => of(authShikimoriFailureAction({ errors }))),
     ));
 
     constructor(

@@ -14,7 +14,7 @@ export const authShikimoriSuccessAction = createAction(
 
 export const authShikimoriFailureAction = createAction(
     '[Auth] OAuth2 shikimori failure',
-    props<{ errors: any }>(),
+    props<{ errors: unknown }>(),
 );
 
 export const changeShikimoriCredentialsAction = createAction(

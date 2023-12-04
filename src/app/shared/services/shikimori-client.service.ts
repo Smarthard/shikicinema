@@ -1,22 +1,23 @@
-import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { map } from 'rxjs/operators';
 
-import { environment } from '@app-env/environment';
-import { UserInterface } from '@app/shared/types/shikimori/user.interface';
-import { UserBriefInfoInterface } from '@app/shared/types/shikimori/user-brief-info.interface';
-import { UserBriefRateInterface } from '@app/shared/types/shikimori/user-brief-rate.interface';
+import { AnimeBriefInfoInterface } from '@app/shared/types/shikimori/anime-brief-info.interface';
+import { Credentials } from '@app/shared/types/shikimori/credentials';
+import { FindAnimeQuery } from '@app/shared/types/shikimori/queries/find-anime-query';
+import { Observable } from 'rxjs';
 import { ResourceIdType } from '@app/shared/types/resource-id.type';
 import { UserAnimeRate } from '@app/shared/types/shikimori/user-anime-rate';
 import { UserAnimeRatesQuery } from '@app/shared/types/shikimori/queries/user-anime-rates-query';
+import { UserBriefInfoInterface } from '@app/shared/types/shikimori/user-brief-info.interface';
+import { UserBriefRateInterface } from '@app/shared/types/shikimori/user-brief-rate.interface';
+import { UserInterface } from '@app/shared/types/shikimori/user.interface';
+import { environment } from '@app-env/environment';
 import { setPaginationToParams } from '@app/shared/types/shikimori/helpers/pagination-helper';
-import { Credentials } from '@app/shared/types/shikimori/credentials';
 import { toShikimoriCredentials } from '@app/shared/types/shikimori/mappers/auth.mappers';
-import { FindAnimeQuery } from '@app/shared/types/shikimori/queries/find-anime-query';
-import { AnimeBriefInfoInterface } from '@app/shared/types/shikimori/anime-brief-info.interface';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class ShikimoriClient {
     readonly baseUri = environment.shikimori.apiURI;
@@ -44,7 +45,7 @@ export class ShikimoriClient {
             .set('client_secret', environment.shikimori.authClientSecret)
             .set('refresh_token', refreshToken);
 
-        return this.http.post<Credentials>('https://shikimori.one/oauth/token', null,{ params })
+        return this.http.post<Credentials>('https://shikimori.one/oauth/token', null, { params })
             .pipe(map(toShikimoriCredentials));
     }
 
@@ -57,8 +58,11 @@ export class ShikimoriClient {
     /**
      * @description get full info about shikimori user
      * @see less info about user here - [getUserBriefInfo]{@link ShikimoriClient#getUserBriefInfo}
+     *
+     * @param {string} idOrUsername shikimori user's id or nickname
+     * @return {Observable} shikimori user info by id or nickname
      */
-    getUser(idOrUsername: ResourceIdType) {
+    getUser(idOrUsername: ResourceIdType): Observable<UserInterface> {
         const url = `${this.baseUri}/api/users/${idOrUsername}`;
 
         return this.http.get<UserInterface>(url);
@@ -77,8 +81,11 @@ export class ShikimoriClient {
      *     <li>locale</li>
      * </ul>
      * @see more info about user here - [getUser]{@link ShikimoriClient#getUser}
+     *
+     * @param {string} idOrUsername shikimori user's id or nickname
+     * @return {Observable} shikimori user shorter info by id or nickname
      */
-    getUserBriefInfo(idOrUsername: ResourceIdType) {
+    getUserBriefInfo(idOrUsername: ResourceIdType): Observable<UserBriefInfoInterface> {
         const url = `${this.baseUri}/api/users/${idOrUsername}/info`;
 
         return this.http.get<UserBriefInfoInterface>(url);

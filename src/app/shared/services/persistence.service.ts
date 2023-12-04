@@ -5,7 +5,7 @@ import { Injectable } from '@angular/core';
  * only for readonly access to storage
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class PersistenceService {
     getItem<T>(key: string): T {

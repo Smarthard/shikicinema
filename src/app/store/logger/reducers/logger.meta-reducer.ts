@@ -1,4 +1,4 @@
-import { ActionReducer } from '@ngrx/store';
+import { Action, ActionReducer } from '@ngrx/store';
 import { diff } from 'deep-object-diff';
 
 import { AppStoreInterface } from '@app/store/app-store.interface';
@@ -6,7 +6,7 @@ import { isEmptyObject } from '@app/shared/utils/object-utils';
 
 
 export function loggerMetaReducer(reducer: ActionReducer<AppStoreInterface>): ActionReducer<AppStoreInterface> {
-    return (state: AppStoreInterface, action: any): any => {
+    return (state: AppStoreInterface, action: Action): AppStoreInterface => {
         const result = reducer(state, action);
         const stateDiff = diff(state, result);
 

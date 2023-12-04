@@ -1,6 +1,6 @@
-import { UserImagesInterface } from '@app/shared/types/shikimori/user-images.interface';
 import { AnimeKindType } from '@app/shared/types/shikimori/anime-kind.type';
 import { MangaKindType } from '@app/shared/types/shikimori/manga-kind.type';
+import { UserImagesInterface } from '@app/shared/types/shikimori/user-images.interface';
 import { UserRateStatusType } from '@app/shared/types/shikimori/user-rate-status.type';
 
 type AnimeReleaseStatus = 'anons' | 'ongoing' | 'released';
@@ -27,7 +27,8 @@ interface Rate<K = string, S = string> {
     russian: string;
     image: RateImage;
     url: string;
-    score: string; // like 1.0
+    /* score: 1.0 */
+    score: string;
     aired_on: string | null;
     released_on: string | null;
     kind: K;
@@ -57,9 +58,9 @@ interface UserFullRate<T> {
     created_at: string;
     updated_at: string;
     user: RateUserInfo;
-    anime: T | null;
-    manga: T | null;
+    anime: T;
+    manga: T;
 }
 
-export type UserAnimeRate = UserFullRate<AnimeRate> & { manga: null };
-export type UserMangaRate = UserFullRate<MangaRate> & { anime: null };
+export type UserAnimeRate = Omit<UserFullRate<AnimeRate>, 'manga'>;
+export type UserMangaRate = Omit<UserFullRate<MangaRate>, 'anime'>;

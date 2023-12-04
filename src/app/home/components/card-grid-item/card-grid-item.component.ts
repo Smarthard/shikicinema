@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 
-import { ImageCardComponent } from '@app/shared/components/image-card/image-card.component';
 import { AnimeKindType } from '@app/shared/types/shikimori/anime-kind.type';
+import { ImageCardComponent } from '@app/shared/components/image-card/image-card.component';
 
 @Component({
     selector: 'app-card-grid-item',
@@ -9,10 +9,6 @@ import { AnimeKindType } from '@app/shared/types/shikimori/anime-kind.type';
     styleUrls: ['./card-grid-item.component.scss'],
 })
 export class CardGridItemComponent extends ImageCardComponent {
-
-    @Input()
-    name: string;
-
     @Input()
     kind: AnimeKindType;
 
@@ -21,5 +17,4 @@ export class CardGridItemComponent extends ImageCardComponent {
 
     @Input()
     link = '#';
-
 }

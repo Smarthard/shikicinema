@@ -1,3 +1,4 @@
+/* eslint-disable no-use-before-define */
 export function getAuthorizationCode(shikimoriOAuthClientId: string): Promise<string> {
     return new Promise((resolve, reject) => {
         const codeUrl = new URL('https://shikimori.one/oauth/authorize');
@@ -7,10 +8,9 @@ export function getAuthorizationCode(shikimoriOAuthClientId: string): Promise<st
 
         chrome.tabs.query({ active: true }, ([selectedTab]) =>
             chrome.tabs.create({ active: true, url: codeUrl.toString() }, (authCodeTab) => {
-
                 const onRemove = (tabId) => {
                     if (tabId === authCodeTab.id) {
-                        reject({ error: 'tab-removed' });
+                        reject(new Error('tab-removed'));
                         removeListeners();
                     }
                 };
@@ -29,15 +29,15 @@ export function getAuthorizationCode(shikimoriOAuthClientId: string): Promise<st
                     const code = tabUrl.toString().split('authorize/')[1];
 
                     if (
-                        tabId !== authCodeTab.id
-                        || isUrlNoTChanged
-                        || tabUrl.toString().includes('response_type')
+                        tabId !== authCodeTab.id ||
+                        isUrlNoTChanged ||
+                        tabUrl.toString().includes('response_type')
                     ) {
                         return;
                     }
 
                     if (error || message) {
-                        reject({ error, message });
+                        reject(new Error(error || message));
                     } else {
                         resolve(code);
                     }
@@ -46,7 +46,7 @@ export function getAuthorizationCode(shikimoriOAuthClientId: string): Promise<st
                     chrome.tabs.update(
                         selectedTab.id,
                         { active: true },
-                        () => chrome.tabs.remove(authCodeTab.id)
+                        () => chrome.tabs.remove(authCodeTab.id),
                     );
                 };
 
@@ -57,7 +57,7 @@ export function getAuthorizationCode(shikimoriOAuthClientId: string): Promise<st
 
                 chrome.tabs.onRemoved.addListener(onRemove);
                 chrome.tabs.onUpdated.addListener(onUpdate);
-            })
+            }),
         );
     });
 }

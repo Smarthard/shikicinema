@@ -1,9 +1,9 @@
-import { UserRateStatusType } from '@app/shared/types/shikimori/user-rate-status.type';
 import {
     LoadStatusKeysType,
     StatusKeysType,
     StatusPageType,
 } from '@app/home/store/anime-rates/types/anime-rates-store.interface';
+import { UserRateStatusType } from '@app/shared/types/shikimori/user-rate-status.type';
 
 export function getRateLoadedKey(status: UserRateStatusType): LoadStatusKeysType {
     switch (status) {

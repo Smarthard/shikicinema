@@ -8,7 +8,7 @@ export interface AnimeNameSortingConfig {
 export function sortByAnimeName(
     rateA: UserAnimeRate,
     rateB: UserAnimeRate,
-    { compareOriginalName, caseSensitive }: AnimeNameSortingConfig
+    { compareOriginalName, caseSensitive }: AnimeNameSortingConfig,
 ) {
     const nameA = compareOriginalName ? rateA.anime.name : rateA.anime.russian;
     const nameB = compareOriginalName ? rateB.anime.name : rateB.anime.russian;
@@ -23,7 +23,7 @@ export function sortByAnimeName(
 export function sortByAnimeUserRating(
     rateA: UserAnimeRate,
     rateB: UserAnimeRate,
-    config: AnimeNameSortingConfig
+    config: AnimeNameSortingConfig,
 ) {
     const cmp = +rateB.score - +rateA.score;
 

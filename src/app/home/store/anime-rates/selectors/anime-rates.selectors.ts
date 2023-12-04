@@ -5,7 +5,7 @@ import { UserRateStatusType } from '@app/shared/types/shikimori/user-rate-status
 import {
     getRateLoadedKey,
     getRatePageKey,
-    getRateStoreKey
+    getRateStoreKey,
 } from '@app/home/store/anime-rates/helpers/anime-rates-store-key.helpers';
 
 export const selectAnimeRates = createFeatureSelector<AnimeRatesStoreInterface>('animeRates');

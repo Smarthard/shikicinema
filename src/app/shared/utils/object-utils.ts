@@ -1,8 +1,3 @@
-export function isEmptyObject<T = any>(obj: T): boolean {
-    // eslint-disable-next-line guard-for-in
-    for (const key in obj) {
-        return false;
-    }
-
-    return true;
+export function isEmptyObject<T = unknown>(obj: T): boolean {
+    return Object.keys(obj)?.length === 0;
 }

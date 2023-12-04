@@ -1,5 +1,5 @@
-import { PaginationRequest } from '@app/shared/types/shikimori/queries/pagination-request';
 import { HttpParams } from '@angular/common/http';
+import { PaginationRequest } from '@app/shared/types/shikimori/queries/pagination-request';
 
 export function parsePagination<T extends PaginationRequest>(query: T): Required<PaginationRequest> {
     const page = query?.page || 1;

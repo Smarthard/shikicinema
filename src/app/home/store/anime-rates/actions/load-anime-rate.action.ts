@@ -1,12 +1,12 @@
 import { createAction, props } from '@ngrx/store';
 
 import { ResourceIdType } from '@app/shared/types/resource-id.type';
-import { UserRateStatusType } from '@app/shared/types/shikimori/user-rate-status.type';
 import { UserAnimeRate } from '@app/shared/types/shikimori/user-anime-rate';
+import { UserRateStatusType } from '@app/shared/types/shikimori/user-rate-status.type';
 
 export const loadAnimeRateByStatusAction = createAction(
     '[Anime Rates] load anime rate by status',
-    props<{ status: UserRateStatusType; userId: ResourceIdType  }>(),
+    props<{ status: UserRateStatusType; userId: ResourceIdType }>(),
 );
 
 export const loadAnimeRateByStatusSuccessAction = createAction(
@@ -16,6 +16,6 @@ export const loadAnimeRateByStatusSuccessAction = createAction(
 
 export const loadAnimeRateByStatusFailureAction = createAction(
     '[Anime Rates] load anime rate by status failure',
-    props<{ status: UserRateStatusType; errors: any }>(),
+    props<{ status: UserRateStatusType; errors: unknown }>(),
 );
 

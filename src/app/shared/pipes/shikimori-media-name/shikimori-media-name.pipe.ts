@@ -8,12 +8,10 @@ import { ShikimoriMediaNameType } from '@app/shared/types/shikimori/shikimori-me
     pure: true,
 })
 export class ShikimoriMediaNamePipe implements PipeTransform {
-
     transform(
         media: AnimeBriefInfoInterface,
-        nameToShow: ShikimoriMediaNameType
+        nameToShow: ShikimoriMediaNameType,
     ): string {
         return nameToShow === 'original' ? media.name : media.russian;
     }
-
 }

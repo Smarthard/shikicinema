@@ -1,14 +1,14 @@
-import { Injectable } from '@angular/core';
-import { delay, map, tap } from 'rxjs/operators';
-import { Store } from '@ngrx/store';
 import {
-    Actions, concatLatestFrom,
+    Actions, CreateEffectMetadata,
+    concatLatestFrom,
     createEffect,
-    CreateEffectMetadata,
     ofType,
 } from '@ngrx/effects';
-import { TranslocoService } from '@ngneat/transloco';
+import { Injectable } from '@angular/core';
+import { Store } from '@ngrx/store';
 import { ToastController } from '@ionic/angular';
+import { TranslocoService } from '@ngneat/transloco';
+import { delay, map, tap } from 'rxjs/operators';
 
 import { ShikimoriClient } from '@app/shared/services/shikimori-client.service';
 import {
@@ -29,14 +29,14 @@ export class AuthEffects {
             authShikimoriFailureAction,
             logoutShikimoriAction,
         ),
-        map(() => getCurrentUserAction())
+        map(() => getCurrentUserAction()),
     ));
 
     protected oauthShikimoriSuccess$ = createEffect(() => this.actions$.pipe(
         ofType(authShikimoriSuccessAction),
         delay(1000),
         concatLatestFrom(() => this.store.select(selectShikimoriCurrentUser)),
-        tap(async ([ _, user ]) => {
+        tap(async ([, user]) => {
             const toast = await this.toast.create({
                 id: 'shikimori-auth-success',
                 color: 'success',

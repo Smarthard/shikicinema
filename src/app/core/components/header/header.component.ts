@@ -1,11 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import {
     BehaviorSubject,
-    combineLatest,
     Observable,
     Subject,
+    combineLatest,
 } from 'rxjs';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import {
     distinctUntilChanged,
@@ -16,20 +16,20 @@ import {
     tap,
 } from 'rxjs/operators';
 
+import { AnimeBriefInfoInterface } from '@app/shared/types/shikimori/anime-brief-info.interface';
+import { NavigationExtras, Router } from '@angular/router';
+import { ResultOpenTarget, SearchbarResult } from '@app/shared/types/searchbar.types';
 import { UserBriefInfoInterface } from '@app/shared/types/shikimori/user-brief-info.interface';
-import {
-    selectShikimoriFoundAnimes,
-    selectShikimoriCurrentUser,
-    selectShikimoriAnimeSearchLoading,
-} from '@app/store/shikimori/selectors/shikimori.selectors';
+import { authShikimoriAction } from '@app/store/auth/actions/auth.actions';
 import {
     findAnimeAction,
     resetFoundAnimeAction,
 } from '@app/store/shikimori/actions/find-anime.action';
-import { authShikimoriAction } from '@app/store/auth/actions/auth.actions';
-import { AnimeBriefInfoInterface } from '@app/shared/types/shikimori/anime-brief-info.interface';
-import { ResultOpenTarget, SearchbarResult } from '@app/shared/types/searchbar.types';
-import { NavigationExtras, Router } from '@angular/router';
+import {
+    selectShikimoriAnimeSearchLoading,
+    selectShikimoriCurrentUser,
+    selectShikimoriFoundAnimes,
+} from '@app/store/shikimori/selectors/shikimori.selectors';
 import { toBase64 } from '@app/shared/utils/base64-utils';
 
 @Component({
@@ -38,7 +38,6 @@ import { toBase64 } from '@app/shared/utils/base64-utils';
     styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent implements OnInit {
-
     currentUser$: Observable<UserBriefInfoInterface>;
     avatarImg$: Observable<string>;
     nickname$: Observable<string>;
@@ -113,13 +112,13 @@ export class HeaderComponent implements OnInit {
         this.isAnimeListPopoverOpen = false;
 
         if (target === 'internal') {
-            await this.router.navigate([ '/player', result.id ]);
+            await this.router.navigate(['/player', result.id]);
         } else {
             const extras: NavigationExtras = {
-                queryParams: { link: toBase64('https://shikimori.one' + result.url) }
+                queryParams: { link: toBase64('https://shikimori.one' + result.url) },
             };
 
-            await this.router.navigate([ '/external' ], extras);
+            await this.router.navigate(['/external'], extras);
         }
     }
 }

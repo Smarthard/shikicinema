@@ -2,15 +2,15 @@ import { createReducer, on } from '@ngrx/store';
 
 import { ShikimoriStoreInterface } from '@app/store/shikimori/types/shikimori-store.interface';
 import {
+    findAnimeAction,
+    findAnimeFailureAction,
+    findAnimeSuccessAction, resetFoundAnimeAction,
+} from '@app/store/shikimori/actions/find-anime.action';
+import {
     getCurrentUserAction,
     getCurrentUserFailureAction,
     getCurrentUserSuccessAction,
 } from '@app/store/shikimori/actions/get-current-user.action';
-import {
-    findAnimeAction,
-    findAnimeFailureAction,
-    findAnimeSuccessAction, resetFoundAnimeAction
-} from '@app/store/shikimori/actions/find-anime.action';
 
 const initialState: ShikimoriStoreInterface = {
     isCurrentUserLoading: false,

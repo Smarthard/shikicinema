@@ -1,6 +1,6 @@
+import { ActivatedRoute, Router } from '@angular/router';
 import { Component, Inject, OnInit } from '@angular/core';
 import { EMPTY, Observable } from 'rxjs';
-import { ActivatedRoute, Router } from '@angular/router';
 import {
     catchError,
     delay,
@@ -10,9 +10,9 @@ import {
     tap,
 } from 'rxjs/operators';
 
-import { fromBase64 } from '@app/shared/utils/base64-utils';
-import { PlatformApi } from '@app/shared/types/platform/platform-api';
 import { PLATFORM_API_TOKEN } from '@app/shared/services/platform-api/platform-api.factory';
+import { PlatformApi } from '@app/shared/types/platform/platform-api';
+import { fromBase64 } from '@app/shared/utils/base64-utils';
 
 @Component({
     selector: 'app-go-external',
@@ -20,7 +20,6 @@ import { PLATFORM_API_TOKEN } from '@app/shared/services/platform-api/platform-a
     styleUrls: ['./go-external.page.scss'],
 })
 export class GoExternalPage implements OnInit {
-
     exLink$: Observable<string>;
     exDomain$: Observable<string>;
 
@@ -43,7 +42,7 @@ export class GoExternalPage implements OnInit {
 
         this.exDomain$ = this.exLink$.pipe(
             map((link) => new URL(link).hostname),
-            catchError(() => EMPTY)
+            catchError(() => EMPTY),
         );
     }
 
@@ -53,9 +52,8 @@ export class GoExternalPage implements OnInit {
             delay(3000),
             tap(async (url) => {
                 this.platformApi.openInBrowser(url, '_blank');
-                await this.router.navigate([ '/home' ]);
+                await this.router.navigate(['/home']);
             }),
         ).subscribe();
     }
-
 }

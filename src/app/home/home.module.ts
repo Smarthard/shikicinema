@@ -1,20 +1,20 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IonicModule } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
-import { TranslocoModule } from '@ngneat/transloco';
+import { IonicModule } from '@ionic/angular';
 import { LayoutModule } from '@angular/cdk/layout';
+import { NgModule } from '@angular/core';
+import { NgxTippyModule } from 'ngx-tippy-wrapper';
 import { NgxVisibilityModule } from 'ngx-visibility';
-import { TooltipsModule } from 'ionic4-tooltips';
+import { TranslocoModule } from '@ngneat/transloco';
 
+import { CardGridComponent } from '@app/home/components/card-grid/card-grid.component';
+import { CardGridItemComponent } from '@app/home/components/card-grid-item/card-grid-item.component';
 import { HomePage } from '@app/home/home.page';
 import { HomePageRoutingModule } from '@app/home/home-routing.module';
-import { CardGridComponent } from '@app/home/components/card-grid/card-grid.component';
-import { TypedTemplateDirective } from '@app/shared/directives/typed-template.directive';
 import { HomeStateModule } from '@app/home/store/home-state.module';
-import { SkeletonBlockModule } from '@app/shared/components/skeleton-block/skeleton-block.module';
 import { ImageCardModule } from '@app/shared/components/image-card/image-card.module';
-import { CardGridItemComponent } from '@app/home/components/card-grid-item/card-grid-item.component';
+import { SkeletonBlockModule } from '@app/shared/components/skeleton-block/skeleton-block.module';
+import { TypedTemplateDirective } from '@app/shared/directives/typed-template.directive';
 
 
 @NgModule({
@@ -26,7 +26,7 @@ import { CardGridItemComponent } from '@app/home/components/card-grid-item/card-
         TranslocoModule,
         LayoutModule,
         NgxVisibilityModule,
-        TooltipsModule,
+        NgxTippyModule,
         HomeStateModule,
         SkeletonBlockModule,
         ImageCardModule,
@@ -36,6 +36,6 @@ import { CardGridItemComponent } from '@app/home/components/card-grid-item/card-
         CardGridComponent,
         CardGridItemComponent,
         TypedTemplateDirective,
-    ]
+    ],
 })
 export class HomePageModule {}

@@ -29,13 +29,19 @@
                 <div class="anime-search-list-item__info anime-info">
                     <ion-label class="anime-info__title">
                         <a
+                            role="button"
+                            tabindex="0"
                             (click)="onResultClick($event,  result, 'external')"
+                            (keydown.enter)="onResultClick($event,  result, 'external')"
                             [title]="result | shikimoriMediaName: firstMediaName"
                         >
                             {{ result | shikimoriMediaName: firstMediaName }}
                         </a>
                         <a
+                            role="button"
+                            tabindex="0"
                             (click)="onResultClick($event,  result, 'external')"
+                            (keydown.enter)="onResultClick($event,  result, 'external')"
                             [title]="result | shikimoriMediaName: secondMediaName"
                         >
                             {{ result | shikimoriMediaName: secondMediaName }}

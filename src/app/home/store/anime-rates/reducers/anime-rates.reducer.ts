@@ -1,19 +1,16 @@
 import { createReducer, on } from '@ngrx/store';
 
-import {
-    loadAnimeRateByStatusFailureAction,
-    loadAnimeRateByStatusSuccessAction,
-} from '@app/home/store/anime-rates/actions/load-anime-rate.action';
-import {
-    getRateLoadedKey,
-    getRatePageKey,
-    getRateStoreKey
-} from '@app/home/store/anime-rates/helpers/anime-rates-store-key.helpers';
 import AnimeRatesStoreInterface from '@app/home/store/anime-rates/types/anime-rates-store.interface';
 import {
     allPagesLoadedForStatusAction,
-    incrementPageForStatusAction
+    incrementPageForStatusAction,
 } from '@app/home/store/anime-rates/actions/anime-rate-paging.actions';
+import {
+    getRateLoadedKey,
+    getRatePageKey,
+    getRateStoreKey,
+} from '@app/home/store/anime-rates/helpers/anime-rates-store-key.helpers';
+import { loadAnimeRateByStatusSuccessAction } from '@app/home/store/anime-rates/actions/load-anime-rate.action';
 
 const initialState: AnimeRatesStoreInterface = {
     planned: [],

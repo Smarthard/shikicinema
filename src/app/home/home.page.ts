@@ -1,22 +1,22 @@
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Component, OnInit } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { filter, map, skipWhile, take, tap, withLatestFrom } from 'rxjs/operators';
-import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
-import { ResourceIdType } from '@app/shared/types/resource-id.type';
-import { UserBriefInfoInterface } from '@app/shared/types/shikimori/user-brief-info.interface';
-import { UserAnimeRate } from '@app/shared/types/shikimori/user-anime-rate';
-import { UserRateStatusType } from '@app/shared/types/shikimori/user-rate-status.type';
 import { AnimeGridInterface } from '@app/home/types/anime-grid.interface';
+import { ResourceIdType } from '@app/shared/types/resource-id.type';
+import { UserAnimeRate } from '@app/shared/types/shikimori/user-anime-rate';
+import { UserBriefInfoInterface } from '@app/shared/types/shikimori/user-brief-info.interface';
+import { UserRateStatusType } from '@app/shared/types/shikimori/user-rate-status.type';
 import { VisibilityChangeInterface } from '@app/home/types/visibility-change.interface';
 import { loadAnimeRateByStatusAction } from '@app/home/store/anime-rates/actions/load-anime-rate.action';
-import { selectShikimoriCurrentUser } from '@app/store/shikimori/selectors/shikimori.selectors';
 import {
     selectIsRatesLoadedByStatus,
     selectRatesByStatus,
 } from '@app/home/store/anime-rates/selectors/anime-rates.selectors';
+import { selectShikimoriCurrentUser } from '@app/store/shikimori/selectors/shikimori.selectors';
 
 @UntilDestroy()
 @Component({
@@ -25,7 +25,6 @@ import {
     styleUrls: ['home.page.scss'],
 })
 export class HomePage implements OnInit {
-
     currentUser$: Observable<UserBriefInfoInterface>;
 
     planned$: Observable<UserAnimeRate[]>;
@@ -77,7 +76,7 @@ export class HomePage implements OnInit {
                 filter(({ isVisible }) => isVisible),
                 filter(({ section }) => section !== 'planned'),
                 withLatestFrom(this.currentUser$),
-                tap(([ event, currentUser ]) => {
+                tap(([event, currentUser]) => {
                     if (currentUser?.id) {
                         this.getUserAnimeRatesByStatus(currentUser.id, event.section);
                     }
@@ -95,9 +94,9 @@ export class HomePage implements OnInit {
             .pipe(
                 untilDestroyed(this),
                 map(({ breakpoints }) => Object.entries(breakpoints)
-                    .filter(([_, matched]) => matched)
-                    .map(([breakpoint, _]) => breakpoint)
-                    ?.[0]
+                    .filter(([, matched]) => matched)
+                    .map(([breakpoint]) => breakpoint)
+                    ?.[0],
                 ),
                 tap((breakpoint) => {
                     const baseHeight = 20;
@@ -125,7 +124,7 @@ export class HomePage implements OnInit {
 
                     this.cardHeight = `${baseHeight * multiplier}rem`;
                     this.cardWidth = `${baseWidth * multiplier}rem`;
-                })
+                }),
             )
             .subscribe();
     }

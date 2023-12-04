@@ -1,9 +1,5 @@
+import { AnimeNameSortingConfig, sortByAnimeUserRating } from '@app/shared/utils/rx-anime-rates-functions';
 import { UserAnimeRate } from '@app/shared/types/shikimori/user-anime-rate';
-import {
-    AnimeNameSortingConfig,
-    sortByAnimeName,
-    sortByAnimeUserRating
-} from '@app/shared/utils/rx-anime-rates-functions';
 import { UserRateStatusType } from '@app/shared/types/shikimori/user-rate-status.type';
 
 export function isDuplicateArrayFilter(item: UserAnimeRate, pos: number, array: UserAnimeRate[]) {

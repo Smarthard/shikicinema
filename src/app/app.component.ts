@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { getBrowserLang } from '@ngneat/transloco';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { tap } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { getBrowserLang } from '@ngneat/transloco';
+import { tap } from 'rxjs/operators';
 
-import { updateSettingsAction } from '@app/store/settings/actions/settings.actions';
-import { selectLanguage } from '@app/store/settings/selectors/settings.selectors';
 import { getCurrentUserAction } from '@app/store/shikimori/actions/get-current-user.action';
+import { selectLanguage } from '@app/store/settings/selectors/settings.selectors';
+import { updateSettingsAction } from '@app/store/settings/actions/settings.actions';
 
 @UntilDestroy()
 @Component({
@@ -15,7 +15,6 @@ import { getCurrentUserAction } from '@app/store/shikimori/actions/get-current-u
     styleUrls: ['app.component.scss'],
 })
 export class AppComponent implements OnInit {
-
     constructor(
         private store: Store,
     ) {}
@@ -33,7 +32,7 @@ export class AppComponent implements OnInit {
                 const language = storedLanguage || browserLang || 'en';
 
                 this.store.dispatch(updateSettingsAction({ config: { language } }));
-            })
+            }),
         ).subscribe();
     }
 
