@@ -27,6 +27,7 @@
         "esrun": "esrun",
         "npx": "npx",
         "ionic": "ionic",
+        "webpack-bundle-analyzer": "webpack-bundle-analyzer",
         "start": "ionic serve",
         "start:native": "npm-run-all -s 'ionic cap sync' 'npx cap sync @capacitor-community/electron' 'npx cap open @capacitor-community/electron'",
         "build": "ionic build",
@@ -36,7 +37,7 @@
         "e2e": "ng e2e",
         "set-env": "esrun setup-env.ts",
         "watch": "ionic build --watch --configuration development",
-        "analyze-bundle": "ionic build -- --stats-json && webpack-bundle-analyzer dist/stats.json"
+        "analyze-bundle": "npm-run-all -s 'ionic build -b -- --stats-json' 'webpack-bundle-analyzer dist/stats.json'"
     },
     "workspaces": [
         "electron"
@@ -122,6 +123,7 @@
         "terser-webpack-plugin": "^5.3.9",
         "ts-node": "^10.9.1",
         "typescript": "^5.1.6",
-        "webpack": "^5.89.0"
+        "webpack": "^5.89.0",
+        "webpack-bundle-analyzer": "^4.10.1"
     }
 }
