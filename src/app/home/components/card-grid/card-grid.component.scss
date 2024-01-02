@@ -3,7 +3,7 @@
 .anime-grid {
     display: grid;
     grid-template-columns: repeat(2, auto);
-    grid-row-gap: 1rem;
+    gap: .5rem;
     justify-content: space-evenly;
 
     @include media-breakpoint-up('sm') {
@@ -33,10 +33,10 @@
     &__item {
         margin: 0;
     }
-}
 
-.skeleton-item {
-    &__text {
-        margin-top: 5px;
+    .skeleton-item {
+        &__text {
+            margin-top: 5px;
+        }
     }
 }

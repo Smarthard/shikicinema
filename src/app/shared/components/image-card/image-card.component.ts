@@ -1,14 +1,18 @@
 import {
+    ChangeDetectionStrategy,
     Component,
     EventEmitter,
     Input,
     Output,
+    ViewEncapsulation,
 } from '@angular/core';
 
 @Component({
     selector: 'app-image-card',
     templateUrl: './image-card.component.html',
     styleUrls: ['./image-card.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
 })
 export class ImageCardComponent {
     @Input()

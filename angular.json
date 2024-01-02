@@ -36,7 +36,7 @@
                             "src/global.scss"
                         ],
                         "scripts": [],
-                        "aot": false,
+                        "aot": true,
                         "vendorChunk": true,
                         "extractLicenses": false,
                         "buildOptimizer": false,
@@ -165,6 +165,13 @@
         },
         "@ionic/angular-toolkit:page": {
             "styleext": "scss"
+        },
+        "@schematics/angular": {
+            "component": {
+                "skipTests": true,
+                "changeDetection": "OnPush",
+                "viewEncapsulation": "None"
+            }
         }
     }
 }

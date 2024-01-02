@@ -1,5 +1,11 @@
 import { ActivatedRoute, Router } from '@angular/router';
-import { Component, Inject, OnInit } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    Inject,
+    OnInit,
+    ViewEncapsulation,
+} from '@angular/core';
 import { EMPTY, Observable } from 'rxjs';
 import {
     catchError,
@@ -18,6 +24,8 @@ import { fromBase64 } from '@app/shared/utils/base64-utils';
     selector: 'app-go-external',
     templateUrl: './go-external.page.html',
     styleUrls: ['./go-external.page.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
 })
 export class GoExternalPage implements OnInit {
     exLink$: Observable<string>;

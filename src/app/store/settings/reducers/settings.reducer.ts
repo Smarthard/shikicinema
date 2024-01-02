@@ -1,7 +1,7 @@
 import { createReducer, on } from '@ngrx/store';
 
 import { SettingsStoreInterface } from '@app/store/settings/types/settings-store.interface';
-import { defaultAvailableLangs } from '@app/transloco-root.module';
+import { defaultAvailableLangs } from '@app-root/app/core/transloco-root.module';
 import {
     resetSettingsAction,
     updateSettingsAction,

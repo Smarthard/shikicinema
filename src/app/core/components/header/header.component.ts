@@ -5,7 +5,12 @@ import {
     combineLatest,
 } from 'rxjs';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { Component, OnInit } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    OnInit,
+    ViewEncapsulation,
+} from '@angular/core';
 import { Store } from '@ngrx/store';
 import {
     distinctUntilChanged,
@@ -36,6 +41,8 @@ import { toBase64 } from '@app/shared/utils/base64-utils';
     selector: 'app-header',
     templateUrl: './header.component.html',
     styleUrls: ['./header.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
 })
 export class HeaderComponent implements OnInit {
     currentUser$: Observable<UserBriefInfoInterface>;

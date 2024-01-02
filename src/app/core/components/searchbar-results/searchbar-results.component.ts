@@ -1,8 +1,10 @@
 import {
+    ChangeDetectionStrategy,
     Component,
     EventEmitter,
     Input,
     Output,
+    ViewEncapsulation,
 } from '@angular/core';
 
 import { ResultOpenTarget, SearchbarResult } from '@app/shared/types/searchbar.types';
@@ -13,6 +15,8 @@ import { trackById } from '@app-root/app/shared/utils/common-ngfor-tracking';
     selector: 'app-searchbar-results',
     templateUrl: './searchbar-results.component.html',
     styleUrls: ['./searchbar-results.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
 })
 export class SearchbarResultsComponent {
     @Input()

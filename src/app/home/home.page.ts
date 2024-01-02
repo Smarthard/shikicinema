@@ -1,5 +1,5 @@
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -21,6 +21,8 @@ import { selectShikimoriCurrentUser } from '@app/store/shikimori/selectors/shiki
 @UntilDestroy()
 @Component({
     selector: 'app-home',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     templateUrl: 'home.page.html',
     styleUrls: ['home.page.scss'],
 })
