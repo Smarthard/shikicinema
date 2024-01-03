@@ -1,12 +1,13 @@
 import {
     ChangeDetectionStrategy,
     Component,
+    HostBinding,
     Input,
     ViewEncapsulation,
 } from '@angular/core';
 
+import { AbstractImageCardComponent } from '@app/shared/components/abstract-image-card/abstract-image-card.component';
 import { AnimeKindType } from '@app/shared/types/shikimori/anime-kind.type';
-import { ImageCardComponent } from '@app/shared/components/image-card/image-card.component';
 
 @Component({
     selector: 'app-card-grid-item',
@@ -15,7 +16,10 @@ import { ImageCardComponent } from '@app/shared/components/image-card/image-card
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
 })
-export class CardGridItemComponent extends ImageCardComponent {
+export class CardGridItemComponent extends AbstractImageCardComponent {
+    @HostBinding('class.card-grid-item')
+    cardGridItemClass = true;
+
     @Input()
     kind: AnimeKindType;
 

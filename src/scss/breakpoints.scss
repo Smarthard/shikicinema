@@ -1,7 +1,10 @@
 $grid-breakpoints: (
     xs: 0,
-    sm: 576px,
-    md: 768px,
-    lg: 992px,
-    xl: 1200px,
+    sm: 576px,      // smartphones
+    md: 768px,      // smartphones in landscape mode
+    lg: 992px,      // tablets
+    xl: 1200px,     // old HD or other
+    xxl: 1400px,    // pretty much any FHD
+    xxxl: 2560px,   // 2K
+    x4k: 3840px,    // 4K
 );

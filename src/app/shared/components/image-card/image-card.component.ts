@@ -1,11 +1,12 @@
 import {
     ChangeDetectionStrategy,
     Component,
-    EventEmitter,
+    HostBinding,
     Input,
-    Output,
     ViewEncapsulation,
 } from '@angular/core';
+
+import { AbstractImageCardComponent } from '@app/shared/components/abstract-image-card/abstract-image-card.component';
 
 @Component({
     selector: 'app-image-card',
@@ -14,12 +15,9 @@ import {
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
 })
-export class ImageCardComponent {
-    @Input()
-    imageUrl: string;
-
-    @Input()
-    name: string;
+export class ImageCardComponent extends AbstractImageCardComponent {
+    @HostBinding('class.image-card')
+    imageCardClass = true;
 
     @Input()
     height = '10rem';
@@ -28,15 +26,7 @@ export class ImageCardComponent {
     width = '7rem';
 
     @Input()
-    backgroundSize = 'auto';
-
-    @Output()
-    imageLoad = new EventEmitter<void>();
+    backgroundSize = 'cover';
 
     isLoading = true;
-
-    onImageLoad(): void {
-        this.isLoading = false;
-        this.imageLoad.emit();
-    }
 }
