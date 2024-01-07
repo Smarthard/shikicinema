@@ -8,7 +8,8 @@
                 "ONA" : "ONA",
                 "MOVIE" : "Movie",
                 "SPECIAL" : "Special",
-                "MUSIC": "Music"
+                "MUSIC": "Music",
+                "TV_SPECIAL": "TV Special"
             },
             "ANIME_STATUSES": {
                 "ANONS": "planned",
