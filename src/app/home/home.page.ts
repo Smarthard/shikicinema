@@ -47,9 +47,6 @@ export class HomePage implements OnInit {
 
     hiddenGridMap: Map<UserRateStatusType, boolean>;
 
-    cardHeight: string;
-    cardWidth: string;
-
     sectionVisibilitySubject$: Subject<VisibilityChangeInterface>;
 
     constructor(
@@ -81,50 +78,6 @@ export class HomePage implements OnInit {
                     if (currentUser?.id) {
                         this.getUserAnimeRatesByStatus(currentUser.id, event.section);
                     }
-                }),
-            )
-            .subscribe();
-
-        this.breakpointObserver.observe([
-            Breakpoints.XSmall,
-            Breakpoints.Small,
-            Breakpoints.Medium,
-            Breakpoints.Large,
-            Breakpoints.XLarge,
-        ])
-            .pipe(
-                untilDestroyed(this),
-                map(({ breakpoints }) => Object.entries(breakpoints)
-                    .filter(([, matched]) => matched)
-                    .map(([breakpoint]) => breakpoint)
-                    ?.[0],
-                ),
-                tap((breakpoint) => {
-                    const baseHeight = 20;
-                    const baseWidth = 14;
-                    let multiplier: number;
-
-                    switch (breakpoint) {
-                        case Breakpoints.XSmall:
-                            multiplier = .75;
-                            break;
-                        case Breakpoints.Small:
-                            multiplier = .8;
-                            break;
-                        case Breakpoints.Medium:
-                            multiplier = .65;
-                            break;
-                        case Breakpoints.Large:
-                            multiplier = .7;
-                            break;
-                        case Breakpoints.XLarge:
-                        default:
-                            multiplier = .9;
-                            break;
-                    }
-
-                    this.cardHeight = `${baseHeight * multiplier}rem`;
-                    this.cardWidth = `${baseWidth * multiplier}rem`;
                 }),
             )
             .subscribe();

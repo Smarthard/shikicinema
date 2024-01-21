@@ -30,12 +30,12 @@ export class AbstractImageCardComponent {
     backgroundSize: string;
 
     @Output()
-    imageLoad = new EventEmitter<void>();
+    imageLoad = new EventEmitter<HTMLImageElement>();
 
     isLoading: boolean;
 
-    protected onImageLoad(): void {
+    protected onImageLoad(image: EventTarget): void {
         this.isLoading = false;
-        this.imageLoad.emit();
+        this.imageLoad.emit(image as HTMLImageElement);
     }
 }

@@ -6,7 +6,6 @@ import {
     ViewEncapsulation,
 } from '@angular/core';
 
-import { AbstractImageCardComponent } from '@app/shared/components/abstract-image-card/abstract-image-card.component';
 import { UserAnimeRate } from '@app/shared/types/shikimori/user-anime-rate';
 import { trackById } from '@app/shared/utils/common-ngfor-tracking';
 
@@ -17,7 +16,9 @@ import { trackById } from '@app/shared/utils/common-ngfor-tracking';
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
 })
-export class CardGridComponent extends AbstractImageCardComponent {
+export class CardGridComponent {
+    readonly trackById = trackById;
+
     @HostBinding('class.anime-grid')
     animeGridClass = true;
 
@@ -25,15 +26,7 @@ export class CardGridComponent extends AbstractImageCardComponent {
     userAnimeRates: UserAnimeRate[];
 
     @Input()
-    height: string;
-
-    @Input()
-    width: string;
-
-    @Input()
     isLoading: boolean;
 
     userAnimeRatesFake = new Array<number>(30).fill(0);
-
-    trackById = trackById;
 }

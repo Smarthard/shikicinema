@@ -1,10 +1,10 @@
 <app-image-card
-    class="card-grid-item__image"
+    class="card-grid-item__image responsive-9by13"
     [height]="height"
     [width]="width"
     [name]="name"
     [imageUrl]="imageUrl"
-    (imageLoad)="onImageLoad()"
+    (imageLoad)="onImageLoad($event)"
 ></app-image-card>
 
 <app-skeleton-block

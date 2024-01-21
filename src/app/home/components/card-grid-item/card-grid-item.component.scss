@@ -1,44 +1,8 @@
 @import 'src/scss/mixins';
 
 .card-grid-item {
-    display: grid;
-    // 2 cards
-    grid-template-rows: 13fr 1fr 1fr;
-
-    @include media-breakpoint-up('sm') {
-        // 3 cards
-        grid-template-rows: 14fr 1fr 1fr;
-    }
-
-    @include media-breakpoint-up('md') {
-        // 4 cards
-        grid-template-rows: 13fr 1fr 1fr;
-    }
-
-    @include media-breakpoint-up('lg') {
-        // 5 cards
-        grid-template-rows: 12fr 1fr 1fr;
-    }
-
-    @include media-breakpoint-up('xl') {
-        // 6 cards
-        grid-template-rows: 10fr 1fr 1fr;
-    }
-
-    @include media-breakpoint-up('xxl') {
-        // 6 cards
-        grid-template-rows: 12fr 1fr 1fr;
-    }
-
-    @include media-breakpoint-up('xxxl') {
-        // 6 cards
-        grid-template-rows: 25fr 1fr 1fr;
-    }
-
-    @include media-breakpoint-up('x4k') {
-        // 6 cards
-        grid-template-rows: 40fr 1fr 1fr;
-    }
+    display: flex;
+    flex-direction: column;
 
     &__name {
         margin: 5px 0 0;
@@ -46,10 +10,6 @@
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-    }
-
-    &__image {
-        display: contents;
     }
 
     &__other-info {

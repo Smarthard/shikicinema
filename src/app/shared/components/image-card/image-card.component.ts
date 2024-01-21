@@ -20,13 +20,19 @@ export class ImageCardComponent extends AbstractImageCardComponent {
     imageCardClass = true;
 
     @Input()
-    height = '10rem';
+    height = '100%';
 
     @Input()
-    width = '7rem';
+    width = 'auto';
 
     @Input()
     backgroundSize = 'cover';
 
     isLoading = true;
+
+    readonly loadedImg$ = this.imageLoad.asObservable();
+
+    protected getBgSize(isWidthLarger: boolean): 'cover' | 'contain' {
+        return isWidthLarger ? 'contain' : 'cover';
+    }
 }

@@ -3,7 +3,7 @@
     [class.ion-hide]="isLoading"
     [ngStyle]="{
         'background-image': 'url(' + imageUrl + ')',
-        'background-size': backgroundSize,
+        'background-size': getBgSize(loadedImg$ | async | isImageWidthLarger),
         height: height,
         width: width
     }"
@@ -20,5 +20,5 @@
     class="ion-hide"
     [src]="imageUrl"
     [alt]="name"
-    (load)="onImageLoad()"
+    (load)="onImageLoad($event?.target)"
 />

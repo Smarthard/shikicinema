@@ -52,8 +52,6 @@
         <app-card-grid
             class="anime-rates__grid"
             [class.ion-hide]="getHiddenGridStatus(status)"
-            [height]="cardHeight"
-            [width]="cardWidth"
             [userAnimeRates]="rates$ | async"
             [isLoading]="(isLoaded$ | async) === false"
         ></app-card-grid>
