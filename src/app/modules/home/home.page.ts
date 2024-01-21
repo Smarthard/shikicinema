@@ -1,21 +1,32 @@
-import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { BreakpointObserver } from '@angular/cdk/layout';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    OnInit,
+    ViewEncapsulation,
+} from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { filter, map, skipWhile, take, tap, withLatestFrom } from 'rxjs/operators';
+import {
+    filter,
+    skipWhile,
+    take,
+    tap,
+    withLatestFrom,
+} from 'rxjs/operators';
 
-import { AnimeGridInterface } from '@app/home/types/anime-grid.interface';
+import { AnimeGridInterface } from '@app/modules/home/types/anime-grid.interface';
 import { ResourceIdType } from '@app/shared/types/resource-id.type';
 import { UserAnimeRate } from '@app/shared/types/shikimori/user-anime-rate';
 import { UserBriefInfoInterface } from '@app/shared/types/shikimori/user-brief-info.interface';
 import { UserRateStatusType } from '@app/shared/types/shikimori/user-rate-status.type';
-import { VisibilityChangeInterface } from '@app/home/types/visibility-change.interface';
-import { loadAnimeRateByStatusAction } from '@app/home/store/anime-rates/actions/load-anime-rate.action';
+import { VisibilityChangeInterface } from '@app/modules/home/types/visibility-change.interface';
+import { loadAnimeRateByStatusAction } from '@app/modules/home/store/anime-rates/actions/load-anime-rate.action';
 import {
     selectIsRatesLoadedByStatus,
     selectRatesByStatus,
-} from '@app/home/store/anime-rates/selectors/anime-rates.selectors';
+} from '@app/modules/home/store/anime-rates/selectors/anime-rates.selectors';
 import { selectShikimoriCurrentUser } from '@app/store/shikimori/selectors/shikimori.selectors';
 
 @UntilDestroy()
