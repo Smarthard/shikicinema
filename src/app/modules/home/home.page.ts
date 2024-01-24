@@ -165,4 +165,8 @@ export class HomePage implements OnInit {
     getUserAnimeRatesByStatus(userId: ResourceIdType, status: UserRateStatusType) {
         this.store.dispatch(loadAnimeRateByStatusAction({ userId, status }));
     }
+
+    isSectionHidden(isLoaded: boolean, rates: UserAnimeRate[]): boolean {
+        return isLoaded && !rates?.length;
+    }
 }

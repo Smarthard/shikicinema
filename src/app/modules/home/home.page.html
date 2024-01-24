@@ -21,6 +21,7 @@
 >
     <section
         [id]="status"
+        [class.ion-hide]="isSectionHidden(isLoaded$ | async, rates$ | async)"
         (ngxVisibility)="onSectionVisibilityChange(status, $event)"
         class="anime-rates"
     >
