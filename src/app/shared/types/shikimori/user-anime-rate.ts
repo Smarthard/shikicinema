@@ -3,10 +3,10 @@ import { MangaKindType } from '@app/shared/types/shikimori/manga-kind.type';
 import { UserImagesInterface } from '@app/shared/types/shikimori/user-images.interface';
 import { UserRateStatusType } from '@app/shared/types/shikimori/user-rate-status.type';
 
-type AnimeReleaseStatus = 'anons' | 'ongoing' | 'released';
-type MangaReleaseStatus = 'anons' | 'ongoing' | 'released' | 'paused' | 'discontinued';
+export type AnimeReleaseStatus = 'anons' | 'ongoing' | 'released';
+export type MangaReleaseStatus = 'anons' | 'ongoing' | 'released' | 'paused' | 'discontinued';
 
-interface RateUserInfo {
+export interface RateUserInfo {
     id: number;
     nickname: string;
     avatar: string;
@@ -14,14 +14,14 @@ interface RateUserInfo {
     last_online_at: string;
 }
 
-interface RateImage {
+export interface RateImage {
     original: string;
     preview: string;
     x96: string;
     x48: string;
 }
 
-interface Rate<K = string, S = string> {
+export interface Rate<K = string, S = string> {
     id: number;
     name: string;
     russian: string;
@@ -35,12 +35,12 @@ interface Rate<K = string, S = string> {
     status: S;
 }
 
-interface AnimeRate extends Rate<AnimeKindType, AnimeReleaseStatus> {
+export interface AnimeRate extends Rate<AnimeKindType, AnimeReleaseStatus> {
     episodes: number;
     episodes_aired: number;
 }
 
-interface MangaRate extends Rate<MangaKindType, MangaReleaseStatus> {
+export interface MangaRate extends Rate<MangaKindType, MangaReleaseStatus> {
     volumes: number;
     chapters: number;
 }

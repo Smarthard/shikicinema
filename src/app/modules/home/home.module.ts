@@ -3,12 +3,11 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { LayoutModule } from '@angular/cdk/layout';
 import { NgModule } from '@angular/core';
-import { NgxTippyModule } from 'ngx-tippy-wrapper';
 import { NgxVisibilityModule } from 'ngx-visibility';
+import { RouterModule } from '@angular/router';
 import { TranslocoModule } from '@ngneat/transloco';
 
-import { CardGridComponent } from '@app/modules/home/components/card-grid/card-grid.component';
-import { CardGridItemComponent } from '@app/modules/home/components/card-grid-item/card-grid-item.component';
+import { CardGridModule } from '@app/modules/home/components/card-grid/card-grid.module';
 import { HomePage } from '@app/modules/home/home.page';
 import { HomePageRoutingModule } from '@app/modules/home/home-routing.module';
 import { HomeStateModule } from '@app/modules/home/store/home-state.module';
@@ -26,16 +25,15 @@ import { TypedTemplateDirective } from '@app/shared/directives/typed-template.di
         TranslocoModule,
         LayoutModule,
         NgxVisibilityModule,
-        NgxTippyModule,
         HomeStateModule,
         SkeletonBlockModule,
         ImageCardModule,
+        RouterModule,
+        CardGridModule,
+        TypedTemplateDirective,
     ],
     declarations: [
         HomePage,
-        CardGridComponent,
-        CardGridItemComponent,
-        TypedTemplateDirective,
     ],
 })
 export class HomePageModule {}

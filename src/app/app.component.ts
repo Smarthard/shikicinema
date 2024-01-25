@@ -1,4 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    OnInit,
+    ViewEncapsulation,
+} from '@angular/core';
 import { Store } from '@ngrx/store';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { getBrowserLang } from '@ngneat/transloco';
@@ -13,6 +18,8 @@ import { updateSettingsAction } from '@app/store/settings/actions/settings.actio
     selector: 'app-root',
     templateUrl: 'app.component.html',
     styleUrls: ['app.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
 })
 export class AppComponent implements OnInit {
     constructor(
