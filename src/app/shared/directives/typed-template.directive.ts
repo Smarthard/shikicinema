@@ -4,7 +4,10 @@ import { Directive, Input, TemplateRef } from '@angular/core';
 /**
  * @see: https://stackoverflow.com/a/68318283
  */
-@Directive({ selector: 'ng-template[templateType]' })
+@Directive({
+    selector: 'ng-template[templateType]',
+    standalone: true,
+})
 export class TypedTemplateDirective<T> {
     @Input()
     templateType: T;

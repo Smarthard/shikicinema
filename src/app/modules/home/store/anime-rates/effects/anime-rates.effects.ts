@@ -23,22 +23,22 @@ import { ShikimoriClient } from '@app/shared/services/shikimori-client.service';
 import {
     allPagesLoadedForStatusAction,
     incrementPageForStatusAction,
-} from '@app/home/store/anime-rates/actions/anime-rate-paging.actions';
+} from '@app/modules/home/store/anime-rates/actions/anime-rate-paging.actions';
 import {
     isDuplicateArrayFilter,
     sortAnimeRatesByUserRating,
-} from '@app/home/store/anime-rates/helpers/anime-rates.helpers';
+} from '@app/modules/home/store/anime-rates/helpers/anime-rates.helpers';
 import {
     loadAnimeRateByStatusAction,
     loadAnimeRateByStatusFailureAction,
     loadAnimeRateByStatusSuccessAction,
-} from '@app/home/store/anime-rates/actions/load-anime-rate.action';
+} from '@app/modules/home/store/anime-rates/actions/load-anime-rate.action';
 import { selectAnimePaginationSize } from '@app/store/settings/selectors/settings.selectors';
 import {
     selectIsRatesLoadedByStatus,
     selectRatesByStatus,
     selectRatesPageByStatus,
-} from '@app/home/store/anime-rates/selectors/anime-rates.selectors';
+} from '@app/modules/home/store/anime-rates/selectors/anime-rates.selectors';
 import { updateSettingsAction } from '@app/store/settings/actions/settings.actions';
 
 @Injectable()
@@ -62,7 +62,7 @@ export class AnimeRatesEffects {
                         const isAllRatesLoaded = newRates?.length < limit;
                         const maxItemsLoaded = page * limit;
                         const rates = [...oldRates, ...newRates]
-                            .sort(sortAnimeRatesByUserRating(status, animeNameSortCfg))
+                            .sort(sortAnimeRatesByUserRating(animeNameSortCfg))
                             .filter(isDuplicateArrayFilter);
                         const actions: Action[] = [
                             loadAnimeRateByStatusSuccessAction({ status, rates, userId, newRates }),

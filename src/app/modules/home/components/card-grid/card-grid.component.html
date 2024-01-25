@@ -4,7 +4,7 @@
         class="anime-grid__item"
         height="100%"
         width="auto"
-        [link]="'https://shikimori.one' + rate.anime.url"
+        [link]="rate.anime | getPlayerLink"
         [imageUrl]="'https://nyaa.shikimori.one' + rate.anime.image.original"
         [name]="rate.anime.russian"
         [kind]="rate.anime.kind"

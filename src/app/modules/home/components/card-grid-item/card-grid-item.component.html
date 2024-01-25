@@ -1,11 +1,19 @@
-<app-image-card
-    class="card-grid-item__image responsive-9by13"
-    [height]="height"
-    [width]="width"
-    [name]="name"
-    [imageUrl]="imageUrl"
-    (imageLoad)="onImageLoad($event)"
-></app-image-card>
+<a class="wrapper" [routerLink]="[link]">
+    <app-image-card
+        class="card-grid-item__image responsive-9by13"
+        tabindex="0"
+        [@scale]="mouseOver"
+        [height]="height"
+        [width]="width"
+        [name]="name"
+        [imageUrl]="imageUrl"
+        (imageLoad)="onImageLoad($event)"
+        (mouseover)="mouseOver = true"
+        (mouseleave)="mouseOver = false"
+        (focus)="mouseOver = true"
+        (focusout)="mouseOver = false"
+    ></app-image-card>
+</a>
 
 <app-skeleton-block
     *ngIf="isLoading"

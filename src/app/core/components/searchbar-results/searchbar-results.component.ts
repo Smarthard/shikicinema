@@ -9,7 +9,7 @@ import {
 
 import { ResultOpenTarget, SearchbarResult } from '@app/shared/types/searchbar.types';
 import { ShikimoriMediaNameType } from '@app/shared/types/shikimori/shikimori-media-name.type';
-import { trackById } from '@app-root/app/shared/utils/common-ngfor-tracking';
+import { trackById } from '@app/shared/utils/common-ngfor-tracking';
 
 @Component({
     selector: 'app-searchbar-results',
@@ -26,7 +26,7 @@ export class SearchbarResultsComponent {
     isLoading: boolean;
 
     @Output()
-    openResult = new EventEmitter<[ SearchbarResult, ResultOpenTarget ]>();
+    openResult = new EventEmitter<[SearchbarResult, ResultOpenTarget]>();
 
     firstMediaName: ShikimoriMediaNameType;
     secondMediaName: ShikimoriMediaNameType;

@@ -18,7 +18,7 @@ import { SearchbarResultsComponent } from '@app/core/components/searchbar-result
 import { ShikimoriClient } from '@app/shared/services/shikimori-client.service';
 import { ShikimoriMediaNameModule } from '@app/shared/pipes/shikimori-media-name/shikimori-media-name.module';
 import { SkeletonBlockModule } from '@app/shared/components/skeleton-block/skeleton-block.module';
-import { TranslocoRootModule } from '@app-root/app/core/transloco-root.module';
+import { TranslocoRootModule } from '@app/core/transloco-root.module';
 
 const components = [
     HeaderComponent,
