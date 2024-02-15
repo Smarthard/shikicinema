@@ -1,3 +1,8 @@
-<ion-content [fullscreen]="true" class="page-content">
-    <!-- TODO: player  -->
+<ion-content [fullscreen]="true" class="page-content ion-padding">
+    <div class="player-page__wrapper">
+        <app-player
+            [loading]="isVideosLoading$ | async"
+            [source]="(currentVideo$ | async)?.url"
+        ></app-player>
+    </div>
 </ion-content>

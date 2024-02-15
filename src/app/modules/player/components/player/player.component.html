@@ -1,0 +1,9 @@
+@if (source) {
+    <iframe
+        class="responsive-16by9 player__video"
+        [src]="source | urlSanitizer"
+        allowfullscreen=""
+    ></iframe>
+} @else {
+    <app-skeleton-block class="responsive-16by9 player__video"></app-skeleton-block>
+}

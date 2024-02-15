@@ -8,3 +8,8 @@ export const selectPlayerVideos = (animeId: string) => createSelector(
     selectPlayer,
     ({ videos }) => videos[animeId] || [],
 );
+
+export const selectPlayerVideosLoading = (animeId: string) => createSelector(
+    selectPlayer,
+    ({ videos }) => !videos[animeId],
+);
