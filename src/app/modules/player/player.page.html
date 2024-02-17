@@ -1,8 +1,13 @@
 <ion-content [fullscreen]="true" class="page-content ion-padding">
     <div class="player-page__wrapper">
-        <app-player
+        <app-player class="responsive-16by9"
             [loading]="isVideosLoading$ | async"
-            [source]="(currentVideo$ | async)?.url"
-        ></app-player>
+            [source]="currentVideo?.url"
+        />
+
+        <app-video-selector
+            [videos]="videos$ | async | filterByEpisode: 1"
+            (selection)="onSelectionChange($event)"
+        />
     </div>
 </ion-content>

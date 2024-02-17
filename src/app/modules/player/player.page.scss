@@ -1,3 +1,21 @@
+@import 'src/scss/mixins';
+
 .player-page {
     display: flex;
+
+    &__wrapper {
+        display: grid;
+        grid-template-columns: 16fr 1fr;
+        grid-template-rows: 9fr;
+        column-gap: 2.75rem;
+        margin: 0 6.75rem;
+
+        @include media-breakpoint-down('xl') {
+            max-height: 28.25rem;
+        }
+
+        @include media-breakpoint-up('xl') {
+            max-height: 28.25rem;
+        }
+    }
 }
