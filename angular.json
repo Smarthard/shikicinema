@@ -170,6 +170,7 @@
         "@schematics/angular": {
             "component": {
                 "skipTests": true,
+                "style": "scss",
                 "changeDetection": "OnPush",
                 "viewEncapsulation": "None"
             }
