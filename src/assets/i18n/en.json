@@ -17,6 +17,13 @@
                 "RELEASED": "released"
             }
         },
+        "VIDEO": {
+            "KINDS": {
+                "DUBBING": "Dubbing",
+                "SUBTITLES": "Subtitles",
+                "ORIGINAL": "Original"
+            }
+        },
         "HEADER": {
             "SEARCHBAR": {
                 "NOTHING_FOUND": "Nothing found",

@@ -1,11 +1,11 @@
-import { AnimeKindType } from '@app/shared/types/shikimori/anime-kind.type';
+import { ShikivideosKindType } from '@app/shared/types/shikicinema/v1/shikivideos-kind.type';
 
 export interface ShikivideosInterface {
     id: number;
     url: string;
     anime_id: number;
     episode: number;
-    kind: AnimeKindType;
+    kind: ShikivideosKindType;
     language: string;
     quality: string;
     author: string;

@@ -1,0 +1,12 @@
+<ion-segment color="dark"
+             [value]="selected">
+    @for (kind of ALL_KINDS; track kind) {
+        <ion-segment-button
+                class="kind-selector__item"
+                [value]="kind"
+                [disabled]="!kinds?.includes(kind)"
+                (click)="selection.emit(kind)">
+            <ion-label>{{ ('GLOBAL.VIDEO.KINDS.' + kind) | transloco }}</ion-label>
+        </ion-segment-button>
+    }
+</ion-segment>

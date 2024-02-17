@@ -5,10 +5,11 @@ import {
 } from '@ngrx/store';
 
 import { PlayerStoreInterface } from '@app/modules/player/store/types';
-import { addVideosAction } from '@app/modules/player/store/actions';
+import { addVideosAction, getAnimeInfoSuccessAction } from '@app/modules/player/store/actions';
 
 const initialState: PlayerStoreInterface = {
     videos: {},
+    animeInfo: {},
 };
 
 export const reducers = createReducer(initialState,
@@ -18,6 +19,15 @@ export const reducers = createReducer(initialState,
             ...state,
             videos: {
                 [animeId]: [...state.videos[animeId] || [], ...videos],
+            },
+        }),
+    ),
+    on(
+        getAnimeInfoSuccessAction,
+        (state, { anime }) => ({
+            ...state,
+            animeInfo: {
+                [anime.id]: anime,
             },
         }),
     ),

@@ -1,3 +1,5 @@
+import { VideoKindEnum } from '@app/modules/player/types/video-kind.enum';
+
 export interface VideoInfoInterface {
     /* id of the video uploaded to shikicinema
         completely optional for other video sources
@@ -7,7 +9,7 @@ export interface VideoInfoInterface {
     url: string;
     urlType: 'iframe' | 'video';
     uploader?: string;
-    kind: string;
+    kind: VideoKindEnum;
     author?: string;
     quality: string;
     language: string;

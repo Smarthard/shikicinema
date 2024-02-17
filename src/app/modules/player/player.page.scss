@@ -3,11 +3,17 @@
 .player-page {
     display: flex;
 
+    .common-info {
+        display: flex;
+        align-items: center;
+    }
+
     &__wrapper {
         display: grid;
         grid-template-columns: 16fr 1fr;
         grid-template-rows: 9fr;
         column-gap: 2.75rem;
+        row-gap: 1rem;
         margin: 0 6.75rem;
 
         @include media-breakpoint-down('xl') {
@@ -17,5 +23,9 @@
         @include media-breakpoint-up('xl') {
             max-height: 28.25rem;
         }
+    }
+
+    &__video-selector {
+        max-height: 28.25rem;
     }
 }

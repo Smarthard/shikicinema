@@ -17,6 +17,13 @@
                 "RELEASED": "вышло"
             }
         },
+        "VIDEO": {
+            "KINDS": {
+                "DUBBING": "Озвучка",
+                "SUBTITLES": "Субтитры",
+                "ORIGINAL": "Оригинал"
+            }
+        },
         "HEADER": {
             "SEARCHBAR": {
                 "NOTHING_FOUND": "Ничего не найдено",

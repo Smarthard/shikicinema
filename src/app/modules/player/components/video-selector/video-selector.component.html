@@ -1,23 +1,27 @@
 <ion-accordion-group class="w-100" multiple>
-    <ng-container *ngFor="let author of authors$ | async">
-        <ion-accordion *ngFor="let video of videos | filterByAuthor: author; let first = first"
-                       class="author-accordion w-100"
+    @for (author of authors$ | async; track author) {
+        <ion-accordion class="author-accordion w-100"
                        [value]="author">
-            <ion-item *ngIf="first"
-                      slot="header"
-                      class="author-accordion__item">
-                <ion-label class="author-accordion__header">{{ author }}</ion-label>
-            </ion-item>
+                <ion-item slot="header"
+                          class="author-accordion__item">
+                    <ion-label class="author-accordion__header"
+                               [color]="selected?.author === author | getColorForSelectable">
+                        {{ author }}
+                    </ion-label>
+                </ion-item>
 
-            <div class="ion-padding author-accordion__content" slot="content">
-                <ion-button
-                    fill="clear"
-                    expand="block"
-                    color="dark"
-                    (click)="selection.emit(video)">
-                    {{ video?.url | getUrlDomain }}
-                </ion-button>
-            </div>
+                <div class="ion-padding author-accordion__content" slot="content">
+                    @for (video of (videos | filterByAuthor: author); track video?.url; let first = $first) {
+                        <ion-button
+                            fill="clear"
+                            expand="block"
+                            [color]="selected?.url === video?.url | getColorForSelectable"
+                            [title]="video?.url"
+                            (click)="selection.emit(video)">
+                            {{ video?.url | getUrlDomain }}
+                        </ion-button>
+                    }
+                </div>
         </ion-accordion>
-    </ng-container>
+    }
 </ion-accordion-group>

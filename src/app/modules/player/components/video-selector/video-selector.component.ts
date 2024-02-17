@@ -16,6 +16,7 @@ import {
 import { ReplaySubject } from 'rxjs';
 
 import { FilterByAuthorPipe } from '@app/shared/pipes/filter-by-author/filter-by-author.pipe';
+import { GetColorForSelectablePipe } from '@app/shared/pipes/get-color-for-selectable/get-color-for-selectable.pipe';
 import { GetUrlDomainPipe } from '@app/shared/pipes/get-url-domain/get-url-domain.pipe';
 import { VideoInfoInterface } from '@app/modules/player/types';
 import { cleanAuthorName } from '@app/shared/utils/clean-author-name.function';
@@ -34,6 +35,7 @@ import { cleanAuthorName } from '@app/shared/utils/clean-author-name.function';
         GetUrlDomainPipe,
         IonButton,
         FilterByAuthorPipe,
+        GetColorForSelectablePipe,
     ],
     templateUrl: './video-selector.component.html',
     styleUrl: './video-selector.component.scss',
@@ -47,6 +49,9 @@ export class VideoSelectorComponent {
     private _videos: VideoInfoInterface[];
 
     authors$ = new ReplaySubject<string[]>(1);
+
+    @Input()
+    selected: VideoInfoInterface;
 
     @Input()
     set videos(videos: VideoInfoInterface[]) {
