@@ -1,7 +1,9 @@
 import { AsyncPipe, NgForOf, NgIf } from '@angular/common';
+import { BehaviorSubject, ReplaySubject } from 'rxjs';
 import {
     ChangeDetectionStrategy,
-    Component, EventEmitter,
+    Component,
+    EventEmitter,
     HostBinding,
     Input, Output,
     ViewEncapsulation,
@@ -13,11 +15,12 @@ import {
     IonItem,
     IonLabel,
 } from '@ionic/angular/standalone';
-import { ReplaySubject } from 'rxjs';
 
 import { FilterByAuthorPipe } from '@app/shared/pipes/filter-by-author/filter-by-author.pipe';
 import { GetColorForSelectablePipe } from '@app/shared/pipes/get-color-for-selectable/get-color-for-selectable.pipe';
 import { GetUrlDomainPipe } from '@app/shared/pipes/get-url-domain/get-url-domain.pipe';
+import { IsSameAuthorPipe } from '@app/shared/pipes/is-same-author/is-same-author.pipe';
+import { IsSameVideoPipe } from '@app/shared/pipes/is-same-video/is-same-video.pipe';
 import { VideoInfoInterface } from '@app/modules/player/types';
 import { cleanAuthorName } from '@app/shared/utils/clean-author-name.function';
 
@@ -36,6 +39,8 @@ import { cleanAuthorName } from '@app/shared/utils/clean-author-name.function';
         IonButton,
         FilterByAuthorPipe,
         GetColorForSelectablePipe,
+        IsSameAuthorPipe,
+        IsSameVideoPipe,
     ],
     templateUrl: './video-selector.component.html',
     styleUrl: './video-selector.component.scss',
@@ -47,11 +52,24 @@ export class VideoSelectorComponent {
     private videoSelectorClass = true;
 
     private _videos: VideoInfoInterface[];
+    private _selected: VideoInfoInterface;
 
     authors$ = new ReplaySubject<string[]>(1);
+    openedByDefaultAuthors$ = new BehaviorSubject<string[]>([]);
 
     @Input()
-    selected: VideoInfoInterface;
+    set selected(selected: VideoInfoInterface) {
+        if (selected) {
+            const previouslySelected = this.openedByDefaultAuthors$.value;
+
+            this.openedByDefaultAuthors$.next([...previouslySelected, cleanAuthorName(selected.author)]);
+            this._selected = selected;
+        }
+    }
+
+    get selected(): VideoInfoInterface {
+        return this._selected;
+    }
 
     @Input()
     set videos(videos: VideoInfoInterface[]) {

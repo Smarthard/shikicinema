@@ -1,11 +1,13 @@
-<ion-accordion-group class="w-100" multiple>
+<ion-accordion-group class="w-100"
+                     multiple
+                     [value]="openedByDefaultAuthors$ | async">
     @for (author of authors$ | async; track author) {
         <ion-accordion class="author-accordion w-100"
                        [value]="author">
                 <ion-item slot="header"
                           class="author-accordion__item">
                     <ion-label class="author-accordion__header"
-                               [color]="selected?.author === author | getColorForSelectable">
+                               [color]="selected?.author | isSameAuthor: author | getColorForSelectable">
                         {{ author }}
                     </ion-label>
                 </ion-item>
@@ -15,7 +17,7 @@
                         <ion-button
                             fill="clear"
                             expand="block"
-                            [color]="selected?.url === video?.url | getColorForSelectable"
+                            [color]="selected | isSameVideo: video | getColorForSelectable"
                             [title]="video?.url"
                             (click)="selection.emit(video)">
                             {{ video?.url | getUrlDomain }}
