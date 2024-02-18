@@ -8,14 +8,18 @@ import {
 } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { map, skipWhile, take, tap } from 'rxjs/operators';
+import {
+    filter,
+    map,
+    switchMap,
+    take,
+    tap,
+} from 'rxjs/operators';
 
-import { AnimeBriefInfoInterface } from '@app/shared/types/shikimori/anime-brief-info.interface';
-import { BehaviorSubject, Observable, ReplaySubject, combineLatest } from 'rxjs';
-import { FilterByEpisodePipe } from '@app/shared/pipes/filter-by-episode/filter-by-episode.pipe';
+import { ReplaySubject, combineLatest } from 'rxjs';
 import { VideoInfoInterface } from '@app/modules/player/types';
 import { VideoKindEnum } from '@app/modules/player/types/video-kind.enum';
-import { combineLatestInit } from 'rxjs/internal/observable/combineLatest';
+import { filterByEpisode } from '@app/shared/utils/filter-by-episode.function';
 import { findVideosAction, getAnimeInfoAction } from '@app/modules/player/store/actions';
 import {
     selectPlayerAnime,
@@ -36,18 +40,29 @@ export class PlayerPage implements OnInit {
     @HostBinding('class.player-page')
     private playerPageClass = true;
 
-    animeId$: Observable<string>;
-    episode$: Observable<number>;
+    animeId$ = this.route.params.pipe<string>(map(({ animeId }) => animeId));
+    episode$ = this.route.params.pipe(map(({ episode }) => Number(episode)));
 
-    isVideosLoading$: Observable<boolean>;
-    videos$: Observable<VideoInfoInterface[]>;
+    isVideosLoading$ = this.animeId$.pipe<boolean>(
+        switchMap((animeId) => this.store.select(selectPlayerVideosLoading(animeId))),
+    );
+    videos$ = this.animeId$.pipe(
+        switchMap((animeId) => this.store.select(selectPlayerVideos(animeId))),
+    );
 
-    isAnimeLoading$: Observable<boolean>;
-    anime$: Observable<AnimeBriefInfoInterface>;
+    isAnimeLoading$ = this.animeId$.pipe(
+        switchMap((animeId) => this.store.select(selectPlayerAnimeLoading(animeId))),
+    );
+    anime$ = this.animeId$.pipe(
+        switchMap((animeId) => this.store.select(selectPlayerAnime(animeId))),
+    );
 
-    currentVideo: VideoInfoInterface;
-    currentKind$ = new BehaviorSubject<VideoKindEnum>(VideoKindEnum.DUBBING);
-    episodeVideos$ = new ReplaySubject<VideoInfoInterface[]>(1);
+    currentVideo$ = new ReplaySubject<VideoInfoInterface>(1);
+    currentKind$ = new ReplaySubject<VideoKindEnum>(1);
+
+    episodeVideos$ = combineLatest([this.videos$, this.episode$]).pipe(
+        map(([videos, episode]) => filterByEpisode(videos, episode)),
+    );
 
     constructor(
         private store: Store,
@@ -55,17 +70,7 @@ export class PlayerPage implements OnInit {
     ) {}
 
     ngOnInit() {
-        this.animeId$ = this.route.params.pipe(map(({ animeId }) => animeId));
-        this.episode$ = this.route.params.pipe(map(({ episode }) => Number(episode)));
-
         this.animeId$.pipe(
-            tap((animeId) => {
-                this.isVideosLoading$ = this.store.select(selectPlayerVideosLoading(animeId));
-                this.videos$ = this.store.select(selectPlayerVideos(animeId));
-
-                this.isAnimeLoading$ = this.store.select(selectPlayerAnimeLoading(animeId));
-                this.anime$ = this.store.select(selectPlayerAnime(animeId));
-            }),
             tap((animeId) => {
                 this.store.dispatch(findVideosAction({ animeId }));
                 this.store.dispatch(getAnimeInfoAction({ animeId }));
@@ -73,28 +78,20 @@ export class PlayerPage implements OnInit {
             untilDestroyed(this),
         ).subscribe();
 
-        combineLatest([this.videos$, this.episode$])
-            .pipe(
-                tap(([videos, targetEpisode]) => {
-                    const videosByEpisode = videos?.filter(({ episode }) => episode === targetEpisode);
-                    this.episodeVideos$.next(videosByEpisode);
-                }),
-                untilDestroyed(this),
-            )
-            .subscribe();
-
         this.episodeVideos$
             .pipe(
-                skipWhile(({ length = 0 }) => length <= 0),
+                filter(({ length = 0 }) => length > 0),
                 take(1),
-                tap((videos) => this.currentVideo = videos?.[0]),
+                map((videos) => videos?.[0]),
+                tap((video) => this.onVideoChange(video)),
                 untilDestroyed(this),
             )
             .subscribe();
     }
 
     onVideoChange(video: VideoInfoInterface): void {
-        this.currentVideo = video;
+        this.currentVideo$.next(video);
+        this.currentKind$.next(video.kind);
     }
 
     onKindChange(kind: VideoKindEnum): void {

@@ -18,13 +18,13 @@
 
         <app-player class="responsive-16by9"
             [loading]="isVideosLoading$ | async"
-            [source]="currentVideo?.url"
+            [source]="(currentVideo$ | async)?.url"
         />
 
         <app-video-selector
             class="player-page__video-selector"
             [videos]="episodeVideos$ | async | filterByKind: (currentKind$ | async)"
-            [selected]="currentVideo"
+            [selected]="currentVideo$ | async"
             (selection)="onVideoChange($event)"
         />
     </div>
