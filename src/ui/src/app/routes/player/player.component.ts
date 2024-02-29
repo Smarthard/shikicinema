@@ -158,10 +158,7 @@ export class PlayerComponent implements OnInit, OnDestroy {
       map((uniques: SmarthardNet.Unique[]) => SmarthardNet.mergeUniques(uniques))
     );
 
-  readonly whoami$ = this.shikimori.whoAmI(new HttpHeaders()
-    .set('Cache-Control', 'no-cache, no-store, must-revalidate')
-    .set('Pragma', 'no-cache')
-  ).pipe(shareReplay(1));
+  readonly whoami$ = this.auth.whoami$;
 
   readonly userRate$ = this.anime$.pipe(
     map((anime) => anime.user_rate),

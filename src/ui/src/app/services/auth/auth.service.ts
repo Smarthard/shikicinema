@@ -1,13 +1,26 @@
-import {Injectable} from '@angular/core';
-import {StorageService} from '../chrome-storage/storage.service';
-import {SmarthardNet} from '../../types/smarthard-net';
-import {Shikimori} from '../../types/shikimori';
-import {EMPTY, from, Observable, ReplaySubject} from 'rxjs';
-import {ShikimoriService} from '../shikimori-api/shikimori.service';
-import {NotificationsService} from '../notifications/notifications.service';
-import {Notification, NotificationType} from '../../types/notification';
-import {ShikivideosService} from '../shikivideos-api/shikivideos.service';
-import {catchError, tap} from 'rxjs/operators';
+import { Injectable } from '@angular/core';
+import { StorageService } from '../chrome-storage/storage.service';
+import { SmarthardNet } from '../../types/smarthard-net';
+import { Shikimori } from '../../types/shikimori';
+import {
+  EMPTY,
+  from,
+  Observable,
+  of,
+  ReplaySubject,
+  switchMap,
+  throwIfEmpty,
+} from 'rxjs';
+import { ShikimoriService } from '../shikimori-api/shikimori.service';
+import { NotificationsService } from '../notifications/notifications.service';
+import { Notification, NotificationType } from '../../types/notification';
+import { ShikivideosService } from '../shikivideos-api/shikivideos.service';
+import {
+  catchError,
+  shareReplay,
+  tap,
+} from 'rxjs/operators';
+import { HttpHeaders } from "@angular/common/http";
 
 @Injectable({
   providedIn: 'root'
@@ -22,6 +35,15 @@ export class AuthService {
 
   public shikivideos$ = this.videoToken.asObservable();
   public shikimori$ = this.shikimoriToken.asObservable();
+
+  readonly whoami$ = this.shikimoriService.whoAmI(new HttpHeaders()
+    .set('Cache-Control', 'no-cache, no-store, must-revalidate')
+    .set('Pragma', 'no-cache')
+  ).pipe(
+    switchMap((user) => user ? of(user) : EMPTY),
+    catchError(() => EMPTY),
+    shareReplay(1),
+  );
 
   constructor(
     private shikimoriService: ShikimoriService,
@@ -61,11 +83,13 @@ export class AuthService {
 
   public shikimoriSync(): Observable<Shikimori.Token> {
     if (!this.shikimori.resfresh || this.shikimori.expired) {
-      return from(this.shikimoriService.getNewToken())
+      return this.whoami$
         .pipe(
+          throwIfEmpty(() => new Error('User is not logged in')),
+          switchMap(() => from(this.shikimoriService.getNewToken())),
           tap((token) => this._updateShikimoriToken(token)),
-          catchError((err) => {
-            console.error(err);
+          catchError((err: Error) => {
+            console.warn(err);
             this.notify.add(new Notification(NotificationType.ERROR, 'Пожалуйста, войдите в свой аккаунт на Шикимори'));
 
             return EMPTY;
@@ -86,11 +110,19 @@ export class AuthService {
 
   public shikivideosSync(forcedNew: boolean = false): Observable<SmarthardNet.Token> {
     if (!this.shikivideos.refresh || this.shikivideos.expired || forcedNew) {
-      return this.shikivideosService.getNewToken(this.shikimori)
+      return this.whoami$
         .pipe(
+          throwIfEmpty(() => new Error('User is not logged in')),
+          switchMap(() => this.shikivideosService.getNewToken(this.shikimori)),
           tap(async (token) => {
             this.videoToken.next(token);
             await StorageService.set('sync', { videoToken: token }).toPromise();
+          }),
+          catchError((err: Error) => {
+            console.warn(err);
+            this.notify.add(new Notification(NotificationType.ERROR, 'Пожалуйста, войдите в свой аккаунт на Шикимори'));
+
+            return EMPTY;
           })
         );
     } else {
