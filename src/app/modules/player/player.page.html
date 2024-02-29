@@ -1,6 +1,6 @@
 <ion-content [fullscreen]="true" class="page-content ion-padding">
     <div class="player-page__wrapper">
-        <div class="common-info">
+        <div class="player-page__anime-info common-info">
             @if (isAnimeLoading$ | async) {
                 <app-skeleton-block height="2rem" width="30rem"></app-skeleton-block>
             } @else {
@@ -11,12 +11,13 @@
         </div>
 
         <app-kind-selector
+            class="player-page__kind"
             [kinds]="episodeVideos$ | async | getActiveKinds"
             [selected]="currentKind$ | async"
             (selection)="onKindChange($event)"
         />
 
-        <app-player class="responsive-16by9"
+        <app-player class="player-page__player responsive-16by9"
             [loading]="isVideosLoading$ | async"
             [source]="(currentVideo$ | async)?.url"
         />
@@ -26,6 +27,13 @@
             [videos]="episodeVideos$ | async | filterByKind: (currentKind$ | async)"
             [selected]="currentVideo$ | async"
             (selection)="onVideoChange($event)"
+        />
+
+        <app-episode-selector
+            class="player-page__episode-selector"
+            [episodes]="videos$ | async | getEpisodes"
+            [selected]="episode$ | async"
+            (selection)="onEpisodeChange($event)"
         />
     </div>
 </ion-content>

@@ -1,4 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
+import { TranslocoService } from '@ngneat/transloco';
+
 import { VideoInfoInterface } from '@app/modules/player/types';
 
 @Pipe({
@@ -7,9 +9,12 @@ import { VideoInfoInterface } from '@app/modules/player/types';
     standalone: true,
 })
 export class FilterByAuthorPipe implements PipeTransform {
+    constructor(private readonly transloco: TranslocoService) {}
     transform(videos: VideoInfoInterface[], targetAuthor: string): VideoInfoInterface[] {
-        return videos?.filter(({ author }) => targetAuthor
+        const defaultAuthor = this.transloco.translate('GLOBAL.VIDEO.AUTHORS.DEFAULT_NAME');
+
+        return videos?.filter(({ author }) => targetAuthor && targetAuthor !== defaultAuthor
             ? author?.includes(targetAuthor)
-            : author === null);
+            : author === defaultAuthor || !author);
     }
 }

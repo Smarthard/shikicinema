@@ -21,6 +21,7 @@ import { GetColorForSelectablePipe } from '@app/shared/pipes/get-color-for-selec
 import { GetUrlDomainPipe } from '@app/shared/pipes/get-url-domain/get-url-domain.pipe';
 import { IsSameAuthorPipe } from '@app/shared/pipes/is-same-author/is-same-author.pipe';
 import { IsSameVideoPipe } from '@app/shared/pipes/is-same-video/is-same-video.pipe';
+import { TranslocoService } from '@ngneat/transloco';
 import { VideoInfoInterface } from '@app/modules/player/types';
 import { cleanAuthorName } from '@app/shared/utils/clean-author-name.function';
 
@@ -51,6 +52,8 @@ export class VideoSelectorComponent {
     @HostBinding('class.video-selector')
     private videoSelectorClass = true;
 
+    private readonly DEFAULT_AUTHOR_NAME = this.transloco.translate('GLOBAL.VIDEO.AUTHORS.DEFAULT_NAME');
+
     private _videos: VideoInfoInterface[];
     private _selected: VideoInfoInterface;
 
@@ -61,8 +64,9 @@ export class VideoSelectorComponent {
     set selected(selected: VideoInfoInterface) {
         if (selected) {
             const previouslySelected = this.openedByDefaultAuthors$.value;
+            const cleanedAuthorName = cleanAuthorName(selected.author, this.DEFAULT_AUTHOR_NAME);
 
-            this.openedByDefaultAuthors$.next([...previouslySelected, cleanAuthorName(selected.author)]);
+            this.openedByDefaultAuthors$.next([...previouslySelected, cleanedAuthorName]);
             this._selected = selected;
         }
     }
@@ -76,7 +80,7 @@ export class VideoSelectorComponent {
         const authors = new Set(
             videos
                 ?.map(({ author }) => author)
-                ?.map(cleanAuthorName),
+                ?.map((author) => cleanAuthorName(author, this.DEFAULT_AUTHOR_NAME)),
         );
 
         this._videos = videos;
@@ -89,4 +93,6 @@ export class VideoSelectorComponent {
 
     @Output()
     selection = new EventEmitter<VideoInfoInterface>;
+
+    constructor(private readonly transloco: TranslocoService) {}
 }

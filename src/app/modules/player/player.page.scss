@@ -3,29 +3,38 @@
 .player-page {
     display: flex;
 
-    .common-info {
+    &__anime-info {
         display: flex;
         align-items: center;
+
+        grid-area: info;
+    }
+
+    &__kind {
+        grid-area: kind;
+    }
+
+    &__player {
+        grid-area: player;
+    }
+
+    &__episode-selector {
+        grid-area: episde;
+    }
+
+    &__video-selector {
+        grid-area: video;
+        max-height: 28.25rem;
     }
 
     &__wrapper {
         display: grid;
-        grid-template-columns: 16fr 1fr;
-        grid-template-rows: 9fr;
+        padding: 0 5%;
         column-gap: 2.75rem;
         row-gap: 1rem;
-        margin: 0 6.75rem;
 
-        @include media-breakpoint-down('xl') {
-            max-height: 28.25rem;
-        }
-
-        @include media-breakpoint-up('xl') {
-            max-height: 28.25rem;
-        }
-    }
-
-    &__video-selector {
-        max-height: 28.25rem;
+        grid-template:  "info   kind"
+                        "player video"
+                        "episde ." / 50.125rem minmax(auto, 23.5rem);
     }
 }

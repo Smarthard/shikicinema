@@ -22,6 +22,9 @@
                 "DUBBING": "Озвучка",
                 "SUBTITLES": "Субтитры",
                 "ORIGINAL": "Оригинал"
+            },
+            "AUTHORS": {
+                "DEFAULT_NAME": "Неизвестно"
             }
         },
         "HEADER": {

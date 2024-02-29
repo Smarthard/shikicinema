@@ -1,4 +1,4 @@
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -9,6 +9,7 @@ import {
 import { Store } from '@ngrx/store';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
+    distinctUntilChanged,
     filter,
     map,
     switchMap,
@@ -16,7 +17,9 @@ import {
     tap,
 } from 'rxjs/operators';
 
+import { AnimeBriefInfoInterface } from '@app/shared/types/shikimori/anime-brief-info.interface';
 import { ReplaySubject, combineLatest } from 'rxjs';
+import { Title } from '@angular/platform-browser';
 import { VideoInfoInterface } from '@app/modules/player/types';
 import { VideoKindEnum } from '@app/modules/player/types/video-kind.enum';
 import { filterByEpisode } from '@app/shared/utils/filter-by-episode.function';
@@ -40,13 +43,20 @@ export class PlayerPage implements OnInit {
     @HostBinding('class.player-page')
     private playerPageClass = true;
 
-    animeId$ = this.route.params.pipe<string>(map(({ animeId }) => animeId));
-    episode$ = this.route.params.pipe(map(({ episode }) => Number(episode)));
+    animeId$ = this.route.params.pipe(
+        map(({ animeId }) => animeId as string),
+        distinctUntilChanged(),
+    );
+
+    episode$ = this.route.params.pipe(
+        map(({ episode }) => Number(episode)),
+        distinctUntilChanged(),
+    );
 
     isVideosLoading$ = this.animeId$.pipe<boolean>(
         switchMap((animeId) => this.store.select(selectPlayerVideosLoading(animeId))),
     );
-    videos$ = this.animeId$.pipe(
+    videos$ = this.animeId$.pipe<VideoInfoInterface[]>(
         switchMap((animeId) => this.store.select(selectPlayerVideos(animeId))),
     );
 
@@ -67,6 +77,8 @@ export class PlayerPage implements OnInit {
     constructor(
         private store: Store,
         private route: ActivatedRoute,
+        private router: Router,
+        private title: Title,
     ) {}
 
     ngOnInit() {
@@ -78,15 +90,25 @@ export class PlayerPage implements OnInit {
             untilDestroyed(this),
         ).subscribe();
 
-        this.episodeVideos$
-            .pipe(
-                filter(({ length = 0 }) => length > 0),
-                take(1),
-                map((videos) => videos?.[0]),
-                tap((video) => this.onVideoChange(video)),
-                untilDestroyed(this),
-            )
-            .subscribe();
+        this.episodeVideos$.pipe(
+            filter(({ length = 0 }) => length > 0),
+            map((videos) => videos?.[0]),
+            tap((video) => this.onVideoChange(video)),
+            untilDestroyed(this),
+        ).subscribe();
+
+        combineLatest([
+            this.anime$,
+            this.episode$,
+        ]).pipe(
+            filter(([anime]) => !!anime?.name),
+            tap(([anime, episode]) => this.changeTitle(anime, episode)),
+            untilDestroyed(this),
+        ).subscribe();
+    }
+
+    changeTitle(anime: AnimeBriefInfoInterface, episode: number): void {
+        this.title.setTitle(`${anime.russian || anime.name} | серия ${episode}`);
     }
 
     onVideoChange(video: VideoInfoInterface): void {
@@ -96,5 +118,15 @@ export class PlayerPage implements OnInit {
 
     onKindChange(kind: VideoKindEnum): void {
         this.currentKind$.next(kind);
+    }
+
+    onEpisodeChange(episode: number): void {
+        this.animeId$.pipe(
+            take(1),
+            tap((animeId) => {
+                void this.router.navigate(['/player', animeId, episode]);
+            }),
+            untilDestroyed(this),
+        ).subscribe();
     }
 }

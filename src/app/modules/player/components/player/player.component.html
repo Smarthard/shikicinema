@@ -5,5 +5,9 @@
         allowfullscreen=""
     ></iframe>
 } @else {
-    <app-skeleton-block class="responsive-16by9 player__video"></app-skeleton-block>
+    <app-skeleton-block
+        class="responsive-16by9 player__video"
+        [height]="'720px'"
+        [width]="'1280px'"
+    />
 }

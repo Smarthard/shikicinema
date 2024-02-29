@@ -1,0 +1,33 @@
+<ion-icon class="episode-selector__item episode-selector__item--icon"
+          name="chevron-back-circle-outline"
+          (click)="changeEpisode(selected - 1, maxEpisode)"
+/>
+
+<div class="scrollable-wrapper"
+    #episodesWrapper>
+    @for (episode of episodes; track episode) {
+        <span class="episode-selector__item"
+              tabindex="0"
+              #episodeEl
+              [id]="'episode-' + episode"
+              [class.episode-selector__item--selected]="episode === selected"
+              [class.episode-selector__item--long]="episode > 99"
+              (click)="onEpisodeSelect(episode)"
+              (keydown.enter)="onEpisodeSelect(episode)">
+            {{ episode }}
+        </span>
+    } @empty {
+        @for (_ of episodesSkeleton; track $index) {
+            <app-skeleton-block
+                class="episode-selector__item"
+                [height]="'1rem'"
+                [width]="'2rem'"
+            />
+        }
+    }
+</div>
+
+<ion-icon class="episode-selector__item episode-selector__item--icon"
+          name="chevron-forward-circle-outline"
+          (click)="changeEpisode(selected + 1, maxEpisode)"
+/>
