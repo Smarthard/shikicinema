@@ -15,6 +15,8 @@ import {
     IonItem,
     IonLabel,
 } from '@ionic/angular/standalone';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { take, tap } from 'rxjs/operators';
 
 import { FilterByAuthorPipe } from '@app/shared/pipes/filter-by-author/filter-by-author.pipe';
 import { GetColorForSelectablePipe } from '@app/shared/pipes/get-color-for-selectable/get-color-for-selectable.pipe';
@@ -25,6 +27,7 @@ import { TranslocoService } from '@ngneat/transloco';
 import { VideoInfoInterface } from '@app/modules/player/types';
 import { cleanAuthorName } from '@app/shared/utils/clean-author-name.function';
 
+@UntilDestroy()
 @Component({
     selector: 'app-video-selector',
     standalone: true,
@@ -52,23 +55,33 @@ export class VideoSelectorComponent {
     @HostBinding('class.video-selector')
     private videoSelectorClass = true;
 
-    private readonly DEFAULT_AUTHOR_NAME = this.transloco.translate('GLOBAL.VIDEO.AUTHORS.DEFAULT_NAME');
-
     private _videos: VideoInfoInterface[];
     private _selected: VideoInfoInterface;
 
     authors$ = new ReplaySubject<string[]>(1);
     openedByDefaultAuthors$ = new BehaviorSubject<string[]>([]);
 
+    private _afterDefaultAuthorSelected(fn: (defaultAuthor: string) => void): void {
+        this.transloco.selectTranslate('GLOBAL.VIDEO.AUTHORS.DEFAULT_NAME')
+            .pipe(
+                take(1),
+                tap(fn),
+                untilDestroyed(this),
+            )
+            .subscribe();
+    }
+
     @Input()
     set selected(selected: VideoInfoInterface) {
-        if (selected) {
-            const previouslySelected = this.openedByDefaultAuthors$.value;
-            const cleanedAuthorName = cleanAuthorName(selected.author, this.DEFAULT_AUTHOR_NAME);
+        this._afterDefaultAuthorSelected((defaultAuthor) => {
+            if (selected) {
+                const previouslySelected = this.openedByDefaultAuthors$.value;
+                const cleanedAuthorName = cleanAuthorName(selected.author, defaultAuthor);
 
-            this.openedByDefaultAuthors$.next([...previouslySelected, cleanedAuthorName]);
-            this._selected = selected;
-        }
+                this.openedByDefaultAuthors$.next([...previouslySelected, cleanedAuthorName]);
+                this._selected = selected;
+            }
+        });
     }
 
     get selected(): VideoInfoInterface {
@@ -77,15 +90,17 @@ export class VideoSelectorComponent {
 
     @Input()
     set videos(videos: VideoInfoInterface[]) {
-        const authors = new Set(
-            videos
-                ?.map(({ author }) => author)
-                ?.map((author) => cleanAuthorName(author, this.DEFAULT_AUTHOR_NAME))
-                ?.sort(),
-        );
+        this._afterDefaultAuthorSelected((defaultAuthor) => {
+            const authors = new Set(
+                videos
+                    ?.map(({ author }) => author)
+                    ?.map((author) => cleanAuthorName(author, defaultAuthor))
+                    ?.sort(),
+            );
 
-        this._videos = videos;
-        this.authors$.next([...authors]);
+            this._videos = videos;
+            this.authors$.next([...authors]);
+        });
     }
 
     get videos(): VideoInfoInterface[] {
