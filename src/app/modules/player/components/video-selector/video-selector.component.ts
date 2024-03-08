@@ -80,7 +80,8 @@ export class VideoSelectorComponent {
         const authors = new Set(
             videos
                 ?.map(({ author }) => author)
-                ?.map((author) => cleanAuthorName(author, this.DEFAULT_AUTHOR_NAME)),
+                ?.map((author) => cleanAuthorName(author, this.DEFAULT_AUTHOR_NAME))
+                ?.sort(),
         );
 
         this._videos = videos;
@@ -95,4 +96,17 @@ export class VideoSelectorComponent {
     selection = new EventEmitter<VideoInfoInterface>;
 
     constructor(private readonly transloco: TranslocoService) {}
+
+    onSelectionChange(selectedVideo: VideoInfoInterface): void {
+        this.selection.emit(selectedVideo);
+    }
+
+    onAuthorSectionToggle(author: string): void {
+        const previouslySelected = this.openedByDefaultAuthors$.value;
+        const isClosingClick = previouslySelected.includes(author);
+        const filteredAuthor = previouslySelected.filter((previous) => previous !== author);
+        const withAuthor = [...previouslySelected, author];
+
+        this.openedByDefaultAuthors$.next(isClosingClick ? filteredAuthor : withAuthor);
+    }
 }

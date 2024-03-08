@@ -3,7 +3,8 @@
                      [value]="openedByDefaultAuthors$ | async">
     @for (author of authors$ | async; track author) {
         <ion-accordion class="author-accordion w-100"
-                       [value]="author">
+                       [value]="author"
+                       (click)="onAuthorSectionToggle(author)">
                 <ion-item slot="header"
                           class="author-accordion__item">
                     <ion-label class="author-accordion__header"
@@ -19,7 +20,7 @@
                             expand="block"
                             [color]="selected | isSameVideo: video | getColorForSelectable"
                             [title]="video?.url"
-                            (click)="selection.emit(video)">
+                            (click)="$event.stopPropagation(); onSelectionChange(video)">
                             {{ video?.url | getUrlDomain }}
                         </ion-button>
                     }
