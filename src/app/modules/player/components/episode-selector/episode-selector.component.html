@@ -18,11 +18,7 @@
         </span>
     } @empty {
         @for (_ of episodesSkeleton; track $index) {
-            <app-skeleton-block
-                class="episode-selector__item"
-                [height]="'1rem'"
-                [width]="'2rem'"
-            />
+            <span class="skeleton episode-selector__item episode-selector__item--skeleton"></span>
         }
     }
 </div>

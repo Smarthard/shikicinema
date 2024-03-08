@@ -46,7 +46,7 @@ export class EpisodeSelectorComponent implements AfterViewInit {
     @ViewChildren('episodeEl')
     episodesEl: QueryList<ElementRef<HTMLSpanElement>>;
 
-    readonly episodesSkeleton = new Array(24).fill(0);
+    readonly episodesSkeleton = new Array(24);
 
     get maxEpisode(): number {
         return this._maxEpisode;
@@ -77,15 +77,15 @@ export class EpisodeSelectorComponent implements AfterViewInit {
     private scrollToEpisode(episode: number) {
         const episodeIndex = episode - 1;
         const element = this.episodesEl?.get(episodeIndex)?.nativeElement;
-        const episodeRect = element.getBoundingClientRect();
+        const episodeRect = element?.getBoundingClientRect();
         const wrapperRect = this.episodesWrapperEl.nativeElement.getBoundingClientRect();
-        const isInView = episodeRect.top >= wrapperRect.top &&
-            episodeRect.left >= wrapperRect.left &&
-            episodeRect.bottom <= wrapperRect.bottom &&
-            episodeRect.right <= wrapperRect.right;
+        const isInView = episodeRect?.top >= wrapperRect.top &&
+            episodeRect?.left >= wrapperRect.left &&
+            episodeRect?.bottom <= wrapperRect.bottom &&
+            episodeRect?.right <= wrapperRect.right;
 
-        if (!isInView) {
-            element?.scrollIntoView({ inline: 'center', behavior: 'auto' });
+        if (!isInView && element) {
+            element.scrollIntoView({ inline: 'center', behavior: 'auto' });
         }
     }
 
