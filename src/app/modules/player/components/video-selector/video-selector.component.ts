@@ -23,6 +23,7 @@ import { GetColorForSelectablePipe } from '@app/shared/pipes/get-color-for-selec
 import { GetUrlDomainPipe } from '@app/shared/pipes/get-url-domain/get-url-domain.pipe';
 import { IsSameAuthorPipe } from '@app/shared/pipes/is-same-author/is-same-author.pipe';
 import { IsSameVideoPipe } from '@app/shared/pipes/is-same-video/is-same-video.pipe';
+import { SortByDomainModule } from '@app/shared/pipes/sort-by-domain/sort-by-domain.module';
 import { TranslocoService } from '@ngneat/transloco';
 import { VideoInfoInterface } from '@app/modules/player/types';
 import { cleanAuthorName } from '@app/shared/utils/clean-author-name.function';
@@ -45,6 +46,7 @@ import { cleanAuthorName } from '@app/shared/utils/clean-author-name.function';
         GetColorForSelectablePipe,
         IsSameAuthorPipe,
         IsSameVideoPipe,
+        SortByDomainModule,
     ],
     templateUrl: './video-selector.component.html',
     styleUrl: './video-selector.component.scss',

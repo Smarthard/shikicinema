@@ -14,7 +14,7 @@
                 </ion-item>
 
                 <div class="ion-padding author-accordion__content" slot="content">
-                    @for (video of (videos | filterByAuthor: author); track video?.url; let first = $first) {
+                    @for (video of (videos | filterByAuthor: author | sortByDomain); track video?.url; let first = $first) {
                         <ion-button
                             fill="clear"
                             expand="block"
