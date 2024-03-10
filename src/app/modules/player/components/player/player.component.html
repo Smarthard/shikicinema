@@ -1,9 +1,18 @@
 @if (source) {
     <iframe
         class="responsive-16by9 player__video"
-        [src]="source | urlSanitizer"
         allowfullscreen=""
+        [class.ion-hide]="isSourceLoading$ | async"
+        [src]="source | urlSanitizer"
+        (load)="onLoad()"
     ></iframe>
+
+    <app-skeleton-block
+        class="responsive-16by9 player__video"
+        [class.ion-hide]="(isSourceLoading$ | async) === false"
+        [height]="'720px'"
+        [width]="'1280px'"
+    />
 } @else {
     <app-skeleton-block
         class="responsive-16by9 player__video"

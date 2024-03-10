@@ -1,8 +1,12 @@
+import { AsyncPipe } from '@angular/common';
+import { BehaviorSubject } from 'rxjs';
 import {
     ChangeDetectionStrategy,
     Component,
+    EventEmitter,
     HostBinding,
     Input,
+    Output,
     ViewEncapsulation,
 } from '@angular/core';
 
@@ -15,6 +19,7 @@ import { UrlSanitizerPipe } from '@app/shared/pipes/url-sanitizer/url-sanitizer.
     imports: [
         UrlSanitizerPipe,
         SkeletonBlockModule,
+        AsyncPipe,
     ],
     templateUrl: './player.component.html',
     styleUrl: './player.component.scss',
@@ -25,9 +30,30 @@ export class PlayerComponent {
     @HostBinding('class.player')
     private playerClass = true;
 
+    private _source: string;
+    private _sourceLoading$ = new BehaviorSubject(true);
+
+    readonly isSourceLoading$ = this._sourceLoading$.asObservable();
+
     @Input()
     loading = true;
 
     @Input()
-    source: string;
+    set source(source: string) {
+        this._source = source;
+        this.loaded.emit(false);
+        this._sourceLoading$.next(true);
+    }
+
+    get source(): string {
+        return this._source;
+    }
+
+    @Output()
+    loaded = new EventEmitter<boolean>();
+
+    onLoad(): void {
+        this.loaded.emit(true);
+        this._sourceLoading$.next(false);
+    }
 }
