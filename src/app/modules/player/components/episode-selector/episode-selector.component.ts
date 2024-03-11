@@ -37,8 +37,6 @@ export class EpisodeSelectorComponent implements AfterViewInit {
     private episodeSelectorClass = true;
 
     private selectedSubject$ = new BehaviorSubject<number>(1);
-    private _episodes: number[];
-    private _maxEpisode: number;
 
     @ViewChild('episodesWrapper', { static: true })
     episodesWrapperEl: ElementRef<HTMLDivElement>;
@@ -48,24 +46,16 @@ export class EpisodeSelectorComponent implements AfterViewInit {
 
     readonly episodesSkeleton = new Array(24);
 
-    get maxEpisode(): number {
-        return this._maxEpisode;
-    }
-
     @Input({ required: true })
-    set episodes(episodes: number[]) {
-        this._episodes = episodes;
-        this._maxEpisode = episodes.length - 1;
-    }
-
-    get episodes(): number[] {
-        return this._episodes;
-    }
+    episodes: number[];
 
     @Input({ required: true })
     set selected(episode: number) {
         this.selectedSubject$.next(episode);
     }
+
+    @Input({ required: true })
+    maxEpisode: number;
 
     get selected(): number {
         return this.selectedSubject$.value;

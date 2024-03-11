@@ -2,7 +2,7 @@
     <div class="player-page__wrapper">
         <div class="player-page__anime-info common-info">
             @if (isAnimeLoading$ | async) {
-                <app-skeleton-block height="2rem" width="30rem"></app-skeleton-block>
+                <app-skeleton-block height="2rem" width="30rem" />
             } @else {
                 <ion-text>
                     <h1>{{ (anime$ | async)?.russian }}</h1>
@@ -29,8 +29,8 @@
             (selection)="onVideoChange($event)"
         />
 
-        <app-episode-selector
-            class="player-page__episode-selector"
+        <app-control-panel
+            class="player-page__control-panel"
             [episodes]="videos$ | async | getEpisodes"
             [selected]="episode$ | async"
             (selection)="onEpisodeChange($event)"

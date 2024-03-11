@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { NgModule } from '@angular/core';
 
-import { EpisodeSelectorComponent } from '@app/modules/player/components/episode-selector/episode-selector.component';
+import { ControlPanelComponent } from '@app/modules/player/components/control-panel/control-panel.component';
 import { FilterByEpisodePipe } from '@app/shared/pipes/filter-by-episode/filter-by-episode.pipe';
 import { FilterByKindPipe } from '@app/shared/pipes/filter-by-kind/filter-by-kind.pipe';
 import { GetActiveKindsPipe } from '@app/shared/pipes/get-active-kinds/get-active-kinds.pipe';
@@ -30,8 +30,8 @@ import { VideoSelectorComponent } from '@app/modules/player/components/video-sel
         SkeletonBlockModule,
         GetActiveKindsPipe,
         FilterByKindPipe,
-        EpisodeSelectorComponent,
         GetEpisodesPipe,
+        ControlPanelComponent,
     ],
 })
 export class PlayerModule {}

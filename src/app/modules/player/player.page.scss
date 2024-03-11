@@ -18,8 +18,8 @@
         grid-area: player;
     }
 
-    &__episode-selector {
-        grid-area: episde;
+    &__control-panel {
+        grid-area: conpan;
     }
 
     &__video-selector {
@@ -35,6 +35,6 @@
 
         grid-template:  "info   kind"
                         "player video"
-                        "episde ." / 50.125rem minmax(auto, 23.5rem);
+                        "conpan ." / 50.125rem minmax(auto, 23.5rem);
     }
 }
