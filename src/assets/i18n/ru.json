@@ -17,6 +17,16 @@
                 "RELEASED": "вышло"
             }
         },
+        "VIDEO": {
+            "KINDS": {
+                "DUBBING": "Озвучка",
+                "SUBTITLES": "Субтитры",
+                "ORIGINAL": "Оригинал"
+            },
+            "AUTHORS": {
+                "DEFAULT_NAME": "Неизвестно"
+            }
+        },
         "HEADER": {
             "SEARCHBAR": {
                 "NOTHING_FOUND": "Ничего не найдено",

@@ -1,3 +1,39 @@
-<ion-content [fullscreen]="true" class="page-content">
-    <!-- TODO: player  -->
+<ion-content [fullscreen]="true" class="page-content ion-padding">
+    <div class="player-page__wrapper">
+        <div class="player-page__anime-info common-info">
+            @if (isAnimeLoading$ | async) {
+                <app-skeleton-block height="2rem" width="30rem" />
+            } @else {
+                <ion-text>
+                    <h1>{{ (anime$ | async)?.russian }}</h1>
+                </ion-text>
+            }
+        </div>
+
+        <app-kind-selector
+            class="player-page__kind"
+            [kinds]="episodeVideos$ | async | getActiveKinds"
+            [selected]="currentKind$ | async"
+            (selection)="onKindChange($event)"
+        />
+
+        <app-player class="player-page__player responsive-16by9"
+            [loading]="isVideosLoading$ | async"
+            [source]="(currentVideo$ | async)?.url"
+        />
+
+        <app-video-selector
+            class="player-page__video-selector"
+            [videos]="episodeVideos$ | async | filterByKind: (currentKind$ | async)"
+            [selected]="currentVideo$ | async"
+            (selection)="onVideoChange($event)"
+        />
+
+        <app-control-panel
+            class="player-page__control-panel"
+            [episodes]="videos$ | async | getEpisodes"
+            [selected]="episode$ | async"
+            (selection)="onEpisodeChange($event)"
+        />
+    </div>
 </ion-content>

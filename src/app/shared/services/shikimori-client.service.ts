@@ -127,4 +127,10 @@ export class ShikimoriClient {
 
         return this.http.get<AnimeBriefInfoInterface[]>(url, { params });
     }
+
+    getAnimeInfo(animeId: string) {
+        const url = `${this.baseUri}/api/animes/${animeId}`;
+
+        return this.http.get<AnimeBriefInfoInterface>(url);
+    }
 }

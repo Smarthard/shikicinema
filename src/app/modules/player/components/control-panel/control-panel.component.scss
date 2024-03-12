@@ -1,0 +1,21 @@
+.control-panel {
+    $inputMinHeight: 2rem;
+
+    display: flex;
+    align-items: center;
+
+    &__episode-wrapper {
+        max-width: 4.625rem;
+        justify-content: center;
+
+        --min-height: $inputMinHeight;
+        --border-width: 0.125rem;
+        --border-color: var(--ion-color-primary);
+        --border-radius: 0.25rem;
+    }
+
+    &__episode {
+        text-align: center;
+        min-height: $inputMinHeight !important;
+    }
+}

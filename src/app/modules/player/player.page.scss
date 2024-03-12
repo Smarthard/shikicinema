@@ -1,0 +1,40 @@
+@import 'src/scss/mixins';
+
+.player-page {
+    display: flex;
+
+    &__anime-info {
+        display: flex;
+        align-items: center;
+
+        grid-area: info;
+    }
+
+    &__kind {
+        grid-area: kind;
+    }
+
+    &__player {
+        grid-area: player;
+    }
+
+    &__control-panel {
+        grid-area: conpan;
+    }
+
+    &__video-selector {
+        grid-area: video;
+        max-height: 28.25rem;
+    }
+
+    &__wrapper {
+        display: grid;
+        padding: 0 5%;
+        column-gap: 2.75rem;
+        row-gap: 1rem;
+
+        grid-template:  "info   kind"
+                        "player video"
+                        "conpan ." / 50.125rem minmax(auto, 23.5rem);
+    }
+}

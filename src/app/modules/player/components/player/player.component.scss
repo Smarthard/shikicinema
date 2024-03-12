@@ -1,0 +1,9 @@
+.player {
+    display: flex;
+
+    &__video {
+        overflow: hidden;
+        background-color: var(--box-shadow);
+        border: 0;
+    }
+}

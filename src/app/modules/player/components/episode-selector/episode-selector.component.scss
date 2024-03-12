@@ -1,0 +1,44 @@
+.episode-selector {
+    display: flex;
+    gap: 0.25rem;
+
+    .scrollable-wrapper {
+        display: flex;
+        align-self: center;
+        max-width: 31rem;
+        overflow-x: auto;
+        gap: 0.25rem;
+    }
+
+    &__item {
+        user-select: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 100vmax;
+        border: 0.16rem solid var(--ion-color-dark);
+        min-width: 2rem;
+        min-height: 2rem;
+        padding: .25rem;
+        font-weight: 600;
+
+        &--selected {
+            color: var(--ion-color-primary);
+            border-color: var(--ion-color-primary);
+        }
+
+        &--long {
+            min-width: 3.2rem;
+        }
+
+        &--icon {
+            border: unset;
+            font-size: 2.5rem;
+            color: var(--ion-color-primary);
+        }
+
+        &--skeleton {
+            border-color: var(--ion-color-step-450);
+        }
+    }
+}

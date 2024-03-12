@@ -1,0 +1,23 @@
+<ion-button class="control-panel__btn" fill="clear">
+    <ion-icon slot="icon-only" name="play-back-outline" />
+</ion-button>
+
+<ion-item lines="none" class="control-panel__episode-wrapper">
+    <ion-input class="control-panel__episode"
+            aria-label="episode"
+            #episodeInputEl
+            [value]="selected"
+            (ionInput)="onEpisodeInput($event)"
+    />
+</ion-item>
+
+<ion-button class="control-panel__btn" fill="clear">
+    <ion-icon slot="icon-only" name="play-forward-outline" />
+</ion-button>
+
+<app-episode-selector class="control-panel__episode-selector"
+                      [episodes]="episodes"
+                      [selected]="selected"
+                      [maxEpisode]="maxEpisode"
+                      (selection)="onEpisodeChange($event)"
+/>
