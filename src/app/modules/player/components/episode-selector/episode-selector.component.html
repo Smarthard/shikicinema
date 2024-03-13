@@ -1,8 +1,3 @@
-<ion-icon class="episode-selector__item episode-selector__item--icon"
-          name="chevron-back-circle-outline"
-          (click)="changeEpisode(selected - 1, maxEpisode)"
-/>
-
 <div class="scrollable-wrapper"
     #episodesWrapper>
     @for (episode of episodes; track episode) {
@@ -22,8 +17,3 @@
         }
     }
 </div>
-
-<ion-icon class="episode-selector__item episode-selector__item--icon"
-          name="chevron-forward-circle-outline"
-          (click)="changeEpisode(selected + 1, maxEpisode)"
-/>

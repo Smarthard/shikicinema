@@ -64,18 +64,27 @@ export class ControlPanelComponent {
         return this._maxEpisode;
     }
 
+    private adjustEpisode(episode): number {
+        return adjustEpisode(episode, this.selected, this.maxEpisode);
+    }
+
+    onEpisodeControlsClick(selectedEpisode: number, type: 'forward' | 'backward'): void {
+        const episode = this.adjustEpisode(selectedEpisode + (type === 'forward' ? 1 : -1));
+
+        this.onEpisodeChange(episode);
+    }
+
     onEpisodeInput(event: InputCustomEvent): void {
         const { value } = event?.target;
-        const episode = adjustEpisode(value, this.selected, this.maxEpisode);
+        const episode = this.adjustEpisode(value);
 
         this._episodeInputEl.value = episode;
-
-        if (episode !== this.selected) {
-            this.selection.emit(episode);
-        }
+        this.onEpisodeChange(episode);
     }
 
     onEpisodeChange(episode: number): void {
-        this.selection.emit(episode);
+        if (episode !== this.selected) {
+            this.selection.emit(episode);
+        }
     }
 }

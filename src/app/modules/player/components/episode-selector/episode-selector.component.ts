@@ -90,10 +90,4 @@ export class EpisodeSelectorComponent implements AfterViewInit {
     onEpisodeSelect(episode: number): void {
         this.selection.emit(episode);
     };
-
-    changeEpisode(episode: number, maxEpisode: number): void {
-        if (episode > 0 && episode <= maxEpisode) {
-            this.onEpisodeSelect(episode);
-        }
-    }
 }

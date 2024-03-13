@@ -1,4 +1,5 @@
-<ion-button class="control-panel__btn" fill="clear">
+<ion-button class="control-panel__btn" fill="clear"
+    (click)="onEpisodeControlsClick(selected, 'backward')">
     <ion-icon slot="icon-only" name="play-back-outline" />
 </ion-button>
 
@@ -11,7 +12,8 @@
     />
 </ion-item>
 
-<ion-button class="control-panel__btn" fill="clear">
+<ion-button class="control-panel__btn" fill="clear"
+    (click)="onEpisodeControlsClick(selected, 'forward')">
     <ion-icon slot="icon-only" name="play-forward-outline" />
 </ion-button>
 
