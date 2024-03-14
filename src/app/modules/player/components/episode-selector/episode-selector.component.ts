@@ -14,10 +14,12 @@ import {
 } from '@angular/core';
 import { BehaviorSubject, combineLatest } from 'rxjs';
 import { IonIcon } from '@ionic/angular/standalone';
+import { NgScrollbar, NgScrollbarModule } from 'ngx-scrollbar';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { tap } from 'rxjs/operators';
 
 import { SkeletonBlockModule } from '@app/shared/components/skeleton-block/skeleton-block.module';
+
 
 @UntilDestroy()
 @Component({
@@ -26,6 +28,7 @@ import { SkeletonBlockModule } from '@app/shared/components/skeleton-block/skele
     imports: [
         IonIcon,
         SkeletonBlockModule,
+        NgScrollbarModule,
     ],
     templateUrl: './episode-selector.component.html',
     styleUrl: './episode-selector.component.scss',
@@ -38,8 +41,8 @@ export class EpisodeSelectorComponent implements AfterViewInit {
 
     private selectedSubject$ = new BehaviorSubject<number>(1);
 
-    @ViewChild('episodesWrapper', { static: true })
-    episodesWrapperEl: ElementRef<HTMLDivElement>;
+    @ViewChild('episodesScrollbar', { static: true })
+    episodesScrollbar: NgScrollbar;
 
     @ViewChildren('episodeEl')
     episodesEl: QueryList<ElementRef<HTMLSpanElement>>;
@@ -65,18 +68,7 @@ export class EpisodeSelectorComponent implements AfterViewInit {
     selection = new EventEmitter<number>();
 
     private scrollToEpisode(episode: number) {
-        const episodeIndex = episode - 1;
-        const element = this.episodesEl?.get(episodeIndex)?.nativeElement;
-        const episodeRect = element?.getBoundingClientRect();
-        const wrapperRect = this.episodesWrapperEl.nativeElement.getBoundingClientRect();
-        const isInView = episodeRect?.top >= wrapperRect.top &&
-            episodeRect?.left >= wrapperRect.left &&
-            episodeRect?.bottom <= wrapperRect.bottom &&
-            episodeRect?.right <= wrapperRect.right;
-
-        if (!isInView && element) {
-            element.scrollIntoView({ inline: 'center', behavior: 'auto' });
-        }
+        this.episodesScrollbar.scrollToElement(`#episode-${episode}`, { duration: 800 });
     }
 
     ngAfterViewInit(): void {

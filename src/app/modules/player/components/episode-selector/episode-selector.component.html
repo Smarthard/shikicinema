@@ -1,19 +1,24 @@
-<div class="scrollable-wrapper"
-    #episodesWrapper>
-    @for (episode of episodes; track episode) {
-        <span class="episode-selector__item"
-              tabindex="0"
-              #episodeEl
-              [id]="'episode-' + episode"
-              [class.episode-selector__item--selected]="episode === selected"
-              [class.episode-selector__item--long]="episode > 99"
-              (click)="onEpisodeSelect(episode)"
-              (keydown.enter)="onEpisodeSelect(episode)">
-            {{ episode }}
-        </span>
-    } @empty {
-        @for (_ of episodesSkeleton; track $index) {
-            <span class="skeleton episode-selector__item episode-selector__item--skeleton"></span>
+<ng-scrollbar #episodesScrollbar
+    class="scrollbar"
+    orientation="horizontal"
+    appearance="compact"
+    visibility="hover">
+    <div class="episode-selector__wrapper">
+        @for (episode of episodes; track episode) {
+            <span class="episode-selector__item"
+                tabindex="0"
+                #episodeEl
+                [id]="'episode-' + episode"
+                [class.episode-selector__item--selected]="episode === selected"
+                [class.episode-selector__item--long]="episode > 99"
+                (click)="onEpisodeSelect(episode)"
+                (keydown.enter)="onEpisodeSelect(episode)">
+                {{ episode }}
+            </span>
+        } @empty {
+            @for (_ of episodesSkeleton; track $index) {
+                <span class="skeleton episode-selector__item episode-selector__item--skeleton"></span>
+            }
         }
-    }
-</div>
+    </div>
+</ng-scrollbar>

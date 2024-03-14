@@ -3,6 +3,7 @@
 
     display: flex;
     align-items: center;
+    justify-content: space-between;
 
     &__episode-wrapper {
         max-width: 4.625rem;
@@ -17,5 +18,9 @@
     &__episode {
         text-align: center;
         min-height: $inputMinHeight !important;
+    }
+
+    &__episode-selector {
+        max-width: 60%;
     }
 }

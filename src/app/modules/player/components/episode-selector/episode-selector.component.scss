@@ -5,12 +5,18 @@
     border: 0.125rem var(--ion-color-primary) solid;
     border-radius: 100vh;
 
-    .scrollable-wrapper {
+    .scrollbar {
+        --scrollbar-thumb-color: rgba(var(--ion-color-primary-rgb), 1);
+        --scrollbar-track-color: rgba(var(--ion-color-primary-rgb), 0.5);
+        --_horizontal-top: .5rem;
+        --_horizontal-left: .5rem;
+        --_horizontal-right: .5rem;
+    }
+
+    &__wrapper {
         display: flex;
-        align-self: center;
-        max-width: 31rem;
-        overflow-x: auto;
         gap: 0.25rem;
+        overflow: hidden;
     }
 
     &__item {
@@ -26,8 +32,10 @@
         font-weight: 600;
 
         &--selected {
-            color: var(--ion-color-primary);
-            border-color: var(--ion-color-primary);
+            $selectedColor: var(--ion-color-primary);
+
+            color: $selectedColor;
+            border-color: $selectedColor;
         }
 
         &--long {
