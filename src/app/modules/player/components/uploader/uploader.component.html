@@ -1,0 +1,13 @@
+@if (uploader?.name; as name) {
+    <a class="uploader__name" [href]="uploader?.url">{{ name }}</a>
+} @else {
+    <app-skeleton-block height="1rem" width="5rem" />
+}
+
+@if (uploader?.avatar; as avatar) {
+    <img class="uploader__avatar"
+        [src]="uploader?.avatar"
+        alt="avatar" />
+} @else {
+    <app-skeleton-block height="1.625rem" width="1.625rem" />
+}

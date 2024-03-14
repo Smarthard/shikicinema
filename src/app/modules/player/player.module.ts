@@ -13,6 +13,8 @@ import { PlayerPage } from '@app/modules/player/player.page';
 import { PlayerRoutingModule } from '@app/modules/player/player-routing.module';
 import { PlayerStateModule } from '@app/modules/player/store/player-state.module';
 import { SkeletonBlockModule } from '@app/shared/components/skeleton-block/skeleton-block.module';
+import { ToUploaderPipe } from '@app/modules/player/pipes/to-uploader.pipe';
+import { UploaderComponent } from '@app/modules/player/components/uploader/uploader.component';
 import { VideoSelectorComponent } from '@app/modules/player/components/video-selector/video-selector.component';
 
 
@@ -32,6 +34,8 @@ import { VideoSelectorComponent } from '@app/modules/player/components/video-sel
         FilterByKindPipe,
         GetEpisodesPipe,
         ControlPanelComponent,
+        UploaderComponent,
+        ToUploaderPipe,
     ],
 })
 export class PlayerModule {}

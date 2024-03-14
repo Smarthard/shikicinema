@@ -6,3 +6,19 @@ h1, h2, h3, h4, h5, h6 {
     margin: 0;
     padding: 0;
 }
+
+a[href] {
+    $linkColor: var(--ion-color-primary);
+
+    color: $linkColor;
+    text-decoration: none;
+
+    &:hover {
+        color: var(--ion-color-secondary);
+        text-decoration: solid;
+    }
+
+    &:visited {
+        color: $linkColor;
+    }
+}

@@ -1,13 +1,19 @@
 <ion-content [fullscreen]="true" class="page-content ion-padding">
     <div class="player-page__wrapper">
         <div class="player-page__anime-info common-info">
-            @if (isAnimeLoading$ | async) {
-                <app-skeleton-block height="2rem" width="30rem" />
-            } @else {
-                <ion-text>
-                    <h1>{{ (anime$ | async)?.russian }}</h1>
-                </ion-text>
-            }
+            <div class="common-info__title">
+                @if (isAnimeLoading$ | async) {
+                    <app-skeleton-block height="2rem" width="30rem" />
+                } @else {
+                    <ion-text>
+                        <h1>{{ (anime$ | async)?.russian }}</h1>
+                    </ion-text>
+                }
+            </div>
+
+            <div class="common-info__video">
+                <app-uploader [uploader]="(currentVideo$ | async)?.uploader | toUploader | async" />
+            </div>
         </div>
 
         <app-kind-selector
