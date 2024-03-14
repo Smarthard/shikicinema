@@ -13,7 +13,7 @@ import {
     ViewEncapsulation,
 } from '@angular/core';
 import { BehaviorSubject, combineLatest } from 'rxjs';
-import { IonIcon } from '@ionic/angular/standalone';
+import { IonIcon, IonRippleEffect } from '@ionic/angular/standalone';
 import { NgScrollbar, NgScrollbarModule } from 'ngx-scrollbar';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { tap } from 'rxjs/operators';
@@ -27,6 +27,7 @@ import { SkeletonBlockModule } from '@app/shared/components/skeleton-block/skele
     standalone: true,
     imports: [
         IonIcon,
+        IonRippleEffect,
         SkeletonBlockModule,
         NgScrollbarModule,
     ],

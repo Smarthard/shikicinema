@@ -20,12 +20,17 @@
     }
 
     &__item {
+        // <-- for ionic ripple effect
+        position: relative;
+        overflow: hidden;
+        // for ionic ripple effect -->
+
         user-select: none;
         display: flex;
         align-items: center;
         justify-content: center;
         border-radius: 100vmax;
-        border: 0.16rem solid var(--ion-color-medium-tint);
+        border: 0.125rem solid var(--ion-color-medium-tint);
         min-width: 2rem;
         min-height: 2rem;
         padding: .25rem;
@@ -40,12 +45,6 @@
 
         &--long {
             min-width: 3.2rem;
-        }
-
-        &--icon {
-            border: unset;
-            font-size: 2.5rem;
-            color: var(--ion-color-primary);
         }
 
         &--skeleton {

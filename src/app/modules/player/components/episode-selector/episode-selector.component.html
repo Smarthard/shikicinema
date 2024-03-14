@@ -5,7 +5,7 @@
     visibility="hover">
     <div class="episode-selector__wrapper">
         @for (episode of episodes; track episode) {
-            <span class="episode-selector__item"
+            <span class="episode-selector__item ion-activatable"
                 tabindex="0"
                 #episodeEl
                 [id]="'episode-' + episode"
@@ -14,6 +14,7 @@
                 (click)="onEpisodeSelect(episode)"
                 (keydown.enter)="onEpisodeSelect(episode)">
                 {{ episode }}
+                <ion-ripple-effect type="unbounded"></ion-ripple-effect>
             </span>
         } @empty {
             @for (_ of episodesSkeleton; track $index) {
