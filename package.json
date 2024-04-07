@@ -69,7 +69,7 @@
         "@ngrx/store": "^17.1.0",
         "deep-object-diff": "^1.1.9",
         "ngrx-store-localstorage": "^16.1.0",
-        "ngx-scrollbar": "^14.0.0-beta.0",
+        "ngx-scrollbar": "^14.0.0",
         "ngx-tippy-wrapper": "^6.2.2",
         "ngx-visibility": "~1.5.0",
         "rxjs": "~7.8.1",

@@ -1,7 +1,6 @@
 @import 'src/scss/mixins';
 
 .player-page {
-    display: flex;
 
     &__anime-info {
         display: flex;
@@ -25,17 +24,82 @@
 
     &__video-selector {
         grid-area: video;
-        max-height: 28.25rem;
+        max-height: 90vh;
+
+        &--modal {
+            height: 100%;
+            min-width: unset !important;
+            overflow: visible !important;
+        }
     }
 
     &__wrapper {
         display: grid;
-        padding: 0 5%;
-        column-gap: 2.75rem;
         row-gap: 1rem;
 
-        grid-template:  "info   kind"
-                        "player video"
-                        "conpan ." / 50.125rem minmax(auto, 23.5rem);
+        justify-content: center;
+
+        grid-template:  "info"
+                        "player"
+                        "conpan"
+                        "kind"
+                        "video";
+        grid-template-columns: 90vw min-content;
+
+        &--mobile {
+            @media (orientation: portrait) {
+                grid-template:  "info"
+                                "player"
+                                "conpan";
+
+                grid-template-rows: auto;
+                grid-template-columns: 90vw min-content;
+            }
+
+            @media (orientation: landscape) {
+                grid-template:  "info"
+                                "player"
+                                "conpan";
+
+                grid-template-rows: auto;
+                grid-template-columns: 90vw min-content;
+            }
+        }
+
+        @include media-breakpoint-up('lg') {
+            margin-top: .5rem;
+            padding: 0 5%;
+
+            grid-template:  "info   kind"
+                            "player video"
+                            "conpan .";
+
+            column-gap: 2.75rem;
+            grid-template-rows: auto 60vh;
+            grid-template-columns: 60vw min-content;
+        }
+
+        @include media-breakpoint-up('xxxl') {
+            margin-top: .5rem;
+            padding: 0 5%;
+
+            grid-template:  "info   kind"
+                            "player video"
+                            "conpan .";
+
+            column-gap: 2.75rem;
+            grid-template-rows: auto 70vh;
+            grid-template-columns: 70vw min-content;
+        }
+    }
+
+    .common-info {
+        &__title {
+            white-space: nowrap;
+
+            @include media-breakpoint-down('lg') {
+                max-width: 60%;
+            }
+        }
     }
 }

@@ -1,29 +1,39 @@
-<ion-button class="control-panel__btn" fill="clear"
-    (click)="onEpisodeControlsClick(selected, 'backward')">
-    <ion-icon slot="icon-only" name="play-back-outline" />
-</ion-button>
+<div class="control-panel__controls">
+    <ion-button class="control-panel__btn" fill="outline"
+        (click)="onEpisodeControlsClick(selected, 'backward')">
+        <ion-icon slot="icon-only" name="play-back-outline" />
+    </ion-button>
 
-<ion-item lines="none" class="control-panel__episode-wrapper">
-    <ion-input class="control-panel__episode"
-            aria-label="episode"
-            #episodeInputEl
-            [value]="selected"
-            (ionInput)="onEpisodeInput($event)"
+    <ion-item lines="none" class="control-panel__episode-wrapper">
+        <ion-input class="control-panel__episode"
+                aria-label="episode"
+                #episodeInputEl
+                [value]="selected"
+                (ionInput)="onEpisodeInput($event)"
+        />
+    </ion-item>
+
+    <ion-button class="control-panel__btn" fill="outline"
+        (click)="onEpisodeControlsClick(selected, 'forward')">
+        <ion-icon slot="icon-only" name="play-forward-outline" />
+    </ion-button>
+
+    <ion-button class="control-panel__btn" fill="outline">
+        <ion-icon slot="icon-only" name="checkmark-outline" />
+    </ion-button>
+
+    @if (isMinified) {
+        <ion-button class="control-panel__btn" fill="outline">
+            <ion-icon slot="icon-only" name="list-outline" />
+        </ion-button>
+    }
+</div>
+
+@if (!isMinified) {
+    <app-episode-selector class="control-panel__episode-selector"
+                        [episodes]="episodes"
+                        [selected]="selected"
+                        [maxEpisode]="maxEpisode"
+                        (selection)="onEpisodeChange($event)"
     />
-</ion-item>
-
-<ion-button class="control-panel__btn" fill="clear"
-    (click)="onEpisodeControlsClick(selected, 'forward')">
-    <ion-icon slot="icon-only" name="play-forward-outline" />
-</ion-button>
-
-<ion-button class="control-panel__btn" fill="outline">
-    <ion-icon slot="icon-only" name="checkmark-outline" />
-</ion-button>
-
-<app-episode-selector class="control-panel__episode-selector"
-                      [episodes]="episodes"
-                      [selected]="selected"
-                      [maxEpisode]="maxEpisode"
-                      (selection)="onEpisodeChange($event)"
-/>
+}

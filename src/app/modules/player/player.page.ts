@@ -1,14 +1,21 @@
 import { ActivatedRoute, Router } from '@angular/router';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import {
     ChangeDetectionStrategy,
     Component,
     HostBinding,
     OnInit,
+    ViewChild,
     ViewEncapsulation,
 } from '@angular/core';
+import { IonModal } from '@ionic/angular/common';
+import { Platform } from '@ionic/angular';
+import { ReplaySubject, combineLatest } from 'rxjs';
 import { Store } from '@ngrx/store';
+import { Title } from '@angular/platform-browser';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
+    debounceTime,
     distinctUntilChanged,
     filter,
     map,
@@ -18,8 +25,6 @@ import {
 } from 'rxjs/operators';
 
 import { AnimeBriefInfoInterface } from '@app/shared/types/shikimori/anime-brief-info.interface';
-import { ReplaySubject, combineLatest } from 'rxjs';
-import { Title } from '@angular/platform-browser';
 import { VideoInfoInterface } from '@app/modules/player/types';
 import { VideoKindEnum } from '@app/modules/player/types/video-kind.enum';
 import { filterByEpisode } from '@app/shared/utils/filter-by-episode.function';
@@ -42,6 +47,32 @@ import {
 export class PlayerPage implements OnInit {
     @HostBinding('class.player-page')
     private playerPageClass = true;
+
+    @ViewChild('videoSelectorModal')
+    videoSelectorModal: IonModal;
+
+    private isMobileSubject$ = new ReplaySubject<boolean>(1);
+    private isOrientationPortraitSubject$ = new ReplaySubject<boolean>(1);
+
+    readonly isMobile$ = this.isMobileSubject$.asObservable();
+    readonly isSmallScreen$ = this.breakpointObserver.observe([
+        Breakpoints.XSmall,
+        Breakpoints.Small,
+        Breakpoints.Medium,
+    ]).pipe(map(({ matches }) => matches));
+
+    readonly isControlPanelMinified$ = combineLatest([
+        this.isMobile$,
+        this.isOrientationPortraitSubject$,
+        this.isSmallScreen$,
+    ]).pipe(
+        map(([isMobile, isPortrait, isSmallScreen]) => isMobile && isPortrait || !isMobile && isSmallScreen),
+    );
+
+    readonly isVideoSelectionHidden$ = combineLatest([
+        this.isMobile$,
+        this.isSmallScreen$,
+    ]).pipe(map(([isMobile, isSmall]) => isMobile || isSmall));
 
     animeId$ = this.route.params.pipe(
         map(({ animeId }) => animeId as string),
@@ -79,9 +110,11 @@ export class PlayerPage implements OnInit {
         private route: ActivatedRoute,
         private router: Router,
         private title: Title,
+        private platform: Platform,
+        private breakpointObserver: BreakpointObserver,
     ) {}
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.animeId$.pipe(
             tap((animeId) => {
                 this.store.dispatch(findVideosAction({ animeId }));
@@ -105,6 +138,21 @@ export class PlayerPage implements OnInit {
             tap(([anime, episode]) => this.changeTitle(anime, episode)),
             untilDestroyed(this),
         ).subscribe();
+
+        this.platform.resize
+            .pipe(
+                debounceTime(100),
+                tap(() => this.onResize()),
+                untilDestroyed(this),
+            )
+            .subscribe();
+
+        this.onResize();
+    }
+
+    private onResize(): void {
+        this.isOrientationPortraitSubject$.next(this.platform.isPortrait());
+        this.isMobileSubject$.next(this.platform.is('mobile') || this.platform.is('mobileweb'));
     }
 
     changeTitle(anime: AnimeBriefInfoInterface, episode: number): void {
@@ -128,5 +176,9 @@ export class PlayerPage implements OnInit {
             }),
             untilDestroyed(this),
         ).subscribe();
+    }
+
+    onOpenVideoSelectorModal(): void {
+        this.videoSelectorModal.present();
     }
 }

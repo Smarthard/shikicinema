@@ -1,12 +1,18 @@
-<ion-content [fullscreen]="true" class="page-content ion-padding">
-    <div class="player-page__wrapper">
+<ion-content [fullscreen]="true" class="page-content ion-padding"
+    appSwipe
+    (appSwipeRight)="onOpenVideoSelectorModal()">
+    <div class="player-page__wrapper"
+        [class.player-page__wrapper--mobile]="isMobile$ | async">
         <div class="player-page__anime-info common-info">
             <div class="common-info__title">
                 @if (isAnimeLoading$ | async) {
                     <app-skeleton-block height="2rem" width="30rem" />
                 } @else {
                     <ion-text>
-                        <h1>{{ (anime$ | async)?.russian }}</h1>
+                        <h1 class="text-ellipsis"
+                            [title]="(anime$ | async)?.russian">
+                            {{ (anime$ | async)?.russian }}
+                        </h1>
                     </ion-text>
                 }
             </div>
@@ -18,18 +24,20 @@
 
         <app-kind-selector
             class="player-page__kind"
+            [class.ion-hide]="isVideoSelectionHidden$ | async"
             [kinds]="episodeVideos$ | async | getActiveKinds"
             [selected]="currentKind$ | async"
             (selection)="onKindChange($event)"
         />
 
-        <app-player class="player-page__player responsive-16by9"
+        <app-player class="player-page__player"
             [loading]="isVideosLoading$ | async"
             [source]="(currentVideo$ | async)?.url"
         />
 
         <app-video-selector
             class="player-page__video-selector"
+            [class.ion-hide]="isVideoSelectionHidden$ | async"
             [videos]="episodeVideos$ | async | filterByKind: (currentKind$ | async)"
             [selected]="currentVideo$ | async"
             (selection)="onVideoChange($event)"
@@ -39,7 +47,33 @@
             class="player-page__control-panel"
             [episodes]="videos$ | async | getEpisodes"
             [selected]="episode$ | async"
+            [isMinified]="isControlPanelMinified$ | async"
             (selection)="onEpisodeChange($event)"
         />
     </div>
 </ion-content>
+
+<ion-modal #videoSelectorModal>
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>Выберите видео</ion-title>
+
+          <ion-buttons slot="end">
+            <ion-button (click)="videoSelectorModal.dismiss()">
+                <ion-icon slot="icon-only" name="close-outline"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+
+      <ion-content class="ion-padding">
+        <app-video-selector
+            class="player-page__video-selector player-page__video-selector--modal"
+            [videos]="episodeVideos$ | async | filterByKind: (currentKind$ | async)"
+            [selected]="currentVideo$ | async"
+            (selection)="onVideoChange($event)"
+        />
+      </ion-content>
+    </ng-template>
+  </ion-modal>

@@ -22,3 +22,8 @@ a[href] {
         color: $linkColor;
     }
 }
+
+.text-ellipsis {
+    text-overflow: ellipsis;
+    overflow: hidden;
+}

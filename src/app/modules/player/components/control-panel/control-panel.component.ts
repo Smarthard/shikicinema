@@ -57,6 +57,9 @@ export class ControlPanelComponent {
     @Input()
     selected: number;
 
+    @Input()
+    isMinified = false;
+
     @Output()
     selection = new EventEmitter<number>();
 

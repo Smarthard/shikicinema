@@ -48,7 +48,7 @@ export class EpisodeSelectorComponent implements AfterViewInit {
     @ViewChildren('episodeEl')
     episodesEl: QueryList<ElementRef<HTMLSpanElement>>;
 
-    readonly episodesSkeleton = new Array(24);
+    readonly episodesSkeleton = new Array<number>(50);
 
     @Input({ required: true })
     episodes: number[];

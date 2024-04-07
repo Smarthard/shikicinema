@@ -52,7 +52,14 @@
                                     "with": "src/environments/environment.prod.ts"
                                 }
                             ],
-                            "optimization": true,
+                            "optimization": {
+                                "scripts": true,
+                                "styles": {
+                                    "minify": true,
+                                    "inlineCritical": false
+                                },
+                                "fonts": true
+                            },
                             "outputHashing": "none",
                             "sourceMap": false,
                             "namedChunks": false,
@@ -66,7 +73,7 @@
                                     "maximumWarning": "2mb",
                                     "maximumError": "5mb"
                                 }
-                            ]
+                            ],
                         },
                         "development": {
                             "optimization": false,

@@ -1,8 +1,8 @@
 .player {
     display: flex;
-    flex: 1 0;
 
     &__video {
+        flex: 1 0;
         overflow: hidden;
         background-color: var(--box-shadow);
         border: 0;
