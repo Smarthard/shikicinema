@@ -9,7 +9,7 @@ function run() {
                   if (settings && settings.playerTabOpens && settings.playerTabOpens === 'same') {
                     chrome.tabs.update({ url: request.openUrl });
                   } else {
-                    chrome.tabs.create({ url: request.openUrl, active: true });
+                    chrome.tabs.create({ url: request.openUrl, index: sender.tab.index + 1, active: true });
                   }
                });
            }
