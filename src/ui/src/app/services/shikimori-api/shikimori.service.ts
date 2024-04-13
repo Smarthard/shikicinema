@@ -111,7 +111,7 @@ export class ShikimoriService {
       switchMap((domain) => this.http.get<Shikimori.User>(`${domain}/api/users/${user}`, { params })
         .pipe(
           catchError((err: HttpErrorResponse) => {
-            const deletedOrRenamedUser = new Shikimori.User({ avatar: `${domain}/favicon.ico`, nickname: user});
+            const deletedOrRenamedUser = new Shikimori.User({ avatar: `${domain}/favicon.ico`, nickname: user });
 
             return err.status === 404 ? of(deletedOrRenamedUser) : throwError(() => err)
           })
@@ -237,10 +237,10 @@ export class ShikimoriService {
     return this.domain$.pipe(
       take(1),
       switchMap((domain) => this.http.delete(`${domain}/api/comments/${id}`, { observe: 'response' })
-      .pipe(
-        timeout(3000),
-        map((res: HttpResponse<any>) => res.ok)
-      ))
+        .pipe(
+          timeout(3000),
+          map((res: HttpResponse<any>) => res.ok)
+        ))
     );
   }
 
@@ -352,7 +352,7 @@ export class ShikimoriService {
 
     return firstValueFrom(this.domain$.pipe(
       take(1),
-      switchMap((domain) => this.http.post<Shikimori.IToken>(`${domain}/oauth/token`, null,{ params })),
+      switchMap((domain) => this.http.post<Shikimori.IToken>(`${domain}/oauth/token`, null, { params })),
       map((token) => new Shikimori.Token(token.access_token, token.refresh_token, token.created_at, token.expires_in))
     ));
   }
@@ -372,12 +372,12 @@ export class ShikimoriService {
       codeUrl.searchParams.set('redirect_uri', 'urn:ietf:wg:oauth:2.0:oob');
       codeUrl.searchParams.set('response_type', 'code');
 
-      chrome.tabs.query({active: true}, ([selectedTab]) =>
+      chrome.tabs.query({ active: true, currentWindow: true }, ([selectedTab]) =>
         chrome.tabs.create({ active: true, url: codeUrl.toString() }, (newTab) => {
 
           const onRemove = (tabId: number) => {
             if (tabId === newTab.id) {
-              reject({error: 'tab-removed'});
+              reject({ error: 'tab-removed' });
               removeListeners();
             }
           };
