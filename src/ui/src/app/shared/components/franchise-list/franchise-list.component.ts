@@ -22,7 +22,7 @@ interface AnimeData {
 export class FranchiseListComponent implements OnInit {
 
   franchiseData: AnimeData[] = [];
-  showFranchiseList = true;
+  showFranchiseList = false;
   currentAnimeId: number;
   PLAYER_URL = '/index.html';
 
