@@ -41,7 +41,7 @@ ul {
 
 .marker {
   display: block;
-  margin-bottom: 5px; /* Adjust spacing between markers */
+  margin-bottom: 3px; /* Adjust spacing between markers */
   user-select: none; /* Make markers unselectable */
   color: #317aad; /* Set color of markers */
 }
