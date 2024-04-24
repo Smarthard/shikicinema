@@ -1,14 +1,14 @@
 <div *ngIf="franchiseData.length > 0" (click)="toggleFranchiseList()" class="franchise-title bold-title">Это аниме состоит из:</div>
 <ul *ngIf="showFranchiseList">
   <li *ngFor="let franchise of franchiseData; let i = index" class="franchise-list-item">
-    <a [routerLink]="['/', franchise.id, franchise.episode]" 
-       [ngStyle]="{'color': franchise.id === currentAnimeId ? '#b34100' : '#317aad'}"
-       (click)="changeCurrentAnimeId(franchise.id)">
-      {{ i + 1 }}. {{ franchise.russian }} [{{ franchise.kind }}{{ franchise.kind === 'ТВ' ? '-' + franchise.e : '' }}]
-      <span *ngIf="franchise.episodes > 1">- ({{ franchise.episodes }} эп.)</span>
-      <span *ngIf="franchise.episodes === 0">- ({{ franchise.episodesAired }}+ эп.)</span>
-      <span *ngIf="franchise.kind === 'ТВ' && franchise.e > 1"> продолжение</span>
-      <span *ngIf="franchise.kind === 'ТВ' && franchise.e === 1"> адаптация манги</span>
-    </a>
+   <a class="franchise-link"
+    (click)="openFranchise(franchise.id, franchise.episodes, franchise.episodesAired)"
+    [ngStyle]="{'color': franchise.id === currentAnimeId ? '#b34100' : '#317aad'}">
+    {{ i + 1 }}. {{ franchise.russian }} [{{ franchise.kind }}{{ franchise.kind === 'ТВ' ? '-' + franchise.e : '' }}]
+    <span *ngIf="franchise.status === 'ongoing'">- ({{ franchise.episodesAired }}+ эп.)</span>
+    <span *ngIf="franchise.status === 'released' && franchise.episodes > 1">- ({{ franchise.episodes }} эп.)</span>
+    <span *ngIf="franchise.kind === 'ТВ' && franchise.e > 1"> продолжение</span>
+    <span *ngIf="franchise.kind === 'ТВ' && franchise.e === 1"> адаптация манги</span>
+   </a>
   </li>
 </ul>
