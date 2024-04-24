@@ -1,8 +1,14 @@
 .franchise-title {
   cursor: pointer;
+  /* Apply gradient for text color */
   background: linear-gradient(90deg, #ff6e00, #f83e02, #d90368, #820263, #291720);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+}
+
+
+.franchise-link {
+   cursor: pointer;
 }
 
 ul {
@@ -10,19 +16,21 @@ ul {
   padding-left: 0;
 }
 
+/* New style for franchise list items */
 .franchise-list-item {
-  margin-bottom: 5px;  
+  margin-bottom: 5px;  /* Add some space between list items */
 }
 
 .franchise-list-item a {
-  color: #317aad;  
-  text-decoration: none;  
+  color: #317aad;  /* Set text color for franchise names */
+  text-decoration: none;  /* Remove underline from links */
 }
 
 .franchise-list-item a:hover {
-  background-color: #f5f5f5;  
+  background-color: #f5f5f5;  /* Add background color on hover */
 }
 
+/* New class for bold title */
 .bold-title {
   font-weight: bold;
 }
