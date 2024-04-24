@@ -1,36 +1,52 @@
+/* Styles for franchise title */
 .franchise-title {
   cursor: pointer;
   /* Apply gradient for text color */
   background: linear-gradient(90deg, #ff6e00, #f83e02, #d90368, #820263, #291720);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  margin-bottom: 20px; /* Add space between franchise title and list */
 }
 
-
+/* Styles for franchise links */
 .franchise-link {
-   cursor: pointer;
+  cursor: pointer;
+  color: #317aad; /* Set text color for franchise names */
+  text-decoration: none; /* Remove underline from links */
 }
 
+/* Hover effect for franchise links */
+.franchise-link:hover {
+  background-color: #f5f5f5; /* Add background color on hover */
+}
+
+/* Styles for the list */
 ul {
-  list-style-type: none;
+  list-style-type: none; /* Remove default list styling */
   padding-left: 0;
+  margin: 0;
 }
 
-/* New style for franchise list items */
+/* Styles for franchise list items */
 .franchise-list-item {
-  margin-bottom: 5px;  /* Add some space between list items */
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 3px; /* Adjust spacing between franchise items */
 }
 
-.franchise-list-item a {
-  color: #317aad;  /* Set text color for franchise names */
-  text-decoration: none;  /* Remove underline from links */
+/* Styles for franchise markers */
+.marker-list {
+  margin-right: 5px; /* Adjust as needed */
 }
 
-.franchise-list-item a:hover {
-  background-color: #f5f5f5;  /* Add background color on hover */
+.marker {
+  display: block;
+  margin-bottom: 5px; /* Adjust spacing between markers */
+  user-select: none; /* Make markers unselectable */
+  color: #317aad; /* Set color of markers */
 }
 
-/* New class for bold title */
+/* Bold title class */
 .bold-title {
   font-weight: bold;
 }
