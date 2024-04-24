@@ -204,6 +204,10 @@
         </div>
       </ng-container>
     </div>
+    <div>
+      <app-franchise-list>
+      </app-franchise-list>
+    </div>
     <ng-container *ngIf="settings.displayComments">
       <app-comments (nextPage)="nextCommentsPage()"
                     (quote)="addQuote($event)"
