@@ -1,15 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import * as jsyaml from 'js-yaml';
+import { FETCH_RESOURCE_TIMEOUT, fetch } from '../../../../../../fetch-timeout';
+import { Router } from '@angular/router';
 
 interface AnimeData {
   id: number;
   russian: string;
   kind: string;
-  episodesAired: number;
   episodes: number;
+  episodesAired: number;
+  status: string;
   e?: number;
-  episode?: number;
 }
 
 @Component({
@@ -22,8 +24,9 @@ export class FranchiseListComponent implements OnInit {
   franchiseData: AnimeData[] = [];
   showFranchiseList = true;
   currentAnimeId: number;
+  PLAYER_URL = '/index.html';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private router: Router) { }
 
   ngOnInit(): void {
     this.currentAnimeId = this.extractIdFromUrl(window.location.href);
@@ -37,73 +40,66 @@ export class FranchiseListComponent implements OnInit {
   }
 
   private async fetchFranchiseData(): Promise<void> {
-    const animeUrl = `https://shikimori.one/api/animes/${this.currentAnimeId}`;
-    const animeResponse = await fetch(animeUrl);
-    const animeData = await animeResponse.json();
-    const franchise = animeData.franchise;
+    try {
+      const animeUrl = `https://shikimori.one/api/animes/${this.currentAnimeId}`;
+      const animeResponse = await fetch(animeUrl);
+      const animeData = await animeResponse.json();
+      const franchise = animeData.franchise;
 
-    const excludedIdsUrl = 'https://corsproxy.io/?' + encodeURIComponent('https://raw.githubusercontent.com/shikimori/neko-achievements/master/priv/rules/_franchises.yml');
-    const excludedIdsData = await this.fetchData(excludedIdsUrl);
-    const excludedIds = this.parseNotAnimeIds(excludedIdsData, franchise);
+      const excludedIdsUrl = 'https://corsproxy.io/?' + encodeURIComponent('https://raw.githubusercontent.com/shikimori/neko-achievements/master/priv/rules/_franchises.yml');
+      const excludedIdsData = await this.fetchData(excludedIdsUrl);
+      const excludedIds = this.parseNotAnimeIds(excludedIdsData, franchise);
 
-    const graphqlUrl = 'https://shikimori.one/api/graphql';
-    const query = `
-      {
-        animes(order: aired_on, franchise: "${franchise}", limit: 50, excludeIds: "${excludedIds}", status: "!anons") {
-          id
-          russian
-          kind
-          episodesAired
-          episodes
-          userRate { episodes status }
+      const graphqlUrl = 'https://shikimori.one/api/graphql';
+      const query = `
+        {
+          animes(order: aired_on, franchise: "${franchise}", limit: 100, excludeIds: "${excludedIds}", status: "!anons") {
+            id
+            russian
+            kind
+            episodes
+            episodesAired
+            status
+          }
         }
+      `;
+
+      const response = await fetch(graphqlUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify({ query })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch data');
       }
-    `;
 
-    const response = await fetch(graphqlUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-      },
-      body: JSON.stringify({ query })
-    });
+      const { data } = await response.json();
 
-    if (!response.ok) {
-      throw new Error('Failed to fetch data');
-    }
-
-    const { data } = await response.json();
-    if (data && data.animes) {
-      this.franchiseData = data.animes.map((node: any) => {
-        const maxEpisode = node.episodes || node.episodesAired || 1;
-        const userRate = node.userRate;
-        const watched = +(userRate ? userRate.episodes : 0);
-        let episode = userRate && userRate.status === 'completed' ? 1 : watched + 1;
-        if (episode > maxEpisode) {
-          episode = maxEpisode;
-        }
-        return {
+      if (data && data.animes) {
+        this.franchiseData = data.animes.map((node: any) => ({
           id: parseInt(node.id, 10),
           russian: node.russian,
           kind: this.translateKind(node.kind),
-          episodesAired: node.episodesAired,
           episodes: node.episodes,
-          userRate: node.userRate.episodes,
-          UserRateStatus: node.userRate.status,
-          episode: episode
-        };
-      }).reverse();
-
-      let e = 1;
-      this.franchiseData.forEach((node: AnimeData) => {
-        if (node.kind === 'ТВ') {
-          node.e = e++;
-        }
-      });
+          episodesAired: node.episodesAired,
+          status: node.status,
+        })).reverse();
+          
+        let e = 1;
+        this.franchiseData.forEach((node: AnimeData) => {
+          if (node.kind === 'ТВ') {
+            node.e = e++;
+          }
+        });
+      }
+    } catch (error) {
+      console.error('Error fetching franchise data:', error);
     }
   }
-
 
   private translateKind(kind: string): string {
     switch (kind) {
@@ -134,15 +130,35 @@ export class FranchiseListComponent implements OnInit {
     let excludedIdsSet: Set<number> = new Set();
     data.forEach(entry => {
       if (entry.neko_id === franchise) {
-        const notAnimeIds = entry.filters?.not_anime_ids || [];
-        notAnimeIds.forEach(id => excludedIdsSet.add(id));
+          const notAnimeIds = entry.filters?.not_anime_ids || [];
+          notAnimeIds.forEach(id => excludedIdsSet.add(id));
       }
     });
     const excludedIds = Array.from(excludedIdsSet);
     return excludedIds;
   }
 
+  openFranchise(animeId: number, episodes: number, episodesAired: number): void {
+    this.changeCurrentAnimeId(animeId)
+    this._getAnimeInfo(animeId, 800)
+      .then((anime) => {
+        const userRate = anime.user_rate;
+        const maxEpisode = episodes || episodesAired || 1;
+        const watched = +(userRate ? userRate.episodes : 0);
+        let episode = userRate && userRate.status === 'completed' ? 1 : watched + 1;
+        if (episode > maxEpisode) {
+          episode = maxEpisode;
+        }
 
+        this.router.navigateByUrl(`/${animeId}/${episode}`);
+      })
+  }
+  
+  private _getAnimeInfo(animeId: number, timeout = FETCH_RESOURCE_TIMEOUT) {
+    return fetch(`https://shikimori.one/api/animes/${animeId}`, {}, timeout)
+      .then((res) => res.json())
+      .catch(() => ({ id: animeId }));
+  }
 
   toggleFranchiseList(): void {
     this.showFranchiseList = !this.showFranchiseList;
@@ -150,6 +166,5 @@ export class FranchiseListComponent implements OnInit {
 
   changeCurrentAnimeId(animeId: number): void {
     this.currentAnimeId = animeId;
-    this.fetchFranchiseData();
   }
 }
