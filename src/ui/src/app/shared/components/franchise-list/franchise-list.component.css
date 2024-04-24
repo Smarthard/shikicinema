@@ -1,0 +1,28 @@
+.franchise-title {
+  cursor: pointer;
+  background: linear-gradient(90deg, #ff6e00, #f83e02, #d90368, #820263, #291720);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.franchise-list-item {
+  margin-bottom: 5px;  
+}
+
+.franchise-list-item a {
+  color: #317aad;  
+  text-decoration: none;  
+}
+
+.franchise-list-item a:hover {
+  background-color: #f5f5f5;  
+}
+
+.bold-title {
+  font-weight: bold;
+}
