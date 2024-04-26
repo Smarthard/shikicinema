@@ -2,7 +2,7 @@
 <div *ngIf="showFranchiseList" class="franchise-container">
   <ul class="franchise-list">
     <li *ngFor="let franchise of franchiseData; let i=index;" class="franchise-list-item">
-      <div class="marker-list">
+      <div class="marker-list" [ngClass]="{ 'marker-list-adjusted': i >= 9 }">
         <span class="marker" [ngStyle]="{'color': franchise.id === currentAnimeId ? '#b34100' : '#317aad'}">{{ i + 1 }}.</span>
       </div>
       <a class="franchise-link"
