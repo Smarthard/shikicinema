@@ -1,6 +1,5 @@
 /* Styles for franchise title */
 .franchise-title {
-  cursor: pointer;
   /* Apply gradient for text color */
   background: linear-gradient(90deg, #ff6e00, #f83e02, #d90368, #820263, #291720);
   -webkit-background-clip: text;
@@ -8,6 +7,9 @@
   margin-bottom: 12px;
   margin-top: 30px; 
   margin-left: 10px;
+}
+.franchise-title span {
+  cursor: pointer;
 }
 
 /* Styles for franchise links */
