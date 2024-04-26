@@ -1,5 +1,5 @@
 <div *ngIf="franchiseData.length > 0" class="franchise-title bold-title">
-  <span (click)="toggleFranchiseList()">Это аниме состоит из:</span>
+  <span (click)="showFranchiseList = !showFranchiseList">{{ showFranchiseList ? '−' : '+' }} Это аниме состоит из:</span>
 </div>
 <div *ngIf="showFranchiseList" class="franchise-container">
   <ul class="franchise-list">
