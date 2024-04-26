@@ -23,6 +23,7 @@ export class FranchiseListComponent implements OnInit {
 
   franchiseData: AnimeData[] = [];
   showFranchiseList = false;
+  isHidden = true;
   currentAnimeId: number;
 
   constructor(private http: HttpClient, private router: Router) { }
@@ -129,6 +130,7 @@ export class FranchiseListComponent implements OnInit {
     let excludedIdsSet: Set<number> = new Set();
     data.forEach(entry => {
       if (entry.neko_id === franchise) {
+          this.isHidden = false;
           const notAnimeIds = entry.filters?.not_anime_ids || [];
           notAnimeIds.forEach(id => excludedIdsSet.add(id));
       }
