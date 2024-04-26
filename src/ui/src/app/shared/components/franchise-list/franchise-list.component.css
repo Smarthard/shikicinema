@@ -50,3 +50,8 @@ ul {
 .bold-title {
   font-weight: bold;
 }
+
+/* Adjusted marker list for longer markers */
+.marker-list-adjusted {
+  margin-left: -10px; /* Adjust this value as needed for alignment */
+}
