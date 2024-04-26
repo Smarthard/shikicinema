@@ -24,7 +24,6 @@ export class FranchiseListComponent implements OnInit {
   franchiseData: AnimeData[] = [];
   showFranchiseList = false;
   currentAnimeId: number;
-  PLAYER_URL = '/index.html';
 
   constructor(private http: HttpClient, private router: Router) { }
 
