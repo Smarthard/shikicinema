@@ -1,4 +1,6 @@
-<div *ngIf="franchiseData.length > 0" (click)="toggleFranchiseList()" class="franchise-title bold-title">Это аниме состоит из:</div>
+<div *ngIf="franchiseData.length > 0" class="franchise-title bold-title">
+  <span (click)="toggleFranchiseList()">Это аниме состоит из:</span>
+</div>
 <div *ngIf="showFranchiseList" class="franchise-container">
   <ul class="franchise-list">
     <li *ngFor="let franchise of franchiseData; let i=index;" class="franchise-list-item">
