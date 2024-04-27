@@ -17,10 +17,6 @@ b {
   text-decoration: none; 
 }
 
-.franchise-link:hover {	
-  background-color: #C0C0C0;	
-}
-
 ul {
   list-style-type: none; 
   padding-left: 0;
@@ -45,4 +41,19 @@ ul {
 
 .marker-list-adjusted {
   margin-left: -10px;
+}
+
+.hovered .marker,
+.hovered .franchise-link {
+  color: #dd5202;
+}
+
+.current .marker,
+.current .franchise-link {
+  color: #b34100;
+}
+
+.current-hovered .franchise-link,
+.current-hovered .marker {
+  color: #dd5202;
 }
