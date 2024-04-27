@@ -1,5 +1,5 @@
-<div *ngIf="isHidden === false" class="franchise-title bold-title">
-  <span (click)="showFranchiseList = !showFranchiseList">{{ showFranchiseList ? '−' : '+' }} Это аниме состоит из:</span>
+<div *ngIf="isHidden === false" class="franchise-title">
+  <span class="text franchise-title" (click)="showFranchiseList = !showFranchiseList"><b>{{ showFranchiseList ? '−' : '+' }} Это аниме состоит из:</b></span>
 </div>
 <div *ngIf="showFranchiseList" class="franchise-container">
   <ul class="franchise-list">
