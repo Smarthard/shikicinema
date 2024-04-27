@@ -94,7 +94,6 @@ export class FranchiseListComponent implements OnInit {
           status: node.status,
           user_status: node.userRate ? node.userRate.status : null,
         }))
-        console.log(this.franchiseData);
         let e = 1;
         this.franchiseData.forEach((node: AnimeData) => {
           if (node.kind === 'ТВ') {
