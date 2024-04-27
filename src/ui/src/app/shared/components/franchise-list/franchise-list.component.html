@@ -3,13 +3,14 @@
 </div>
 <div *ngIf="showFranchiseList" class="franchise-container">
   <ul class="franchise-list">
-    <li *ngFor="let franchise of franchiseData; let i=index;" class="franchise-list-item">
+    <li *ngFor="let franchise of franchiseData; let i=index;" class="franchise-list-item" [ngClass]="{'hovered': franchiseHovered === franchise.id, 'current-hovered': franchiseHovered === franchise.id && franchise.id === currentAnimeId, 'current': franchise.id === currentAnimeId}">
       <div class="marker-list" [ngClass]="{ 'marker-list-adjusted': i >= 9 }">
-        <span class="marker" [ngStyle]="{'color': franchise.id === currentAnimeId ? '#b34100' : '#317aad'}">{{ i + 1 }}.</span>
+        <span class="marker">{{ i + 1 }}.</span>
       </div>
       <a class="franchise-link"
         (click)="openFranchise(franchise.id, franchise.episodes, franchise.episodesAired)"
-        [ngStyle]="{'color': franchise.id === currentAnimeId ? '#b34100' : '#317aad'}">
+        (mouseenter)="franchiseHovered = franchise.id"
+        (mouseleave)="franchiseHovered = null">
         {{ franchise.russian }} [{{ franchise.kind }}{{ franchise.kind === 'ТВ' ? '-' + franchise.e : '' }}]
         <span *ngIf="franchise.status === 'ongoing'">- ({{ franchise.episodesAired }}+ эп.)</span>
         <span *ngIf="franchise.status === 'released' && franchise.episodes > 1">- ({{ franchise.episodes }} эп.)</span>
