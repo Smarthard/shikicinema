@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import * as jsyaml from 'js-yaml';
+import * as yaml from 'yaml';
 import { FETCH_RESOURCE_TIMEOUT, fetch } from '../../../../../../fetch-timeout';
 import { Router } from '@angular/router';
 
@@ -89,7 +89,7 @@ export class FranchiseListComponent implements OnInit {
           episodesAired: node.episodesAired,
           status: node.status,
         })).reverse();
-          
+
         let e = 1;
         this.franchiseData.forEach((node: AnimeData) => {
           if (node.kind === 'ТВ') {
@@ -123,7 +123,7 @@ export class FranchiseListComponent implements OnInit {
 
   private async fetchData(url: string): Promise<any> {
     const response = await this.http.get(url, { responseType: 'text' }).toPromise();
-    return jsyaml.load(response);
+    return yaml.parse(response); // Parsing YAML to JSON
   }
 
 
@@ -131,9 +131,9 @@ export class FranchiseListComponent implements OnInit {
     let excludedIdsSet: Set<number> = new Set();
     data.forEach(entry => {
       if (entry.neko_id === franchise) {
-          this.isHidden = false;
-          const notAnimeIds = entry.filters?.not_anime_ids || [];
-          notAnimeIds.forEach(id => excludedIdsSet.add(id));
+        this.isHidden = false;
+        const notAnimeIds = entry.filters?.not_anime_ids || [];
+        notAnimeIds.forEach(id => excludedIdsSet.add(id));
       }
     });
     const excludedIds = Array.from(excludedIdsSet);
@@ -155,7 +155,7 @@ export class FranchiseListComponent implements OnInit {
         this.router.navigateByUrl(`/${animeId}/${episode}`);
       })
   }
-  
+
   private _getAnimeInfo(animeId: number, timeout = FETCH_RESOURCE_TIMEOUT) {
     return fetch(`https://shikimori.one/api/animes/${animeId}`, {}, timeout)
       .then((res) => res.json())
