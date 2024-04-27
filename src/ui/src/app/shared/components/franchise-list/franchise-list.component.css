@@ -31,12 +31,25 @@ ul {
 
 .marker-list {
   margin-right: 5px;
+  margin-top: -2px;
 }
 
 .marker {
   display: block;
   user-select: none;
   color: #317aad;
+}
+
+.check_mark {
+  color: #16c60c;
+}
+
+.x_mark {
+  color: #f03a17;
+}
+
+.repeat_mark, .watch_mark {
+  color: #ff9231;
 }
 
 .marker-list-adjusted {
