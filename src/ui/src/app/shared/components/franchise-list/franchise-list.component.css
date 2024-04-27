@@ -1,14 +1,9 @@
-/* Styles for franchise title */
 .franchise-title {
-  /* Apply gradient for text color */
-  background: linear-gradient(90deg, #ff6e00, #f83e02, #d90368, #820263, #291720);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
   margin-bottom: 12px;
   margin-top: 30px; 
-  margin-left: 10px;
 }
-.franchise-title span {
+b {
+  font-size: 11pt;
   cursor: pointer;
 }
 
@@ -16,49 +11,34 @@
   margin-bottom: 15px;
 }
 
-/* Styles for franchise links */
 .franchise-link {
   cursor: pointer;
   color: #317aad; 
   text-decoration: none; 
 }
 
-/* Hover effect for franchise links */
-.franchise-link:hover {
-  background-color: #f5f5f5; /* Add background color on hover */
-}
-
-/* Styles for the list */
 ul {
-  list-style-type: none;
+  list-style-type: none; 
   padding-left: 0;
   margin: 0;
 }
 
-/* Styles for franchise list items */
 .franchise-list-item {
-  margin-left: 49px; 
+  margin-left: 49px;
   display: flex;
   align-items: flex-start;
 }
 
-/* Styles for franchise markers */
 .marker-list {
-  margin-right: 5px; 
+  margin-right: 5px;
 }
 
 .marker {
   display: block;
-  user-select: none; /* Make markers unselectable */
-  color: #317aad; 
+  user-select: none;
+  color: #317aad;
 }
 
-/* Bold title class */
-.bold-title {
-  font-weight: bold;
-}
-
-/* Adjusted marker list for longer markers */
 .marker-list-adjusted {
-  margin-left: -10px; 
+  margin-left: -10px;
 }
