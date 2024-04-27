@@ -54,7 +54,7 @@ export class FranchiseListComponent implements OnInit {
       const graphqlUrl = 'https://shikimori.one/api/graphql';
       const query = `
         {
-          animes(order: aired_on, franchise: "${franchise}", limit: 100, excludeIds: "${excludedIds}", status: "!anons") {
+          animes(order: id, franchise: "${franchise}", limit: 100, excludeIds: "${excludedIds}", status: "!anons") {
             id
             russian
             kind
@@ -88,7 +88,7 @@ export class FranchiseListComponent implements OnInit {
           episodes: node.episodes,
           episodesAired: node.episodesAired,
           status: node.status,
-        })).reverse();
+        }))
 
         let e = 1;
         this.franchiseData.forEach((node: AnimeData) => {
