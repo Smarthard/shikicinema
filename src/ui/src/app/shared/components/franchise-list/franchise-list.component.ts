@@ -12,6 +12,7 @@ interface AnimeData {
   episodesAired: number;
   status: string;
   e?: number;
+  userRate_status: string;
 }
 
 @Component({
@@ -61,6 +62,9 @@ export class FranchiseListComponent implements OnInit {
             episodes
             episodesAired
             status
+            userRate {
+              status
+            }
           }
         }
       `;
@@ -79,7 +83,7 @@ export class FranchiseListComponent implements OnInit {
       }
 
       const { data } = await response.json();
-
+      
       if (data && data.animes) {
         this.franchiseData = data.animes.map((node: any) => ({
           id: parseInt(node.id, 10),
@@ -88,8 +92,9 @@ export class FranchiseListComponent implements OnInit {
           episodes: node.episodes,
           episodesAired: node.episodesAired,
           status: node.status,
+          user_status: node.userRate ? node.userRate.status : null,
         }))
-
+        console.log(this.franchiseData);
         let e = 1;
         this.franchiseData.forEach((node: AnimeData) => {
           if (node.kind === 'ТВ') {
