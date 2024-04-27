@@ -5,7 +5,21 @@
   <ul class="franchise-list">
     <li *ngFor="let franchise of franchiseData; let i=index;" class="franchise-list-item" [ngClass]="{'hovered': franchiseHovered === franchise.id, 'current-hovered': franchiseHovered === franchise.id && franchise.id === currentAnimeId, 'current': franchise.id === currentAnimeId}">
       <div class="marker-list" [ngClass]="{ 'marker-list-adjusted': i >= 9 }">
-        <span class="marker">{{ i + 1 }}.</span>
+        <span class="marker">
+          <ng-container *ngIf="franchise.user_status === 'completed'">
+            <span class="check_mark">✓</span>
+          </ng-container>
+          <ng-container *ngIf="franchise.user_status === 'rewatching'">
+            <span class="repeat_mark">↺</span>
+          </ng-container>
+          <ng-container *ngIf="franchise.user_status === 'watching'">
+            <span class="watch_mark">▶</span>
+          </ng-container>
+          <ng-container *ngIf="franchise.user_status !== 'completed' && franchise.user_status !== 'rewatching' && franchise.user_status !== 'watching'">
+            <span class="x_mark">✕</span>
+          </ng-container>
+          {{ i + 1 }}.
+        </span>
       </div>
       <a class="franchise-link"
         (click)="openFranchise(franchise.id, franchise.episodes, franchise.episodesAired)"
