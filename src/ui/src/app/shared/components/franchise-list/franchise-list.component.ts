@@ -25,6 +25,7 @@ export class FranchiseListComponent implements OnInit {
   showFranchiseList = false;
   isHidden = true;
   currentAnimeId: number;
+  franchiseHovered: string | null = null;
 
   constructor(private http: HttpClient, private router: Router) { }
 
