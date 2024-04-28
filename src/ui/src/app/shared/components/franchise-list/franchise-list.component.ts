@@ -13,6 +13,7 @@ interface AnimeData {
   status: string;
   e?: number;
   userRate_status: string;
+  year: number;
 }
 
 @Component({
@@ -42,67 +43,57 @@ export class FranchiseListComponent implements OnInit {
   }
 
   private async fetchFranchiseData(): Promise<void> {
-    try {
-      const animeUrl = `https://shikimori.one/api/animes/${this.currentAnimeId}`;
-      const animeResponse = await fetch(animeUrl);
-      const animeData = await animeResponse.json();
-      const franchise = animeData.franchise;
-
-      const excludedIdsUrl = 'https://corsproxy.io/?' + encodeURIComponent('https://raw.githubusercontent.com/shikimori/neko-achievements/master/priv/rules/_franchises.yml');
-      const excludedIdsData = await this.fetchData(excludedIdsUrl);
-      const excludedIds = this.parseNotAnimeIds(excludedIdsData, franchise);
-
-      const graphqlUrl = 'https://shikimori.one/api/graphql';
-      const query = `
-        {
-          animes(order: id, franchise: "${franchise}", limit: 100, excludeIds: "${excludedIds}", status: "!anons") {
-            id
-            russian
-            kind
-            episodes
-            episodesAired
-            status
-            userRate {
-              status
-            }
-          }
+    const animeUrl = `https://shikimori.one/api/animes/${this.currentAnimeId}`;
+    const animeResponse = await fetch(animeUrl);
+    const animeData = await animeResponse.json();
+    const franchise = animeData.franchise;
+    const excludedIdsUrl = 'https://corsproxy.io/?' + encodeURIComponent('https://raw.githubusercontent.com/shikimori/neko-achievements/master/priv/rules/_franchises.yml');
+    const excludedIdsData = await this.fetchData(excludedIdsUrl);
+    const excludedIds = this.parseNotAnimeIds(excludedIdsData, franchise);
+    const graphqlUrl = 'https://shikimori.one/api/graphql';
+    const query = `
+      {
+        animes(order: id, franchise: "${franchise}", limit: 100, excludeIds: "${excludedIds}", status: "!anons") {
+          id
+          russian
+          kind
+          episodes
+          episodesAired
+          status
+          userRate { status }
+          airedOn { year }
         }
-      `;
-
-      const response = await fetch(graphqlUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-        body: JSON.stringify({ query })
+      }
+    `;
+   
+    const response = await fetch(graphqlUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: JSON.stringify({ query })
+    });
+   
+    const { data } = await response.json();
+    
+    if (data && data.animes) {
+      this.franchiseData = data.animes.map((node: any) => ({
+        id: parseInt(node.id, 10),
+        russian: node.russian,
+        kind: this.translateKind(node.kind),
+        episodes: node.episodes,
+        episodesAired: node.episodesAired,
+        status: node.status,
+        user_status: node.userRate ? node.userRate.status : null,
+        year: node.airedOn.year,
+      }))
+      let e = 1;
+      this.franchiseData.forEach((node: AnimeData) => {
+        if (node.kind === 'ТВ') {
+          node.e = e++;
+        }
       });
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch data');
-      }
-
-      const { data } = await response.json();
-      
-      if (data && data.animes) {
-        this.franchiseData = data.animes.map((node: any) => ({
-          id: parseInt(node.id, 10),
-          russian: node.russian,
-          kind: this.translateKind(node.kind),
-          episodes: node.episodes,
-          episodesAired: node.episodesAired,
-          status: node.status,
-          user_status: node.userRate ? node.userRate.status : null,
-        }))
-        let e = 1;
-        this.franchiseData.forEach((node: AnimeData) => {
-          if (node.kind === 'ТВ') {
-            node.e = e++;
-          }
-        });
-      }
-    } catch (error) {
-      console.error('Error fetching franchise data:', error);
     }
   }
 
@@ -111,7 +102,7 @@ export class FranchiseListComponent implements OnInit {
       case 'tv':
         return 'ТВ';
       case 'movie':
-        return 'п/ф';
+        return 'Фильм';
       case 'ova':
         return 'OVA';
       case 'ona':
@@ -119,7 +110,7 @@ export class FranchiseListComponent implements OnInit {
       case 'special':
         return 'Спецвыпуск';
       case 'tv_special':
-        return 'Спешл';
+        return 'TV Спецвыпуск';
       default:
         return kind;
     }
@@ -129,7 +120,6 @@ export class FranchiseListComponent implements OnInit {
     const response = await this.http.get(url, { responseType: 'text' }).toPromise();
     return yaml.parse(response); // Parsing YAML to JSON
   }
-
 
   private parseNotAnimeIds(data: any[], franchise: string): number[] {
     let excludedIdsSet: Set<number> = new Set();
@@ -155,7 +145,6 @@ export class FranchiseListComponent implements OnInit {
         if (episode > maxEpisode) {
           episode = maxEpisode;
         }
-
         this.router.navigateByUrl(`/${animeId}/${episode}`);
       })
   }
