@@ -8,7 +8,7 @@ b {
 }
 
 .franchise-list {
-  margin-bottom: 15px;
+  margin-bottom: 30px;
 }
 
 .franchise-link {
@@ -31,13 +31,11 @@ ul {
 
 .marker-list {
   margin-right: 5px;
-  margin-top: -2px;
 }
 
 .marker {
   display: block;
   user-select: none;
-  color: #317aad;
 }
 
 .check_mark {
@@ -48,25 +46,24 @@ ul {
   color: #f03a17;
 }
 
-.repeat_mark, .watch_mark {
+.watch_mark {
   color: #ff9231;
+  font-size: 14px;
 }
 
-.marker-list-adjusted {
-  margin-left: -10px;
+.repeat_mark {
+  color: #ff9231;
+  font-size: 15px;
 }
 
-.hovered .marker,
 .hovered .franchise-link {
   color: #dd5202;
 }
 
-.current .marker,
 .current .franchise-link {
   color: #b34100;
 }
 
-.current-hovered .franchise-link,
-.current-hovered .marker {
+.current-hovered .franchise-link {
   color: #dd5202;
 }
