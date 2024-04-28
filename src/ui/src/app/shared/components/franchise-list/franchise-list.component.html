@@ -3,29 +3,27 @@
 </div>
 <div *ngIf="showFranchiseList" class="franchise-container">
   <ul>
-    <li *ngFor="let franchise of franchiseData; let i=index;" class="franchise-list-item" [ngClass]="{'hovered': franchiseHovered === franchise.id, 'current-hovered': franchiseHovered === franchise.id && franchise.id === currentAnimeId, 'current': franchise.id === currentAnimeId}">
-      <a class="franchise-link"
+    <li class="franchise-link" *ngFor="let franchise of franchiseData; let i=index;" class="franchise-list-item" [ngClass]="{'hovered': franchiseHovered === franchise.id, 'current-hovered': franchiseHovered === franchise.id && franchise.id === currentAnimeId, 'current': franchise.id === currentAnimeId}"
         (click)="openFranchise(franchise.id, franchise.episodes, franchise.episodesAired)"
         (mouseenter)="franchiseHovered = franchise.id"
         (mouseleave)="franchiseHovered = null">
-        <ng-container *ngIf="franchise.user_status !== 'completed' && franchise.user_status !== 'rewatching' && franchise.user_status !== 'watching'">
-          <span class="x_mark">✕ </span>
-        </ng-container>
-        <ng-container *ngIf="franchise.user_status === 'rewatching'">
-          <span class="repeat_mark">↺ </span>
-        </ng-container>
-        <ng-container *ngIf="franchise.user_status === 'watching'">
-          <span class="watch_mark">▶ </span>
-        </ng-container>
-        <ng-container *ngIf="franchise.user_status === 'completed'">
-          <span class="check_mark">✓ </span>
-        </ng-container>
-        <span class="text">#{{ i + 1 }} </span>
-        {{ franchise.russian }} <span class="text">{{ franchise.kind === 'ТВ' ? '[ТВ-' + franchise.e + ']' : franchise.kind }}</span>
-        <span class="text" *ngIf="franchise.status === 'ongoing'">  ({{ franchise.episodesAired }}+ эп.)</span>
-        <span class="text" *ngIf="franchise.status === 'released' && franchise.episodes > 1">  ({{ franchise.episodes }} эп.)</span>
-        <span class="text"> {{ franchise.year }}</span>
-      </a>
+      <ng-container *ngIf="franchise.user_status !== 'completed' && franchise.user_status !== 'rewatching' && franchise.user_status !== 'watching'">
+        <span class="x_mark">✕ </span>
+      </ng-container>
+      <ng-container *ngIf="franchise.user_status === 'rewatching'">
+        <span class="repeat_mark">↺ </span>
+      </ng-container>
+      <ng-container *ngIf="franchise.user_status === 'watching'">
+        <span class="watch_mark">▶ </span>
+      </ng-container>
+      <ng-container *ngIf="franchise.user_status === 'completed'">
+        <span class="check_mark">✓ </span>
+      </ng-container>
+      <span class="text">#{{ i + 1 }} </span>
+      <span class="franchise-link">{{ franchise.russian }} </span> <span class="text">{{ franchise.kind === 'ТВ' ? '[ТВ-' + franchise.e + ']' : franchise.kind }}</span>
+      <span class="text" *ngIf="franchise.status === 'ongoing'">  ({{ franchise.episodesAired }}+ эп.)</span>
+      <span class="text" *ngIf="franchise.status === 'released' && franchise.episodes > 1">  ({{ franchise.episodes }} эп.)</span>
+      <span class="text"> {{ franchise.year }}</span>
     </li>
   </ul>
 </div>
