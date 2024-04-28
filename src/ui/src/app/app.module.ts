@@ -14,6 +14,7 @@ import {BrowserModule} from '@angular/platform-browser';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {VideoListComponent} from './shared/components/video-list/video-list.component';
 import {EpisodesListComponent} from './shared/components/episodes-list/episodes-list.component';
+import {FranchiseListComponent} from './shared/components/franchise-list/franchise-list.component';
 import {KindRemoteComponent} from './shared/components/kind-remote/kind-remote.component';
 import {UploaderComponent} from './shared/components/uploader/uploader.component';
 import {DropdownFiltersComponent} from './shared/components/dropdown-filters/dropdown-filters.component';
@@ -77,6 +78,7 @@ registerLocaleData(localeRu, 'ru');
     SafeVideoUrlPipe,
     VideoListComponent,
     EpisodesListComponent,
+    FranchiseListComponent,
     KindRemoteComponent,
     UploaderComponent,
     DropdownFiltersComponent,
