@@ -11,8 +11,11 @@ b {
   user-select: none;
 }
 
-.franchise-link {
+li {
   cursor: pointer;
+}
+
+.franchise-link {
   color: #317aad;
 }
 
@@ -35,11 +38,17 @@ b {
 .watch_mark,
 .repeat_mark {
   color: #ff9231;
-  margin-left: -2px;
+  font-size: 14px;
 }
 
-.hovered .franchise-link,
-.current .franchise-link,
+.hovered .franchise-link {
+  color: #dd5202;
+}
+
+.current .franchise-link {
+  color: #b34100;
+}
+
 .current-hovered .franchise-link {
   color: #dd5202;
 }
