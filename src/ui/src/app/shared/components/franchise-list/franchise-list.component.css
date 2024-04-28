@@ -1,40 +1,26 @@
 .franchise-title {
-  margin-bottom: 12px;
-  margin-top: 30px; 
+  margin-top: 30px;
 }
+
 b {
   font-size: 11pt;
   cursor: pointer;
 }
 
-.franchise-link {
-  cursor: pointer;
-  color: #317aad; 
-  text-decoration: none; 
+.text {
+  user-select: none;
 }
 
-ul {
-    display: block;
-    list-style-type: disc;
-    margin-block-start: 1em;
-    margin-block-end: 1em;
-    margin-inline-start: 0px;
-    margin-inline-end: 0px;
-    padding-inline-start: 34px;
-    unicode-bidi: isolate;
+.franchise-link {
+  cursor: pointer;
+  color: #317aad;
 }
 
 .franchise-list-item {
-  display: flex;
-  align-items: flex-end;
+  list-style-type: none;
 }
 
-.marker-list {
-  margin-right: 5px;
-}
-
-.marker {
-  display: block;
+.check_mark, .x_mark, .watch_mark, .repeat_mark {
   user-select: none;
 }
 
@@ -46,22 +32,14 @@ ul {
   color: #f03a17;
 }
 
-.watch_mark {
-  color: #ff9231;
-}
-
+.watch_mark,
 .repeat_mark {
   color: #ff9231;
+  margin-left: -2px;
 }
 
-.hovered .franchise-link {
-  color: #dd5202;
-}
-
-.current .franchise-link {
-  color: #b34100;
-}
-
+.hovered .franchise-link,
+.current .franchise-link,
 .current-hovered .franchise-link {
   color: #dd5202;
 }
