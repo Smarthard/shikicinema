@@ -24,9 +24,9 @@ ul {
 }
 
 .franchise-list-item {
-  margin-left: 49px;
+  margin-left: 35px;
   display: flex;
-  align-items: flex-start;
+  align-items: flex-end;
 }
 
 .marker-list {
@@ -48,12 +48,10 @@ ul {
 
 .watch_mark {
   color: #ff9231;
-  font-size: 14px;
 }
 
 .repeat_mark {
   color: #ff9231;
-  font-size: 15px;
 }
 
 .hovered .franchise-link {
