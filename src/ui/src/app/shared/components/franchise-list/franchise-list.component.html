@@ -20,7 +20,7 @@
         <span class="check_mark">✓ </span>
       </ng-container>
       <span class="text">#{{ i + 1 }} </span>
-      <span class="franchise-link">{{ franchise.russian }} </span> <span class="text">{{ franchise.kind === 'ТВ' ? '[ТВ-' + franchise.e + ']' : franchise.kind }}</span>
+      <span class="franchise-link">{{ franchise.name }} </span> <span class="text">{{ franchise.kind === 'ТВ' ? '[ТВ-' + franchise.e + ']' : franchise.kind }}</span>
       <span class="text" *ngIf="franchise.status === 'ongoing'">  ({{ franchise.episodesAired }}+ эп.)</span>
       <span class="text" *ngIf="franchise.status === 'released' && franchise.episodes > 1">  ({{ franchise.episodes }} эп.)</span>
       <span class="text"> {{ franchise.year }}</span>
