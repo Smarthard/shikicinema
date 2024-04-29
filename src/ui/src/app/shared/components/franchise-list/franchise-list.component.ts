@@ -99,13 +99,11 @@ export class FranchiseListComponent implements OnInit {
         related: node.related,
       }));
       franchiseData.reverse();
-      // Sorting logic
       let hasMoves = false;
       let iterations = 0;
       do {
         hasMoves = false;
         const withPrehistory = franchiseData.filter(node => node.related.some(rel => rel.relationRu === "Предыстория"));
-        const withoutPrehistory = franchiseData.filter(node => !node.related.some(rel => rel.relationRu === "Предыстория"));
 
         withPrehistory.forEach(item => {
           const index = franchiseData.findIndex(node => node.id === item.id);
@@ -113,20 +111,22 @@ export class FranchiseListComponent implements OnInit {
           if (prehistory) {
             const prehistoryIndex = franchiseData.findIndex(node => node.id === parseInt(prehistory.anime.id, 10));
             if (prehistoryIndex > index) {
-              franchiseData.splice(index, 1);
-              franchiseData.splice(prehistoryIndex, 0, item);
+              // Remove prehistory item from its current position
+              const prehistoryItem = franchiseData.splice(prehistoryIndex, 1)[0];
+              // Insert prehistory item before the current item
+              franchiseData.splice(index, 0, prehistoryItem);
               hasMoves = true;
             }
           }
         });
 
         iterations++;
-        // Prevent infinite loop
+
         if (iterations > franchiseData.length) {
-          console.error("Infinite loop detected in sorting.");
           break;
         }
       } while (hasMoves);
+
       this.franchiseData = franchiseData;
       let e = 1;
       this.franchiseData.forEach((node: AnimeData) => {
@@ -141,6 +141,10 @@ export class FranchiseListComponent implements OnInit {
     switch (kind) {
       case 'tv':
         return 'ТВ';
+      case 'pv':
+        return 'Проморолик';
+      case 'cm':
+        return 'Реклама';
       case 'music':
         return 'Клип';
       case 'movie':
