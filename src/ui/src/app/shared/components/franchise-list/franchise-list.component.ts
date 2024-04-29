@@ -48,6 +48,9 @@ export class FranchiseListComponent implements OnInit {
     const animeResponse = await fetch(animeUrl);
     const animeData = await animeResponse.json();
     const franchise = animeData.franchise;
+    if (franchise !== null) { 
+      this.isHidden = false;
+    }
     const excludedIdsUrl = 'https://corsproxy.io/?' + encodeURIComponent('https://raw.githubusercontent.com/shikimori/neko-achievements/master/priv/rules/_franchises.yml');
     const excludedIdsData = await this.fetchData(excludedIdsUrl);
     const excludedIds = this.parseNotAnimeIds(excludedIdsData, franchise);
@@ -162,7 +165,6 @@ export class FranchiseListComponent implements OnInit {
     let excludedIdsSet: Set<number> = new Set();
     data.forEach(entry => {
       if (entry.neko_id === franchise) {
-        this.isHidden = false;
         const notAnimeIds = entry.filters?.not_anime_ids || [];
         notAnimeIds.forEach(id => excludedIdsSet.add(id));
       }
