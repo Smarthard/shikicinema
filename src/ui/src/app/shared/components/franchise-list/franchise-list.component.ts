@@ -6,14 +6,15 @@ import { Router } from '@angular/router';
 
 interface AnimeData {
   id: number;
-  russian: string;
+  name: string;
   kind: string;
   episodes: number;
   episodesAired: number;
   status: string;
-  e?: number;
-  userRate_status: string;
+  user_status: string;
   year: number;
+  e?: number;
+  related: { relationRu: string; anime: { id: string } | null }[];
 }
 
 @Component({
@@ -52,20 +53,25 @@ export class FranchiseListComponent implements OnInit {
     const excludedIds = this.parseNotAnimeIds(excludedIdsData, franchise);
     const graphqlUrl = 'https://shikimori.one/api/graphql';
     const query = `
-      {
-        animes(order: id, franchise: "${franchise}", limit: 100, excludeIds: "${excludedIds}", status: "!anons") {
-          id
-          russian
-          kind
-          episodes
-          episodesAired
-          status
-          userRate { status }
-          airedOn { year }
-        }
+    {
+      animes(order: id, franchise: "${franchise}", limit: 100, excludeIds: "${excludedIds}", status: "!anons") {
+        id
+        russian
+        kind
+        episodes
+        episodesAired
+        status
+        userRate { status }
+        airedOn { year }
+        related { relationRu
+          anime {
+            id
+          }
+        } 
       }
-    `;
-   
+    }
+  `;
+
     const response = await fetch(graphqlUrl, {
       method: 'POST',
       headers: {
@@ -74,20 +80,52 @@ export class FranchiseListComponent implements OnInit {
       },
       body: JSON.stringify({ query })
     });
-   
+
     const { data } = await response.json();
-    
+
     if (data && data.animes) {
-      this.franchiseData = data.animes.map((node: any) => ({
+      let franchiseData: AnimeData[] = data.animes.map((node: any) => ({
         id: parseInt(node.id, 10),
-        russian: node.russian,
+        name: node.russian,
         kind: this.translateKind(node.kind),
         episodes: node.episodes,
         episodesAired: node.episodesAired,
         status: node.status,
         user_status: node.userRate ? node.userRate.status : null,
         year: node.airedOn.year,
-      }))
+        related: node.related,
+      }));
+
+      // Sorting logic
+      let hasMoves = false;
+      let iterations = 0;
+      do {
+        hasMoves = false;
+        const withPrehistory = franchiseData.filter(node => node.related.some(rel => rel.relationRu === "Предыстория"));
+        const withoutPrehistory = franchiseData.filter(node => !node.related.some(rel => rel.relationRu === "Предыстория"));
+
+        withPrehistory.forEach(item => {
+          const index = franchiseData.findIndex(node => node.id === item.id);
+          const prehistory = item.related.find(rel => rel.relationRu === "Предыстория");
+          if (prehistory) {
+            const prehistoryIndex = franchiseData.findIndex(node => node.id === parseInt(prehistory.anime.id, 10));
+            if (prehistoryIndex > index) {
+              franchiseData.splice(index, 1);
+              franchiseData.splice(prehistoryIndex, 0, item);
+              hasMoves = true;
+            }
+          }
+        });
+
+        iterations++;
+        // Prevent infinite loop
+        if (iterations > franchiseData.length) {
+          console.error("Infinite loop detected in sorting.");
+          break;
+        }
+      } while (hasMoves);
+
+      this.franchiseData = franchiseData;
       let e = 1;
       this.franchiseData.forEach((node: AnimeData) => {
         if (node.kind === 'ТВ') {
@@ -135,7 +173,7 @@ export class FranchiseListComponent implements OnInit {
   }
 
   openFranchise(animeId: number, episodes: number, episodesAired: number): void {
-    this.changeCurrentAnimeId(animeId)
+    this.changeCurrentAnimeId(animeId);
     this._getAnimeInfo(animeId, 800)
       .then((anime) => {
         const userRate = anime.user_rate;
@@ -146,7 +184,7 @@ export class FranchiseListComponent implements OnInit {
           episode = maxEpisode;
         }
         this.router.navigateByUrl(`/${animeId}/${episode}`);
-      })
+      });
   }
 
   private _getAnimeInfo(animeId: number, timeout = FETCH_RESOURCE_TIMEOUT) {
