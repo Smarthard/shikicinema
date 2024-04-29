@@ -141,6 +141,8 @@ export class FranchiseListComponent implements OnInit {
     switch (kind) {
       case 'tv':
         return 'ТВ';
+      case 'music':
+        return 'Клип';
       case 'movie':
         return 'Фильм';
       case 'ova':
