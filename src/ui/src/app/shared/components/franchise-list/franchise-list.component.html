@@ -1,5 +1,5 @@
 <div *ngIf="!isHidden" class="franchise-title">
-  <span class="text franchise-title" (click)="showFranchiseList = !showFranchiseList"><b>{{ showFranchiseList ? '−' : '+' }} Франшиза состоит из:</b></span>
+  <span class="text franchise-title" (click)="showFranchiseList = !showFranchiseList"><b>{{ showFranchiseList ? '− Скрыть' : '+ Показать список аниме' }}</b></span>
 </div>
 <div *ngIf="showFranchiseList" class="franchise-container">
   <ul>
