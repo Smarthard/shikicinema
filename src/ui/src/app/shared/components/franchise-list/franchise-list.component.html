@@ -3,8 +3,8 @@
 </div>
 <div *ngIf="showFranchiseList" class="franchise-container">
   <ul>
-    <li class="franchise-link" *ngFor="let franchise of franchiseData; let i=index;" class="franchise-list-item" [ngClass]="{'hovered': franchiseHovered === franchise.id, 'current-hovered': franchiseHovered === franchise.id && franchise.id === currentAnimeId, 'current': franchise.id === currentAnimeId}"
-        (click)="openFranchise(franchise.id, franchise.episodes, franchise.episodesAired)"
+    <li class="franchise-link" *ngFor="let franchise of franchiseData; let i=index;" [ngClass]="{'hovered': franchiseHovered === franchise.id, 'current-hovered': franchiseHovered === franchise.id && franchise.id === currentAnimeId, 'current': franchise.id === currentAnimeId}"
+        (click)="openFranchise(franchise.id, franchise.episodes, franchise.episodesAired, franchise.user_episodes, franchise.user_status)"
         (mouseenter)="franchiseHovered = franchise.id"
         (mouseleave)="franchiseHovered = null">
       <ng-container *ngIf="franchise.user_status !== 'completed' && franchise.user_status !== 'rewatching' && franchise.user_status !== 'watching'">
