@@ -53,92 +53,91 @@ export class FranchiseListComponent implements OnInit {
     const franchise = animeData.franchise;
     if (franchise !== null) {
       this.isHidden = false;
-    }
-    const excludedIdsUrl = 'https://corsproxy.io/?' + encodeURIComponent('https://raw.githubusercontent.com/shikimori/neko-achievements/master/priv/rules/_franchises.yml');
-    const excludedIdsData = await this.fetchData(excludedIdsUrl);
-    const excludedIds = this.parseNotAnimeIds(excludedIdsData, franchise);
-    const graphqlUrl = `${domain}/api/graphql`;
-    const query = `
-    {
-      animes(order: aired_on, franchise: "${franchise}", limit: 100, excludeIds: "${excludedIds}", status: "!anons") {
-        id
-        russian
-        kind
-        episodes
-        episodesAired
-        status
-        userRate { status episodes  }
-        airedOn { year }
-        related { relationRu
-          anime {
-            id
-          }
-        } 
-      }
-    }
-  `;
-
-    const response = await fetch(graphqlUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-      },
-      body: JSON.stringify({ query })
-    });
-
-    const { data } = await response.json();
-
-    if (data && data.animes) {
-      let franchiseData: AnimeData[] = data.animes.map((node: any) => ({
-        id: parseInt(node.id, 10),
-        name: node.russian,
-        kind: this.translateKind(node.kind),
-        episodes: node.episodes,
-        episodesAired: node.episodesAired,
-        status: node.status,
-        user_status: node.userRate ? node.userRate.status : null,
-        user_episodes: node.userRate ? node.userRate.episodes : null,
-        year: node.airedOn.year,
-        related: node.related,
-      }));
-      franchiseData.reverse();
-      let hasMoves = false;
-      let iterations = 0;
-      do {
-        hasMoves = false;
-        const withPrehistory = franchiseData.filter(node => node.related.some(rel => rel.relationRu === "Предыстория"));
-
-        withPrehistory.forEach(item => {
-          const index = franchiseData.findIndex(node => node.id === item.id);
-          const prehistory = item.related.find(rel => rel.relationRu === "Предыстория");
-          if (prehistory) {
-            const prehistoryIndex = franchiseData.findIndex(node => node.id === parseInt(prehistory.anime.id, 10));
-            if (prehistoryIndex > index) {
-              const prehistoryItem = franchiseData.splice(prehistoryIndex, 1)[0];
-              franchiseData.splice(index, 0, prehistoryItem);
-              hasMoves = true;
+      const excludedIdsUrl = 'https://corsproxy.io/?' + encodeURIComponent('https://raw.githubusercontent.com/shikimori/neko-achievements/master/priv/rules/_franchises.yml');
+      const excludedIdsData = await this.fetchData(excludedIdsUrl);
+      const excludedIds = this.parseNotAnimeIds(excludedIdsData, franchise);
+      const graphqlUrl = `${domain}/api/graphql`;
+      const query = `
+      {
+        animes(order: aired_on, franchise: "${franchise}", limit: 100, excludeIds: "${excludedIds}", status: "!anons") {
+          id
+          russian
+          kind
+          episodes
+          episodesAired
+          status
+          userRate { status episodes  }
+          airedOn { year }
+          related { relationRu
+            anime {
+              id
             }
+          } 
+        }
+      }
+    `;
+    
+      const response = await fetch(graphqlUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify({ query })
+      });
+    
+      const { data } = await response.json();
+    
+      if (data && data.animes) {
+        let franchiseData: AnimeData[] = data.animes.map((node: any) => ({
+          id: parseInt(node.id, 10),
+          name: node.russian,
+          kind: this.translateKind(node.kind),
+          episodes: node.episodes,
+          episodesAired: node.episodesAired,
+          status: node.status,
+          user_status: node.userRate ? node.userRate.status : null,
+          user_episodes: node.userRate ? node.userRate.episodes : null,
+          year: node.airedOn.year,
+          related: node.related,
+        }));
+        franchiseData.reverse();
+        let hasMoves = false;
+        let iterations = 0;
+        do {
+          hasMoves = false;
+          const withPrehistory = franchiseData.filter(node => node.related.some(rel => rel.relationRu === "Предыстория"));
+    
+          withPrehistory.forEach(item => {
+            const index = franchiseData.findIndex(node => node.id === item.id);
+            const prehistory = item.related.find(rel => rel.relationRu === "Предыстория");
+            if (prehistory) {
+              const prehistoryIndex = franchiseData.findIndex(node => node.id === parseInt(prehistory.anime.id, 10));
+              if (prehistoryIndex > index) {
+                const prehistoryItem = franchiseData.splice(prehistoryIndex, 1)[0];
+                franchiseData.splice(index, 0, prehistoryItem);
+                hasMoves = true;
+              }
+            }
+          });
+    
+          iterations++;
+    
+          if (iterations > franchiseData.length) {
+            break;
+          }
+        } while (hasMoves);
+    
+        this.franchiseData = franchiseData;
+        let e = 1;
+        this.franchiseData.forEach((node: AnimeData) => {
+          if (node.kind === 'ТВ') {
+            node.e = e++;
           }
         });
-
-        iterations++;
-
-        if (iterations > franchiseData.length) {
-          break;
-        }
-      } while (hasMoves);
-
-      this.franchiseData = franchiseData;
-      let e = 1;
-      this.franchiseData.forEach((node: AnimeData) => {
-        if (node.kind === 'ТВ') {
-          node.e = e++;
-        }
-      });
+      }
     }
   }
-
   private translateKind(kind: string): string {
     switch (kind) {
       case 'tv':
@@ -164,10 +163,11 @@ export class FranchiseListComponent implements OnInit {
     }
   }
 
+
   private async fetchData(url: string): Promise<any> {
     const response = await fetch(url);
     const text = await response.text();
-    return yaml.parse(text);
+    return yaml.parse(text); // Parsing YAML to JSON
   }
 
   private parseNotAnimeIds(data: any[], franchise: string): number[] {
@@ -186,7 +186,6 @@ export class FranchiseListComponent implements OnInit {
     return [...excludedIdsSet];
   }
 
-
   openFranchise(animeId: number, episodes: number, episodesAired: number, user_episodes: number, user_status: string): void {
     this.changeCurrentAnimeId(animeId)
     const maxEpisode = episodes || episodesAired || 1;
@@ -195,6 +194,7 @@ export class FranchiseListComponent implements OnInit {
     if (episode > maxEpisode) {
       episode = maxEpisode;
     }
+    this.showFranchiseList = !this.showFranchiseList;
     this.router.navigateByUrl(`/${animeId}/${episode}`);
   }
 
