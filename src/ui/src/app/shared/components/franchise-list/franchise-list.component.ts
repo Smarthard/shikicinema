@@ -1,22 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import * as yaml from 'yaml';
 import { Router, ActivatedRoute } from '@angular/router';
-import { ShikimoriService } from '../../../services/shikimori-api/shikimori.service';
 import { firstValueFrom, map, distinctUntilChanged } from 'rxjs';
-
-interface AnimeData {
-  id: number;
-  name: string;
-  kind: string;
-  episodes: number;
-  episodesAired: number;
-  status: string;
-  user_status: string;
-  user_episodes: number;
-  year: number;
-  e?: number;
-  related: { relationRu: string; anime: { id: string } | null }[];
-}
+import { ShikimoriService } from '../../../services/shikimori-api/shikimori.service';
+import { FranchiseData } from '../../../types/franchise';
+import { FranchiseService } from '../../../services/franchise/franchise.service';
 
 @Component({
   selector: 'app-franchise-list',
@@ -25,13 +12,19 @@ interface AnimeData {
 })
 export class FranchiseListComponent implements OnInit {
   
-  franchiseData: AnimeData[] = [];
+  franchiseData: FranchiseData[] = [];
   showFranchiseList = false;
   isHidden = true;
   currentAnimeId: number;
   franchiseHovered: string | null = null;
+  franchise;
 
-  constructor(private router: Router, private shikimori: ShikimoriService, private route: ActivatedRoute,) { }
+  constructor(
+    private router: Router,
+    private FranchiseServ: FranchiseService,
+    private route: ActivatedRoute,
+    private shikimori: ShikimoriService,
+  ) {}
 
   readonly currentAnimeId$ = this.route.params.pipe(
     map((params) => +params.animeId),
@@ -41,25 +34,24 @@ export class FranchiseListComponent implements OnInit {
   ngOnInit(): void {
     this.currentAnimeId$.subscribe((animeId: number) => {
       this.currentAnimeId = animeId;
-      this.fetchFranchiseData()
+      this.fetchFranchise(this.currentAnimeId)
+        .then(franchise => {
+          this.franchise = franchise
+          this.fetchFranchiseData()
+        })
     });
   }
 
   private async fetchFranchiseData(): Promise<void> {
     const domain = await firstValueFrom(this.shikimori.domain$);
-    const animeUrl = `${domain}/api/animes/${this.currentAnimeId}`;
-    const animeResponse = await fetch(animeUrl);
-    const animeData = await animeResponse.json();
-    const franchise = animeData.franchise;
-    if (franchise !== null) {
+    if (this.franchise !== null && this.franchise !== 'undefined') {
       this.isHidden = false;
-      const excludedIdsUrl = 'https://corsproxy.io/?' + encodeURIComponent('https://raw.githubusercontent.com/shikimori/neko-achievements/master/priv/rules/_franchises.yml');
-      const excludedIdsData = await this.fetchData(excludedIdsUrl);
-      const excludedIds = this.parseNotAnimeIds(excludedIdsData, franchise);
+      const excludedIdsData = await this.FranchiseServ.fetchData();
+      const excludedIds = this.parseNotAnimeIds(excludedIdsData, this.franchise);
       const graphqlUrl = `${domain}/api/graphql`;
       const query = `
       {
-        animes(order: aired_on, franchise: "${franchise}", limit: 100, excludeIds: "${excludedIds}", status: "!anons") {
+        animes(order: aired_on, franchise: "${this.franchise}", limit: 100, excludeIds: "${excludedIds}", status: "!anons") {
           id
           russian
           kind
@@ -89,7 +81,7 @@ export class FranchiseListComponent implements OnInit {
       const { data } = await response.json();
     
       if (data && data.animes) {
-        let franchiseData: AnimeData[] = data.animes.map((node: any) => ({
+        let franchiseData: FranchiseData[] = data.animes.map((node: any) => ({
           id: parseInt(node.id, 10),
           name: node.russian,
           kind: this.translateKind(node.kind),
@@ -102,9 +94,10 @@ export class FranchiseListComponent implements OnInit {
           related: node.related,
         }));
         franchiseData.reverse();
-        // Список исключений для франшиз (в которых ТВ сериал не первый в хронологии)
-        const excludedFranchises: string[] = ['ginga_eiyuu_densetsu']; 
-        if (!excludedFranchises.includes(franchise)) {
+
+        // Список исключений для франшиз (в которых ТВ сериал не должен быть первым в хронологии)
+        const excludedFranchises: string[] = ['ginga_eiyuu_densetsu', 'gintama']; 
+        if (!excludedFranchises.includes(this.franchise)) {
           const firstTVItem = franchiseData.find(node => node.kind === "ТВ");
           const index = franchiseData.indexOf(firstTVItem);
           if (firstTVItem && index !== 0) {
@@ -130,9 +123,7 @@ export class FranchiseListComponent implements OnInit {
               }
             }
           });
-    
           iterations++;
-    
           if (iterations > franchiseData.length) {
             break;
           }
@@ -140,7 +131,7 @@ export class FranchiseListComponent implements OnInit {
     
         this.franchiseData = franchiseData;
         let e = 1;
-        this.franchiseData.forEach((node: AnimeData) => {
+        this.franchiseData.forEach((node: FranchiseData) => {
           if (node.kind === 'ТВ') {
             node.e = e++;
           }
@@ -148,6 +139,7 @@ export class FranchiseListComponent implements OnInit {
       }
     }
   }
+
   private translateKind(kind: string): string {
     switch (kind) {
       case 'tv':
@@ -173,26 +165,16 @@ export class FranchiseListComponent implements OnInit {
     }
   }
 
-
-  private async fetchData(url: string): Promise<any> {
-    const response = await fetch(url);
-    const text = await response.text();
-    return yaml.parse(text); // Parsing YAML to JSON
-  }
-
   private parseNotAnimeIds(data: any[], franchise: string): number[] {
     const excludedIdsSet: Set<number> = new Set();
-
     for (const entry of data) {
       if (entry.neko_id === franchise) {
         const notAnimeIds = entry.filters?.not_anime_ids || [];
-
         for (const id of notAnimeIds) {
           excludedIdsSet.add(id);
         }
       }
     }
-
     return [...excludedIdsSet];
   }
 
@@ -214,5 +196,10 @@ export class FranchiseListComponent implements OnInit {
 
   changeCurrentAnimeId(animeId: number): void {
     this.currentAnimeId = animeId;
+  }
+
+  async fetchFranchise(animeId: number) {
+    const anime = await this.shikimori.getAnime(animeId).toPromise();
+    return anime.franchise
   }
 }
