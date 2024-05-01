@@ -102,6 +102,16 @@ export class FranchiseListComponent implements OnInit {
           related: node.related,
         }));
         franchiseData.reverse();
+        // Список исключений для франшиз (в которых ТВ сериал не первый в хронологии)
+        const excludedFranchises: string[] = ['ginga_eiyuu_densetsu']; 
+        if (!excludedFranchises.includes(franchise)) {
+          const firstTVItem = franchiseData.find(node => node.kind === "ТВ");
+          const index = franchiseData.indexOf(firstTVItem);
+          if (firstTVItem && index !== 0) {
+            franchiseData.splice(index, 1);
+            franchiseData.unshift(firstTVItem);
+          }
+        }
         let hasMoves = false;
         let iterations = 0;
         do {
