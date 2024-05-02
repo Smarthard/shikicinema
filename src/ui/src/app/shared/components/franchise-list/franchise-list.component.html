@@ -1,5 +1,5 @@
 <div *ngIf="!isHidden" class="franchise-title">
-  <span class="text franchise-title" (click)="showFranchiseList = !showFranchiseList"><b>{{ showFranchiseList ? '− Скрыть' : '+ Показать список аниме' }}</b></span>
+  <span class="text franchise-title" (click)="showFranchiseList = !showFranchiseList"><b>{{ showFranchiseList ? '— Скрыть' : '+ Показать список аниме' }}</b></span>
 </div>
 <div *ngIf="showFranchiseList" class="franchise-container">
   <ul>
@@ -20,10 +20,11 @@
         <span class="check_mark">✓ </span>
       </ng-container>
       <span class="text">#{{ i + 1 }} </span>
-      <span class="franchise-link">{{ franchise.name }} </span> <span class="text">{{ franchise.kind === 'ТВ' ? '[ТВ-' + franchise.e + ']' : franchise.kind }}</span>
+      <span class="franchise-link">{{ franchise.name }}</span> <span class="text"> {{ franchise.kind === 'ТВ' ? '[ТВ-' + franchise.e + ']' : franchise.kind }}</span>
       <span class="text" *ngIf="franchise.status === 'ongoing'">  ({{ franchise.episodesAired }}+ эп.)</span>
       <span class="text" *ngIf="franchise.status === 'released' && franchise.episodes > 1">  ({{ franchise.episodes }} эп.)</span>
       <span class="text"> {{ franchise.year }}</span>
+      <span class="text" *ngIf="franchise.ep > 0 && franchise.kind !== 'ТВ'"> (~{{ franchise.ep }})</span>
     </li>
   </ul>
 </div>
