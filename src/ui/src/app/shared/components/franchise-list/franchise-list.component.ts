@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { map, distinctUntilChanged } from 'rxjs';
+import { map, distinctUntilChanged } from 'rxjs/operators';
 import { FranchiseData, exceptionsFranchises } from '../../../types/franchise';
 import { FranchiseService } from '../../../services/franchise/franchise.service';
 
@@ -21,7 +21,7 @@ export class FranchiseListComponent implements OnInit {
   constructor(
     private franchiseService: FranchiseService,
     private route: ActivatedRoute,
-  ) {}
+  ) { }
 
   readonly currentAnimeId$ = this.route.params.pipe(
     map(params => +params.animeId),
@@ -130,7 +130,6 @@ export class FranchiseListComponent implements OnInit {
   }
 
   openFranchise(animeId: number, episodes: number, episodesAired: number, user_episodes: number, user_status: string): void {
-    this.changeCurrentAnimeId(animeId);
     const PLAYER_URL = chrome.runtime.getURL('/index.html');
     const maxEpisode = episodes || episodesAired || 1;
     const watched = +(user_episodes ? user_episodes : 0);
@@ -142,9 +141,5 @@ export class FranchiseListComponent implements OnInit {
 
   toggleFranchiseList(): void {
     this.showFranchiseList = !this.showFranchiseList;
-  }
-
-  changeCurrentAnimeId(animeId: number): void {
-    this.currentAnimeId = animeId;
   }
 }
