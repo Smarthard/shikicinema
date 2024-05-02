@@ -27,7 +27,8 @@ export class FranchiseService {
           episodesAired
           status
           userRate { status episodes  }
-          airedOn { year }
+          airedOn { year date }
+          releasedOn { date }
           related { relationRu
             anime {
               id
