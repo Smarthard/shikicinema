@@ -1,3 +1,7 @@
+// Список для: ТВ сериал должен быть первым в хронологии, но он не первый 
+const exceptionsFranchises: string[] = ['jojo_no_kimyou_na_bouken', 'hellsing', 'one_piece'];
+export { exceptionsFranchises }
+
 export interface FranchiseData {
   id: number;
   name: string;
