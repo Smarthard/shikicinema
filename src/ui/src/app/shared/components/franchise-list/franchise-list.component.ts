@@ -17,6 +17,8 @@ export class FranchiseListComponent implements OnInit {
   currentAnimeId: number;
   franchiseHovered: string | null = null;
   franchise;
+  skips: number;
+  now: Date;
 
   constructor(
     private franchiseService: FranchiseService,
@@ -87,6 +89,8 @@ export class FranchiseListComponent implements OnInit {
       user_status: anime.userRate?.status || null,
       user_episodes: anime.userRate?.episodes || null,
       year: anime.airedOn.year,
+      date: anime.airedOn.date,
+      released: anime.releasedOn.date,
       related: anime.related,
     }));
     franchiseData.reverse();
@@ -106,12 +110,52 @@ export class FranchiseListComponent implements OnInit {
   }
 
   private addEpisodeNumbers(): void {
-    let e = 1;
-    this.franchiseData.forEach((node: FranchiseData) => {
-      if (node.kind === 'ТВ') {
-        node.e = e++;
+    let episodeCounter = 1;
+    this.franchiseData.forEach((currentNode: FranchiseData, currentIndex: number) => {
+      if (currentNode.kind === 'ТВ') {
+        const timeDifference = this.calculateTimeDifference(currentNode);
+        currentNode.e = episodeCounter++;
+        let nextIndex = currentIndex + 1;
+        while (nextIndex < this.franchiseData.length) {
+          const nextNode = this.franchiseData[nextIndex];
+          if (nextNode.ep !== undefined) {
+            break;
+          }
+          if (currentNode.year <= nextNode.year && nextNode.kind !== 'ТВ') {
+            console.log(currentNode.name, nextNode.name)
+            let weeksDifference = this.calculateWeekDifference(currentNode, nextNode, timeDifference);
+            console.log(weeksDifference)
+            if (currentNode.status === 'ongoing') {
+              weeksDifference+=2
+            }
+            const hasEnoughEpisodes = weeksDifference <= (currentNode.status === 'ongoing' ? currentNode.episodesAired : currentNode.episodes);
+            if (hasEnoughEpisodes) {
+              nextNode.ep = weeksDifference;
+              nextIndex++;
+            } else {
+              break;
+            }
+          } else {
+            nextIndex++;
+            continue;
+          }
+        }
       }
     });
+  }
+
+  private calculateTimeDifference(node: FranchiseData): number {
+    const startDate = new Date(node.date);
+    const endDate = node.status === 'ongoing' ? new Date() : new Date(node.released);
+    const differenceInMs = endDate.getTime() - startDate.getTime();
+    return differenceInMs / (604800000 * (node.status === 'ongoing' ? node.episodesAired : node.episodes));
+  }
+
+  private calculateWeekDifference(currentNode: FranchiseData, nextNode: FranchiseData, skips: number): number {
+    const currentDate = new Date(currentNode.date);
+    const nextDate = new Date(nextNode.date);
+    const differenceInMs = nextDate.getTime() - currentDate.getTime();
+    return Math.ceil(differenceInMs / (604800000 * skips)) ;
   }
 
   private translateKind(kind: string): string {
