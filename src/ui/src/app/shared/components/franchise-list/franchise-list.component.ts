@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
-import { firstValueFrom, map, distinctUntilChanged } from 'rxjs';
-import { ShikimoriService } from '../../../services/shikimori-api/shikimori.service';
-import { FranchiseData } from '../../../types/franchise';
+import { ActivatedRoute } from '@angular/router';
+import { map, distinctUntilChanged } from 'rxjs';
+import { FranchiseData, exceptionsFranchises } from '../../../types/franchise';
 import { FranchiseService } from '../../../services/franchise/franchise.service';
 
 @Component({
@@ -11,7 +10,7 @@ import { FranchiseService } from '../../../services/franchise/franchise.service'
   styleUrls: ['./franchise-list.component.css']
 })
 export class FranchiseListComponent implements OnInit {
-  
+
   franchiseData: FranchiseData[] = [];
   showFranchiseList = false;
   isHidden = true;
@@ -20,174 +19,125 @@ export class FranchiseListComponent implements OnInit {
   franchise;
 
   constructor(
-    private router: Router,
-    private FranchiseServ: FranchiseService,
+    private franchiseService: FranchiseService,
     private route: ActivatedRoute,
-    private shikimori: ShikimoriService,
   ) {}
 
   readonly currentAnimeId$ = this.route.params.pipe(
-    map((params) => +params.animeId),
+    map(params => +params.animeId),
     distinctUntilChanged()
   );
 
   ngOnInit(): void {
     this.currentAnimeId$.subscribe((animeId: number) => {
       this.currentAnimeId = animeId;
-      this.fetchFranchise(this.currentAnimeId)
-        .then(franchise => {
-          this.franchise = franchise
-          this.fetchFranchiseData()
-        })
+      this.fetchAndProcessFranchiseData();
     });
   }
 
-  private async fetchFranchiseData(): Promise<void> {
-    const domain = await firstValueFrom(this.shikimori.domain$);
-    if (this.franchise !== null && this.franchise !== 'undefined') {
+  private async fetchAndProcessFranchiseData(): Promise<void> {
+    this.franchise = await this.franchiseService.fetchFranchise(this.currentAnimeId);
+    if (this.franchise !== null) {
       this.isHidden = false;
-      const excludedIdsData = await this.FranchiseServ.fetchData();
-      const excludedIds = this.parseNotAnimeIds(excludedIdsData, this.franchise);
-      const graphqlUrl = `${domain}/api/graphql`;
-      const query = `
-      {
-        animes(order: aired_on, franchise: "${this.franchise}", limit: 100, excludeIds: "${excludedIds}", status: "!anons") {
-          id
-          russian
-          kind
-          episodes
-          episodesAired
-          status
-          userRate { status episodes  }
-          airedOn { year }
-          related { relationRu
-            anime {
-              id
-            }
-          } 
-        }
-      }
-    `;
-    
-      const response = await fetch(graphqlUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-        body: JSON.stringify({ query })
-      });
-    
-      const { data } = await response.json();
-    
+      const data = await this.franchiseService.fetchAnimeData(this.franchise);
       if (data && data.animes) {
-        let franchiseData: FranchiseData[] = data.animes.map((node: any) => ({
-          id: parseInt(node.id, 10),
-          name: node.russian,
-          kind: this.translateKind(node.kind),
-          episodes: node.episodes,
-          episodesAired: node.episodesAired,
-          status: node.status,
-          user_status: node.userRate ? node.userRate.status : null,
-          user_episodes: node.userRate ? node.userRate.episodes : null,
-          year: node.airedOn.year,
-          related: node.related,
-        }));
-        franchiseData.reverse();
-
-        // Список исключений для франшиз (в которых ТВ сериал не должен быть первым в хронологии)
-        const excludedFranchises: string[] = ['ginga_eiyuu_densetsu', 'gintama']; 
-        if (!excludedFranchises.includes(this.franchise)) {
-          const firstTVItem = franchiseData.find(node => node.kind === "ТВ");
-          const index = franchiseData.indexOf(firstTVItem);
-          if (firstTVItem && index !== 0) {
-            franchiseData.splice(index, 1);
-            franchiseData.unshift(firstTVItem);
-          }
-        }
-        let hasMoves = false;
-        let iterations = 0;
-        do {
-          hasMoves = false;
-          const withPrehistory = franchiseData.filter(node => node.related.some(rel => rel.relationRu === "Предыстория"));
-    
-          withPrehistory.forEach(item => {
-            const index = franchiseData.findIndex(node => node.id === item.id);
-            const prehistory = item.related.find(rel => rel.relationRu === "Предыстория");
-            if (prehistory) {
-              const prehistoryIndex = franchiseData.findIndex(node => node.id === parseInt(prehistory.anime.id, 10));
-              if (prehistoryIndex > index) {
-                const prehistoryItem = franchiseData.splice(prehistoryIndex, 1)[0];
-                franchiseData.splice(index, 0, prehistoryItem);
-                hasMoves = true;
-              }
-            }
-          });
-          iterations++;
-          if (iterations > franchiseData.length) {
-            break;
-          }
-        } while (hasMoves);
-    
-        this.franchiseData = franchiseData;
-        let e = 1;
-        this.franchiseData.forEach((node: FranchiseData) => {
-          if (node.kind === 'ТВ') {
-            node.e = e++;
-          }
-        });
+        let franchiseData: FranchiseData[] = this.processFranchiseData(data.animes);
+        this.franchiseData = this.sortFranchiseData(franchiseData);
+        this.addEpisodeNumbers();
       }
     }
+  }
+
+  private sortFranchiseData(franchiseData: FranchiseData[]): FranchiseData[] {
+    let hasMoves = false;
+    let iterations = 0;
+    do {
+      hasMoves = false;
+      const withPrehistory = franchiseData.filter(node => node.related.some(rel => rel.relationRu === "Предыстория"));
+      withPrehistory.forEach(item => {
+        const index = franchiseData.findIndex(node => node.id === item.id);
+        const prehistory = item.related.find(rel => rel.relationRu === "Предыстория");
+        if (prehistory) {
+          const prehistoryIndex = franchiseData.findIndex(node => node.id === parseInt(prehistory.anime.id, 10));
+          if (prehistoryIndex > index) {
+            const prehistoryItem = franchiseData.splice(prehistoryIndex, 1)[0];
+            franchiseData.splice(index, 0, prehistoryItem);
+            hasMoves = true;
+          }
+        }
+      });
+      iterations++;
+      if (iterations > franchiseData.length) {
+        break;
+      }
+    } while (hasMoves);
+
+    return franchiseData;
+  }
+
+
+  private processFranchiseData(animes: any[]): FranchiseData[] {
+    let franchiseData: FranchiseData[] = animes.map(anime => ({
+      id: parseInt(anime.id, 10),
+      name: anime.russian,
+      kind: this.translateKind(anime.kind),
+      episodes: anime.episodes,
+      episodesAired: anime.episodesAired,
+      status: anime.status,
+      user_status: anime.userRate?.status || null,
+      user_episodes: anime.userRate?.episodes || null,
+      year: anime.airedOn.year,
+      related: anime.related,
+    }));
+    franchiseData.reverse();
+    this.handleExceptions(franchiseData);
+    return franchiseData;
+  }
+
+  private handleExceptions(franchiseData: FranchiseData[]): void {
+    if (exceptionsFranchises.includes(this.franchise)) {
+      const firstTVItem = franchiseData.find(node => node.kind === "ТВ");
+      const index = franchiseData.indexOf(firstTVItem);
+      if (firstTVItem && index !== 0) {
+        franchiseData.splice(index, 1);
+        franchiseData.unshift(firstTVItem);
+      }
+    }
+  }
+
+  private addEpisodeNumbers(): void {
+    let e = 1;
+    this.franchiseData.forEach((node: FranchiseData) => {
+      if (node.kind === 'ТВ') {
+        node.e = e++;
+      }
+    });
   }
 
   private translateKind(kind: string): string {
-    switch (kind) {
-      case 'tv':
-        return 'ТВ';
-      case 'pv':
-        return 'Проморолик';
-      case 'cm':
-        return 'Реклама';
-      case 'music':
-        return 'Клип';
-      case 'movie':
-        return 'Фильм';
-      case 'ova':
-        return 'OVA';
-      case 'ona':
-        return 'ONA';
-      case 'special':
-        return 'Спецвыпуск';
-      case 'tv_special':
-        return 'TV Спецвыпуск';
-      default:
-        return kind;
-    }
-  }
-
-  private parseNotAnimeIds(data: any[], franchise: string): number[] {
-    const excludedIdsSet: Set<number> = new Set();
-    for (const entry of data) {
-      if (entry.neko_id === franchise) {
-        const notAnimeIds = entry.filters?.not_anime_ids || [];
-        for (const id of notAnimeIds) {
-          excludedIdsSet.add(id);
-        }
-      }
-    }
-    return [...excludedIdsSet];
+    const kindTranslations = {
+      'tv': 'ТВ',
+      'pv': 'Проморолик',
+      'cm': 'Реклама',
+      'music': 'Клип',
+      'movie': 'Фильм',
+      'ova': 'OVA',
+      'ona': 'ONA',
+      'special': 'Спецвыпуск',
+      'tv_special': 'TV Спецвыпуск',
+    };
+    return kindTranslations[kind] || kind;
   }
 
   openFranchise(animeId: number, episodes: number, episodesAired: number, user_episodes: number, user_status: string): void {
-    this.changeCurrentAnimeId(animeId)
+    this.changeCurrentAnimeId(animeId);
+    const PLAYER_URL = chrome.runtime.getURL('/index.html');
     const maxEpisode = episodes || episodesAired || 1;
     const watched = +(user_episodes ? user_episodes : 0);
     let episode = user_episodes && user_status === 'completed' ? 1 : watched + 1;
-    if (episode > maxEpisode) {
-      episode = maxEpisode;
-    }
-    this.showFranchiseList = !this.showFranchiseList;
-    this.router.navigateByUrl(`/${animeId}/${episode}`);
+    episode = Math.min(episode, maxEpisode);
+    window.location.href = `${PLAYER_URL}#/${animeId}/${episode}`;
+    location.reload();
   }
 
   toggleFranchiseList(): void {
@@ -196,10 +146,5 @@ export class FranchiseListComponent implements OnInit {
 
   changeCurrentAnimeId(animeId: number): void {
     this.currentAnimeId = animeId;
-  }
-
-  async fetchFranchise(animeId: number) {
-    const anime = await this.shikimori.getAnime(animeId).toPromise();
-    return anime.franchise
   }
 }
