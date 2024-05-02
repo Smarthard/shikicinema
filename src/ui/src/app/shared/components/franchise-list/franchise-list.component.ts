@@ -121,10 +121,8 @@ export class FranchiseListComponent implements OnInit {
           if (nextNode.ep !== undefined) {
             break;
           }
-          if (currentNode.year <= nextNode.year && nextNode.kind !== 'ТВ') {
-            console.log(currentNode.name, nextNode.name)
+          if (currentNode.year < nextNode.year && nextNode.kind !== 'ТВ') {
             let weeksDifference = this.calculateWeekDifference(currentNode, nextNode, timeDifference);
-            console.log(weeksDifference)
             if (currentNode.status === 'ongoing') {
               weeksDifference+=2
             }
