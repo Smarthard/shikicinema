@@ -12,6 +12,9 @@ export interface FranchiseData {
   user_status: string;
   user_episodes: number;
   year: number;
+  date: string;
+  released: string;
   e?: number;
+  ep?: number;
   related: { relationRu: string; anime: { id: string } | null }[];
 }
