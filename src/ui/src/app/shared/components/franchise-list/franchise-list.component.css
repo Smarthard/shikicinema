@@ -5,7 +5,6 @@
 
 b {
   font-size: 11pt;
-  cursor: pointer;
 }
 
 .text,
@@ -50,12 +49,6 @@ li,
 @media screen and (max-width: 768px) {
   .franchise-grid {
     grid-template-columns: repeat(5, minmax(calc(100% / 5 - 10px), 1fr)); 
-  }
-}
-
-@media screen and (max-width: 480px) {
-  .franchise-grid {
-    grid-template-columns: repeat(4, minmax(calc(100% / 4 - 10px), 1fr)); 
   }
 }
 
@@ -144,4 +137,9 @@ li,
   background-color: #f0f0f0; 
   border-radius: 50%;
   animation: pulse 1s infinite alternate;
+}
+
+button {
+  padding: 0px;
+  margin-left: 10px;
 }
