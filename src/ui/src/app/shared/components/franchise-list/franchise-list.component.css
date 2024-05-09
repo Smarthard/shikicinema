@@ -138,8 +138,3 @@ li,
   border-radius: 50%;
   animation: pulse 1s infinite alternate;
 }
-
-button {
-  padding: 0px;
-  margin-left: 10px;
-}
