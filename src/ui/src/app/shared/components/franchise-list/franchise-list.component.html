@@ -1,30 +1,42 @@
 <div *ngIf="!isHidden" class="franchise-title">
-  <span class="text franchise-title" (click)="showFranchiseList = !showFranchiseList"><b>{{ showFranchiseList ? '— Скрыть' : '+ Показать список аниме' }}</b></span>
+  <button mat-button class="text franchise-title" (click)="toggleFranchiseList()">
+    <b>{{ showFranchiseList ? '— Скрыть' : '+ Показать список аниме' }}</b>
+  </button>
 </div>
 <div *ngIf="showFranchiseList" class="franchise-container">
-  <ul>
-    <li class="franchise-link" *ngFor="let franchise of franchiseData; let i=index;" [ngClass]="{'hovered': franchiseHovered === franchise.id, 'current-hovered': franchiseHovered === franchise.id && franchise.id === currentAnimeId, 'current': franchise.id === currentAnimeId}"
-        (click)="openFranchise(franchise.id, franchise.episodes, franchise.episodesAired, franchise.user_episodes, franchise.user_status)"
+  <ul class="franchise-grid">
+    <li class="list" *ngFor="let franchise of franchiseData; let i=index;" [ngClass]="{'hovered': franchiseHovered === franchise.id, 'current-hovered': franchiseHovered === franchise.id && franchise.id === currentAnimeId, 'current': franchise.id === currentAnimeId}"
+        (click)="openFranchise(franchise.id)"
         (mouseenter)="franchiseHovered = franchise.id"
         (mouseleave)="franchiseHovered = null">
-      <ng-container *ngIf="franchise.user_status !== 'completed' && franchise.user_status !== 'rewatching' && franchise.user_status !== 'watching'">
-        <span class="x_mark">✕ </span>
-      </ng-container>
-      <ng-container *ngIf="franchise.user_status === 'rewatching'">
-        <span class="repeat_mark">↺ </span>
-      </ng-container>
-      <ng-container *ngIf="franchise.user_status === 'watching'">
-        <span class="watch_mark">▶ </span>
-      </ng-container>
-      <ng-container *ngIf="franchise.user_status === 'completed'">
-        <span class="check_mark">✓ </span>
-      </ng-container>
-      <span class="text">#{{ i + 1 }} </span>
-      <span class="franchise-link">{{ franchise.name }}</span> <span class="text"> {{ franchise.kind === 'ТВ' ? '[ТВ-' + franchise.e + ']' : franchise.kind }}</span>
-      <span class="text" *ngIf="franchise.status === 'ongoing'">  ({{ franchise.episodesAired }}+ эп.)</span>
-      <span class="text" *ngIf="franchise.status === 'released' && franchise.episodes > 1">  ({{ franchise.episodes }} эп.)</span>
-      <span class="text"> {{ franchise.year }}</span>
-      <span class="text" *ngIf="franchise.ep > 0 && franchise.kind !== 'ТВ'"> (~{{ franchise.ep }})</span>
+      <div class="franchise-content">
+        <img [src]="franchise.poster" alt="Poster" class="franchise-poster">
+        <span class="franchise-link" [matTooltip]="franchise.name">{{ franchise.name }}</span>
+        <span class="misc">
+          <span class="text">{{ franchise.kind }}</span>
+          <span class="text">{{ franchise.year }}</span>
+        </span>
+
+        <div *ngIf="isLoadingData">
+          <span class="badge-icon skeleton-badge-icon"></span>
+        </div>
+
+        <div *ngIf="!isLoadingData">
+          <div *ngIf="franchise.status === 'completed'" class="completed-badge">
+            <span class="badge-icon"></span>
+          </div>
+          <div *ngIf="franchise.status === 'watching'" class="watching-badge">
+            <span class="badge-icon"></span>
+          </div>
+          <div *ngIf="franchise.status === 'rewatching'" class="rewatching-badge">
+            <span class="badge-icon"></span>
+          </div>
+          <div *ngIf="franchise.status === 'planned'" class="planned-badge">
+            <span class="badge-icon"></span>
+          </div>
+        </div>
+
+      </div>
     </li>
   </ul>
 </div>
