@@ -16,6 +16,7 @@ export class KodikService {
 
   private _kodikResponseCache: Kodik.ISearchResponse;
   private _franchise: Shikimori.IFranchiseResponse;
+  
 
   constructor(
     private http: HttpClient,
@@ -99,7 +100,7 @@ export class KodikService {
 
   private async _getSeason(anime: Shikimori.Anime) {
     if (!this._franchise || this._franchise.current_id !== anime.id) {
-      this._franchise = await lastValueFrom(this.shikimori.getFranchise(anime));
+       this._franchise = await lastValueFrom(this.shikimori.getFranchise(anime));
     }
 
     const response = await this.getVideos(anime);
@@ -119,6 +120,10 @@ export class KodikService {
     }
 
     return Object.keys(response?.results?.[0]?.seasons || {})[0];
+  }
+
+  exportFranchise() {
+    return this._franchise;
   }
 
   public async getVideos(anime: Shikimori.Anime) {
