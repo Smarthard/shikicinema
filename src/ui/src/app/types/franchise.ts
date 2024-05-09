@@ -1,20 +1,14 @@
-// Список для: ТВ сериал должен быть первым в хронологии, но он не первый 
-const exceptionsFranchises: string[] = ['jojo_no_kimyou_na_bouken', 'hellsing', 'one_piece'];
-export { exceptionsFranchises }
+  export interface AnimeFranchiseLink {
+    source_id: number;
+    target_id: number;
+    relation: string;
+}
 
-export interface FranchiseData {
-  id: number;
-  name: string;
-  kind: string;
-  episodes: number;
-  episodesAired: number;
-  status: string;
-  user_status: string;
-  user_episodes: number;
-  year: number;
-  date: string;
-  released: string;
-  e?: number;
-  ep?: number;
-  related: { relationRu: string; anime: { id: string } | null }[];
+  export interface AnimeFranchiseNode {
+    id: number;
+    name: string;
+    poster: string;
+    year: number;
+    kind: string;
+    status: string;
 }
