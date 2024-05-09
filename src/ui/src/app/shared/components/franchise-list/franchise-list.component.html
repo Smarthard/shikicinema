@@ -1,42 +1,44 @@
-<div *ngIf="!isHidden" class="franchise-title">
-  <button mat-button class="text franchise-title" (click)="toggleFranchiseList()">
-    <b>{{ showFranchiseList ? '— Скрыть' : '+ Показать список аниме' }}</b>
-  </button>
-</div>
-<div *ngIf="showFranchiseList" class="franchise-container">
-  <ul class="franchise-grid">
-    <li class="list" *ngFor="let franchise of franchiseData; let i=index;" [ngClass]="{'hovered': franchiseHovered === franchise.id, 'current-hovered': franchiseHovered === franchise.id && franchise.id === currentAnimeId, 'current': franchise.id === currentAnimeId}"
-        (click)="openFranchise(franchise.id)"
-        (mouseenter)="franchiseHovered = franchise.id"
-        (mouseleave)="franchiseHovered = null">
-      <div class="franchise-content">
-        <img [src]="franchise.poster" alt="Poster" class="franchise-poster">
-        <span class="franchise-link" [matTooltip]="franchise.name">{{ franchise.name }}</span>
-        <span class="misc">
-          <span class="text">{{ franchise.kind }}</span>
-          <span class="text">{{ franchise.year }}</span>
-        </span>
+<div class="franchise">
+  <div *ngIf="!isHidden">
+    <button mat-button class="text" (click)="toggleFranchiseList()">
+      <b>{{ showFranchiseList ? '— Скрыть' : '+ Показать список аниме' }}</b>
+    </button>
+  </div>
+  <div *ngIf="showFranchiseList">
+    <ul class="franchise-grid">
+      <li *ngFor="let franchise of franchiseData; let i=index;" [ngClass]="{'hovered': franchiseHovered === franchise.id, 'current-hovered': franchiseHovered === franchise.id && franchise.id === currentAnimeId, 'current': franchise.id === currentAnimeId}"
+          (click)="openFranchise(franchise.id)"
+          (mouseenter)="franchiseHovered = franchise.id"
+          (mouseleave)="franchiseHovered = null">
+        <div class="franchise-content">
+          <img [src]="franchise.poster" alt="Poster" class="franchise-poster">
+          <span class="franchise-link" [matTooltip]="franchise.name">{{ franchise.name }}</span>
+          <span class="misc">
+            <span class="text">{{ franchise.kind }}</span>
+            <span class="text">{{ franchise.year }}</span>
+          </span>
 
-        <div *ngIf="isLoadingData">
-          <span class="badge-icon skeleton-badge-icon"></span>
+          <div *ngIf="isLoadingData">
+            <span class="badge-icon skeleton-badge-icon"></span>
+          </div>
+
+          <div *ngIf="!isLoadingData">
+            <div *ngIf="franchise.status === 'completed'" class="completed-badge">
+              <span class="badge-icon"></span>
+            </div>
+            <div *ngIf="franchise.status === 'watching'" class="watching-badge">
+              <span class="badge-icon"></span>
+            </div>
+            <div *ngIf="franchise.status === 'rewatching'" class="rewatching-badge">
+              <span class="badge-icon"></span>
+            </div>
+            <div *ngIf="franchise.status === 'planned'" class="planned-badge">
+              <span class="badge-icon"></span>
+            </div>
+
+          </div>
         </div>
-
-        <div *ngIf="!isLoadingData">
-          <div *ngIf="franchise.status === 'completed'" class="completed-badge">
-            <span class="badge-icon"></span>
-          </div>
-          <div *ngIf="franchise.status === 'watching'" class="watching-badge">
-            <span class="badge-icon"></span>
-          </div>
-          <div *ngIf="franchise.status === 'rewatching'" class="rewatching-badge">
-            <span class="badge-icon"></span>
-          </div>
-          <div *ngIf="franchise.status === 'planned'" class="planned-badge">
-            <span class="badge-icon"></span>
-          </div>
-        </div>
-
-      </div>
-    </li>
-  </ul>
+      </li>
+    </ul>
+  </div>
 </div>
