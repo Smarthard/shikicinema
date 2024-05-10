@@ -6,7 +6,7 @@
   </div>
   <div *ngIf="showFranchiseList">
     <ul class="franchise-grid">
-      <li *ngFor="let franchise of franchiseData; let i=index;" [ngClass]="{'hovered': franchiseHovered === franchise.id, 'current-hovered': franchiseHovered === franchise.id && franchise.id === currentAnimeId, 'current': franchise.id === currentAnimeId}"
+      <li *ngFor="let franchise of franchiseData;" [ngClass]="{'hovered': franchiseHovered === franchise.id, 'current-hovered': franchiseHovered === franchise.id && franchise.id === currentAnimeId, 'current': franchise.id === currentAnimeId}"
           (click)="openFranchise(franchise.id)"
           (mouseenter)="franchiseHovered = franchise.id"
           (mouseleave)="franchiseHovered = null">

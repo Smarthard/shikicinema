@@ -12,7 +12,6 @@ import { FranchiseService } from '../../../services/franchise/franchise.service'
 export class FranchiseListComponent implements OnInit {
 
   franchiseData: AnimeFranchiseNode[] = [];
-  relationData: AnimeFranchiseLink[] = [];
   showFranchiseList = false;
   isHidden = true;
   currentAnimeId: number;
@@ -35,7 +34,7 @@ export class FranchiseListComponent implements OnInit {
   ngOnInit(): void {
     this.subscribeToAnimeId();
     if (!this.dataFetched) {
-      this.fetchAndProcessFranchiseData();
+      this.fetchAndProcessFranchiseData().then(() => {});
     }
   }
 
@@ -49,7 +48,7 @@ export class FranchiseListComponent implements OnInit {
   // Получаем данные о франшизе
   private async fetchAndProcessFranchiseData(): Promise<void> {
     const data = await this.franchiseService.fetchFranchiseData();
-    if (data) { 
+    if (data) {
       this.isHidden = false;
       this.franchiseData = this.processFranchiseData(data.nodes, data.links);
       this.dataFetched = true;
@@ -58,7 +57,7 @@ export class FranchiseListComponent implements OnInit {
 
   // Маппим и фильтруем чтобы приквелы стояли спереди
   private processFranchiseData(nodes: any[], links: AnimeFranchiseLink[]): AnimeFranchiseNode[] {
-    let franchiseData: AnimeFranchiseNode[] = nodes.map(node => ({
+    const franchiseData: AnimeFranchiseNode[] = nodes.map(node => ({
       id: node.id,
       name: node.name,
       poster: node.image_url,
@@ -95,7 +94,7 @@ export class FranchiseListComponent implements OnInit {
     if (episode > maxEpisode) {
       episode = maxEpisode;
     }
-    this.router.navigate([`/${animeId}/${episode}`]);
+    await this.router.navigate([`/${animeId}/${episode}`]);
     this.showFranchiseList = !this.showFranchiseList;
   }
 
@@ -106,7 +105,7 @@ export class FranchiseListComponent implements OnInit {
       this.isLoadingData = true;
       this.graphql = await this.franchiseService.GraphQL();
       this.franchiseData.forEach(franchise => {
-        const matchedAnime = this.graphql.animes.find(anime => anime.id === franchise.id.toString());
+        const matchedAnime = this.graphql.animes.find((anime: { id: string; }) => anime.id === franchise.id.toString());
         if (matchedAnime && matchedAnime.userRate !== null) {
           franchise.status = matchedAnime.userRate.status;
         }
