@@ -10,7 +10,7 @@ import { notAnimeIds} from '../../types/franchise';
 
 export class FranchiseService {
   franchise: any;
-  domain: string | undefined;
+  domain?: string;
 
 
   constructor(private kodik: KodikService, private shikimori: ShikimoriService) { }
