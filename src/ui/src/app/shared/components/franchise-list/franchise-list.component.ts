@@ -11,20 +11,20 @@ import { FranchiseService } from '../../../services/franchise/franchise.service'
 })
 export class FranchiseListComponent implements OnInit {
 
-  franchiseData: AnimeFranchiseNode[] = [];
-  showFranchiseList = false;
-  isHidden = true;
-  currentAnimeId: number;
-  franchiseHovered: string | null = null;
-  graphql: any
-  dataFetched = false;
-  isLoadingData = false;
-
   constructor(
     private franchiseService: FranchiseService,
     private route: ActivatedRoute,
     private router: Router,
   ) {}
+
+  franchiseData: AnimeFranchiseNode[] = [];
+  showFranchiseList = false;
+  isHidden = true;
+  currentAnimeId: number;
+  franchiseHovered: number;
+  graphql: any
+  dataFetched = false;
+  isLoadingData = false;
 
   readonly currentAnimeId$ = this.route.params.pipe(
     map(params => +params.animeId),

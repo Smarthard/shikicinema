@@ -14,6 +14,11 @@ li,
   list-style-type: none;
 }
 
+li {
+  max-width: 163px;
+  max-height: 297px;
+}
+
 .franchise-link {
   font-size: 13px;
   color: #317aad;
@@ -25,7 +30,7 @@ li,
   font-weight: bold;
   line-height: 1.65;
   margin-top: 5px;
-  max-width: 100px;
+  max-width: 100%;
 }
 
 .kind {
@@ -50,6 +55,7 @@ li,
   display: grid;
   grid-gap: 10px;
   grid-template-columns: repeat(8, minmax(calc(100% / 8 - 10px), 1fr));
+  max-width: 1400px;
 }
 
 @media screen and (max-width: 768px) {
