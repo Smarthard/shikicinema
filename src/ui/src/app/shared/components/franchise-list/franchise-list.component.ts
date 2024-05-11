@@ -60,7 +60,7 @@ export class FranchiseListComponent implements OnInit {
     const franchiseData: AnimeFranchiseNode[] = nodes.map(node => ({
       id: node.id,
       name: node.name,
-      poster: node.image_url,
+      poster: this.replaceLink(node.image_url),
       year: node.year === null ? 'Анонс' : node.year,
       kind: node.kind === null ? 'Анонс' : node.kind,
       status: '',
@@ -82,6 +82,10 @@ export class FranchiseListComponent implements OnInit {
       });
     });
     return franchiseData
+  }
+
+  private replaceLink(url: string): string {
+    return url.replace('/x96/', '/original/');
   }
 
   // Переход по тайтлам из франшизы
