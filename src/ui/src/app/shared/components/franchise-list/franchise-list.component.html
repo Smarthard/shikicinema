@@ -1,0 +1,12 @@
+<div class="franchise" *ngIf="!isHidden">
+  <button mat-button class="text" (click)="toggleFranchiseList()">
+    <b>{{ showFranchiseList ? '— Скрыть' : '+ Показать список аниме' }}</b>
+  </button>
+  <div *ngIf="showFranchiseList">
+    <app-franchise-list-item
+      [franchiseData]="franchiseData"
+      [isLoadingData]="isLoadingData"
+      (openFranchise)="openFranchise($event)">
+    </app-franchise-list-item>
+  </div>
+</div>
