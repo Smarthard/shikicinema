@@ -1,0 +1,169 @@
+.text,
+li,
+.franchise-name {
+  cursor: pointer;
+  list-style-type: none;
+}
+
+li {
+  max-width: 163px;
+  max-height: 297px;
+}
+
+.franchise-name {
+  font-size: 13px;
+  color: #317aad;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: pointer;
+  display: inline-block;
+  font-weight: bold;
+  line-height: 1.65;
+  margin-top: 5px;
+  max-width: 100%;
+}
+
+.kind {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.hovered .franchise-name {
+  color: #dd5202;
+}
+
+.current .franchise-name {
+  color: #b34100;
+}
+
+.current-hovered .franchise-name {
+  color: #dd5202;
+}
+
+.franchise-grid {
+  display: grid;
+  grid-gap: 10px;
+  grid-template-columns: repeat(8, minmax(calc(100% / 8 - 10px), 1fr));
+  max-width: 1400px;
+}
+
+@media screen and (max-width: 768px) {
+  .franchise-grid {
+    grid-template-columns: repeat(4, minmax(calc(100% / 4 - 10px), 1fr));
+  }
+  .franchise-poster {
+    width: 100%;
+    height: 66vh;
+  }
+}
+
+@media screen and (max-width: 768px) and (min-height: 400px) {
+  .franchise-grid {
+    grid-template-columns: repeat(3, minmax(calc(100% / 3 - 10px), 1fr));
+  }
+  .franchise-poster {
+    width: 100%;
+    height: 41vh;
+    max-height: 141px;
+  }
+}
+
+@media screen and (min-width: 769px) and (min-height: 478px) {
+  .franchise-poster {
+    width: 100%;
+    height: 26vh;
+    max-height: 255px;
+  }
+}
+
+@media screen and (min-width: 769px) and (max-height: 478px) {
+  .franchise-poster {
+    width: 100%;
+    height: 37vh;
+    max-height: 255px;
+  }
+}
+
+.franchise-content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.misc {
+  display: flex;
+  font-size: 11px;
+  gap: 5px;
+  justify-content: space-between;
+  line-height: 17px;
+}
+
+.completed-badge {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  z-index: 1;
+  background: #419541;
+  color: #fff;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  font-size: 20px;
+}
+
+.watching-badge, .rewatching-badge {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  z-index: 1;
+  background: #176093;
+  color: #fff;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  font-size: 21px;
+}
+
+.planned-badge {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  z-index: 1;
+  background: #fff;
+  color: #176093;
+  border-radius: 50%;
+  border: 2px solid #176093;
+  font-size: 24px;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0.5;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+.badge-icon {
+  position: relative;
+  display: inline-block;
+  width: 32px;
+  line-height: 32px;
+  font-family: shikimori;
+  text-align: center;
+}
+
+.skeleton-badge-icon {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  z-index: 1;
+  display: inline-block;
+  width: 32px;
+  height: 32px;
+  background-color: #f0f0f0;
+  border-radius: 50%;
+  animation: pulse 1s infinite alternate;
+}

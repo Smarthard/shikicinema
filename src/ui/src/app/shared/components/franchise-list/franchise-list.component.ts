@@ -1,48 +1,32 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { map, distinctUntilChanged } from 'rxjs/operators';
-import { AnimeFranchiseNode, AnimeFranchiseLink } from '../../../types/franchise';
-import { FranchiseService } from '../../../services/franchise/franchise.service';
+import {Component, OnInit} from '@angular/core';
+import {Router} from '@angular/router';
+import {AnimeFranchiseNode, AnimeFranchiseLink} from '../../../types/franchise';
+import {FranchiseService} from '../../../services/franchise/franchise.service';
 
 @Component({
   selector: 'app-franchise-list',
   templateUrl: './franchise-list.component.html',
   styleUrls: ['./franchise-list.component.css']
 })
+
 export class FranchiseListComponent implements OnInit {
 
   constructor(
     private franchiseService: FranchiseService,
-    private route: ActivatedRoute,
     private router: Router,
   ) {}
 
   franchiseData: AnimeFranchiseNode[] = [];
   showFranchiseList = false;
   isHidden = true;
-  currentAnimeId: number;
-  franchiseHovered: number;
-  graphql: any
+  userRates: any
   dataFetched = false;
   isLoadingData = false;
 
-  readonly currentAnimeId$ = this.route.params.pipe(
-    map(params => +params.animeId),
-    distinctUntilChanged()
-  );
-
   ngOnInit(): void {
-    this.subscribeToAnimeId();
     if (!this.dataFetched) {
       this.fetchAndProcessFranchiseData().then(() => {});
     }
-  }
-
-
-  private subscribeToAnimeId(): void {
-    this.currentAnimeId$.subscribe((animeId: number) => {
-      this.currentAnimeId = animeId;
-    });
   }
 
   // Получаем данные о франшизе
@@ -60,35 +44,63 @@ export class FranchiseListComponent implements OnInit {
     const franchiseData: AnimeFranchiseNode[] = nodes.map(node => ({
       id: node.id,
       name: node.name,
-      poster: this.replaceLink(node.image_url),
+      poster: node.image_url,
       year: node.year === null ? 'Анонс' : node.year,
       kind: node.kind === null ? 'Анонс' : node.kind,
       status: '',
     }));
+
+    // Даты по возрастанию (изначально по убыванию)
     franchiseData.reverse();
+
+    // Находим приквел в relation для тайтла и ставим его перед выбраным тайтлом
     franchiseData.forEach(node => {
       const nodeID = node.id;
-      const relatedLinks: AnimeFranchiseLink[] = links.map(link => link.source_id === nodeID ? link : null).filter(Boolean);
+      const relatedLinks: AnimeFranchiseLink[] = links.filter(link => link.source_id === nodeID);
+
+      // проходим по каждому тайтлу и ищем для него приквел
       relatedLinks.forEach(link => {
         if (link.relation === 'prequel') {
-          const targetID = link.target_id;
-          const targetIndex = franchiseData.findIndex(item => item.id === targetID);
+          const prequelID = link.target_id;
+
+          // находим индекс тайтла и приквела
           const sourceIndex = franchiseData.findIndex(item => item.id === nodeID);
-          if (targetIndex !== -1 && sourceIndex !== -1 && targetIndex > sourceIndex) {
-            const targetItem = franchiseData.splice(targetIndex, 1)[0];
+          const prequelIndex = franchiseData.findIndex(item => item.id === prequelID);
+
+          // если приквел стоит после тайтла - ставим приквел перед тайтлом
+          if (sourceIndex !== -1 && prequelIndex > sourceIndex) {
+            const targetItem = franchiseData.splice(prequelIndex, 1)[0];
             franchiseData.splice(sourceIndex, 0, targetItem);
           }
         }
       });
     });
-    return franchiseData
+
+    return franchiseData;
   }
 
-  private replaceLink(url: string): string {
-    return url.replace('/x96/', '/original/');
+  // Открытие и закрытие списка + подгружаем userRates для отметок
+  async toggleFranchiseList(): Promise<any> {
+    this.showFranchiseList = !this.showFranchiseList;
+
+    if (!this.userRates) {
+      this.isLoadingData = true;
+      this.userRates = await this.franchiseService.GraphQL();
+
+      this.franchiseData.forEach(franchise => {
+        const matchedAnime = this.userRates.animes.find((
+          anime: { id: string; }) =>
+            anime.id === franchise.id.toString());
+
+        if (matchedAnime && matchedAnime.userRate !== null) {
+          franchise.status = matchedAnime.userRate.status;
+        }
+      });
+      this.isLoadingData = false;
+    }
   }
 
-  // Переход по тайтлам из франшизы
+  // Открываем выбранный тайтл
   async openFranchise(animeId: number): Promise<void> {
     const AnimeInfo = await this.franchiseService.GetEpisode(animeId);
     const maxEpisode = AnimeInfo.episodes || AnimeInfo.episodes_aired || 1;
@@ -100,21 +112,5 @@ export class FranchiseListComponent implements OnInit {
     }
     await this.router.navigate([`/${animeId}/${episode}`]);
     this.showFranchiseList = !this.showFranchiseList;
-  }
-
-  // Открытие и закрытие списка + подгружаем userRates для отметок
-  async toggleFranchiseList(): Promise<any> {
-    this.showFranchiseList = !this.showFranchiseList;
-    if (!this.graphql) {
-      this.isLoadingData = true;
-      this.graphql = await this.franchiseService.GraphQL();
-      this.franchiseData.forEach(franchise => {
-        const matchedAnime = this.graphql.animes.find((anime: { id: string; }) => anime.id === franchise.id.toString());
-        if (matchedAnime && matchedAnime.userRate !== null) {
-          franchise.status = matchedAnime.userRate.status;
-        }
-      });
-      this.isLoadingData = false;
-    }
   }
 }

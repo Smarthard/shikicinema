@@ -15,6 +15,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {VideoListComponent} from './shared/components/video-list/video-list.component';
 import {EpisodesListComponent} from './shared/components/episodes-list/episodes-list.component';
 import {FranchiseListComponent} from './shared/components/franchise-list/franchise-list.component';
+import {FranchiseListItemComponent} from './shared/components/franchise-list-item/franchise-list-item.component';
 import {KindRemoteComponent} from './shared/components/kind-remote/kind-remote.component';
 import {UploaderComponent} from './shared/components/uploader/uploader.component';
 import {DropdownFiltersComponent} from './shared/components/dropdown-filters/dropdown-filters.component';
@@ -67,6 +68,7 @@ import {CommentComponent} from './shared/components/comment/comment.component';
 import {CommentBadgeComponent} from './shared/components/comment-badge/comment-badge.component';
 import {InlineSVGModule} from 'ng-inline-svg';
 import {ShikimoriApiThrottleInterceptor} from './shared/interceptors/shikimori-api-throttle.interceptor';
+import {LinkReplacePipe} from './shared/pipes/url-replace-pipe/url-replace-pipe';
 
 registerLocaleData(localeRu, 'ru');
 
@@ -79,6 +81,7 @@ registerLocaleData(localeRu, 'ru');
     VideoListComponent,
     EpisodesListComponent,
     FranchiseListComponent,
+    FranchiseListItemComponent,
     KindRemoteComponent,
     UploaderComponent,
     DropdownFiltersComponent,
@@ -102,7 +105,8 @@ registerLocaleData(localeRu, 'ru');
     CommentFormComponent,
     SmilleyComponent,
     CommentComponent,
-    CommentBadgeComponent
+    CommentBadgeComponent,
+    LinkReplacePipe
   ],
   imports: [
     AppRoutingModule,

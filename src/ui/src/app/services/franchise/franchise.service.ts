@@ -1,23 +1,28 @@
-import { Injectable } from '@angular/core';
-import { KodikService } from '../kodik-api/kodik.service';
-import { ShikimoriService } from '../shikimori-api/shikimori.service';
-import { firstValueFrom } from 'rxjs';
-import { notAnimeIds} from '../../types/franchise';
+import {Injectable} from '@angular/core';
+import {KodikService} from '../kodik-api/kodik.service';
+import {ShikimoriService} from '../shikimori-api/shikimori.service';
+import {firstValueFrom, lastValueFrom} from 'rxjs';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {Shikimori} from '../../types/shikimori';
 
 @Injectable({
   providedIn: 'root'
 })
 
 export class FranchiseService {
-  franchise: any;
+  franchise: Shikimori.IFranchiseResponse
   domain?: string;
 
 
-  constructor(private kodik: KodikService, private shikimori: ShikimoriService) { }
+  constructor(
+    private kodik: KodikService,
+    private shikimori: ShikimoriService,
+    private http: HttpClient
+  ) { }
+
   async fetchFranchiseData(): Promise<any> {
     this.franchise = this.kodik.exportFranchise();
     if (this.franchise.nodes.length > 0) {
-      this.franchise.nodes = this.franchise.nodes.filter((franchise: { id: number; }) => !notAnimeIds.includes(franchise.id));
       return this.franchise;
     }
   }
@@ -34,22 +39,20 @@ export class FranchiseService {
         }
       }
     `;
-    const response = await fetch(graphqlUrl, {
-      method: 'POST',
-      headers: {
+
+    const httpOptions = {
+      headers: new HttpHeaders({
         'Content-Type': 'application/json',
         Accept: 'application/json',
-      },
-      body: JSON.stringify({ query })
-    });
+      })
+    };
 
-    const { data } = await response.json();
-    return data
+    const response = await lastValueFrom(this.http.post<any>(graphqlUrl, { query }, httpOptions));
+    return response.data;
   }
 
   async GetEpisode(animeId: number): Promise<any> {
-    const response = await fetch(`${this.domain}/api/animes/${animeId}`);
-    return response.json();
+    const episodeUrl = `${this.domain}/api/animes/${animeId}`;
+    return await lastValueFrom(this.http.get<any>(episodeUrl));
   }
-
 }
