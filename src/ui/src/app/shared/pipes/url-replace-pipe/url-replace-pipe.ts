@@ -5,6 +5,6 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class LinkReplacePipe implements PipeTransform {
   transform(url: string): string {
-    return url.replace('/x96/', '/original/');
+    return url.replace('/x96/', '/preview/');
   }
 }

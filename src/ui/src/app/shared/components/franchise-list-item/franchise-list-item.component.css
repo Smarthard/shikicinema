@@ -6,8 +6,8 @@ li,
 }
 
 li {
-  max-width: 163px;
-  max-height: 297px;
+  max-width: 105px;
+  max-height: 200px;
 }
 
 .franchise-name {
@@ -46,35 +46,37 @@ li {
   display: grid;
   grid-gap: 10px;
   grid-template-columns: repeat(8, minmax(calc(100% / 8 - 10px), 1fr));
-  max-width: 1400px;
+  max-width: 1000px;
 }
 
 @media screen and (max-width: 768px) {
   .franchise-grid {
     grid-template-columns: repeat(4, minmax(calc(100% / 4 - 10px), 1fr));
+    row-gap: 30px;
   }
   .franchise-poster {
     width: 100%;
-    height: 66vh;
+    height: 40vh;
   }
 }
 
 @media screen and (max-width: 768px) and (min-height: 400px) {
   .franchise-grid {
     grid-template-columns: repeat(3, minmax(calc(100% / 3 - 10px), 1fr));
+    row-gap: 50px;
   }
   .franchise-poster {
     width: 100%;
     height: 41vh;
-    max-height: 141px;
+    max-height: 177px;
   }
 }
 
 @media screen and (min-width: 769px) and (min-height: 478px) {
   .franchise-poster {
     width: 100%;
-    height: 26vh;
-    max-height: 255px;
+    height: 25vh;
+    max-height: 149px;
   }
 }
 
@@ -90,6 +92,8 @@ li {
   position: relative;
   display: flex;
   flex-direction: column;
+  max-width: 125px;
+  max-height: 221px;
 }
 
 .misc {
