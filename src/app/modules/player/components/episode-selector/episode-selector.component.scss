@@ -8,9 +8,8 @@
     .scrollbar {
         --scrollbar-thumb-color: rgba(var(--ion-color-primary-rgb), 1);
         --scrollbar-track-color: rgba(var(--ion-color-primary-rgb), 0.5);
-        --_horizontal-top: .5rem;
-        --_horizontal-left: .5rem;
-        --_horizontal-right: .5rem;
+        --_horizontal-left: .625rem;
+        --_horizontal-right: .625rem;
     }
 
     &__wrapper {
