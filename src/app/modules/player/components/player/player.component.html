@@ -1,0 +1,9 @@
+@if (source) {
+    <iframe
+        class="responsive-16by9 player__video"
+        allowfullscreen=""
+        [class.ion-hide]="isLoading$ | async"
+        [src]="source | urlSanitizer"
+        (load)="onLoad()"
+    ></iframe>
+}

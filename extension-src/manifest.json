@@ -7,7 +7,7 @@
         "128": "assets/icon128.png"
     },
     "description": "Returns video player on Shikimori",
-    "content_security_policy": "default-src 'self'; img-src 'self' data: *; frame-src *; font-src *; style-src 'unsafe-inline' https://*.googleapis.com; connect-src https://kodikapi.com https://smarthard.net https://shikimori.org https://shikimori.one data:; script-src 'self'",
+    "content_security_policy": "default-src 'self'; img-src 'self' data: *; frame-src *; font-src *; style-src 'unsafe-inline' blob: https://*.googleapis.com; connect-src https://kodikapi.com https://smarthard.net https://shikimori.org https://shikimori.one data:; script-src 'self'",
     "browser_specific_settings": {
         "gecko": {
             "id": "{78e6c1a5-0b68-4e13-a0ac-f3a7597cf220}"

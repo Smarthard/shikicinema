@@ -17,6 +17,16 @@
                 "RELEASED": "released"
             }
         },
+        "VIDEO": {
+            "KINDS": {
+                "DUBBING": "Dubbing",
+                "SUBTITLES": "Subtitles",
+                "ORIGINAL": "Original"
+            },
+            "AUTHORS": {
+                "DEFAULT_NAME": "Unknown"
+            }
+        },
         "HEADER": {
             "SEARCHBAR": {
                 "NOTHING_FOUND": "Nothing found",
