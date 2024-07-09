@@ -1,7 +1,7 @@
 {
-  "manifest_version": 2,
+  "manifest_version": 3,
   "name": "shikicinema",
-  "version": "0.8.23",
+  "version": "0.8.24",
 
   "icons": {
     "64": "assets/icon64.png",
@@ -9,7 +9,9 @@
   },
 
   "description": "Returns video player on Shikimori",
-  "content_security_policy": "default-src 'self'; img-src *; frame-src *; font-src *; style-src 'unsafe-inline' https://*.googleapis.com; connect-src https://kodikapi.com https://smarthard.net https://shikimori.org https://shikimori.one https://shikimori.me; script-src 'self'",
+  "content_security_policy": {
+    "extension_pages": "default-src 'self'; img-src *; frame-src *; font-src *; style-src 'unsafe-inline' https://*.googleapis.com; connect-src https://kodikapi.com https://smarthard.net https://shikimori.org https://shikimori.one https://shikimori.me; script-src 'self'"
+  },
 
   "browser_specific_settings": {
     "gecko": {
@@ -35,26 +37,36 @@
   ],
 
   "background": {
-    "scripts": ["background.js"],
-    "persistent": true
+    "service_worker": "background.js",
+    "scripts": ["background.js"]
   },
 
   "web_accessible_resources": [
-    "assets/*.png",
-    "index.html",
-    "styles.css",
-    "*.js"
+    {
+      "resources": [
+        "assets/*.png",
+        "index.html",
+        "styles.css",
+        "*.js"
+      ],
+      "matches": [
+        "<all_urls>"
+      ]
+    }
   ],
 
   "permissions": [
+    "storage",
+    "tabs",
+    "unlimitedStorage"
+  ],
+
+  "host_permissions": [
     "https://shikimori.org/*",
     "https://shikimori.one/*",
     "https://shikimori.me/*",
     "https://smarthard.net/*",
     "https://kodikapi.com/*",
-    "https://smotret-anime.online/*",
-    "storage",
-    "unlimitedStorage",
-    "tabs"
+    "https://smotret-anime.online/*"
   ]
 }

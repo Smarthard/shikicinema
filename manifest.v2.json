@@ -1,0 +1,60 @@
+{
+  "manifest_version": 2,
+  "name": "shikicinema",
+  "version": "0.8.24",
+
+  "icons": {
+    "64": "assets/icon64.png",
+    "128": "assets/icon128.png"
+  },
+
+  "description": "Returns video player on Shikimori",
+  "content_security_policy": "default-src 'self'; img-src *; frame-src *; font-src *; style-src 'unsafe-inline' https://*.googleapis.com; connect-src https://kodikapi.com https://smarthard.net https://shikimori.org https://shikimori.one https://shikimori.me; script-src 'self'",
+
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "{78e6c1a5-0b68-4e13-a0ac-f3a7597cf220}"
+    }
+  },
+
+  "content_scripts": [
+    {
+      "matches": [
+        "*://shikimori.org/*",
+        "*://shikimori.one/*",
+        "*://shikimori.me/*"
+      ],
+      "js": [
+        "shikicinema.js"
+      ],
+      "css": [
+        "watch-button.css"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": true
+  },
+
+  "web_accessible_resources": [
+    "assets/*.png",
+    "index.html",
+    "styles.css",
+    "*.js"
+  ],
+
+  "permissions": [
+    "https://shikimori.org/*",
+    "https://shikimori.one/*",
+    "https://shikimori.me/*",
+    "https://smarthard.net/*",
+    "https://kodikapi.com/*",
+    "https://smotret-anime.online/*",
+    "storage",
+    "unlimitedStorage",
+    "tabs"
+  ]
+}

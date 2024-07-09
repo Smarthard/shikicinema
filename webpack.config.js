@@ -4,11 +4,15 @@ const TerserPlugin = require('terser-webpack-plugin');
 const webpack = require('webpack');
 
 const IS_PRODUCTION = process.env.NODE_ENV === 'production';
+const MANIFEST_VERSION = process.env.MANIFEST_VERSION ?? 'v3';
 
 function processManifest(content) {
     const PROCESSED_MANIFEST = JSON.parse(content.toString());
 
-    PROCESSED_MANIFEST.content_security_policy += IS_PRODUCTION ? '' : ' \'unsafe-eval\'';
+    if (MANIFEST_VERSION !== 'v3') {
+        PROCESSED_MANIFEST.content_security_policy += IS_PRODUCTION ? '' : ' \'unsafe-eval\'';
+    }
+
     return JSON.stringify(PROCESSED_MANIFEST);
 }
 
@@ -16,7 +20,6 @@ module.exports = {
     context: path.resolve(__dirname, ''),
     entry: {
         shikicinema: ['./src/fetch-timeout.js', './src/watch-button.js', './src/contributions.js'],
-        background: './src/background.js'
     },
     output: {
         path: path.resolve(__dirname, 'bin'),
@@ -45,9 +48,10 @@ module.exports = {
         new CopyPlugin({
             patterns: [
                 { from: './src/watch-button.css' },
+                { from: './src/background.js' },
                 {
-                    from: 'manifest.json',
-                    to: './',
+                    from: `manifest.${MANIFEST_VERSION}.json`,
+                    to: 'manifest.json',
                     transform(content, path) {
                         return processManifest(content);
                     }
