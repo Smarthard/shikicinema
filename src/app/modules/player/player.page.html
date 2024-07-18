@@ -6,7 +6,7 @@
         <div class="player-page__anime-info common-info">
             <div class="common-info__title">
                 @if (isAnimeLoading$ | async) {
-                    <app-skeleton-block height="2rem" width="30rem" />
+                    <app-skeleton-block height="2rem" [width]="(isMobile$ | async) ? '15rem' : '30rem'" />
                 } @else {
                     <ion-text>
                         <h1 class="text-ellipsis"
@@ -49,6 +49,7 @@
             [selected]="episode$ | async"
             [isMinified]="isControlPanelMinified$ | async"
             (selection)="onEpisodeChange($event)"
+            (watch)="onWatch($event)"
         />
     </div>
 </ion-content>

@@ -181,4 +181,8 @@ export class PlayerPage implements OnInit {
     onOpenVideoSelectorModal(): void {
         this.videoSelectorModal.present();
     }
+
+    onWatch(episode: number): void {
+        // TODO: implement
+    }
 }
