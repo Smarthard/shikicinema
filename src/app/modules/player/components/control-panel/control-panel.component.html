@@ -1,4 +1,5 @@
-<div class="control-panel__controls">
+<div class="control-panel__controls"
+    [class.control-panel__controls--minified]="isMinified">
     <ion-button class="control-panel__btn" fill="outline"
         (click)="onEpisodeControlsClick(selected, 'backward')">
         <ion-icon slot="icon-only" name="play-back-outline" />
@@ -27,6 +28,10 @@
         <ion-button class="control-panel__btn" fill="outline"
             (click)="onOpenEpisodeSelectorModal()">
             <ion-icon slot="icon-only" name="list-outline" />
+        </ion-button>
+
+        <ion-button class="control-panel__btn" fill="outline" disabled>
+            <ion-icon slot="icon-only" name="settings-outline" />
         </ion-button>
     }
 </div>

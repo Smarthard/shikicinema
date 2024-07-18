@@ -10,6 +10,11 @@
     &__controls {
         display: flex;
         gap: .5rem;
+
+        &--minified {
+            width: 100%;
+            justify-content: center;
+        }
     }
 
     &__btn {
