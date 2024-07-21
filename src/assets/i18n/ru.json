@@ -70,5 +70,13 @@
                 "DROPPED": "Брошено"
             }
         }
+    },
+    "PLAYER_MODULE": {
+        "PLAYER_PAGE": {
+            "WATCH_ACTION": {
+                "SUCCESS": "Просмотрено",
+                "FAILURE": "Ошибка"
+            }
+        }
     }
 }

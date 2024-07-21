@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
+import { NgLetModule } from 'ng-let';
 import { NgModule } from '@angular/core';
 
 import { ControlPanelComponent } from '@app/modules/player/components/control-panel/control-panel.component';
@@ -38,6 +39,7 @@ import { VideoSelectorComponent } from '@app/modules/player/components/video-sel
         UploaderComponent,
         ToUploaderPipe,
         SwipeDirective,
+        NgLetModule,
     ],
 })
 export class PlayerModule {}

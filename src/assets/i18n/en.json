@@ -70,5 +70,13 @@
                 "DROPPED": "Dropped"
             }
         }
+    },
+    "PLAYER_MODULE": {
+        "PLAYER_PAGE": {
+            "WATCH_ACTION": {
+                "SUCCESS": "Watched",
+                "FAILURE": "Failed"
+            }
+        }
     }
 }

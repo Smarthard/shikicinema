@@ -1,3 +1,4 @@
+import { Actions, ofType } from '@ngrx/effects';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import {
@@ -10,7 +11,7 @@ import {
 } from '@angular/core';
 import { IonModal } from '@ionic/angular/common';
 import { Platform } from '@ionic/angular';
-import { ReplaySubject, combineLatest } from 'rxjs';
+import { ReplaySubject, combineLatest, firstValueFrom } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { Title } from '@angular/platform-browser';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -22,16 +23,25 @@ import {
     switchMap,
     take,
     tap,
+    withLatestFrom,
 } from 'rxjs/operators';
 
 import { AnimeBriefInfoInterface } from '@app/shared/types/shikimori/anime-brief-info.interface';
 import { VideoInfoInterface } from '@app/modules/player/types';
 import { VideoKindEnum } from '@app/modules/player/types/video-kind.enum';
 import { filterByEpisode } from '@app/shared/utils/filter-by-episode.function';
-import { findVideosAction, getAnimeInfoAction } from '@app/modules/player/store/actions';
+import {
+    findVideosAction,
+    getAnimeInfoAction,
+    watchAnimeAction,
+    watchAnimeSuccessAction,
+} from '@app/modules/player/store/actions';
+import { getLastAiredEpisode } from './utils/get-last-aired-episode.function';
+import { isEpisodeWatched } from '@app/modules/player/utils';
 import {
     selectPlayerAnime,
     selectPlayerAnimeLoading,
+    selectPlayerUserRate,
     selectPlayerVideos,
     selectPlayerVideosLoading,
 } from '@app/modules/player/store/selectors/player.selectors';
@@ -97,6 +107,17 @@ export class PlayerPage implements OnInit {
     anime$ = this.animeId$.pipe(
         switchMap((animeId) => this.store.select(selectPlayerAnime(animeId))),
     );
+    lastAiredEpisode$ = this.anime$.pipe(map(getLastAiredEpisode));
+
+    userRate$ = this.animeId$.pipe(
+        switchMap((animeId) => this.store.select(selectPlayerUserRate(animeId))),
+    );
+    isWatched$ = combineLatest([this.episode$, this.userRate$]).pipe(
+        map(([episode, userRate]) => isEpisodeWatched(episode, userRate)),
+    );
+    isRewatching$ = this.userRate$.pipe(
+        map((userRate) => userRate?.status === 'rewatching'),
+    );
 
     currentVideo$ = new ReplaySubject<VideoInfoInterface>(1);
     currentKind$ = new ReplaySubject<VideoKindEnum>(1);
@@ -112,6 +133,7 @@ export class PlayerPage implements OnInit {
         private title: Title,
         private platform: Platform,
         private breakpointObserver: BreakpointObserver,
+        private actions$: Actions,
     ) {}
 
     ngOnInit(): void {
@@ -136,6 +158,12 @@ export class PlayerPage implements OnInit {
         ]).pipe(
             filter(([anime]) => !!anime?.name),
             tap(([anime, episode]) => this.changeTitle(anime, episode)),
+            untilDestroyed(this),
+        ).subscribe();
+
+        this.actions$.pipe(
+            ofType(watchAnimeSuccessAction),
+            tap(({ userRate }) => this.onEpisodeChange(userRate.episodes + 1)),
             untilDestroyed(this),
         ).subscribe();
 
@@ -171,8 +199,11 @@ export class PlayerPage implements OnInit {
     onEpisodeChange(episode: number): void {
         this.animeId$.pipe(
             take(1),
-            tap((animeId) => {
-                void this.router.navigate(['/player', animeId, episode]);
+            withLatestFrom(this.lastAiredEpisode$),
+            tap(async ([animeId, lastAiredEpisode]) => {
+                if (episode <= lastAiredEpisode && episode > 0) {
+                    void this.router.navigate(['/player', animeId, episode]);
+                }
             }),
             untilDestroyed(this),
         ).subscribe();
@@ -182,7 +213,12 @@ export class PlayerPage implements OnInit {
         this.videoSelectorModal.present();
     }
 
-    onWatch(episode: number): void {
-        // TODO: implement
+    async onWatch(episode: number, isUnwatch = false): Promise<void> {
+        const anime = await firstValueFrom(this.anime$);
+        const userRate = await firstValueFrom(this.userRate$);
+        const isRewarch = await firstValueFrom(this.isRewatching$) || userRate?.status === 'completed';
+        const watchedEpisode = isUnwatch ? episode - 1 : episode;
+
+        this.store.dispatch(watchAnimeAction({ animeId: anime.id, episode: watchedEpisode, isRewarch }));
     }
 }

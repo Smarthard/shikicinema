@@ -9,6 +9,7 @@
                 tabindex="0"
                 #episodeEl
                 [id]="'episode-' + episode"
+                [class.episode-selector__item--watched]="episode <= maxWatchedEpisode"
                 [class.episode-selector__item--selected]="episode === selected"
                 [class.episode-selector__item--long]="episode > 99"
                 (click)="onEpisodeSelect(episode)"

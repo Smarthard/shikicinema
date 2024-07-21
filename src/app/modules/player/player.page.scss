@@ -1,6 +1,7 @@
 @import 'src/scss/mixins';
 
 .player-page {
+    --shc-watched-episode-color: var(--ion-color-success-shade);
 
     &__anime-info {
         display: flex;
@@ -16,6 +17,21 @@
 
     &__player {
         grid-area: player;
+
+        &.skeleton {
+            @media (orientation: portrait) {
+                min-height: 20vh;
+            }
+
+            @media (orientation: landscape) {
+                min-height: 100vh;
+
+            }
+
+            @include media-breakpoint-up('lg') {
+                min-height: 50vh;
+            }
+        }
     }
 
     &__control-panel {

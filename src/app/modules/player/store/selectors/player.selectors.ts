@@ -15,12 +15,18 @@ export const selectPlayerVideosLoading = (animeId: string) => createSelector(
     ({ videos }) => !videos[animeId],
 );
 
-export const selectPlayerAnime = (animeId: string) => createSelector(
+export const selectPlayerAnime = (animeId: string | number) => createSelector(
     selectPlayer,
-    ({ animeInfo }) => animeInfo[animeId] || {} as AnimeBriefInfoInterface,
+    ({ animeInfo }) => animeInfo[`${animeId}`] || {} as AnimeBriefInfoInterface,
 );
 
-export const selectPlayerAnimeLoading = (animeId: string) => createSelector(
+export const selectPlayerAnimeLoading = (animeId: string | number) => createSelector(
     selectPlayer,
-    ({ animeInfo }) => !animeInfo[animeId],
+    ({ animeInfo }) => !animeInfo[`${animeId}`],
+);
+
+export const selectPlayerUserRate = (animeId: string | number) => createSelector(
+    selectPlayerAnime(animeId),
+    // eslint-disable-next-line camelcase
+    ({ user_rate }) => user_rate,
 );

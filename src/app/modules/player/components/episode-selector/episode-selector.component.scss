@@ -35,6 +35,10 @@
         padding: .25rem;
         font-weight: 600;
 
+        &--watched {
+            color: var(--shc-watched-episode-color) !important;
+        }
+
         &--selected {
             $selectedColor: var(--ion-color-primary);
 

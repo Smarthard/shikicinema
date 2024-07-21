@@ -19,9 +19,14 @@
         <ion-icon slot="icon-only" name="play-forward-outline" />
     </ion-button>
 
-    <ion-button class="control-panel__btn" fill="outline"
+    <ion-button class="control-panel__btn watch-btn" fill="outline"
+        [class.watch-btn--watched]="isWatched"
         (click)="onWatch(selected)">
-        <ion-icon slot="icon-only" name="checkmark-outline" />
+        @if (isRewatching) {
+            <ion-icon slot="icon-only" name="checkmark-done-outline" />
+        } @else {
+            <ion-icon slot="icon-only" name="checkmark-outline" />
+        }
     </ion-button>
 
     @if (isMinified) {
@@ -41,6 +46,7 @@
                         [episodes]="episodes"
                         [selected]="selected"
                         [maxEpisode]="maxEpisode"
+                        [maxWatchedEpisode]="maxWatchedEpisode"
                         (selection)="onEpisodeChange($event)"
     />
 }

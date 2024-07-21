@@ -133,4 +133,16 @@ export class ShikimoriClient {
 
         return this.http.get<AnimeBriefInfoInterface>(url);
     }
+
+    createUserRate(animeId: string | number, userRates: Partial<UserAnimeRate>) {
+        const url = `${this.baseUri}/api/v2/user_rates`;
+
+        return this.http.post<UserAnimeRate>(url, userRates);
+    }
+
+    updateUserRate(animeId: string | number, userRates: UserAnimeRate) {
+        const url = `${this.baseUri}/api/v2/user_rates/${userRates?.id}`;
+
+        return this.http.patch<UserAnimeRate>(url, userRates);
+    }
 }

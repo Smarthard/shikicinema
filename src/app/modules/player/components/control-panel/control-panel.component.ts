@@ -1,7 +1,6 @@
 import {
     ChangeDetectionStrategy,
     Component,
-    ComponentRef,
     EventEmitter,
     HostBinding,
     Input,
@@ -26,6 +25,7 @@ import {
 } from '@ionic/angular/standalone';
 
 import { EpisodeSelectorComponent } from '@app/modules/player/components/episode-selector/episode-selector.component';
+import { UserAnimeRate } from '@app/shared/types/shikimori/user-anime-rate';
 import { adjustEpisode } from '@app/shared/utils/adjust-episode.function';
 
 @Component({
@@ -81,6 +81,15 @@ export class ControlPanelComponent {
     selected: number;
 
     @Input()
+    userRate: UserAnimeRate;
+
+    @Input()
+    isWatched = false;
+
+    @Input()
+    isRewatching = false;
+
+    @Input()
     isMinified = false;
 
     @Output()
@@ -91,6 +100,10 @@ export class ControlPanelComponent {
 
     get maxEpisode(): number {
         return this._maxEpisode;
+    }
+
+    get maxWatchedEpisode(): number {
+        return this.userRate?.episodes || 0;
     }
 
     private adjustEpisode(episode): number {

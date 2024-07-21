@@ -61,6 +61,9 @@ export class EpisodeSelectorComponent implements AfterViewInit {
     @Input({ required: true })
     maxEpisode: number;
 
+    @Input()
+    maxWatchedEpisode: number;
+
     get selected(): number {
         return this.selectedSubject$.value;
     }

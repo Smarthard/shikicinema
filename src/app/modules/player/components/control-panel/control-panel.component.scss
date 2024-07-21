@@ -51,4 +51,10 @@
             align-items: end;
         }
     }
+
+    .watch-btn {
+        &--watched {
+            color: var(--shc-watched-episode-color);
+        }
+    }
 }

@@ -43,14 +43,19 @@
             (selection)="onVideoChange($event)"
         />
 
-        <app-control-panel
-            class="player-page__control-panel"
-            [episodes]="videos$ | async | getEpisodes"
-            [selected]="episode$ | async"
-            [isMinified]="isControlPanelMinified$ | async"
-            (selection)="onEpisodeChange($event)"
-            (watch)="onWatch($event)"
-        />
+        <ng-container *ngLet="isWatched$ | async as isWatched">
+            <app-control-panel
+                class="player-page__control-panel"
+                [episodes]="videos$ | async | getEpisodes"
+                [selected]="episode$ | async"
+                [userRate]="userRate$ | async"
+                [isWatched]="isWatched"
+                [isRewatching]="isRewatching$ | async"
+                [isMinified]="isControlPanelMinified$ | async"
+                (selection)="onEpisodeChange($event)"
+                (watch)="onWatch($event, isWatched)"
+            />
+        </ng-container>
     </div>
 </ion-content>
 
