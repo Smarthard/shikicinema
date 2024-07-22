@@ -5,6 +5,7 @@ import { ToastController } from '@ionic/angular/standalone';
 import { TranslocoService } from '@ngneat/transloco';
 import {
     catchError,
+    debounceTime,
     filter,
     map,
     tap,
@@ -53,6 +54,7 @@ export class PlayerEffects {
 
     getAnimeInfo$ = createEffect(() => this.actions$.pipe(
         ofType(getAnimeInfoAction),
+        debounceTime(50),
         concatLatestFrom(({ animeId }) => this.store$.select(selectPlayerAnime(animeId))),
         filter(([, anime]) => !anime?.id),
         switchMap(([{ animeId }]) => this.shikimori.getAnimeInfo(animeId)),
