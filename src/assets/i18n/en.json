@@ -76,7 +76,8 @@
             "WATCH_ACTION": {
                 "SUCCESS": "Watched",
                 "FAILURE": "Failed"
-            }
+            },
+            "RELEVANT_VIDEOS_MISSING": "We couldn't find relevant videos"
         }
     }
 }

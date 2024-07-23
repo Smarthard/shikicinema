@@ -1,5 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
+import { getDomain } from '@app/shared/utils/get-domain.function';
+
 @Pipe({
     name: 'getUrlDomain',
     pure: true,
@@ -7,11 +9,6 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class GetUrlDomainPipe implements PipeTransform {
     transform(url: string | URL): string {
-        const asUrl = url instanceof URL ? url : new URL(url);
-
-        return asUrl.hostname
-            .split('.')
-            .slice(-2)
-            .join('.');
+        return getDomain(url);
     }
 }

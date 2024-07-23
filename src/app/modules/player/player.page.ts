@@ -14,6 +14,8 @@ import { Platform } from '@ionic/angular';
 import { ReplaySubject, combineLatest, firstValueFrom } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { Title } from '@angular/platform-browser';
+import { ToastController } from '@ionic/angular/standalone';
+import { TranslocoService } from '@ngneat/transloco';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
     debounceTime,
@@ -27,17 +29,24 @@ import {
 } from 'rxjs/operators';
 
 import { AnimeBriefInfoInterface } from '@app/shared/types/shikimori/anime-brief-info.interface';
+import { NoPreferenceSymbol } from '@app/store/settings/types';
 import { VideoInfoInterface } from '@app/modules/player/types';
 import { VideoKindEnum } from '@app/modules/player/types/video-kind.enum';
 import { filterByEpisode } from '@app/shared/utils/filter-by-episode.function';
+import { filterVideosByPreferences } from '@app/modules/player/utils/filter-videos-by-preferences.function';
 import {
     findVideosAction,
     getAnimeInfoAction,
     watchAnimeAction,
     watchAnimeSuccessAction,
 } from '@app/modules/player/store/actions';
-import { getLastAiredEpisode } from './utils/get-last-aired-episode.function';
-import { isEpisodeWatched } from '@app/modules/player/utils';
+import { getDomain } from '@app/shared/utils/get-domain.function';
+import { getLastAiredEpisode, isEpisodeWatched } from '@app/modules/player/utils';
+import {
+    selectAuthorPreferencesByAnime,
+    selectDomainPreferencesByAnime,
+    selectKindPreferencesByAnime,
+} from '@app/store/settings/selectors/settings.selectors';
 import {
     selectPlayerAnime,
     selectPlayerAnimeLoading,
@@ -45,6 +54,8 @@ import {
     selectPlayerVideos,
     selectPlayerVideosLoading,
 } from '@app/modules/player/store/selectors/player.selectors';
+import { updatePlayerPreferencesAction } from '@app/store/settings/actions/settings.actions';
+
 
 @UntilDestroy()
 @Component({
@@ -119,6 +130,16 @@ export class PlayerPage implements OnInit {
         map((userRate) => userRate?.status === 'rewatching'),
     );
 
+    authorPreferences$ = this.animeId$.pipe(
+        switchMap((animeId) => this.store.select(selectAuthorPreferencesByAnime(animeId))),
+    );
+    kindPreferences$ = this.animeId$.pipe(
+        switchMap((animeId) => this.store.select(selectKindPreferencesByAnime(animeId))),
+    );
+    domainPreferences$ = this.animeId$.pipe(
+        switchMap((animeId) => this.store.select(selectDomainPreferencesByAnime(animeId))),
+    );
+
     currentVideo$ = new ReplaySubject<VideoInfoInterface>(1);
     currentKind$ = new ReplaySubject<VideoKindEnum>(1);
 
@@ -134,6 +155,8 @@ export class PlayerPage implements OnInit {
         private platform: Platform,
         private breakpointObserver: BreakpointObserver,
         private actions$: Actions,
+        private toast: ToastController,
+        private transloco: TranslocoService,
     ) {}
 
     ngOnInit(): void {
@@ -147,8 +170,31 @@ export class PlayerPage implements OnInit {
 
         this.episodeVideos$.pipe(
             filter(({ length = 0 }) => length > 0),
-            map((videos) => videos?.[0]),
-            tap((video) => this.onVideoChange(video)),
+            withLatestFrom(
+                this.authorPreferences$,
+                this.domainPreferences$,
+                this.kindPreferences$,
+            ),
+            map(([videos, author, domain, kind]) => {
+                const relevantVideos = filterVideosByPreferences(videos, author, domain, kind);
+
+                if (!relevantVideos &&
+                    author !== NoPreferenceSymbol &&
+                    domain !== NoPreferenceSymbol &&
+                    kind !== NoPreferenceSymbol
+                ) {
+                    this.toast.create({
+                        id: 'player-relevant-videos-missing',
+                        color: 'warning',
+                        message: this.transloco.translate('PLAYER_MODULE.PLAYER_PAGE.RELEVANT_VIDEOS_MISSING'),
+                        duration: 1000,
+                    }).then((toast) => toast.present());
+                }
+
+                return relevantVideos || videos;
+            }),
+            map((relevantVideos) => relevantVideos?.[0]),
+            tap((video) => this.onVideoChange(video, false)),
             untilDestroyed(this),
         ).subscribe();
 
@@ -183,13 +229,26 @@ export class PlayerPage implements OnInit {
         this.isMobileSubject$.next(this.platform.is('mobile') || this.platform.is('mobileweb'));
     }
 
+    private async updateUserPreferences(): Promise<void> {
+        const anime = await firstValueFrom(this.anime$);
+        const currentVideo = await firstValueFrom(this.currentVideo$);
+        const { author, kind, url } = currentVideo;
+        const domain = getDomain(url);
+
+        this.store.dispatch(updatePlayerPreferencesAction({ animeId: anime.id, author, kind, domain }));
+    }
+
     changeTitle(anime: AnimeBriefInfoInterface, episode: number): void {
         this.title.setTitle(`${anime.russian || anime.name} | серия ${episode}`);
     }
 
-    onVideoChange(video: VideoInfoInterface): void {
+    onVideoChange(video: VideoInfoInterface, isShouldUpdatePref = true): void {
         this.currentVideo$.next(video);
         this.currentKind$.next(video.kind);
+
+        if (isShouldUpdatePref) {
+            void this.updateUserPreferences();
+        }
     }
 
     onKindChange(kind: VideoKindEnum): void {
@@ -220,5 +279,7 @@ export class PlayerPage implements OnInit {
         const watchedEpisode = isUnwatch ? episode - 1 : episode;
 
         this.store.dispatch(watchAnimeAction({ animeId: anime.id, episode: watchedEpisode, isRewarch }));
+
+        void this.updateUserPreferences();
     }
 }

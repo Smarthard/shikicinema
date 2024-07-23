@@ -76,7 +76,8 @@
             "WATCH_ACTION": {
                 "SUCCESS": "Просмотрено",
                 "FAILURE": "Ошибка"
-            }
+            },
+            "RELEVANT_VIDEOS_MISSING": "Не смогли найти похожие видео"
         }
     }
 }
