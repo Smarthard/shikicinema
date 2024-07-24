@@ -24,7 +24,7 @@ import {
     getAnimeInfoSuccessAction,
     watchAnimeAction,
 } from '@app/modules/player/store/actions';
-import { getLastAiredEpisode } from '@app/modules/player/utils';
+import { getLastAiredEpisode, toUserRatesUpdate } from '@app/modules/player/utils';
 import {
     selectPlayerAnime,
     selectPlayerUserRate,
@@ -70,7 +70,7 @@ export class PlayerEffects {
             this.store$.select(selectPlayerAnime(animeId)),
         ]),
         switchMap(([{ animeId, episode: episodes, isRewarch }, user, rate, anime]) => {
-            const userRate = { ...rate };
+            const userRate: Partial<UserAnimeRate> = toUserRatesUpdate(rate);
             const lastAiredEpisode = getLastAiredEpisode(anime);
             const isLastEpisodeWatched = episodes >= lastAiredEpisode;
             const status: UserRateStatusType = isLastEpisodeWatched
