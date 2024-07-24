@@ -3,6 +3,10 @@
 .player-page {
     --shc-watched-episode-color: var(--ion-color-success-shade);
 
+    &__title {
+        max-width: 50vw;
+    }
+
     &__anime-info {
         display: flex;
         align-items: flex-end;
