@@ -13,13 +13,13 @@ a[href] {
     color: $linkColor;
     text-decoration: none;
 
-    &:hover {
-        color: var(--ion-color-secondary);
-        text-decoration: solid;
-    }
-
     &:visited {
         color: $linkColor;
+    }
+
+    &:hover {
+        color: var(--ion-color-primary-contrast);
+        text-decoration: solid;
     }
 }
 
