@@ -69,33 +69,31 @@ export class PlayerEffects {
             this.store$.select(selectPlayerUserRate(animeId)),
             this.store$.select(selectPlayerAnime(animeId)),
         ]),
-        switchMap(([{ animeId, episode: episodes, isRewarch }, user, rate, anime]) => {
-            const userRate: Partial<UserAnimeRate> = toUserRatesUpdate(rate);
+        map(([{ animeId, episode: episodes, isRewarch }, user, rate, anime]) => {
             const lastAiredEpisode = getLastAiredEpisode(anime);
             const isLastEpisodeWatched = episodes >= lastAiredEpisode;
             const status: UserRateStatusType = isLastEpisodeWatched
                 ? 'completed'
                 : isRewarch ? 'rewatching' : 'watching';
 
-            if (userRate?.id) {
-                userRate.episodes = episodes;
-                userRate.status = status;
-
-                return this.shikimori.updateUserRate(animeId, userRate);
-            } else {
-                const userRate: Partial<UserAnimeRate> = {
-                    user_id: user.id,
-                    target_id: animeId,
-                    target_type: 'Anime',
-                    episodes,
-                    status,
-                };
-
-                return this.shikimori.createUserRate(animeId, userRate);
-            }
+            // убираем лишние поля, если у пользователя есть user_rate
+            // если нет, создаем сразу с нужными значениями
+            return toUserRatesUpdate({
+                ...rate || {} as UserAnimeRate,
+                user_id: user.id,
+                target_id: animeId,
+                target_type: 'Anime',
+                episodes,
+                status,
+            });
         }),
-        map((userRate) => watchAnimeSuccessAction({ userRate })),
-        catchError((errors) => of(watchAnimeFailureAction({ errors }))),
+        switchMap((userRate) => (userRate?.id
+            ? this.shikimori.updateUserRate(userRate)
+            : this.shikimori.createUserRate(userRate)
+        ).pipe(
+            map((userRate) => watchAnimeSuccessAction({ userRate })),
+            catchError((errors) => of(watchAnimeFailureAction({ errors }))),
+        )),
     ));
 
     watchAnimeSuccess$ = createEffect(() => this.actions$.pipe(
