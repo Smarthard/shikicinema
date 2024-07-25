@@ -13,7 +13,7 @@ export const kodikVideoMapper: VideoMapperFn<KodikApiResponse<KodikAnimeInfo>> =
 
         if (seasons) {
             const episodes: VideoInfoInterface[] = [];
-            const seasonIndex = Object.keys(seasons)?.[0];
+            const seasonIndex = Object.keys(seasons)?.filter((season) => Number(season) > 0)?.[0];
             const episodesObj = seasons?.[seasonIndex]?.episodes || {} as KodikEpisodes;
 
             for (const [episode, url] of Object.entries(episodesObj)) {
