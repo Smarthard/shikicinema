@@ -6,7 +6,11 @@ import { mapKodikKind } from '@app/shared/types/kodik/mappers/map-kodik-kind.fun
 
 
 export const kodikVideoMapper: VideoMapperFn<KodikApiResponse<KodikAnimeInfo>> = ({ results }) => results.flatMap(
-    ({ seasons, translation, quality }) => {
+    ({ seasons, translation, quality, link }) => {
+        const author = translation?.title || null;
+        const kind = mapKodikKind(translation?.type);
+        const uploader = KODIK_UPLOADER;
+
         if (seasons) {
             const episodes: VideoInfoInterface[] = [];
             const seasonIndex = Object.keys(seasons)?.[0];
@@ -15,11 +19,11 @@ export const kodikVideoMapper: VideoMapperFn<KodikApiResponse<KodikAnimeInfo>> =
             for (const [episode, url] of Object.entries(episodesObj)) {
                 episodes.push({
                     quality,
+                    author,
+                    kind,
+                    uploader,
                     url: 'https:' + url,
                     episode: Number(episode),
-                    author: translation?.title || null,
-                    kind: mapKodikKind(translation?.type),
-                    uploader: KODIK_UPLOADER,
                     urlType: 'iframe',
                     language: 'ru',
                 });
@@ -27,16 +31,16 @@ export const kodikVideoMapper: VideoMapperFn<KodikApiResponse<KodikAnimeInfo>> =
 
             return episodes;
         } else {
-            return results.map(({ link: url }) => ({
+            return {
                 quality,
-                url: 'https:' + url,
+                author,
+                kind,
+                uploader,
+                url: 'https:' + link,
                 episode: 1,
-                author: translation?.title || null,
-                kind: mapKodikKind(translation?.type),
-                uploader: KODIK_UPLOADER,
                 urlType: 'iframe',
                 language: 'ru',
-            }));
+            };
         }
     },
 );
