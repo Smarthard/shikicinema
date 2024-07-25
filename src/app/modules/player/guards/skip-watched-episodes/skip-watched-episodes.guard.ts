@@ -24,6 +24,6 @@ export const skipWatchedEpisodesGuard: CanActivateChildFn = async (route) => {
         const anime = await firstValueFrom(anime$);
         const episode = getLastUnwatchedEpisode(anime);
 
-        return router.navigateByUrl(`player/${animeId}/${episode}`);
+        return router.navigateByUrl(`/player/${animeId}/${episode}`, { replaceUrl: true });
     }
 };
