@@ -17,17 +17,10 @@ function mapShikicinemaKindToCommon(kind: ShikivideosKindType): VideoKindEnum {
     }
 }
 
-export const shikicinemaVideoMapper: VideoMapperFn<ShikivideosInterface> = ({
-    id,
-    url,
-    kind,
-    author,
-    episode,
-    quality,
-    language,
-    uploader,
-}) => ({
-    id, url, language, quality, uploader, episode, author,
-    kind: mapShikicinemaKindToCommon(kind),
-    urlType: 'iframe',
-});
+export const shikicinemaVideoMapper: VideoMapperFn<ShikivideosInterface[]> = (videos) => videos?.map(
+    ({ kind, ...others }) => ({
+        ...others,
+        kind: mapShikicinemaKindToCommon(kind),
+        urlType: 'iframe',
+    }),
+);

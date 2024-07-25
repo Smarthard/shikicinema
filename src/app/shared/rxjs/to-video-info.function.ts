@@ -1,7 +1,11 @@
-import { map } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
+import { of, pipe } from 'rxjs';
 
 import { VideoMapperFn } from '@app/shared/types/video-mapper.type';
 
 export function toVideoInfo<T>(mapper: VideoMapperFn<T>) {
-    return map((videos: T[]) => videos?.map(mapper));
+    return pipe(
+        map(mapper),
+        catchError(() => of([])),
+    );
 }

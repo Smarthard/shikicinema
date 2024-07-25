@@ -13,6 +13,7 @@ import {
 import { concatLatestFrom } from '@ngrx/operators';
 import { merge, of, switchMap } from 'rxjs';
 
+import { KodikClient } from '@app/shared/services/kodik-client.service';
 import { ShikicinemaV1ClientService, ShikimoriClient } from '@app/shared/services';
 import { UserAnimeRate } from '@app/shared/types/shikimori/user-anime-rate';
 import { UserRateStatusType } from '@app/shared/types/shikimori/user-rate-status.type';
@@ -25,6 +26,7 @@ import {
     watchAnimeAction,
 } from '@app/modules/player/store/actions';
 import { getLastAiredEpisode, toUserRatesUpdate } from '@app/modules/player/utils';
+import { kodikVideoMapper } from '@app/shared/types/kodik/mappers';
 import {
     selectPlayerAnime,
     selectPlayerUserRate,
@@ -35,6 +37,7 @@ import { shikicinemaVideoMapper } from '@app/shared/types/shikicinema/v1';
 import { toVideoInfo } from '@app/shared/rxjs';
 import { watchAnimeFailureAction, watchAnimeSuccessAction } from '@app/modules/player/store/actions/player.actions';
 
+
 @Injectable()
 export class PlayerEffects {
     findVideos$ = createEffect(() => this.actions$.pipe(
@@ -43,10 +46,10 @@ export class PlayerEffects {
         filter(([, videos]) => !videos?.length),
         switchMap(
             ([{ animeId }]) => merge(
-                this.shikivideos.findAnimes(animeId),
+                this.shikivideos.findAnimes(animeId).pipe(toVideoInfo(shikicinemaVideoMapper)),
+                this.kodik.findAnimes(animeId).pipe(toVideoInfo(kodikVideoMapper)),
             ).pipe(
                 /* accumulating videos into storage */
-                toVideoInfo(shikicinemaVideoMapper),
                 map((videos) => addVideosAction({ animeId, videos })),
             ),
         ),
@@ -130,6 +133,7 @@ export class PlayerEffects {
         private store$: Store,
         private shikivideos: ShikicinemaV1ClientService,
         private shikimori: ShikimoriClient,
+        private kodik: KodikClient,
         private toast: ToastController,
         private translate: TranslocoService,
     ) {}

@@ -1,5 +1,5 @@
 export interface UploaderInterface {
-    id: number;
+    id: number | symbol;
     name: string;
     avatar: string;
     url: string;

@@ -1,7 +1,13 @@
-import { EMPTY, Observable, map } from 'rxjs';
+import {
+    EMPTY,
+    Observable,
+    map,
+    of,
+} from 'rxjs';
 import { Pipe, PipeTransform } from '@angular/core';
 
-import { ShikimoriClient } from '@app-root/app/shared/services';
+import { KODIK_UPLOADER } from '@app/shared/types/kodik';
+import { ShikimoriClient } from '@app/shared/services';
 import { UploaderInterface } from '@app/modules/player/types';
 import { mapUserToUploader } from '@app/shared/utils/map-user-to-uploader.function';
 
@@ -15,7 +21,16 @@ export class ToUploaderPipe implements PipeTransform {
         private readonly shikimori: ShikimoriClient,
     ) {}
 
-    transform(uploaderId: string): Observable<UploaderInterface> {
+    transform(uploaderId: string | symbol): Observable<UploaderInterface> {
+        if (typeof uploaderId === 'symbol') {
+            return of({
+                id: KODIK_UPLOADER,
+                name: 'kodik',
+                avatar: '/assets/kodik.png',
+                url: 'mailto:support@kodik.biz',
+            });
+        }
+
         return uploaderId
             ? this.shikimori.getUser(uploaderId).pipe(map(mapUserToUploader))
             : EMPTY;

@@ -8,7 +8,7 @@ export interface VideoInfoInterface {
     episode: number;
     url: string;
     urlType: 'iframe' | 'video';
-    uploader?: string;
+    uploader?: string | symbol;
     kind: VideoKindEnum;
     author?: string;
     quality: string;
