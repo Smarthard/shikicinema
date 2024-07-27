@@ -1,0 +1,35 @@
+<ul class="franchise-grid">
+  <li *ngFor="let franchise of franchiseData;" [ngClass]="{'hovered': franchiseHovered === franchise.id, 'current-hovered': franchiseHovered === franchise.id && franchise.id === currentAnimeId, 'current': franchise.id === currentAnimeId}"
+      (click)="openFranchise.emit(franchise.id)"
+      (mouseenter)="franchiseHovered = franchise.id"
+      (mouseleave)="franchiseHovered = null">
+    <div class="franchise-content">
+      <img [src]="franchise.poster | LinkReplace" [alt]="franchise.name" class="franchise-poster">
+      <span class="franchise-name" [matTooltip]="franchise.name">{{ franchise.name }}</span>
+      <span class="misc">
+            <span class="kind text">{{ franchise.kind }}</span>
+            <span class="text">{{ franchise.year }}</span>
+          </span>
+
+      <div *ngIf="isLoadingData">
+        <span class="badge-icon skeleton-badge-icon"></span>
+      </div>
+
+      <div *ngIf="!isLoadingData">
+        <div *ngIf="franchise.status === 'completed'" class="completed-badge">
+          <span class="badge-icon"></span>
+        </div>
+        <div *ngIf="franchise.status === 'watching'" class="watching-badge">
+          <span class="badge-icon"></span>
+        </div>
+        <div *ngIf="franchise.status === 'rewatching'" class="rewatching-badge">
+          <span class="badge-icon"></span>
+        </div>
+        <div *ngIf="franchise.status === 'planned'" class="planned-badge">
+          <span class="badge-icon"></span>
+        </div>
+
+      </div>
+    </div>
+  </li>
+</ul>

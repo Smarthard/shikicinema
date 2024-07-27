@@ -121,6 +121,10 @@ export class KodikService {
     return Object.keys(response?.results?.[0]?.seasons || {})[0];
   }
 
+  exportFranchise() {
+    return this._franchise;
+  }
+
   public async getVideos(anime: Shikimori.Anime) {
     let response = this._getCachedResponse();
 
