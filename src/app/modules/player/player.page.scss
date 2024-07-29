@@ -64,7 +64,7 @@
                         "conpan"
                         "kind"
                         "video";
-        grid-template-columns: 90vw min-content;
+        grid-template-columns: 90vh min-content;
 
         &--mobile {
             @media (orientation: portrait) {
@@ -96,7 +96,7 @@
 
             column-gap: 2.75rem;
             grid-template-rows: auto 60vh;
-            grid-template-columns: 60vw min-content;
+            grid-template-columns: calc(60vh * (16/9)) min-content;
         }
 
         @include media-breakpoint-up('xxxl') {
@@ -109,7 +109,7 @@
 
             column-gap: 2.75rem;
             grid-template-rows: auto 70vh;
-            grid-template-columns: 70vw min-content;
+            grid-template-columns: calc(70vh * (16/9)) min-content;
         }
     }
 
