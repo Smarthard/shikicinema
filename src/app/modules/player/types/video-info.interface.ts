@@ -1,3 +1,4 @@
+import { UploaderIdType } from '@app/shared/types/uploader-id.type';
 import { VideoKindEnum } from '@app/modules/player/types/video-kind.enum';
 
 export interface VideoInfoInterface {
@@ -8,7 +9,7 @@ export interface VideoInfoInterface {
     episode: number;
     url: string;
     urlType: 'iframe' | 'video';
-    uploader?: string | symbol;
+    uploader?: UploaderIdType;
     kind: VideoKindEnum;
     author?: string;
     quality: string;

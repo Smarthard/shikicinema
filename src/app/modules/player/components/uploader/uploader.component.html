@@ -1,13 +1,29 @@
-@if (uploader?.name; as name) {
-    <a class="uploader__name" [href]="uploader?.url">{{ name }}</a>
+@if (uploader?.url; as href) {
+    <a class="uploader__link-wrapper" [href]="href">
+        <ng-container *ngTemplateOutlet="uploaderTempl"></ng-container>
+    </a>
 } @else {
-    <app-skeleton-block height="1rem" width="5rem" />
+    <ng-container *ngTemplateOutlet="uploaderTempl"></ng-container>
 }
 
-@if (uploader?.avatar; as avatar) {
-    <img class="uploader__avatar"
-        [src]="uploader?.avatar"
-        alt="avatar" />
-} @else {
-    <app-skeleton-block height="1.625rem" width="1.625rem" />
-}
+<ng-template #uploaderTempl>
+    @if (uploader?.name; as name) {
+        <span class="uploader__name">
+            @if (uploader?.id | isWellKnownUploader) {
+                {{ name | transloco }}
+            } @else {
+                {{ name }}
+            }
+        </span>
+    } @else {
+        <app-skeleton-block height="1rem" width="5rem" />
+    }
+
+    @if (uploader?.avatar; as avatar) {
+        <img class="uploader__avatar"
+            [src]="uploader?.avatar"
+            alt="avatar" />
+    } @else {
+        <app-skeleton-block height="1.625rem" width="1.625rem" />
+    }
+</ng-template>

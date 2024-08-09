@@ -25,6 +25,10 @@
             },
             "AUTHORS": {
                 "DEFAULT_NAME": "Неизвестно"
+            },
+            "WELL_KNOWN_UPLOADERS": {
+                "KODIK": "Кодик",
+                "DELETED_UPLOADER": "Удаленный аккаунт"
             }
         },
         "HEADER": {

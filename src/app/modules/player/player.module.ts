@@ -18,10 +18,15 @@ import { SwipeDirective } from '@app/shared/directives/swipe.directive';
 import { ToUploaderPipe } from '@app/modules/player/pipes/to-uploader.pipe';
 import { UploaderComponent } from '@app/modules/player/components/uploader/uploader.component';
 import { VideoSelectorComponent } from '@app/modules/player/components/video-selector/video-selector.component';
+import { WELL_KNOWN_UPLOADERS_MAP } from '@app/shared/config/well-known-uploaders.config';
+import { WELL_KNOWN_UPLOADERS_TOKEN } from '@app/shared/types/well-known-uploaders.token';
 
 
 @NgModule({
     declarations: [PlayerPage],
+    providers: [
+        { provide: WELL_KNOWN_UPLOADERS_TOKEN, useValue: WELL_KNOWN_UPLOADERS_MAP },
+    ],
     imports: [
         CommonModule,
         PlayerRoutingModule,

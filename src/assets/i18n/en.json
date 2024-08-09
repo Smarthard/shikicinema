@@ -25,6 +25,10 @@
             },
             "AUTHORS": {
                 "DEFAULT_NAME": "Unknown"
+            },
+            "WELL_KNOWN_UPLOADERS": {
+                "KODIK": "Kodik",
+                "DELETED_UPLOADER": "Deleted user"
             }
         },
         "HEADER": {

@@ -1,6 +1,8 @@
+import { UploaderIdType } from '@app/shared/types/uploader-id.type';
+
 export interface UploaderInterface {
-    id: number | symbol;
+    id: UploaderIdType;
     name: string;
     avatar: string;
-    url: string;
+    url?: string;
 }
