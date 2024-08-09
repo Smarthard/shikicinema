@@ -1,0 +1,18 @@
+.uploader {
+    &,
+    &__link-wrapper {
+        display: flex;
+        align-items: center;
+        gap: .25rem;
+    }
+
+    &__avatar {
+        object-fit: cover;
+
+        border: 1px var(--ion-color-primary) solid;
+        border-radius: .125rem;
+
+        width: 1.625rem;
+        height: 1.625rem;
+    }
+}

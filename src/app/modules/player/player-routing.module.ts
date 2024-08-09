@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import { PlayerPage } from '@app/modules/player/player.page';
+import { skipWatchedEpisodesGuard } from '@app/modules/player/guards/skip-watched-episodes';
 
 const routes: Routes = [
     {
@@ -10,7 +11,8 @@ const routes: Routes = [
     },
     {
         path: ':animeId',
-        redirectTo: ':animeId/1',
+        canActivate: [skipWatchedEpisodesGuard],
+        component: PlayerPage,
     },
     {
         path: '',
@@ -23,4 +25,4 @@ const routes: Routes = [
     imports: [RouterModule.forChild(routes)],
     exports: [RouterModule],
 })
-export class PlayerRoutingModule { }
+export class PlayerRoutingModule {}

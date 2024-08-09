@@ -1,0 +1,9 @@
+.episode-selector-modal {
+    &__title {
+        text-align: center;
+    }
+
+    &__picker {
+        margin-bottom: var(--ion-safe-area-bottom);
+    }
+}

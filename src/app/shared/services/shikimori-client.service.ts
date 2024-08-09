@@ -127,4 +127,22 @@ export class ShikimoriClient {
 
         return this.http.get<AnimeBriefInfoInterface[]>(url, { params });
     }
+
+    getAnimeInfo(animeId: string) {
+        const url = `${this.baseUri}/api/animes/${animeId}`;
+
+        return this.http.get<AnimeBriefInfoInterface>(url);
+    }
+
+    createUserRate(userRates: Partial<UserAnimeRate>) {
+        const url = `${this.baseUri}/api/v2/user_rates`;
+
+        return this.http.post<UserAnimeRate>(url, userRates);
+    }
+
+    updateUserRate(userRates: Partial<UserAnimeRate>) {
+        const url = `${this.baseUri}/api/v2/user_rates/${userRates?.id}`;
+
+        return this.http.patch<UserAnimeRate>(url, userRates);
+    }
 }

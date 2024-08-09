@@ -35,12 +35,12 @@ export interface Rate<K = string, S = string> {
     status: S;
 }
 
-export interface AnimeRate extends Rate<AnimeKindType, AnimeReleaseStatus> {
+export interface AnimeRate extends Rate<AnimeKindType, UserRateStatusType> {
     episodes: number;
     episodes_aired: number;
 }
 
-export interface MangaRate extends Rate<MangaKindType, MangaReleaseStatus> {
+export interface MangaRate extends Rate<MangaKindType, UserRateStatusType> {
     volumes: number;
     chapters: number;
 }
@@ -57,7 +57,9 @@ interface UserFullRate<T> {
     rewatches: number;
     created_at: string;
     updated_at: string;
-    user: RateUserInfo;
+    user_id: number;
+    target_id: number;
+    target_type: 'Anime' | 'Manga';
     anime: T;
     manga: T;
 }

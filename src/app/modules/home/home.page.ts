@@ -83,7 +83,6 @@ export class HomePage implements OnInit {
         this.sectionVisibilitySubject$
             .pipe(
                 untilDestroyed(this),
-                filter(({ section }) => section !== 'planned'),
                 withLatestFrom(this.currentUser$),
                 tap(([event, currentUser]) => {
                     if (currentUser?.id) {
