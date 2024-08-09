@@ -66,6 +66,10 @@
                         "video";
         grid-template-columns: 90vh min-content;
 
+        @media (orientation: landscape) {
+            grid-template-columns: 90vw min-content;
+        }
+
         &--mobile {
             @media (orientation: portrait) {
                 grid-template:  "info"
