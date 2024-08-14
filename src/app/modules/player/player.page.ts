@@ -259,11 +259,8 @@ export class PlayerPage implements OnInit {
         this.animeId$.pipe(
             take(1),
             withLatestFrom(this.lastAiredEpisode$),
-            tap(async ([animeId, lastAiredEpisode]) => {
-                if (episode <= lastAiredEpisode && episode > 0) {
-                    void this.router.navigate(['/player', animeId, episode]);
-                }
-            }),
+            filter(([_, lastAiredEpisode]) => episode <= lastAiredEpisode && episode > 0),
+            tap(([animeId]) => this.router.navigate(['/player', animeId, episode])),
             untilDestroyed(this),
         ).subscribe();
     }
