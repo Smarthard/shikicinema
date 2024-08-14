@@ -8,17 +8,17 @@
                 <ion-item slot="header"
                           class="author-accordion__item">
                     <ion-label class="author-accordion__header"
-                               [color]="selected?.author | isSameAuthor: author | getColorForSelectable">
+                               [color]="(selected$ | async)?.author | isSameAuthor: author | getColorForSelectable">
                         {{ author }}
                     </ion-label>
                 </ion-item>
 
                 <div class="ion-padding author-accordion__content" slot="content">
-                    @for (video of (videos | filterByAuthor: author | sortByDomain); track video?.url; let first = $first) {
+                    @for (video of (videos$ | async | filterByAuthor: author | sortByDomain); track video?.url; let first = $first) {
                         <ion-button
                             fill="clear"
                             expand="block"
-                            [color]="selected | isSameVideo: video | getColorForSelectable"
+                            [color]="(selected$ | async) | isSameVideo: video | getColorForSelectable"
                             [title]="video?.url"
                             (click)="$event.stopPropagation(); onSelectionChange(video)">
                             {{ video?.url | getUrlDomain }}

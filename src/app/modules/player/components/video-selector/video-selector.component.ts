@@ -1,11 +1,13 @@
 import { AsyncPipe, NgForOf, NgIf } from '@angular/common';
-import { BehaviorSubject, ReplaySubject } from 'rxjs';
+import { BehaviorSubject, Observable, ReplaySubject } from 'rxjs';
 import {
     ChangeDetectionStrategy,
     Component,
     EventEmitter,
     HostBinding,
-    Input, Output,
+    Input,
+    OnInit,
+    Output,
     ViewEncapsulation,
 } from '@angular/core';
 import {
@@ -16,7 +18,13 @@ import {
     IonLabel,
 } from '@ionic/angular/standalone';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { take, tap } from 'rxjs/operators';
+import {
+    combineLatestWith,
+    filter,
+    map,
+    tap,
+    withLatestFrom,
+} from 'rxjs/operators';
 
 import { FilterByAuthorPipe } from '@app/shared/pipes/filter-by-author/filter-by-author.pipe';
 import { GetColorForSelectablePipe } from '@app/shared/pipes/get-color-for-selectable/get-color-for-selectable.pipe';
@@ -53,66 +61,53 @@ import { cleanAuthorName } from '@app/shared/utils/clean-author-name.function';
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class VideoSelectorComponent {
+export class VideoSelectorComponent implements OnInit {
     @HostBinding('class.video-selector')
     private videoSelectorClass = true;
 
-    private _videos: VideoInfoInterface[];
-    private _selected: VideoInfoInterface;
-
-    authors$ = new ReplaySubject<string[]>(1);
+    authors$: Observable<Set<string>>;
+    selected$ = new ReplaySubject<VideoInfoInterface>(1);
+    videos$ = new ReplaySubject<VideoInfoInterface[]>(1);
     openedByDefaultAuthors$ = new BehaviorSubject<string[]>([]);
-
-    private _afterDefaultAuthorSelected(fn: (defaultAuthor: string) => void): void {
-        this.transloco.selectTranslate('GLOBAL.VIDEO.AUTHORS.DEFAULT_NAME')
-            .pipe(
-                take(1),
-                tap(fn),
-                untilDestroyed(this),
-            )
-            .subscribe();
-    }
 
     @Input()
     set selected(selected: VideoInfoInterface) {
-        this._afterDefaultAuthorSelected((defaultAuthor) => {
-            if (selected) {
-                const previouslySelected = this.openedByDefaultAuthors$.value;
-                const cleanedAuthorName = cleanAuthorName(selected.author, defaultAuthor);
-
-                this.openedByDefaultAuthors$.next([...previouslySelected, cleanedAuthorName]);
-                this._selected = selected;
-            }
-        });
-    }
-
-    get selected(): VideoInfoInterface {
-        return this._selected;
+        this.selected$.next(selected);
     }
 
     @Input()
     set videos(videos: VideoInfoInterface[]) {
-        this._afterDefaultAuthorSelected((defaultAuthor) => {
-            const authors = new Set(
-                videos
-                    ?.map(({ author }) => author)
-                    ?.map((author) => cleanAuthorName(author, defaultAuthor))
-                    ?.sort(),
-            );
-
-            this._videos = videos;
-            this.authors$.next([...authors]);
-        });
-    }
-
-    get videos(): VideoInfoInterface[] {
-        return this._videos;
+        this.videos$.next(videos);
     }
 
     @Output()
     selection = new EventEmitter<VideoInfoInterface>;
 
     constructor(private readonly transloco: TranslocoService) {}
+
+    ngOnInit(): void {
+        this.selected$.pipe(
+            filter((selected) => !!selected),
+            combineLatestWith(this.transloco.selectTranslate('GLOBAL.VIDEO.AUTHORS.DEFAULT_NAME')),
+            map(([selected, defaultAuthor]) => cleanAuthorName(selected.author, defaultAuthor)),
+            withLatestFrom(this.openedByDefaultAuthors$),
+            tap(([cleanedAuthorName, previouslySelected]) => this.openedByDefaultAuthors$.next([
+                ...previouslySelected,
+                cleanedAuthorName,
+            ])),
+            untilDestroyed(this),
+        ).subscribe();
+
+        this.authors$ = this.videos$.pipe(
+            combineLatestWith(this.transloco.selectTranslate('GLOBAL.VIDEO.AUTHORS.DEFAULT_NAME')),
+            map(([videos, defaultAuthor]) => new Set(
+                videos
+                    ?.map(({ author }) => author)
+                    ?.map((author) => cleanAuthorName(author, defaultAuthor))
+                    ?.sort(),
+            )),
+        );
+    }
 
     onSelectionChange(selectedVideo: VideoInfoInterface): void {
         this.selection.emit(selectedVideo);
