@@ -17,6 +17,20 @@
                 "RELEASED": "released"
             }
         },
+        "VIDEO": {
+            "KINDS": {
+                "DUBBING": "Dubbing",
+                "SUBTITLES": "Subtitles",
+                "ORIGINAL": "Original"
+            },
+            "AUTHORS": {
+                "DEFAULT_NAME": "Unknown"
+            },
+            "WELL_KNOWN_UPLOADERS": {
+                "KODIK": "Kodik",
+                "DELETED_UPLOADER": "Anonym"
+            }
+        },
         "HEADER": {
             "SEARCHBAR": {
                 "NOTHING_FOUND": "Nothing found",
@@ -59,6 +73,15 @@
                 "ON_HOLD": "On hold",
                 "DROPPED": "Dropped"
             }
+        }
+    },
+    "PLAYER_MODULE": {
+        "PLAYER_PAGE": {
+            "WATCH_ACTION": {
+                "SUCCESS": "Watched",
+                "FAILURE": "Failed"
+            },
+            "RELEVANT_VIDEOS_MISSING": "We couldn't find relevant videos"
         }
     }
 }

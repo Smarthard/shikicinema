@@ -9,8 +9,8 @@ import { AnimeRate } from '@app/shared/types/shikimori/user-anime-rate';
 })
 export class GetPlayerLinkPipe implements PipeTransform {
     transform(anime: AnimeRate): string {
-        const { id: animeId, episodes: episode } = anime;
+        const { id: animeId } = anime;
 
-        return `/player/${animeId}/${episode}`;
+        return `/player/${animeId}`;
     }
 }

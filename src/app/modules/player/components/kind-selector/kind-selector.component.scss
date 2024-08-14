@@ -1,0 +1,8 @@
+.kind-selector {
+    background-color: var(--ion-color-light);
+    border-radius: .25rem;
+
+    .segment-button-checked {
+        --ion-color-base: var(--ion-color-primary);
+    }
+}

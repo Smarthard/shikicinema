@@ -6,6 +6,7 @@ import { IonicModule } from '@ionic/angular';
 import { IonicStorageModule } from '@ionic/storage-angular';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { provideScrollbarPolyfill } from 'ngx-scrollbar';
 
 import { AppStateModule } from '@app/store/app-state.module';
 import { Base64Module } from '@app/shared/pipes/base64/base64.module';
@@ -32,6 +33,7 @@ const components = [
     ],
     providers: [
         ShikimoriClient,
+        provideScrollbarPolyfill('assets/scroll-timeline-polyfill.js'),
         { provide: PLATFORM_API_TOKEN, useFactory: platformApiFactory, deps: [ElectronIpcProxyService] },
     ],
     imports: [
