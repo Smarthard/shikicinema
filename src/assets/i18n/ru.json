@@ -28,7 +28,7 @@
             },
             "WELL_KNOWN_UPLOADERS": {
                 "KODIK": "Кодик",
-                "DELETED_UPLOADER": "Удаленный аккаунт"
+                "DELETED_UPLOADER": "Аноним"
             }
         },
         "HEADER": {
