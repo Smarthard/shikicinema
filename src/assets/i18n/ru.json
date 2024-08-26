@@ -9,7 +9,9 @@
                 "MOVIE" : "Фильм",
                 "SPECIAL" : "Спешл",
                 "MUSIC": "Клип",
-                "TV_SPECIAL": "ТВ Спецвыпуск"
+                "TV_SPECIAL": "ТВ Спецвыпуск",
+                "PV": "Проморолик",
+                "CM": "Реклама"
             },
             "ANIME_STATUSES": {
                 "ANONS": "анонс",
