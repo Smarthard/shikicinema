@@ -9,7 +9,9 @@
                 "MOVIE" : "Movie",
                 "SPECIAL" : "Special",
                 "MUSIC": "Music",
-                "TV_SPECIAL": "TV Special"
+                "TV_SPECIAL": "TV Special",
+                "PV": "Promotional Video",
+                "CM": "Commercial Message"
             },
             "ANIME_STATUSES": {
                 "ANONS": "planned",
