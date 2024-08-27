@@ -1,0 +1,35 @@
+name: "Code Quality Test: Build and Code style"
+
+on:
+    pull_request:
+        branches:
+            - v1.0.0
+
+jobs:
+  nodejs:
+    runs-on: ubuntu-latest
+
+    permissions:
+      checks: write
+      pull-requests: write
+      contents: write
+
+    name: PR CI
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check code style
+        run: npm run lint
+
+      - name: Check build
+        run: npm run build:prod
