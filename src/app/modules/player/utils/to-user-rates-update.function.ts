@@ -5,9 +5,9 @@ export function toUserRatesUpdate({
     chapters,
     volumes,
     text,
-    created_at,
-    updated_at,
-    text_html,
+    created_at: _created,
+    updated_at: _updated,
+    text_html: _html,
     ...userRate
 }: UserAnimeRate): Partial<UserAnimeRate> {
     return {
