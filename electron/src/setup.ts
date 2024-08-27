@@ -45,7 +45,6 @@ export function setupReloadWatcher(electronCapacitorApp: ElectronCapacitorApp): 
 
 // Define our class to manage our app.
 export class ElectronCapacitorApp {
-
     private readonly trayMenuTemplate: (MenuItem | MenuItemConstructorOptions)[] = [
         new MenuItem({ label: 'Quit App', role: 'quit' }),
     ];
@@ -179,7 +178,7 @@ export class ElectronCapacitorApp {
                 imageFilePath: join(
                     app.getAppPath(),
                     'assets',
-                    this.capacitorFileConfig.electron?.splashScreenImageName ?? 'splash.png'
+                    this.capacitorFileConfig.electron?.splashScreenImageName ?? 'splash.png',
                 ),
                 windowWidth: 400,
                 windowHeight: 400,
@@ -236,7 +235,11 @@ export function setupContentSecurityPolicy(customScheme: string): void {
         'https://*.recaptcha.net',
         'https://*.gstatic.com',
         'https://vk.com',
-        'https://*.vk.com'
+        'https://*.vk.com',
+        'https://googleapis.com/',
+        'https://*.googleapis.com/',
+        'https://cloudflare.com',
+        'https://*.cloudflare.com',
     ].join(' ');
 
     session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
@@ -246,8 +249,8 @@ export function setupContentSecurityPolicy(customScheme: string): void {
                 // eslint-disable-next-line @typescript-eslint/naming-convention
                 'Content-Security-Policy': [
                     electronIsDev
-                        ? `default-src ${customScheme}://* ${allowedRemotes} 'unsafe-inline' devtools://* 'unsafe-eval' data:`
-                        : `default-src ${customScheme}://* ${allowedRemotes} 'unsafe-inline' data: 'unsafe-eval' self`,
+                        ? `default-src ${customScheme}://* ${allowedRemotes} 'unsafe-inline' devtools://* 'unsafe-eval' data: blob:`
+                        : `default-src ${customScheme}://* ${allowedRemotes} 'unsafe-inline' data: blob: 'unsafe-eval' self`,
                 ],
             },
         });
