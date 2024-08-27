@@ -235,6 +235,8 @@ export function setupContentSecurityPolicy(customScheme: string): void {
         'https://*.shikimori.org',
         'https://*.recaptcha.net',
         'https://*.gstatic.com',
+        'https://vk.com',
+        'https://*.vk.com'
     ].join(' ');
 
     session.defaultSession.webRequest.onHeadersReceived((details, callback) => {

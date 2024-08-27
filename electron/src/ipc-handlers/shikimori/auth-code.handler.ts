@@ -36,14 +36,10 @@ export default async function shikimoriAuthCodeHandler(
         authWindow.webContents.on(
             'will-navigate',
             (event, url) => {
-                try {
-                    const code = getCodeFromAuthUrl(url);
-
+                const code = getCodeFromAuthUrl(url);
+                if (code) {
                     resolve(code);
-                } catch (e) {
-                    reject(e);
-                } finally {
-                    authWindow.close();
+                    authWindow.destroy();
                 }
             },
         );
@@ -51,14 +47,10 @@ export default async function shikimoriAuthCodeHandler(
         authWindow.webContents.on(
             'did-navigate',
             (event, url) => {
-                try {
-                    const code = getCodeFromAuthUrl(url);
-
+                const code = getCodeFromAuthUrl(url);
+                if (code) {
                     resolve(code);
-                } catch (e) {
-                    reject(e);
-                } finally {
-                    authWindow.close();
+                    authWindow.destroy();
                 }
             },
         );
