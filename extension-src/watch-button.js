@@ -2,45 +2,22 @@
 
 import { FETCH_RESOURCE_TIMEOUT, fetch } from './fetch-timeout';
 
-let timeout = null;
 const PLAYER_URL = chrome.runtime.getURL('/index.html');
 const SHIKIVIDEOS_API = 'https://smarthard.net/api/shikivideos';
 const KODIK_TOKEN = `${process.env.KODIK_TOKEN}`;
 const PLAYER_BUTTON = document.createElement('a');
 const INFO_DIV = document.createElement('div');
-const ON_WATCH_CLICK = async (anime) => {
-  const userRate = await _getAnimeInfo(anime.id, 800)
-    .then((updatedAnime) => updatedAnime.user_rate)
-    .catch(() => null);
-  const maxEpisode = anime.episodes || anime.episodes_aired || 1;
-  const watched = +(userRate ? userRate.episodes : 0);
-  let episode = userRate && userRate.status === 'completed' ? 1 : watched + 1;
 
-  if (episode > maxEpisode) {
-    episode = maxEpisode;
-  }
-
-  chrome.runtime.sendMessage({ openUrl: `${PLAYER_URL}#/${anime.id}/${episode}` });
-};
-
-const OBSERVER = new MutationObserver(() => {
-  let animeId = `${window.location}`.match(/\d+/);
-  let isAnimePage = `${window.location}`.includes('/animes/');
-  let divInfo = document.querySelector('div.c-info-right');
-  let watchButton = document.querySelector('a#watch_button');
-
-  if (timeout)
-    clearTimeout(timeout);
-
-  timeout = setTimeout(async () => {
-    let anime = isAnimePage ? await _getAnimeInfo(animeId) : {};
+const OBSERVER = new MutationObserver(async () => {
+    let animeId = `${window.location}`.match(/\d+/);
+    let isAnimePage = `${window.location}`.includes('/animes/');
+    let divInfo = document.querySelector('div.c-info-right');
+    let watchButton = document.querySelector('a#watch_button');
 
     if (divInfo && isAnimePage && !watchButton) {
-      await appendWatchButtonTo(divInfo, anime);
-    } else if (isAnimePage && watchButton) {
-      watchButton.onclick = () => ON_WATCH_CLICK(anime);
+        const anime = isAnimePage ? await _getAnimeInfo(animeId) : {};
+        await appendWatchButtonTo(divInfo, anime);
     }
-  }, 100);
 });
 
 OBSERVER.observe(window.document, {childList: true, subtree: true});
@@ -82,7 +59,7 @@ async function appendWatchButtonTo(element, anime) {
   PLAYER_BUTTON.classList.add('b-link_button', 'dark', 'watch-online');
   PLAYER_BUTTON.classList.remove('upload-video');
   PLAYER_BUTTON.textContent = 'Смотреть онлайн';
-  PLAYER_BUTTON.onclick = () => ON_WATCH_CLICK(anime);
+  PLAYER_BUTTON.href = `${PLAYER_URL}#player/${anime.id}`
 
   INFO_DIV.classList.add('watch-button-div');
 

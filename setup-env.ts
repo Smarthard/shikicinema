@@ -1,16 +1,10 @@
+import * as dotenv from 'dotenv';
 import * as fs from 'fs';
 import * as path from 'path';
-import * as dotenv from 'dotenv';
 
 dotenv.config();
 
 const isProduction = process.env.NODE_ENV === 'production';
-
-const envPath = path.resolve(
-    'src',
-    'environments',
-    `environment${isProduction ? '.prod' : ''}.ts`,
-);
 
 const envFileContent = `import { EnvironmentInterface } from '@app-root/environments';
 
@@ -38,12 +32,18 @@ function errorHandler(err: NodeJS.ErrnoException | null): void {
     if (err) {
         console.error(err);
     } else {
-        console.log(`Environment file generated`);
+        console.log('Environment file generated');
     }
 }
 
 fs.writeFile(
-    envPath,
+    path.resolve('src', 'environments', 'environment.ts'),
+    envFileContent,
+    errorHandler,
+);
+
+fs.writeFile(
+    path.resolve('src', 'environments', 'environment.prod.ts'),
     envFileContent,
     errorHandler,
 );

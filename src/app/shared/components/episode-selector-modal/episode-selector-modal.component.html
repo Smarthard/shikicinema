@@ -1,0 +1,23 @@
+<ion-toolbar>
+    <ion-title class="episode-selector-modal__title">Выберите эпизод</ion-title>
+
+    <ion-buttons slot="start">
+        <ion-button (click)="cancel()">
+            <ion-icon slot="icon-only" name="close-outline" />
+        </ion-button>
+    </ion-buttons>
+
+    <ion-buttons slot="end">
+        <ion-button (click)="submit(selected)">
+            <ion-icon slot="icon-only" name="checkmark-outline" />
+        </ion-button>
+    </ion-buttons>
+</ion-toolbar>
+
+<ion-picker class="episode-selector-modal__picker">
+    <ion-picker-column [value]="selected" (ionChange)="onSelectedChange($event)">
+        @for (episode of episodes; track $index) {
+            <ion-picker-column-option [value]="episode">{{ episode }}</ion-picker-column-option>
+        }
+    </ion-picker-column>
+</ion-picker>

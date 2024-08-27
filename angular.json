@@ -29,6 +29,11 @@
                                 "glob": "**/*.svg",
                                 "input": "node_modules/ionicons/dist/ionicons/svg",
                                 "output": "./svg"
+                            },
+                            {
+                                "glob": "**/*",
+                                "input": "node_modules/ngx-scrollbar/assets/",
+                                "output": "assets"
                             }
                         ],
                         "styles": [
@@ -52,7 +57,14 @@
                                     "with": "src/environments/environment.prod.ts"
                                 }
                             ],
-                            "optimization": true,
+                            "optimization": {
+                                "scripts": true,
+                                "styles": {
+                                    "minify": true,
+                                    "inlineCritical": false
+                                },
+                                "fonts": true
+                            },
                             "outputHashing": "none",
                             "sourceMap": false,
                             "namedChunks": false,
@@ -66,7 +78,7 @@
                                     "maximumWarning": "2mb",
                                     "maximumError": "5mb"
                                 }
-                            ]
+                            ],
                         },
                         "development": {
                             "optimization": false,
@@ -157,7 +169,8 @@
         }
     },
     "cli": {
-        "defaultCollection": "@ionic/angular-toolkit"
+        "defaultCollection": "@ionic/angular-toolkit",
+        "schematicCollections": ["@ngrx/schematics"]
     },
     "schematics": {
         "@ionic/angular-toolkit:component": {
@@ -169,6 +182,7 @@
         "@schematics/angular": {
             "component": {
                 "skipTests": true,
+                "style": "scss",
                 "changeDetection": "OnPush",
                 "viewEncapsulation": "None"
             }

@@ -13,9 +13,9 @@ import {
     encapsulation: ViewEncapsulation.None,
 })
 export class SkeletonBlockComponent {
-    @Input()
+    @Input({ required: true })
     height: string;
 
-    @Input()
+    @Input({ required: true })
     width: string;
 }

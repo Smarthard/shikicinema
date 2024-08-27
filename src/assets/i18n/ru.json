@@ -9,12 +9,28 @@
                 "MOVIE" : "Фильм",
                 "SPECIAL" : "Спешл",
                 "MUSIC": "Клип",
-                "TV_SPECIAL": "ТВ Спецвыпуск"
+                "TV_SPECIAL": "ТВ Спецвыпуск",
+                "PV": "Проморолик",
+                "CM": "Реклама"
             },
             "ANIME_STATUSES": {
                 "ANONS": "анонс",
                 "ONGOING": "онгоинг",
                 "RELEASED": "вышло"
+            }
+        },
+        "VIDEO": {
+            "KINDS": {
+                "DUBBING": "Озвучка",
+                "SUBTITLES": "Субтитры",
+                "ORIGINAL": "Оригинал"
+            },
+            "AUTHORS": {
+                "DEFAULT_NAME": "Неизвестно"
+            },
+            "WELL_KNOWN_UPLOADERS": {
+                "KODIK": "Кодик",
+                "DELETED_UPLOADER": "Аноним"
             }
         },
         "HEADER": {
@@ -59,6 +75,15 @@
                 "ON_HOLD": "Отложено",
                 "DROPPED": "Брошено"
             }
+        }
+    },
+    "PLAYER_MODULE": {
+        "PLAYER_PAGE": {
+            "WATCH_ACTION": {
+                "SUCCESS": "Просмотрено",
+                "FAILURE": "Ошибка"
+            },
+            "RELEVANT_VIDEOS_MISSING": "Не смогли найти похожие видео"
         }
     }
 }

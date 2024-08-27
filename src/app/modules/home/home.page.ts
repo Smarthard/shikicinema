@@ -9,7 +9,6 @@ import { Observable, Subject } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
-    filter,
     skipWhile,
     take,
     tap,
@@ -83,7 +82,6 @@ export class HomePage implements OnInit {
         this.sectionVisibilitySubject$
             .pipe(
                 untilDestroyed(this),
-                filter(({ section }) => section !== 'planned'),
                 withLatestFrom(this.currentUser$),
                 tap(([event, currentUser]) => {
                     if (currentUser?.id) {
