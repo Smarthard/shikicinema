@@ -9,10 +9,10 @@ import { Injectable } from '@angular/core';
 import {
     catchError,
     delay,
+    exhaustMap,
     filter,
     map,
     mergeMap,
-    switchMap,
     withLatestFrom,
 } from 'rxjs/operators';
 
@@ -50,7 +50,7 @@ export class AnimeRatesEffects {
             this.store.select(selectIsRatesLoadedByStatus(status)),
             this.store.select(selectAnimePaginationSize),
         ]),
-        switchMap(([{ status, userId }, page, isLoad, limit]) => !isLoad
+        exhaustMap(([{ status, userId }, page, isLoad, limit]) => !isLoad
             ? this.shikimoriClient.getUserAnimeRates(userId, { status, page, limit })
                 .pipe(
                     withLatestFrom(this.store.select(selectRatesByStatus(status))),
@@ -89,7 +89,7 @@ export class AnimeRatesEffects {
         filter(([{ newRates }, limit]) => newRates?.length >= limit),
         // Shikimori API is limited by 5 rps, 90 rpm!
         delay(1000),
-        switchMap(([action]) => of(action).pipe(
+        mergeMap(([action]) => of(action).pipe(
             map(({ userId, status }) => loadAnimeRateByStatusAction({ userId, status })),
             catchError((errors) => of(loadAnimeRateByStatusFailureAction({ errors, status: action.status }))),
         )),
