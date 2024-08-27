@@ -31,5 +31,24 @@ jobs:
       - name: Check code style
         run: npm run lint
 
+      - name: Make .env
+        uses: SpicyPizza/create-envfile@v2.0
+        with:
+            file_name: .env
+            envkey_NODE_ENV: 'production'
+            envkey_PLATFORM_TARGET: 'web-extension'
+            envkey_KODIK_API_URI: ${{ secrets.KODIK_API_URI }}
+            envkey_KODIK_AUTH_TOKEN: ${{ secrets.KODIK_AUTH_TOKEN }}
+            envkey_SHIKIMORI_API_URI: ${{ secrets.SHIKIMORI_API_URI }}
+            envkey_SHIKIMORI_CLIENT_ID: ${{ secrets.SHIKIMORI_CLIENT_ID }}
+            envkey_SHIKIMORI_CLIENT_SECRET: ${{ secrets.SHIKIMORI_CLIENT_SECRET }}
+            envkey_SHIKIMORI_EPISODE_NOTIFICATION_TOKEN: ${{ secrets.SHIKIMORI_EPISODE_NOTIFICATION_TOKEN }}
+            envkey_SMARTHARD_API_URI: ${{ secrets.SMARTHARD_API_URI }}
+            envkey_SMARTHARD_CLIENT_ID: ${{ secrets.SMARTHARD_CLIENT_ID }}
+            envkey_SMARTHARD_CLIENT_SECRET: ${{ secrets.SMARTHARD_CLIENT_SECRET }}
+
+      - name: Generate Angular Environment
+        run: npm run set-env
+
       - name: Check build
         run: npm run build:prod
