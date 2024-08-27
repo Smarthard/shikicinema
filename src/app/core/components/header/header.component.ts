@@ -25,7 +25,7 @@ import { AnimeBriefInfoInterface } from '@app/shared/types/shikimori/anime-brief
 import { NavigationExtras, Router } from '@angular/router';
 import { ResultOpenTarget, SearchbarResult } from '@app/shared/types/searchbar.types';
 import { UserBriefInfoInterface } from '@app/shared/types/shikimori/user-brief-info.interface';
-import {authShikimoriAction, logoutShikimoriAction} from '@app/store/auth/actions/auth.actions';
+import { authShikimoriAction, logoutShikimoriAction } from '@app/store/auth/actions/auth.actions';
 import {
     findAnimeAction,
     resetFoundAnimeAction,
