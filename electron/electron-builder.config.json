@@ -1,5 +1,6 @@
 {
     "appId": "net.smarthard.shikicinema",
+    "electronVersion": "22.3.25",
     "directories": {
         "buildResources": "resources"
     },
@@ -18,7 +19,7 @@
         "allowToChangeInstallationDirectory": true
     },
     "win": {
-        "target": "nsis",
+        "target": "portable",
         "icon": "assets/appIcon.ico"
     },
     "mac": {
@@ -26,7 +27,7 @@
         "category": "Player"
     },
     "linux": {
-        "target": "AppImage",
+        "target": "zip",
         "category": "Player"
     }
 }

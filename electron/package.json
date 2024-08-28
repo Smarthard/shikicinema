@@ -2,22 +2,28 @@
     "name": "shikicinema",
     "version": "1.0.0",
     "description": "Shikicinema - player app for Shikimori",
-    "author": {
-        "name": "",
-        "email": ""
-    },
+    "author": "Smarthard",
     "repository": {
         "type": "git",
         "url": "https://github.com/Smarthard/shikicinema.git"
     },
     "license": "BSD-2-Clause",
     "main": "build/src/index.js",
+    "build": {
+        "asar": true,
+        "files": [
+            "assets/**/*",
+            "build/**/*",
+            "capacitor.config.*",
+            "app/**/*"
+        ]
+    },
     "scripts": {
-        "build": "tsc && electron-rebuild",
-        "electron:start-live": "node ./live-runner.js",
-        "electron:start": "npm run build && electron --inspect=5858 ./",
-        "electron:pack": "npm run build && electron-builder build --dir -c ./electron-builder.config.json",
-        "electron:make": "npm run build && electron-builder build -c ./electron-builder.config.json -p always"
+        "postinstall": "electron-builder install-app-deps",
+        "build": "electron-builder -mwl",
+        "build:mac": "electron-builder --mac",
+        "build:win": "electron-builder --windows portable",
+        "build:linux": "electron-builder --linux zip"
     },
     "dependencies": {
         "@capacitor-community/electron": "^4.1.0",
@@ -29,9 +35,8 @@
         "electron-window-state": "~5.0.3"
     },
     "devDependencies": {
-        "electron": "^22.3.25",
-        "electron-builder": "~22.11.7",
-        "electron-rebuild": "^3.2.3",
+        "electron": "22.3.25",
+        "electron-builder": "~24.13.3",
         "typescript": "~4.3.5"
     },
     "keywords": [

@@ -29,7 +29,7 @@
         "ionic": "ionic",
         "webpack-bundle-analyzer": "webpack-bundle-analyzer",
         "start": "ionic serve",
-        "start:native": "npm-run-all -s 'ionic cap sync' 'npx cap sync @capacitor-community/electron' 'npx cap open @capacitor-community/electron --livereload'",
+        "start:native": "npm-run-all -s 'ionic cap sync' 'npx cap sync @capacitor-community/electron' 'npx cap open @capacitor-community/electron'",
         "build": "ionic build",
         "build:prod": "ionic build --prod",
         "test": "ng test",
