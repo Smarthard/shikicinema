@@ -122,7 +122,6 @@ export class ElectronCapacitorApp {
             webPreferences: {
                 nodeIntegration: true,
                 contextIsolation: true,
-                nativeWindowOpen: false,
                 // Use preload to inject the electron varriant overrides for capacitor plugins.
                 // preload: join(app.getAppPath(), "node_modules", "@capacitor-community", "electron", "dist", "runtime", "electron-rt.js"),
                 preload: preloadPath,
@@ -216,8 +215,8 @@ export class ElectronCapacitorApp {
             }
 
             setTimeout(() => {
+                this.mainWindow.webContents.openDevTools();
                 if (electronIsDev) {
-                    this.mainWindow.webContents.openDevTools();
                 }
                 CapElectronEventEmitter.emit('CAPELECTRON_DeeplinkListenerInitialized', '');
             }, 400);
@@ -232,6 +231,11 @@ export function setupContentSecurityPolicy(customScheme: string): void {
         'https://*.shikimori.one',
         'https://shikimori.org',
         'https://*.shikimori.org',
+        'https://smarthard.net',
+        'https://*.smarthard.net',
+        'https://smarthard.net',
+        'https://*.smarthard.net',
+        'https://kodikapi.com',
         'https://*.recaptcha.net',
         'https://*.gstatic.com',
         'https://vk.com',
@@ -249,8 +253,8 @@ export function setupContentSecurityPolicy(customScheme: string): void {
                 // eslint-disable-next-line @typescript-eslint/naming-convention
                 'Content-Security-Policy': [
                     electronIsDev
-                        ? `default-src ${customScheme}://* ${allowedRemotes} 'unsafe-inline' devtools://* 'unsafe-eval' data: blob:`
-                        : `default-src ${customScheme}://* ${allowedRemotes} 'unsafe-inline' data: blob: 'unsafe-eval' self`,
+                        ? `default-src ${customScheme}://* ${allowedRemotes} 'unsafe-inline' devtools://* 'unsafe-eval' data: blob: ; frame-src * ; media-src * blob: ; img-src 'self' data: *`
+                        : `default-src ${customScheme}://* ${allowedRemotes} 'unsafe-inline' data: blob: 'unsafe-eval' self ; frame-src * ; media-src * blob: ; img-src 'self' data: *`,
                 ],
             },
         });

@@ -1,6 +1,6 @@
 {
-    "appId": "io.ionic.starter",
-    "appName": "shikicinema",
+    "appId": "net.smarthard.shikicinema",
+    "appName": "Shikicinema",
     "webDir": "dist",
     "bundledWebRuntime": false
 }
