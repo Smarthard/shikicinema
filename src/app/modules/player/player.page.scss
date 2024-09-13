@@ -63,8 +63,8 @@
                         "player"
                         "conpan"
                         "kind"
-                        "video";
-        grid-template-columns: 90vh min-content;
+                        "video"
+                        "comments";
 
         @media (orientation: landscape) {
             grid-template-columns: 90vw min-content;
@@ -74,7 +74,8 @@
             @media (orientation: portrait) {
                 grid-template:  "info"
                                 "player"
-                                "conpan";
+                                "conpan"
+                                "comments";
 
                 grid-template-rows: auto;
                 grid-template-columns: 90vw min-content;
@@ -83,7 +84,8 @@
             @media (orientation: landscape) {
                 grid-template:  "info"
                                 "player"
-                                "conpan";
+                                "conpan"
+                                "comments";
 
                 grid-template-rows: auto;
                 grid-template-columns: 90vw min-content;
@@ -96,7 +98,8 @@
 
             grid-template:  "info   kind"
                             "player video"
-                            "conpan .";
+                            "conpan ."
+                            "comments comments";
 
             column-gap: 2.75rem;
             grid-template-rows: auto 60vh;
@@ -109,12 +112,18 @@
 
             grid-template:  "info   kind"
                             "player video"
-                            "conpan .";
+                            "conpan ."
+                            "comments comments";
 
             column-gap: 2.75rem;
             grid-template-rows: auto 70vh;
             grid-template-columns: calc(70vh * (16/9)) min-content;
         }
+    }
+
+    &__comments {
+        grid-area: comments;
+        margin-top: .5rem;
     }
 
     .common-info {

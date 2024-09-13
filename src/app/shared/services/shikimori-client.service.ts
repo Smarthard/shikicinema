@@ -1,12 +1,14 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map } from 'rxjs/operators';
 
 import { AnimeBriefInfoInterface } from '@app/shared/types/shikimori/anime-brief-info.interface';
+import { Comment } from '@app/shared/types/shikimori/comment';
 import { Credentials } from '@app/shared/types/shikimori/credentials';
 import { FindAnimeQuery } from '@app/shared/types/shikimori/queries/find-anime-query';
 import { Observable } from 'rxjs';
 import { ResourceIdType } from '@app/shared/types/resource-id.type';
+import { Topic } from '@app/shared/types/shikimori/topic';
 import { UserAnimeRate } from '@app/shared/types/shikimori/user-anime-rate';
 import { UserAnimeRatesQuery } from '@app/shared/types/shikimori/queries/user-anime-rates-query';
 import { UserBriefInfoInterface } from '@app/shared/types/shikimori/user-brief-info.interface';
@@ -15,6 +17,7 @@ import { UserInterface } from '@app/shared/types/shikimori/user.interface';
 import { environment } from '@app-env/environment';
 import { setPaginationToParams } from '@app/shared/types/shikimori/helpers/pagination-helper';
 import { toShikimoriCredentials } from '@app/shared/types/shikimori/mappers/auth.mappers';
+
 
 @Injectable({
     providedIn: 'root',
@@ -144,5 +147,37 @@ export class ShikimoriClient {
         const url = `${this.baseUri}/api/v2/user_rates/${userRates?.id}`;
 
         return this.http.patch<UserAnimeRate>(url, userRates);
+    }
+
+    getTopics(animeId: number, episode?: number, revalidate = true) {
+        let headers = new HttpHeaders();
+        let params = new HttpParams()
+            .set('kind', 'episode');
+
+        if (episode) {
+            params = params.set('episode', `${episode}`);
+        }
+
+        if (revalidate) {
+            headers = headers
+                .set('Cache-Control', 'no-cache, no-store, must-revalidate')
+                .set('Pragma', 'no-cache');
+        }
+
+        return this.http.get<Topic[]>(`${this.baseUri}/api/animes/${animeId}/topics`, { params, headers });
+    }
+
+    getComments(commentableId: number, page = 1, limit = 30, desc: '0' | '1' = '0') {
+        let params = new HttpParams()
+            .set('commentable_id', `${commentableId}`)
+            .set('commentable_type', 'Topic')
+            .set('page', `${page}`)
+            .set('limit', `${limit}`);
+
+        if (desc) {
+            params = params.set('desc', desc);
+        }
+
+        return this.http.get<Comment[]>(`${this.baseUri}/api/comments`, { params });
     }
 }

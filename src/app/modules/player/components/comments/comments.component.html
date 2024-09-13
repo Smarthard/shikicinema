@@ -1,0 +1,22 @@
+@if (isLoading) {
+    @for(_ of skeletonComments; track $index) {
+        <div class="comments__item comments__item--skeleton skeleton"></div>
+    }
+} @else {
+    @if (comments?.length) {
+        @if (showMoreButton) {
+            <ion-button (click)="loadLastComments()">Посмотреть остальные комментарии</ion-button>
+        }
+
+        @for (comment of (comments | slice: showMoreButton ? -(sliceLastComments$ | async) : 0 ); track trackById) {
+            <app-comment
+                id="comment-{{ comment.id }}"
+                #comment
+                class="comments__item"
+                [comment]="comment"
+                (openReply)="onOpenReply($event)"
+                (openImage)="onOpenImage($event)">
+            </app-comment>
+        }
+    }
+}
