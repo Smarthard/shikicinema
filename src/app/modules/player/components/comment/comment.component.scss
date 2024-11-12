@@ -1,0 +1,40 @@
+.comment {
+    &__message {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        flex: 1;
+    }
+
+    &__avatar {
+        .image-card__img {
+            border-radius: 100%;
+        }
+    }
+
+    &__avatar-wrap {
+        --shc-comment-avatar-size: 7vh;
+
+        width: var(--shc-comment-avatar-size);
+        height: var(--shc-comment-avatar-size);
+        min-width: var(--shc-comment-avatar-size);
+        min-height: var(--shc-comment-avatar-size);
+        max-width: var(--shc-comment-avatar-size);
+        max-height: var(--shc-comment-avatar-size);
+    }
+
+    &__header {
+        display: flex;
+        align-items: baseline;
+        gap: 1rem;
+    }
+
+    &__author {
+        font-weight: bold;
+    }
+
+    &__date {
+        font-size: small;
+        color: var(--ion-color-medium);
+    }
+}

@@ -83,7 +83,8 @@
                 "SUCCESS": "Watched",
                 "FAILURE": "Failed"
             },
-            "RELEVANT_VIDEOS_MISSING": "We couldn't find relevant videos"
+            "RELEVANT_VIDEOS_MISSING": "We couldn't find relevant videos",
+            "COMMENT_REPLY_MISSING": "Reply was deleted"
         }
     }
 }

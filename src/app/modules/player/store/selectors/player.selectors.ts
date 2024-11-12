@@ -30,3 +30,23 @@ export const selectPlayerUserRate = (animeId: string | number) => createSelector
     // eslint-disable-next-line camelcase
     ({ user_rate }) => user_rate,
 );
+
+export const selectPlayerTopic = (animeId: string | number, episode: string | number) => createSelector(
+    selectPlayer,
+    ({ comments }) => comments?.[animeId]?.[episode]?.topic,
+);
+
+export const selectPlayerIsCommentsLoading = (animeId: string | number, episode: string | number) => createSelector(
+    selectPlayer,
+    ({ comments }) => comments?.[animeId]?.[episode]?.isLoading,
+);
+
+export const selectPlayerIsShownAllComments = (animeId: string | number, episode: string | number) => createSelector(
+    selectPlayer,
+    ({ comments }) => comments?.[animeId]?.[episode]?.isShownAll,
+);
+
+export const selectPlayerComments = (animeId: string | number, episode: string | number) => createSelector(
+    selectPlayer,
+    ({ comments }) => comments?.[animeId]?.[episode]?.comments || [],
+);

@@ -1,0 +1,32 @@
+@import 'src/scss/mixins';
+
+.comments {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    &__item {
+        display: flex;
+        gap: .5rem;
+        padding: 1rem;
+        background-color: var(--ion-color-light);
+        border-radius: 1rem;
+
+        &--skeleton {
+            width: 100%;
+            height: 6rem;
+        }
+
+        &--flashing {
+            animation: flash-background 1s ease-in-out;
+        }
+    }
+
+    &__image-viewer {
+        overflow: auto;
+        --height: auto;
+        --width: auto;
+        --background: rgba(var(--ion-background-color-rgb), 0.01);
+        --box-shadow: unset;
+    }
+}

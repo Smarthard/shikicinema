@@ -3,6 +3,7 @@ import { IonicModule } from '@ionic/angular';
 import { NgLetModule } from 'ng-let';
 import { NgModule } from '@angular/core';
 
+import { CommentsComponent } from '@app/modules/player/components/comments/comments.component';
 import { ControlPanelComponent } from '@app/modules/player/components/control-panel/control-panel.component';
 import { FilterByEpisodePipe } from '@app/shared/pipes/filter-by-episode/filter-by-episode.pipe';
 import { FilterByKindPipe } from '@app/shared/pipes/filter-by-kind/filter-by-kind.pipe';
@@ -45,6 +46,7 @@ import { WELL_KNOWN_UPLOADERS_TOKEN } from '@app/shared/types/well-known-uploade
         ToUploaderPipe,
         SwipeDirective,
         NgLetModule,
+        CommentsComponent,
     ],
 })
 export class PlayerModule {}

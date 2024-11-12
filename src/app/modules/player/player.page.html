@@ -58,6 +58,14 @@
                 (watch)="onWatch($event, isWatched)"
             />
         </ng-container>
+
+        <app-comments
+            class="player-page__comments"
+            [comments]="comments$ | async"
+            [isLoading]="isCommentsLoading$ | async"
+            [showMoreButton]="(isShownAllComments$ | async) === false"
+            (showMoreComments)="onShowMoreComments()"
+        />
     </div>
 </ion-content>
 

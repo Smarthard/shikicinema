@@ -27,3 +27,17 @@ a[href] {
     text-overflow: ellipsis;
     overflow: hidden;
 }
+
+.shc-interactive {
+    pointer-events: all;
+
+    &:hover {
+        cursor: pointer;
+    }
+}
+
+.shc-iframe {
+    display: flex;
+    flex: 1;
+    border: 0;
+}

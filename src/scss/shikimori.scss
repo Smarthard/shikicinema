@@ -1,0 +1,271 @@
+// Shikimori styles for comments section
+
+// global related variables define here
+html {
+    --shc-shikimori-inline-spoiler-color-rgb: 102,119,136;
+    --shc-smiley-background-color: white;
+}
+
+.name-en {
+    display: none;
+}
+
+[lang=en] {
+    .name-en {
+        display: inline;
+    }
+
+    .name-ru {
+        display: none;
+    }
+}
+
+.smiley {
+    background-color: var(--shc-smiley-background-color);
+    border-radius: 100vh;
+    height: 2rem;
+    width: auto;
+    vertical-align: middle;
+    margin: 0 .125rem;
+}
+
+.b-image {
+    display: inline-block;
+    vertical-align: text-top;
+
+    &.no-zoom {
+        cursor: default;
+    }
+
+    &:not(.no-zoom) {
+        cursor: zoom-in;
+    }
+
+    img {
+        pointer-events: none;
+    }
+}
+
+.b-replies {
+    margin-top: 2rem;
+    text-align: end;
+}
+
+.b-video {
+    display: flex;
+    aspect-ratio: 16/9;
+}
+
+.b-mention {
+    & > * {
+        pointer-events: none;
+    }
+
+    s {
+        color: var(--ion-color-secondary);
+        text-decoration: none;
+    }
+}
+
+.b-quote-v2,
+.b-quote {
+    background-color: var(--ion-color-light-tint);
+    border-radius: .5rem;
+    padding: .5rem;
+    margin: .5rem 0;
+
+    .quoteable {
+        display: flex;
+
+        &::before {
+            display: inline-block;
+            content: '';
+            background-color: var(--ion-color-primary-contrast);
+            height: 1rem;
+            width: 1rem;
+            mask-image: url("/svg/chatbubble-ellipses.svg");
+            mask-size: 1rem 1rem;
+            transform: scaleX(-1);
+            margin-right: .5rem;
+        }
+
+        .b-user16 {
+            display: flex;
+            flex: 1;
+            gap: .25rem;
+
+            img {
+                border-radius: 100%;
+            }
+        }
+    }
+}
+
+.ban {
+    display: flex;
+    padding: 1rem;
+    color: var(--ion-color-danger);
+    border: 1px dashed var(--ion-color-danger);
+    border-radius: 1rem;
+
+    .b-user16 {
+        img {
+            border-radius: 100%;
+        }
+
+        a {
+            display: flex;
+            gap: .5rem;
+        }
+    }
+
+    .resolution {
+        margin-left: 0.5rem;
+    }
+}
+
+.b-spoiler {
+    display:inline;
+
+    label {
+        color: var(--ion-color-primary);
+        cursor:pointer;
+        border-bottom-style: dashed;
+        border-bottom-width: 1px;
+        font-size: 12px;
+        letter-spacing: 0.5px;
+        pointer-events: none;
+
+        &:active {
+            color:var(--ion-color-secondary);
+        }
+    }
+
+    .content {
+        display:none;
+        pointer-events: none;
+
+        &:not(.only-show) {
+            cursor:pointer;
+        }
+
+        .before,
+        .after {
+            display: inline;
+            font-size: 0.625rem;
+            color: var(--ion-color-primary);
+        }
+
+        .before {
+            padding-right: 0.25rem;
+            &::before {
+                content: '[spoiler]';
+            }
+        }
+
+        .after {
+            padding-left: 0.25rem;
+            &::after {
+                content: '[spoiler]';
+            }
+        }
+
+        .inner {
+            border-bottom: 1px dashed var(--ion-color-primary);
+            display:inline;
+        }
+    }
+
+    &.is-opened {
+        label {
+            display: none;
+        }
+
+        .content {
+            display: inline;
+        }
+    }
+}
+
+
+.b-spoiler_block {
+    overflow: hidden;
+    position: relative;
+    border-left: 0.25rem solid rgb(var(--shc-shikimori-inline-spoiler-color-rgb));
+
+    // spoiler head
+    & > span {
+        display: inline-block;
+        background-color: rgb(var(--shc-shikimori-inline-spoiler-color-rgb));
+        padding: 0.125rem 0.5rem 0.125rem 0.25rem;
+        pointer-events: none;
+
+        &::after {
+            display: inline-block;
+            content: '';
+            background-color: var(--ion-color-primary-contrast);
+            height: 1rem;
+            width: 1rem;
+            mask-image: url("/svg/chevron-up.svg");
+            mask-size: 1rem 1rem;
+            mask-position-y: 0.25rem;
+        }
+    }
+
+    // spoiler body
+    & > div {
+        margin-top: 0.25rem;
+        margin-left: 0.5rem;
+    }
+
+    &:not(.is-opened) {
+        & > span {
+            &::after {
+                mask-image: url("/svg/chevron-down.svg");
+            }
+        }
+
+        & > div {
+            display: none;
+        }
+    }
+}
+
+.b-spoiler_inline {
+    padding: 1px 3px 2px;
+    transition: background-color .25s ease;
+    background: none;
+    border: none;
+    display: inline;
+    line-height: initial;
+
+    &.is-opened {
+        background-color: rgba(var(--shc-shikimori-inline-spoiler-color-rgb), 0.125);
+
+        &:active {
+            background-color: rgba(var(--shc-shikimori-inline-spoiler-color-rgb), 0.25)
+        }
+    }
+
+    &:not(.is-opened) {
+        background-color: rgb(var(--shc-shikimori-inline-spoiler-color-rgb));
+        color: rgb(var(--shc-shikimori-inline-spoiler-color-rgb));
+        user-select: none;
+        cursor:pointer;
+
+        & > * {
+            opacity: 0;
+        }
+    }
+
+    // prevent to trigger main click handler on non-interactive elements inside spoiler
+    // see CommentComponent.onClick method
+    span,
+    div {
+        pointer-events: none;
+    }
+}
+
+.marker {
+    display: none;
+}
