@@ -59,7 +59,6 @@ export class CommentComponent {
     }
 
     onClick(event: Event): void {
-        event.preventDefault();
         const target = event.target as HTMLElement;
 
         switch (true) {
@@ -69,11 +68,13 @@ export class CommentComponent {
                 const href = target.getAttribute('href') ?? '';
 
                 if (isMention) {
+                    event.preventDefault();
                     const [commentId] = /([\d]+)/.exec(href);
                     this.openReply.emit(commentId);
                 }
 
                 if (isImage) {
+                    event.preventDefault();
                     this.openImage.emit(href);
                 }
 
@@ -82,6 +83,7 @@ export class CommentComponent {
                 const isSpoiler = target.className.includes('spoiler');
 
                 if (isSpoiler) {
+                    event.preventDefault();
                     this._toggleSpoiler(target);
                 }
 
