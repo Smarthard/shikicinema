@@ -38,6 +38,10 @@
         }
     }
 
+    &__comment-form {
+        grid-area: comment-form;
+    }
+
     &__control-panel {
         grid-area: conpan;
     }
@@ -64,7 +68,8 @@
                         "conpan"
                         "kind"
                         "video"
-                        "comments";
+                        "comments"
+                        "comment-form";
 
         @media (orientation: landscape) {
             grid-template-columns: 90vw min-content;
@@ -75,7 +80,8 @@
                 grid-template:  "info"
                                 "player"
                                 "conpan"
-                                "comments";
+                                "comments"
+                                "comment-form";
 
                 grid-template-rows: auto;
                 grid-template-columns: 90vw min-content;
@@ -85,7 +91,8 @@
                 grid-template:  "info"
                                 "player"
                                 "conpan"
-                                "comments";
+                                "comments"
+                                "comment-form";
 
                 grid-template-rows: auto;
                 grid-template-columns: 90vw min-content;
@@ -99,7 +106,8 @@
             grid-template:  "info   kind"
                             "player video"
                             "conpan ."
-                            "comments comments";
+                            "comments comments"
+                            "comment-form comment-form";
 
             column-gap: 2.75rem;
             grid-template-rows: auto 60vh;
@@ -113,7 +121,8 @@
             grid-template:  "info   kind"
                             "player video"
                             "conpan ."
-                            "comments comments";
+                            "comments comments"
+                            "comment-form comment-form";
 
             column-gap: 2.75rem;
             grid-template-rows: auto 70vh;

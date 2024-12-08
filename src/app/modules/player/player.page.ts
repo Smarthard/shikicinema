@@ -39,6 +39,7 @@ import {
     getAnimeInfoAction,
     getCommentsAction,
     getTopicsAction,
+    sendCommentAction,
     setIsShownAllAction,
     watchAnimeAction,
     watchAnimeSuccessAction,
@@ -312,5 +313,12 @@ export class PlayerPage implements OnInit {
             tap(([animeId, episode]) => this.store.dispatch(setIsShownAllAction({ animeId, episode, isShownAll }))),
             untilDestroyed(this),
         ).subscribe();
+    }
+
+    async onCommentSend(commentText: string): Promise<void> {
+        const animeId = await firstValueFrom(this.animeId$);
+        const episode = await firstValueFrom(this.episode$);
+
+        this.store.dispatch(sendCommentAction({ animeId, episode, commentText }));
     }
 }

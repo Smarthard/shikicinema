@@ -18,6 +18,7 @@ import { SkeletonBlockModule } from '@app/shared/components/skeleton-block/skele
 import { SwipeDirective } from '@app/shared/directives/swipe.directive';
 import { ToUploaderPipe } from '@app/modules/player/pipes/to-uploader.pipe';
 import { UploaderComponent } from '@app/modules/player/components/uploader/uploader.component';
+import { UserCommentFormComponent } from '@app/modules/player/components/user-comment-form/user-comment-form.component';
 import { VideoSelectorComponent } from '@app/modules/player/components/video-selector/video-selector.component';
 import { WELL_KNOWN_UPLOADERS_MAP } from '@app/shared/config/well-known-uploaders.config';
 import { WELL_KNOWN_UPLOADERS_TOKEN } from '@app/shared/types/well-known-uploaders.token';
@@ -47,6 +48,7 @@ import { WELL_KNOWN_UPLOADERS_TOKEN } from '@app/shared/types/well-known-uploade
         SwipeDirective,
         NgLetModule,
         CommentsComponent,
+        UserCommentFormComponent,
     ],
 })
 export class PlayerModule {}

@@ -84,7 +84,13 @@
                 "FAILURE": "Failed"
             },
             "RELEVANT_VIDEOS_MISSING": "We couldn't find relevant videos",
-            "COMMENT_REPLY_MISSING": "Reply was deleted"
+            "COMMENT_REPLY_MISSING": "Reply was deleted",
+            "USER_COMMENT_FORM": {
+                "LABEL": "Comment",
+                "PLACEHOLDER": "Enter your comment",
+                "SEND_SUCCESS": "Comment sent",
+                "SEND_FAILURE": "Failed to send comment"
+            }
         }
     }
 }

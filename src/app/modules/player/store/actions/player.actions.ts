@@ -115,3 +115,26 @@ export const setIsShownAllAction = createAction(
         episode: number,
     }>(),
 );
+
+export const sendCommentAction = createAction(
+    '[Player] send comment',
+    props<{
+        animeId: ResourceIdType,
+        episode: number,
+        commentText: string,
+    }>(),
+);
+
+export const sendCommentSuccessAction = createAction(
+    '[Player] send comment success',
+    props<{
+        animeId: ResourceIdType,
+        episode: number,
+        comment: Comment,
+    }>(),
+);
+
+export const sendCommentFailureAction = createAction(
+    '[Player] send comment failure',
+    props<{ errors: any }>(),
+);

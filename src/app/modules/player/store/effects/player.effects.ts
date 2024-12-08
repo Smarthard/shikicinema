@@ -7,6 +7,7 @@ import {
     catchError,
     debounceTime,
     delay,
+    exhaustMap,
     filter,
     first,
     map,
@@ -35,6 +36,9 @@ import {
     getTopicsAction,
     getTopicsFailureAction,
     getTopicsSuccessAction,
+    sendCommentAction,
+    sendCommentFailureAction,
+    sendCommentSuccessAction,
     watchAnimeFailureAction,
     watchAnimeSuccessAction,
 } from '@app/modules/player/store/actions/player.actions';
@@ -154,7 +158,7 @@ export class PlayerEffects {
 
     getComments$ = createEffect(() => this.actions$.pipe(
         ofType(getCommentsAction),
-        switchMap(({ animeId, episode, page, limit }) => this.store$.select(selectPlayerTopic(animeId, episode)).pipe(
+        mergeMap(({ animeId, episode, page, limit }) => this.store$.select(selectPlayerTopic(animeId, episode)).pipe(
             first((topic) => !!topic?.id),
             concatLatestFrom(() => this.store$.select(selectPlayerComments(animeId, episode))),
             filter(([topic, comments]) => comments?.length < topic?.comments_count),
@@ -171,6 +175,51 @@ export class PlayerEffects {
         map(({ comments: _comments, page, ...rest }) => getCommentsAction({ ...rest, page: page + 1 })),
         catchError((errors) => of(getCommentsFailureAction({ errors }))),
     ));
+
+    sendComment$ = createEffect(() => this.actions$.pipe(
+        ofType(sendCommentAction),
+        switchMap(({ animeId, episode, commentText }) => this.store$.select(selectPlayerTopic(animeId, episode)).pipe(
+            switchMap((topic) =>
+                !topic?.id
+                    ? this.shikimori.createEpisodeTopic(animeId, episode).pipe(
+                        // eslint-disable-next-line camelcase
+                        map(({ topic_id }) => topic_id),
+                    )
+                    : of(topic.id),
+            ),
+            exhaustMap((commentableId) => this.shikimori.createComment(commentableId, commentText)),
+            map((comment) => sendCommentSuccessAction({ animeId, episode, comment })),
+            catchError((errors) => of(sendCommentFailureAction({ errors }))),
+        )),
+    ));
+
+    sendCommentSuccess$ = createEffect(() => this.actions$.pipe(
+        ofType(sendCommentSuccessAction),
+        tap(async () => {
+            const toast = await this.toast.create({
+                id: 'shikimori-send-comment-success',
+                message: this.translate.translate('PLAYER_MODULE.PLAYER_PAGE.USER_COMMENT_FORM.SEND_SUCCESS'),
+                color: 'success',
+                duration: 1000,
+            });
+
+            await toast.present();
+        }),
+    ), { dispatch: false });
+
+    sendCommentFailure$ = createEffect(() => this.actions$.pipe(
+        ofType(sendCommentFailureAction),
+        tap(async () => {
+            const toast = await this.toast.create({
+                id: 'shikimori-send-comment-error',
+                message: this.translate.translate('PLAYER_MODULE.PLAYER_PAGE.USER_COMMENT_FORM.SEND_FAILURE'),
+                color: 'danger',
+                duration: 1000,
+            });
+
+            await toast.present();
+        }),
+    ), { dispatch: false });
 
     constructor(
         private actions$: Actions,

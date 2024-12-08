@@ -1,12 +1,16 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { AnimeBriefInfoInterface } from '@app/shared/types/shikimori/anime-brief-info.interface';
 import { Comment } from '@app/shared/types/shikimori/comment';
+import { CommentableEnum } from '@app/shared//types/shikimori/commentable.enum';
+import { CreateComment } from '@app/shared/types/shikimori/create-comment.interface';
 import { Credentials } from '@app/shared/types/shikimori/credentials';
+import { EpisodeNotification } from '@app/shared//types/shikimori/episode-notification.interface';
+import { EpisodeNotificationResponse } from '@app/shared/types/shikimori/episode-notification-response.interface';
 import { FindAnimeQuery } from '@app/shared/types/shikimori/queries/find-anime-query';
-import { Observable } from 'rxjs';
 import { ResourceIdType } from '@app/shared/types/resource-id.type';
 import { Topic } from '@app/shared/types/shikimori/topic';
 import { UserAnimeRate } from '@app/shared/types/shikimori/user-anime-rate';
@@ -24,6 +28,7 @@ import { toShikimoriCredentials } from '@app/shared/types/shikimori/mappers/auth
 })
 export class ShikimoriClient {
     readonly baseUri = environment.shikimori.apiURI;
+    readonly episodeNotificationToken = environment.shikimori.episodeNotificationToken;
 
     constructor(
         private http: HttpClient,
@@ -167,7 +172,20 @@ export class ShikimoriClient {
         return this.http.get<Topic[]>(`${this.baseUri}/api/animes/${animeId}/topics`, { params, headers });
     }
 
-    getComments(commentableId: number, page = 1, limit = 30, desc: '0' | '1' = '0') {
+    createEpisodeTopic(animeId: ResourceIdType, episode: number) {
+        const body: EpisodeNotification = {
+            episode_notification: {
+                anime_id: animeId,
+                episode,
+                aired_at: new Date().toISOString(),
+            },
+            token: this.episodeNotificationToken,
+        };
+
+        return this.http.post<EpisodeNotificationResponse>(`${this.baseUri}/api/v2/episode_notifications`, body);
+    }
+
+    getComments(commentableId: ResourceIdType, page = 1, limit = 30, desc: '0' | '1' = '0') {
         let params = new HttpParams()
             .set('commentable_id', `${commentableId}`)
             .set('commentable_type', 'Topic')
@@ -179,5 +197,21 @@ export class ShikimoriClient {
         }
 
         return this.http.get<Comment[]>(`${this.baseUri}/api/comments`, { params });
+    }
+
+    createComment(commentableId: ResourceIdType, comment: string) {
+        const body: CreateComment = {
+            comment: {
+                body: comment,
+                commentable_id: commentableId,
+                commentable_type: CommentableEnum.TOPIC,
+                // TODO: учитывать offtopic
+                is_offtopic: false,
+            },
+            broadcast: false,
+            frontend: false,
+        };
+
+        return this.http.post<Comment>(`${this.baseUri}/api/comments`, body);
     }
 }
