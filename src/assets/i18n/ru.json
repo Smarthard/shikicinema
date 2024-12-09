@@ -83,7 +83,14 @@
                 "SUCCESS": "Просмотрено",
                 "FAILURE": "Ошибка"
             },
-            "RELEVANT_VIDEOS_MISSING": "Не смогли найти похожие видео"
+            "RELEVANT_VIDEOS_MISSING": "Не смогли найти похожие видео",
+            "COMMENT_REPLY_MISSING": "Комментарий был удален",
+            "USER_COMMENT_FORM": {
+                "LABEL": "Ваш комментарий",
+                "PLACEHOLDER": "Введите свой комментарий",
+                "SEND_SUCCESS": "Комментарий отправлен",
+                "SEND_FAILURE": "Не удалось отправить комментарий"
+            }
         }
     }
 }

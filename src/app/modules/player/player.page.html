@@ -58,6 +58,19 @@
                 (watch)="onWatch($event, isWatched)"
             />
         </ng-container>
+
+        <app-comments
+            class="player-page__comments"
+            [comments]="comments$ | async"
+            [isLoading]="isCommentsLoading$ | async"
+            [showMoreButton]="(isShownAllComments$ | async) === false"
+            (showMoreComments)="onShowMoreComments()"
+        />
+
+        <app-user-comment-form
+            class="player-page__comment-form"
+            (send)="onCommentSend($event)"
+        />
     </div>
 </ion-content>
 
@@ -84,4 +97,4 @@
         />
       </ion-content>
     </ng-template>
-  </ion-modal>
+</ion-modal>

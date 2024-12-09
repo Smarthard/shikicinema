@@ -37,6 +37,10 @@ import { filterVideosByPreferences } from '@app/modules/player/utils/filter-vide
 import {
     findVideosAction,
     getAnimeInfoAction,
+    getCommentsAction,
+    getTopicsAction,
+    sendCommentAction,
+    setIsShownAllAction,
     watchAnimeAction,
     watchAnimeSuccessAction,
 } from '@app/modules/player/store/actions';
@@ -50,6 +54,9 @@ import {
 import {
     selectPlayerAnime,
     selectPlayerAnimeLoading,
+    selectPlayerComments,
+    selectPlayerIsCommentsLoading,
+    selectPlayerIsShownAllComments,
     selectPlayerUserRate,
     selectPlayerVideos,
     selectPlayerVideosLoading,
@@ -147,6 +154,16 @@ export class PlayerPage implements OnInit {
         map(([videos, episode]) => filterByEpisode(videos, episode)),
     );
 
+    comments$ = combineLatest([this.animeId$, this.episode$]).pipe(
+        switchMap(([animeId, episode]) => this.store.select(selectPlayerComments(animeId, episode))),
+    );
+    isShownAllComments$ = combineLatest([this.animeId$, this.episode$]).pipe(
+        switchMap(([animeId, episode]) => this.store.select(selectPlayerIsShownAllComments(animeId, episode))),
+    );
+    isCommentsLoading$ = combineLatest([this.animeId$, this.episode$]).pipe(
+        switchMap(([animeId, episode]) => this.store.select(selectPlayerIsCommentsLoading(animeId, episode))),
+    );
+
     constructor(
         private store: Store,
         private route: ActivatedRoute,
@@ -203,7 +220,12 @@ export class PlayerPage implements OnInit {
             this.episode$,
         ]).pipe(
             filter(([anime]) => !!anime?.name),
-            tap(([anime, episode]) => this.changeTitle(anime, episode)),
+            tap(([anime, episode]) => {
+                this.changeTitle(anime, episode);
+
+                this.store.dispatch(getTopicsAction({ animeId: anime.id, episode }));
+                this.store.dispatch(getCommentsAction({ animeId: anime.id, episode, page: 1, limit: 30 }));
+            }),
             untilDestroyed(this),
         ).subscribe();
 
@@ -278,5 +300,25 @@ export class PlayerPage implements OnInit {
         this.store.dispatch(watchAnimeAction({ animeId: anime.id, episode: watchedEpisode, isRewarch }));
 
         void this.updateUserPreferences();
+    }
+
+    onShowMoreComments(): void {
+        const isShownAll = true;
+
+        combineLatest([
+            this.animeId$,
+            this.episode$,
+        ]).pipe(
+            take(1),
+            tap(([animeId, episode]) => this.store.dispatch(setIsShownAllAction({ animeId, episode, isShownAll }))),
+            untilDestroyed(this),
+        ).subscribe();
+    }
+
+    async onCommentSend(commentText: string): Promise<void> {
+        const animeId = await firstValueFrom(this.animeId$);
+        const episode = await firstValueFrom(this.episode$);
+
+        this.store.dispatch(sendCommentAction({ animeId, episode, commentText }));
     }
 }

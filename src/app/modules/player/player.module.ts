@@ -3,6 +3,7 @@ import { IonicModule } from '@ionic/angular';
 import { NgLetModule } from 'ng-let';
 import { NgModule } from '@angular/core';
 
+import { CommentsComponent } from '@app/modules/player/components/comments/comments.component';
 import { ControlPanelComponent } from '@app/modules/player/components/control-panel/control-panel.component';
 import { FilterByEpisodePipe } from '@app/shared/pipes/filter-by-episode/filter-by-episode.pipe';
 import { FilterByKindPipe } from '@app/shared/pipes/filter-by-kind/filter-by-kind.pipe';
@@ -17,6 +18,7 @@ import { SkeletonBlockModule } from '@app/shared/components/skeleton-block/skele
 import { SwipeDirective } from '@app/shared/directives/swipe.directive';
 import { ToUploaderPipe } from '@app/modules/player/pipes/to-uploader.pipe';
 import { UploaderComponent } from '@app/modules/player/components/uploader/uploader.component';
+import { UserCommentFormComponent } from '@app/modules/player/components/user-comment-form/user-comment-form.component';
 import { VideoSelectorComponent } from '@app/modules/player/components/video-selector/video-selector.component';
 import { WELL_KNOWN_UPLOADERS_MAP } from '@app/shared/config/well-known-uploaders.config';
 import { WELL_KNOWN_UPLOADERS_TOKEN } from '@app/shared/types/well-known-uploaders.token';
@@ -45,6 +47,8 @@ import { WELL_KNOWN_UPLOADERS_TOKEN } from '@app/shared/types/well-known-uploade
         ToUploaderPipe,
         SwipeDirective,
         NgLetModule,
+        CommentsComponent,
+        UserCommentFormComponent,
     ],
 })
 export class PlayerModule {}

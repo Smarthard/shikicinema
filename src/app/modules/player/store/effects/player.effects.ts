@@ -6,8 +6,12 @@ import { TranslocoService } from '@ngneat/transloco';
 import {
     catchError,
     debounceTime,
+    delay,
+    exhaustMap,
     filter,
+    first,
     map,
+    mergeMap,
     tap,
 } from 'rxjs/operators';
 import { concatLatestFrom } from '@ngrx/operators';
@@ -25,17 +29,31 @@ import {
     getAnimeInfoSuccessAction,
     watchAnimeAction,
 } from '@app/modules/player/store/actions';
+import {
+    getCommentsAction,
+    getCommentsFailureAction,
+    getCommentsSuccessAction,
+    getTopicsAction,
+    getTopicsFailureAction,
+    getTopicsSuccessAction,
+    sendCommentAction,
+    sendCommentFailureAction,
+    sendCommentSuccessAction,
+    watchAnimeFailureAction,
+    watchAnimeSuccessAction,
+} from '@app/modules/player/store/actions/player.actions';
 import { getLastAiredEpisode, toUserRatesUpdate } from '@app/modules/player/utils';
 import { kodikVideoMapper } from '@app/shared/types/kodik/mappers';
 import {
     selectPlayerAnime,
+    selectPlayerComments,
+    selectPlayerTopic,
     selectPlayerUserRate,
     selectPlayerVideos,
 } from '@app/modules/player/store/selectors/player.selectors';
 import { selectShikimoriCurrentUser } from '@app/store/shikimori/selectors/shikimori.selectors';
 import { shikicinemaVideoMapper } from '@app/shared/types/shikicinema/v1';
 import { toVideoInfo } from '@app/shared/rxjs';
-import { watchAnimeFailureAction, watchAnimeSuccessAction } from '@app/modules/player/store/actions/player.actions';
 
 
 @Injectable()
@@ -122,6 +140,81 @@ export class PlayerEffects {
                 message: errors.message,
                 color: 'danger',
                 duration: 10000,
+            });
+
+            await toast.present();
+        }),
+    ), { dispatch: false });
+
+    getTopics$ = createEffect(() => this.actions$.pipe(
+        ofType(getTopicsAction),
+        concatLatestFrom(({ animeId, episode }) => this.store$.select(selectPlayerTopic(animeId, episode))),
+        filter(([, topic]) => !topic?.id),
+        switchMap(([{ animeId, episode }]) => this.shikimori.getTopics(animeId, episode).pipe(
+            map((topics) => getTopicsSuccessAction({ animeId, episode, topics })),
+            catchError((errors) => of(getTopicsFailureAction({ errors }))),
+        )),
+    ));
+
+    getComments$ = createEffect(() => this.actions$.pipe(
+        ofType(getCommentsAction),
+        mergeMap(({ animeId, episode, page, limit }) => this.store$.select(selectPlayerTopic(animeId, episode)).pipe(
+            first((topic) => !!topic?.id),
+            concatLatestFrom(() => this.store$.select(selectPlayerComments(animeId, episode))),
+            filter(([topic, comments]) => comments?.length < topic?.comments_count),
+            mergeMap(([topic]) => this.shikimori.getComments(topic.id, page, limit)),
+            map((comments) => getCommentsSuccessAction({ animeId, episode, page, limit, comments })),
+            catchError((errors) => of(getCommentsFailureAction({ errors }))),
+        )),
+    ));
+
+    getCommentsSuccess$ = createEffect(() => this.actions$.pipe(
+        ofType(getCommentsSuccessAction),
+        filter(({ comments, limit }) => comments?.length > limit),
+        delay(250),
+        map(({ comments: _comments, page, ...rest }) => getCommentsAction({ ...rest, page: page + 1 })),
+        catchError((errors) => of(getCommentsFailureAction({ errors }))),
+    ));
+
+    sendComment$ = createEffect(() => this.actions$.pipe(
+        ofType(sendCommentAction),
+        switchMap(({ animeId, episode, commentText }) => this.store$.select(selectPlayerTopic(animeId, episode)).pipe(
+            switchMap((topic) =>
+                !topic?.id
+                    ? this.shikimori.createEpisodeTopic(animeId, episode).pipe(
+                        // eslint-disable-next-line camelcase
+                        map(({ topic_id }) => topic_id),
+                    )
+                    : of(topic.id),
+            ),
+            exhaustMap((commentableId) => this.shikimori.createComment(commentableId, commentText)),
+            map((comment) => sendCommentSuccessAction({ animeId, episode, comment })),
+            catchError((errors) => of(sendCommentFailureAction({ errors }))),
+        )),
+    ));
+
+    sendCommentSuccess$ = createEffect(() => this.actions$.pipe(
+        ofType(sendCommentSuccessAction),
+        tap(async () => {
+            const toast = await this.toast.create({
+                id: 'shikimori-send-comment-success',
+                message: this.translate.translate('PLAYER_MODULE.PLAYER_PAGE.USER_COMMENT_FORM.SEND_SUCCESS'),
+                color: 'success',
+                duration: 1000,
+            });
+
+            await toast.present();
+        }),
+    ), { dispatch: false });
+
+    sendCommentFailure$ = createEffect(() => this.actions$.pipe(
+        ofType(sendCommentFailureAction),
+        tap(async () => {
+            const toast = await this.toast.create({
+                id: 'shikimori-send-comment-error',
+                message: this.translate.translate('PLAYER_MODULE.PLAYER_PAGE.USER_COMMENT_FORM.SEND_FAILURE'),
+                color: 'danger',
+                duration: 1000,
             });
 
             await toast.present();

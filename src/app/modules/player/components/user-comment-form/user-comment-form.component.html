@@ -1,0 +1,19 @@
+<ion-textarea
+    labelPlacement="floating"
+    fill="outline"
+    [autoGrow]="true"
+    [formControl]="comment"
+    [label]="'PLAYER_MODULE.PLAYER_PAGE.USER_COMMENT_FORM.LABEL' | transloco"
+    [placeholder]="'PLAYER_MODULE.PLAYER_PAGE.USER_COMMENT_FORM.PLACEHOLDER' | transloco"
+>
+    <ion-button
+        type="button"
+        fill="clear"
+        slot="end"
+        aria-label="send"
+        (click)="onSend(comment.value)"
+        [disabled]="comment.invalid"
+    >
+        <ion-icon slot="icon-only" name="send" aria-hidden="true" />
+    </ion-button>
+</ion-textarea>
