@@ -10,7 +10,6 @@ import {
 } from '@angular/core';
 import { DatePipe } from '@angular/common';
 
-import { BbToHtmlPipe } from '@app/modules/player/pipes/bb-to-html.pipe';
 import { Comment } from '@app/shared/types/shikimori/comment';
 import { ImageCardModule } from '@app/shared/components/image-card/image-card.module';
 import { ProcessShikimoriHtmlPipe } from '@app/modules/player/pipes/process-shikimori-html.pipe';
@@ -21,7 +20,6 @@ import { ToCommentUrlPipe } from '@app/modules/player/pipes/to-comment-url.pipe'
     standalone: true,
     imports: [
         DatePipe,
-        BbToHtmlPipe,
         ProcessShikimoriHtmlPipe,
         ToCommentUrlPipe,
         ImageCardModule,
