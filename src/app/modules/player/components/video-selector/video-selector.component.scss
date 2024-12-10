@@ -26,6 +26,38 @@
             text-overflow: ellipsis;
         }
 
+        &__qualities {
+            display: flex;
+            align-items: center;
+            justify-content: space-evenly;
+            gap: 0.5rem;
+
+            > :not(:last-child) {
+                &::after {
+                    display: block;
+                    content: "/";
+                }
+            }
+        }
+
+        &__icon-wrap {
+            display: contents;
+        }
+
+        &__icon {
+            max-height: 1rem;
+            width: auto;
+
+            &--inline {
+                margin-left: .5rem;
+            }
+
+            &--bd {
+                max-height: .875rem;
+                margin-top: .25rem;
+            }
+        }
+
         &__content {
             display: contents;
         }
