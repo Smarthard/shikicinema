@@ -4,6 +4,7 @@ import { ShikivideosKindType } from '@app/shared/types/shikicinema/v1/shikivideo
 import { UploaderIdType } from '@app/shared/types/uploader-id.type';
 import { VideoKindEnum } from '@app/modules/player/types/video-kind.enum';
 import { VideoMapperFn } from '@app/shared/types/video-mapper.type';
+import { VideoQualityEnum } from '@app/modules/player/types';
 
 function mapShikicinemaKindToCommon(kind: ShikivideosKindType): VideoKindEnum {
     switch (kind) {
@@ -19,10 +20,11 @@ function mapShikicinemaKindToCommon(kind: ShikivideosKindType): VideoKindEnum {
 }
 
 export const shikicinemaVideoMapper: VideoMapperFn<ShikivideosInterface[]> = (videos) => videos?.map(
-    ({ kind, uploader, ...others }) => ({
+    ({ kind, uploader, quality, ...others }) => ({
         ...others,
         kind: mapShikicinemaKindToCommon(kind),
         urlType: 'iframe',
+        quality: quality.toLocaleLowerCase() as VideoQualityEnum,
         uploader: uploader as UploaderIdType,
     }),
 );

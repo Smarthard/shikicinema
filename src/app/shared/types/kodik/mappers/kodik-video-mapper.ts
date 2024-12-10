@@ -3,13 +3,15 @@ import { KodikAnimeInfo, KodikApiResponse, KodikEpisodes } from '@app/shared/typ
 import { VideoInfoInterface } from '@app/modules/player/types';
 import { VideoMapperFn } from '@app/shared/types/video-mapper.type';
 import { mapKodikKind } from '@app/shared/types/kodik/mappers/map-kodik-kind.function';
+import { mapKodikQuality } from '@app/shared/types/kodik/mappers/map-kodik-quality.function';
 
 
 export const kodikVideoMapper: VideoMapperFn<KodikApiResponse<KodikAnimeInfo>> = ({ results }) => results.flatMap(
-    ({ seasons, translation, quality, link }) => {
+    ({ seasons, translation, quality: kodikQuality, link }) => {
         const author = translation?.title || null;
         const kind = mapKodikKind(translation?.type);
         const uploader = KODIK_UPLOADER;
+        const quality = mapKodikQuality(kodikQuality);
 
         if (seasons) {
             const episodes: VideoInfoInterface[] = [];

@@ -1,5 +1,6 @@
 import { UploaderIdType } from '@app/shared/types/uploader-id.type';
 import { VideoKindEnum } from '@app/modules/player/types/video-kind.enum';
+import { VideoQualityEnum } from '@app/modules/player/types/video-quality.enum';
 
 export interface VideoInfoInterface {
     /* id of the video uploaded to shikicinema
@@ -12,6 +13,6 @@ export interface VideoInfoInterface {
     uploader?: UploaderIdType;
     kind: VideoKindEnum;
     author?: string;
-    quality: string;
+    quality: VideoQualityEnum;
     language: string;
 }

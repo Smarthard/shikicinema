@@ -11,6 +11,20 @@
                                [color]="(selected$ | async)?.author | isSameAuthor: author | getColorForSelectable">
                         {{ author }}
                     </ion-label>
+
+                    <div class="author-accordion__qualities">
+                        @if (videos$ | async | filterByAuthor: author | hasQualities: VideoQualityEnum.DVD) {
+                            <div class="author-accordion__icon-wrap">
+                                <img class="author-accordion__icon author-accordion__icon--dvd" src="/assets/dvd.svg" alt="includes DVD" />
+                            </div>
+                        }
+
+                        @if (videos$ | async | filterByAuthor: author | hasQualities: VideoQualityEnum.BD) {
+                            <div class="author-accordion__icon-wrap">
+                                <img class="author-accordion__icon author-accordion__icon--bd" src="/assets/bd.svg" alt="includes BD" />
+                            </div>
+                        }
+                    </div>
                 </ion-item>
 
                 <div class="ion-padding author-accordion__content" slot="content">
@@ -21,7 +35,24 @@
                             [color]="(selected$ | async) | isSameVideo: video | getColorForSelectable"
                             [title]="video?.url"
                             (click)="$event.stopPropagation(); onSelectionChange(video)">
+
                             {{ video?.url | getUrlDomain }}
+
+                            <img
+                                [class.ion-hide]="video.quality !== VideoQualityEnum.DVD"
+                                class="author-accordion__icon author-accordion__icon--inline author-accordion__icon--dvd"
+                                src="/assets/dvd.svg"
+                                alt="includes DVD"
+                                slot="end"
+                            />
+
+                            <img
+                                [class.ion-hide]="video.quality !== VideoQualityEnum.BD"
+                                class="author-accordion__icon author-accordion__icon--inline author-accordion__icon--bd"
+                                src="/assets/bd.svg"
+                                alt="includes BD"
+                                slot="end"
+                            />
                         </ion-button>
                     }
                 </div>
