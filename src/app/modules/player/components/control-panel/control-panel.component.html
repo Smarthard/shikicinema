@@ -1,6 +1,6 @@
 <div class="control-panel__controls"
     [class.control-panel__controls--minified]="isMinified">
-    <ion-button class="control-panel__btn" fill="outline"
+    <ion-button class="control-panel__btn" fill="clear"
         (click)="onEpisodeControlsClick(selected, 'backward')">
         <ion-icon slot="icon-only" name="play-back-outline" />
     </ion-button>
@@ -14,12 +14,12 @@
         />
     </ion-item>
 
-    <ion-button class="control-panel__btn" fill="outline"
+    <ion-button class="control-panel__btn" fill="clear"
         (click)="onEpisodeControlsClick(selected, 'forward')">
         <ion-icon slot="icon-only" name="play-forward-outline" />
     </ion-button>
 
-    <ion-button class="control-panel__btn watch-btn" fill="outline"
+    <ion-button class="control-panel__btn watch-btn" fill="clear"
         [class.watch-btn--watched]="isWatched"
         (click)="onWatch(selected)">
         @if (isRewatching) {
@@ -30,12 +30,12 @@
     </ion-button>
 
     @if (isMinified) {
-        <ion-button class="control-panel__btn" fill="outline"
+        <ion-button class="control-panel__btn" fill="clear"
             (click)="openVideoModal.emit()">
             <ion-icon slot="icon-only" name="list-outline" />
         </ion-button>
 
-        <ion-button class="control-panel__btn" fill="outline" disabled>
+        <ion-button class="control-panel__btn" fill="clear" disabled>
             <ion-icon slot="icon-only" name="settings-outline" />
         </ion-button>
     }

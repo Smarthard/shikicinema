@@ -1,9 +1,9 @@
 .episode-selector {
     display: flex;
-    gap: 0.25rem;
-    padding: 0.25rem;
-    border: 0.125rem var(--ion-color-primary) solid;
-    border-radius: 100vh;
+    gap: .25rem;
+    padding: .5rem .25rem;
+    background-color: var(--ion-color-light);
+    border-radius: .25rem;
 
     .scrollbar {
         --scrollbar-thumb-color: rgba(var(--ion-color-primary-rgb), 1);
@@ -36,7 +36,7 @@
         font-weight: 600;
 
         &--watched {
-            color: var(--shc-watched-episode-color) !important;
+            color: rgba(var(--shc-watched-episode-color-rgb), 0.85) !important;
         }
 
         &--selected {

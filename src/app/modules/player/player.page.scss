@@ -1,7 +1,8 @@
 @import 'src/scss/mixins';
 
 .player-page {
-    --shc-watched-episode-color: var(--ion-color-success-shade);
+    --shc-watched-episode-color-rgb: 41, 196, 103;
+    --shc-watched-episode-color: rgb(var(--shc-watched-episode-color-rgb));
 
     &__title {
         max-width: 50vw;
