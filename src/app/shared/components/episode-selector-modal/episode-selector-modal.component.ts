@@ -41,7 +41,7 @@ import {
 })
 export class EpisodeSelectorModalComponent extends IonModal {
     @HostBinding('class.episode-selector-modal')
-    private controlPanelClass = true;
+    private episodeSelectorModalClass = true;
 
     private _selected = 1;
 

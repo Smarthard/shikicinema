@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
+import { ModalController } from '@ionic/angular/standalone';
 import { NgLetModule } from 'ng-let';
 import { NgModule } from '@angular/core';
 
@@ -27,6 +28,7 @@ import { WELL_KNOWN_UPLOADERS_TOKEN } from '@app/shared/types/well-known-uploade
 @NgModule({
     declarations: [PlayerPage],
     providers: [
+        ModalController,
         { provide: WELL_KNOWN_UPLOADERS_TOKEN, useValue: WELL_KNOWN_UPLOADERS_MAP },
     ],
     imports: [

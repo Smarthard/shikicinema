@@ -49,12 +49,6 @@
     &__video-selector {
         grid-area: video;
         max-height: 90vh;
-
-        &--modal {
-            height: 100%;
-            min-width: unset !important;
-            overflow: visible !important;
-        }
     }
 
     &__wrapper {

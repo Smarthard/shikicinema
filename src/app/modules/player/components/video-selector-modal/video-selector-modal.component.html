@@ -1,0 +1,31 @@
+<ion-toolbar>
+    <ion-title>Выберите видео</ion-title>
+
+    <ion-buttons slot="start">
+        <ion-button (click)="cancel()">
+            <ion-icon slot="icon-only" name="close-outline" />
+        </ion-button>
+    </ion-buttons>
+
+    <ion-buttons slot="end">
+        <ion-button (click)="submit()">
+            <ion-icon slot="icon-only" name="checkmark-outline" />
+        </ion-button>
+    </ion-buttons>
+</ion-toolbar>
+
+<div class="video-selector-modal__selector-wrap">
+    <app-kind-selector
+        class="video-selector-modal__kind-selector"
+        [kinds]="videos | getActiveKinds"
+        [selected]="selectedKind"
+        (selection)="onKindChange($event)"
+    />
+
+    <app-video-selector
+        class="video-selector-modal__video-selector"
+        [videos]="videos | filterByKind: selectedKind"
+        [selected]="selectedVideo"
+        (selection)="onVideoChange($event)"
+    />
+</div>

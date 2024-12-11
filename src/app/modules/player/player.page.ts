@@ -6,11 +6,9 @@ import {
     Component,
     HostBinding,
     OnInit,
-    ViewChild,
     ViewEncapsulation,
 } from '@angular/core';
-import { IonModal } from '@ionic/angular/common';
-import { Platform } from '@ionic/angular';
+import { ModalController, Platform } from '@ionic/angular';
 import { ReplaySubject, combineLatest, firstValueFrom } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { Title } from '@angular/platform-browser';
@@ -75,9 +73,6 @@ import { updatePlayerPreferencesAction } from '@app/store/settings/actions/setti
 export class PlayerPage implements OnInit {
     @HostBinding('class.player-page')
     private playerPageClass = true;
-
-    @ViewChild('videoSelectorModal')
-    videoSelectorModal: IonModal;
 
     private isMobileSubject$ = new ReplaySubject<boolean>(1);
     private isOrientationPortraitSubject$ = new ReplaySubject<boolean>(1);
@@ -174,6 +169,7 @@ export class PlayerPage implements OnInit {
         private actions$: Actions,
         private toast: ToastController,
         private transloco: TranslocoService,
+        private modalController: ModalController,
     ) {}
 
     ngOnInit(): void {
@@ -287,8 +283,27 @@ export class PlayerPage implements OnInit {
         ).subscribe();
     }
 
-    onOpenVideoSelectorModal(): void {
-        this.videoSelectorModal.present();
+    // TODO: для модалок нужно придумать какой-то сервис - слишком много бойлерплейта
+    async onOpenVideoSelectorModal(): Promise<void> {
+        const componentProps = {
+            videos: await firstValueFrom(this.episodeVideos$),
+            selectedKind: await firstValueFrom(this.currentKind$),
+            selectedVideo: await firstValueFrom(this.currentVideo$),
+        };
+        const { VideoSelectorModalComponent } = await import('@app/modules/player/components/video-selector-modal');
+
+        const modal = await this.modalController.create({
+            component: VideoSelectorModalComponent,
+            componentProps,
+        });
+
+        modal.present();
+
+        const { data: newSelected, role } = await modal.onDidDismiss<VideoInfoInterface>();
+
+        if (role === 'submit') {
+            this.onVideoChange(newSelected);
+        }
     }
 
     async onWatch(episode: number, isUnwatch = false): Promise<void> {
