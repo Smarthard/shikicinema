@@ -10,9 +10,9 @@
                 } @else {
                     <ion-text>
                         <h1 class="player-page__title text-ellipsis"
-                            [title]="(anime$ | async)?.russian">
+                            [title]="(animeName$ | async)">
                             <a [href]="'https://shikimori.one/animes/' + (animeId$ | async)">
-                                {{ (anime$ | async)?.russian }}
+                                {{ animeName$ | async }}
                             </a>
                         </h1>
                     </ion-text>

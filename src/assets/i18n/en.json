@@ -66,6 +66,7 @@
     },
     "HOME_MODULE": {
         "HOME_PAGE": {
+            "PAGE_TITLE": "{{ nickname }} anime list",
             "ANIME_SEARCHBAR_PLACEHOLDER": "Search anime...",
             "GRIDS": {
                 "PLANNED": "Planned to watch",
@@ -79,6 +80,10 @@
     },
     "PLAYER_MODULE": {
         "PLAYER_PAGE": {
+            "PAGE_TITLE": {
+                "MOVIE": "{{ title }} | movie",
+                "SERIES": "{{ title }} | episode {{ episode }}"
+            },
             "WATCH_ACTION": {
                 "SUCCESS": "Watched",
                 "FAILURE": "Failed"

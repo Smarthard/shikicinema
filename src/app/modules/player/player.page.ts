@@ -42,6 +42,7 @@ import {
     watchAnimeAction,
     watchAnimeSuccessAction,
 } from '@app/modules/player/store/actions';
+import { getAnimeName } from '@app/shared/utils/get-anime-name.function';
 import { getDomain } from '@app/shared/utils/get-domain.function';
 import { getLastAiredEpisode, isEpisodeWatched } from '@app/modules/player/utils';
 import {
@@ -119,6 +120,9 @@ export class PlayerPage implements OnInit {
     );
     anime$ = this.animeId$.pipe(
         switchMap((animeId) => this.store.select(selectPlayerAnime(animeId))),
+    );
+    animeName$ = combineLatest([this.anime$, this.transloco.langChanges$]).pipe(
+        map(([anime, lang]) => getAnimeName(anime, lang)),
     );
     lastAiredEpisode$ = this.anime$.pipe(map(getLastAiredEpisode));
 
@@ -256,8 +260,16 @@ export class PlayerPage implements OnInit {
         this.store.dispatch(updatePlayerPreferencesAction({ animeId: anime.id, author, kind, domain }));
     }
 
-    changeTitle(anime: AnimeBriefInfoInterface, episode: number): void {
-        this.title.setTitle(`${anime.russian || anime.name} | серия ${episode}`);
+    async changeTitle(anime: AnimeBriefInfoInterface, episode: number): Promise<void> {
+        // TODO: добавить селектор из настроек предпочтений названия аниме, а не просто по языку пользователя
+        const animeName = await firstValueFrom(this.animeName$);
+        const isSeries = getLastAiredEpisode(anime) > 1;
+        const translationKey = isSeries
+            ? 'PLAYER_MODULE.PLAYER_PAGE.PAGE_TITLE.SERIES'
+            : 'PLAYER_MODULE.PLAYER_PAGE.PAGE_TITLE.MOVIE';
+        const title = this.transloco.translate(translationKey, { title: animeName, episode });
+
+        this.title.setTitle(title);
     }
 
     onVideoChange(video: VideoInfoInterface, isShouldUpdatePref = true): void {

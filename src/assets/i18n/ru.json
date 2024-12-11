@@ -66,6 +66,7 @@
     },
     "HOME_MODULE": {
         "HOME_PAGE": {
+            "PAGE_TITLE": "Список аниме {{ nickname }}",
             "ANIME_SEARCHBAR_PLACEHOLDER": "Поиск аниме...",
             "GRIDS": {
                 "PLANNED": "Запланировано",
@@ -79,6 +80,10 @@
     },
     "PLAYER_MODULE": {
         "PLAYER_PAGE": {
+            "PAGE_TITLE": {
+                "MOVIE": "{{ title }} | фильм",
+                "SERIES": "{{ title }} | серия {{ episode }}"
+            },
             "WATCH_ACTION": {
                 "SUCCESS": "Просмотрено",
                 "FAILURE": "Ошибка"

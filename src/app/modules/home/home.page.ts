@@ -1,4 +1,3 @@
-import { BreakpointObserver } from '@angular/cdk/layout';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -17,6 +16,8 @@ import {
 
 import { AnimeGridInterface } from '@app/modules/home/types/anime-grid.interface';
 import { ResourceIdType } from '@app/shared/types/resource-id.type';
+import { Title } from '@angular/platform-browser';
+import { TranslocoService } from '@ngneat/transloco';
 import { UserAnimeRate } from '@app/shared/types/shikimori/user-anime-rate';
 import { UserBriefInfoInterface } from '@app/shared/types/shikimori/user-brief-info.interface';
 import { UserRateStatusType } from '@app/shared/types/shikimori/user-rate-status.type';
@@ -60,22 +61,28 @@ export class HomePage implements OnInit {
     sectionVisibilitySubject$: Subject<VisibilityChangeInterface>;
 
     constructor(
-        private readonly breakpointObserver: BreakpointObserver,
-        private readonly store: Store,
+        private readonly _store: Store,
+        private readonly _title: Title,
+        private readonly _transloco: TranslocoService,
     ) {}
 
     ngOnInit() {
-        this.initializeValues();
-        this.initializeSubscriptions();
+        this.initValues();
+        this.initSubscriptions();
     }
 
-    initializeSubscriptions(): void {
+    initSubscriptions(): void {
         this.currentUser$
             .pipe(
                 untilDestroyed(this),
                 skipWhile((currentUser) => !currentUser?.id),
                 take(1),
-                tap((currentUser) => this.getUserAnimeRatesByStatus(currentUser.id, 'planned')),
+                tap(({ id, nickname }) => {
+                    const title = this._transloco.translate('HOME_MODULE.HOME_PAGE.PAGE_TITLE', { nickname });
+
+                    this.getUserAnimeRatesByStatus(id, 'planned');
+                    this._title.setTitle(title);
+                }),
             )
             .subscribe();
 
@@ -92,25 +99,25 @@ export class HomePage implements OnInit {
             .subscribe();
     }
 
-    initializeValues(): void {
+    initValues(): void {
         this.hiddenGridMap = new Map<UserRateStatusType, boolean>();
         this.sectionVisibilitySubject$ = new Subject<VisibilityChangeInterface>();
 
-        this.currentUser$ = this.store.select(selectShikimoriCurrentUser);
+        this.currentUser$ = this._store.select(selectShikimoriCurrentUser);
 
-        this.planned$ = this.store.select(selectRatesByStatus('planned'));
-        this.watching$ = this.store.select(selectRatesByStatus('watching'));
-        this.rewatching$ = this.store.select(selectRatesByStatus('rewatching'));
-        this.completed$ = this.store.select(selectRatesByStatus('completed'));
-        this.onHold$ = this.store.select(selectRatesByStatus('on_hold'));
-        this.dropped$ = this.store.select(selectRatesByStatus('dropped'));
+        this.planned$ = this._store.select(selectRatesByStatus('planned'));
+        this.watching$ = this._store.select(selectRatesByStatus('watching'));
+        this.rewatching$ = this._store.select(selectRatesByStatus('rewatching'));
+        this.completed$ = this._store.select(selectRatesByStatus('completed'));
+        this.onHold$ = this._store.select(selectRatesByStatus('on_hold'));
+        this.dropped$ = this._store.select(selectRatesByStatus('dropped'));
 
-        this.isPlannedLoaded$ = this.store.select(selectIsRatesLoadedByStatus('planned'));
-        this.isWatchingLoaded$ = this.store.select(selectIsRatesLoadedByStatus('watching'));
-        this.isRewatchingLoaded$ = this.store.select(selectIsRatesLoadedByStatus('rewatching'));
-        this.isCompletedLoaded$ = this.store.select(selectIsRatesLoadedByStatus('completed'));
-        this.isOnHoldLoaded$ = this.store.select(selectIsRatesLoadedByStatus('on_hold'));
-        this.isDroppedLoaded$ = this.store.select(selectIsRatesLoadedByStatus('dropped'));
+        this.isPlannedLoaded$ = this._store.select(selectIsRatesLoadedByStatus('planned'));
+        this.isWatchingLoaded$ = this._store.select(selectIsRatesLoadedByStatus('watching'));
+        this.isRewatchingLoaded$ = this._store.select(selectIsRatesLoadedByStatus('rewatching'));
+        this.isCompletedLoaded$ = this._store.select(selectIsRatesLoadedByStatus('completed'));
+        this.isOnHoldLoaded$ = this._store.select(selectIsRatesLoadedByStatus('on_hold'));
+        this.isDroppedLoaded$ = this._store.select(selectIsRatesLoadedByStatus('dropped'));
 
         this.animeGrids = [
             {
@@ -161,7 +168,7 @@ export class HomePage implements OnInit {
     }
 
     getUserAnimeRatesByStatus(userId: ResourceIdType, status: UserRateStatusType) {
-        this.store.dispatch(loadAnimeRateByStatusAction({ userId, status }));
+        this._store.dispatch(loadAnimeRateByStatusAction({ userId, status }));
     }
 
     isSectionHidden(isLoaded: boolean, rates: UserAnimeRate[]): boolean {

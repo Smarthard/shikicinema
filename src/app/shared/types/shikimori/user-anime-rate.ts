@@ -38,6 +38,10 @@ export interface Rate<K = string, S = string> {
 export interface AnimeRate extends Rate<AnimeKindType, UserRateStatusType> {
     episodes: number;
     episodes_aired: number;
+
+    // для совместимости с полями названий аниме в AnimeBriefInfoInterface
+    japanese: never;
+    english: never;
 }
 
 export interface MangaRate extends Rate<MangaKindType, UserRateStatusType> {

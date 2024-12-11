@@ -6,7 +6,7 @@
         width="auto"
         [link]="rate.anime | getPlayerLink"
         [imageUrl]="'https://nyaa.shikimori.one' + rate.anime.image.original"
-        [name]="rate.anime.russian"
+        [name]="getAnimeName(rate.anime, currentLang$ | async)"
         [kind]="rate.anime.kind"
         [releaseDate]="rate.anime.released_on || rate.anime.aired_on"
     ></app-card-grid-item>
