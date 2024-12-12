@@ -59,5 +59,13 @@ jobs:
       - name: Create artifact
         uses: actions/upload-artifact@v4
         with:
-          name: shikicinema-${{ github.ref_name }}-${{ matrix.manifest == 'v2' && 'firefox' || 'chrome' }})
+          name: shikicinema-${{ github.ref_name }}-${{ matrix.manifest == 'v2' && 'firefox' || 'chrome' }}
           path: dist/**
+
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        with:
+          draft: true
+          files: shikicinema-*.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
