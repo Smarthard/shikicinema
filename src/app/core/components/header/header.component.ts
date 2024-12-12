@@ -119,7 +119,7 @@ export class HeaderComponent implements OnInit {
         this.searchbarFocusedSubject$.next(hasFocus);
     }
 
-    async openResult([result, target]: [ SearchbarResult, ResultOpenTarget ]): Promise<void> {
+    async openResult([result, target]: [SearchbarResult, ResultOpenTarget]): Promise<void> {
         this.isAnimeListPopoverOpen = false;
 
         if (target === 'internal') {

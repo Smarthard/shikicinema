@@ -5,14 +5,14 @@
             [class.toolbar--searchbar_focused]="(isSearchbarFocusedOnMobile$ | async) === true"
         >
             <ion-title class="toolbar__title ion-hide-lg-down">
-                {{ 'GLOBAL.APP_NAME' | transloco }}
+                <a [routerLink]="(currentUser$ | async) ? '/home' : null">{{ 'GLOBAL.APP_NAME' | transloco }}</a>
             </ion-title>
 
             <ion-searchbar
                 id="anime-searchbar"
                 class="toolbar__search"
                 debounce="500"
-                (ionChange)="onAnimeSearch($event)"
+                (ionInput)="onAnimeSearch($event)"
                 (click)="isAnimeListPopoverOpen = true"
                 (ionFocus)="onSearchbarFocusChange(true)"
                 (ionBlur)="onSearchbarFocusChange(false)"
