@@ -33,7 +33,7 @@ $grid-searchbar-column-width: 10fr;
         &__title {
             margin: 0 auto;
 
-            [href] {
+            a {
                 color: var(--ion-text-color);
             }
         }
