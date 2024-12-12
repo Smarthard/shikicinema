@@ -65,6 +65,8 @@ jobs:
 
       - name: Download artifact
         uses: actions/download-artifact@v4
+
+      - name: debug
         run: ls -R
 
       - name: Release
