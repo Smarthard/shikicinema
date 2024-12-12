@@ -4,14 +4,20 @@ const ESLintPlugin = require('eslint-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 
-function processManifest(content) {
-    const PROCESSED_MANIFEST = JSON.parse(content.toString());
-
-    PROCESSED_MANIFEST.content_security_policy += isProduction ? '' : ' \'unsafe-eval\'';
-    return JSON.stringify(PROCESSED_MANIFEST);
-}
 
 const isProduction = process.env.NODE_ENV === 'production';
+const manifestVersion = process.env.MANIFEST_VERSION ?? 'v2';
+
+function processManifest(content) {
+    const manifestContents = JSON.parse(content.toString());
+
+    if (manifestVersion !== 'v3') {
+        manifestContents.content_security_policy += isProduction ? '' : ' \'unsafe-eval\'';
+    }
+
+    return JSON.stringify(manifestContents);
+}
+
 const webpackConfig = {
     mode: isProduction ? 'production' : 'development',
     context: path.resolve(__dirname, ''),
@@ -45,7 +51,8 @@ const webpackConfig = {
                     from: './extension-src/watch-button.css'
                 },
                 {
-                    from: './extension-src/manifest.json',
+                    from: `./extension-src/manifest.${manifestVersion}.json`,
+                    to: 'manifest.json',
                     transform: (content, _) => processManifest(content),
                 }
             ]
