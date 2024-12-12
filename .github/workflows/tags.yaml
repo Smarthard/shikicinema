@@ -63,6 +63,10 @@ jobs:
           path: dist/**
           compression-level: 9
 
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        run: ls -R
+
       - name: Release
         uses: softprops/action-gh-release@v2
         with:
