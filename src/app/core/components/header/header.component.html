@@ -5,7 +5,7 @@
             [class.toolbar--searchbar_focused]="(isSearchbarFocusedOnMobile$ | async) === true"
         >
             <ion-title class="toolbar__title ion-hide-lg-down">
-                {{ 'GLOBAL.APP_NAME' | transloco }}
+                <a routerLink="/home">{{ 'GLOBAL.APP_NAME' | transloco }}</a>
             </ion-title>
 
             <ion-searchbar

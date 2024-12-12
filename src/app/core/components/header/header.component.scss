@@ -32,11 +32,15 @@ $grid-searchbar-column-width: 10fr;
 
         &__title {
             margin: 0 auto;
+
+            [href] {
+                color: var(--ion-text-color);
+            }
         }
 
         &__title,
         &__search,
-        &__menu-btn, {
+        &__menu-btn {
             padding: 0;
         }
     }
