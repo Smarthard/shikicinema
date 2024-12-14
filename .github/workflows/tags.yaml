@@ -67,13 +67,13 @@ jobs:
         uses: actions/download-artifact@v4
 
       - name: debug
-        run: ls -R
+        run: ls -lahR
 
       - name: Release
         uses: softprops/action-gh-release@v2
         with:
           draft: true
           files: |
-            *.zip
+            */*.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
