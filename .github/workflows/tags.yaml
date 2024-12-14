@@ -57,14 +57,7 @@ jobs:
         run: npm run build:prod
 
       - name: Create artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: shikicinema-${{ github.ref_name }}-${{ matrix.manifest == 'v2' && 'firefox' || 'chrome' }}.zip
-          path: dist/**
-          compression-level: 9
-
-      - name: Download artifact
-        uses: actions/download-artifact@v4
+        run: cd dist/ && zip -qr9 ../releases/shikicinema-${{ github.ref_name }}-${{ matrix.manifest == 'v2' && 'firefox' || 'chrome' }}.zip . && cd -
 
       - name: debug
         run: ls -lahR
@@ -74,6 +67,6 @@ jobs:
         with:
           draft: true
           files: |
-            */*.zip
+            releases/*.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
