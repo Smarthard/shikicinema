@@ -2,11 +2,14 @@ import {
     ChangeDetectionStrategy,
     Component,
     HostBinding,
+    Inject,
     Input,
     ViewEncapsulation,
 } from '@angular/core';
+import { Observable } from 'rxjs';
 import { TranslocoService } from '@ngneat/transloco';
 
+import { SHIKIMORI_DOMAIN_TOKEN } from '@app/core/providers/shikimori-domain';
 import { UserAnimeRate } from '@app/shared/types/shikimori/user-anime-rate';
 import { getAnimeName } from '@app/shared/utils/get-anime-name.function';
 import { trackById } from '@app/shared/utils/common-ngfor-tracking';
@@ -34,5 +37,9 @@ export class CardGridComponent {
 
     userAnimeRatesFake = new Array<number>(30).fill(0);
 
-    constructor(private readonly _transloco: TranslocoService) {}
+    constructor(
+        @Inject(SHIKIMORI_DOMAIN_TOKEN)
+        readonly shikimoriDomain$: Observable<string>,
+        private readonly _transloco: TranslocoService,
+    ) {}
 }

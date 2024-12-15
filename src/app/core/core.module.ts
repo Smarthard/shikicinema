@@ -15,8 +15,10 @@ import { GoExternalPage } from '@app/core/pages/go-external/go-external.page';
 import { HeaderComponent } from '@app/core/components/header/header.component';
 import { ImageCardModule } from '@app/shared/components/image-card/image-card.module';
 import { PLATFORM_API_TOKEN, platformApiFactory } from '@app/shared/services/platform-api/platform-api.factory';
+import { SHIKIMORI_DOMAIN_TOKEN, shikimoriDomainFactory } from '@app/core/providers/shikimori-domain';
 import { SearchbarResultsComponent } from '@app/core/components/searchbar-results/searchbar-results.component';
 import { ShikimoriClient } from '@app/shared/services/shikimori-client.service';
+import { ShikimoriDomainsService } from '@app-root/app/core/services/shikimori-domain.service';
 import { ShikimoriMediaNameModule } from '@app/shared/pipes/shikimori-media-name/shikimori-media-name.module';
 import { SkeletonBlockModule } from '@app/shared/components/skeleton-block/skeleton-block.module';
 import { TranslocoRootModule } from '@app/core/transloco-root.module';
@@ -35,6 +37,7 @@ const components = [
         ShikimoriClient,
         provideScrollbarPolyfill('assets/scroll-timeline-polyfill.js'),
         { provide: PLATFORM_API_TOKEN, useFactory: platformApiFactory, deps: [ElectronIpcProxyService] },
+        { provide: SHIKIMORI_DOMAIN_TOKEN, useFactory: shikimoriDomainFactory, deps: [ShikimoriDomainsService] },
     ],
     imports: [
         BrowserModule,

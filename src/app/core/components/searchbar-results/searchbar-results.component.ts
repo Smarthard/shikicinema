@@ -2,12 +2,15 @@ import {
     ChangeDetectionStrategy,
     Component,
     EventEmitter,
+    Inject,
     Input,
     Output,
     ViewEncapsulation,
 } from '@angular/core';
 
+import { Observable } from 'rxjs';
 import { ResultOpenTarget, SearchbarResult } from '@app/shared/types/searchbar.types';
+import { SHIKIMORI_DOMAIN_TOKEN } from '@app/core/providers/shikimori-domain';
 import { ShikimoriMediaNameType } from '@app/shared/types/shikimori/shikimori-media-name.type';
 import { trackById } from '@app/shared/utils/common-ngfor-tracking';
 
@@ -34,6 +37,11 @@ export class SearchbarResultsComponent {
     fakeResults = new Array<number>(15).fill(0);
 
     trackById = trackById;
+
+    constructor(
+        @Inject(SHIKIMORI_DOMAIN_TOKEN)
+        readonly shikimoriDomain$: Observable<string>,
+    ) {}
 
     @Input()
     set originalNameFirst(isOriginFirst: boolean) {

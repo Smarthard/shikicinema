@@ -1,7 +1,15 @@
+import { Observable, firstValueFrom } from 'rxjs';
+import { inject } from '@angular/core';
+
+import { SHIKIMORI_DOMAIN_TOKEN } from '@app/core/providers/shikimori-domain';
+
 /* eslint-disable no-use-before-define */
 export function getAuthorizationCode(shikimoriOAuthClientId: string): Promise<string> {
-    return new Promise((resolve, reject) => {
-        const codeUrl = new URL('https://shikimori.one/oauth/authorize');
+    return new Promise(async (resolve, reject) => {
+        const shikimoriDomain$ = inject<Observable<string>>(SHIKIMORI_DOMAIN_TOKEN);
+        const shikimoriDomain = await firstValueFrom(shikimoriDomain$);
+
+        const codeUrl = new URL(`${shikimoriDomain}/oauth/authorize`);
         codeUrl.searchParams.set('client_id', shikimoriOAuthClientId);
         codeUrl.searchParams.set('redirect_uri', 'urn:ietf:wg:oauth:2.0:oob');
         codeUrl.searchParams.set('response_type', 'code');

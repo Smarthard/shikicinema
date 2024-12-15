@@ -1,7 +1,15 @@
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import {
+    HttpClient,
+    HttpHeaders,
+    HttpParams,
+} from '@angular/common/http';
+import { Inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import {
+    map,
+    switchMap,
+    take,
+} from 'rxjs/operators';
 
 import { AnimeBriefInfoInterface } from '@app/shared/types/shikimori/anime-brief-info.interface';
 import { Comment } from '@app/shared/types/shikimori/comment';
@@ -12,6 +20,8 @@ import { EpisodeNotification } from '@app/shared//types/shikimori/episode-notifi
 import { EpisodeNotificationResponse } from '@app/shared/types/shikimori/episode-notification-response.interface';
 import { FindAnimeQuery } from '@app/shared/types/shikimori/queries/find-anime-query';
 import { ResourceIdType } from '@app/shared/types/resource-id.type';
+import { SHIKIMORI_DOMAIN_TOKEN } from '@app/core/providers/shikimori-domain';
+import { ShikimoriCredentials } from '@app/store/auth/types/auth-store.interface';
 import { Topic } from '@app/shared/types/shikimori/topic';
 import { UserAnimeRate } from '@app/shared/types/shikimori/user-anime-rate';
 import { UserAnimeRatesQuery } from '@app/shared/types/shikimori/queries/user-anime-rates-query';
@@ -27,14 +37,15 @@ import { toShikimoriCredentials } from '@app/shared/types/shikimori/mappers/auth
     providedIn: 'root',
 })
 export class ShikimoriClient {
-    readonly baseUri = environment.shikimori.apiURI;
     readonly episodeNotificationToken = environment.shikimori.episodeNotificationToken;
 
     constructor(
+        @Inject(SHIKIMORI_DOMAIN_TOKEN)
+        private shikimoriDomain$: Observable<string>,
         private http: HttpClient,
     ) {}
 
-    getNewToken(authCode: string) {
+    getNewToken(authCode: string): Observable<ShikimoriCredentials> {
         const params = new HttpParams()
             .set('grant_type', 'authorization_code')
             .set('client_id', environment.shikimori.authClientId)
@@ -42,25 +53,34 @@ export class ShikimoriClient {
             .set('code', authCode)
             .set('redirect_uri', 'urn:ietf:wg:oauth:2.0:oob');
 
-        return this.http.post<Credentials>('https://shikimori.one/oauth/token', null, { params })
-            .pipe(map(toShikimoriCredentials));
+        return this.shikimoriDomain$.pipe(
+            take(1),
+            switchMap((domain) => this.http.post<Credentials>(`${domain}/oauth/token`, null, { params })
+                .pipe(map(toShikimoriCredentials)),
+            ),
+        );
     }
 
-    refreshToken(refreshToken: string) {
+    refreshToken(refreshToken: string): Observable<ShikimoriCredentials> {
         const params = new HttpParams()
             .set('grant_type', 'refresh_token')
             .set('client_id', environment.shikimori.authClientId)
             .set('client_secret', environment.shikimori.authClientSecret)
             .set('refresh_token', refreshToken);
 
-        return this.http.post<Credentials>('https://shikimori.one/oauth/token', null, { params })
-            .pipe(map(toShikimoriCredentials));
+        return this.shikimoriDomain$.pipe(
+            take(1),
+            switchMap((domain) => this.http.post<Credentials>(`${domain}/oauth/token`, null, { params })
+                .pipe(map(toShikimoriCredentials)),
+            ),
+        );
     }
 
-    getCurrentUser() {
-        const url = `${this.baseUri}/api/users/whoami`;
-
-        return this.http.get<UserBriefInfoInterface>(url);
+    getCurrentUser(): Observable<UserBriefInfoInterface> {
+        return this.shikimoriDomain$.pipe(
+            take(1),
+            switchMap((domain) => this.http.get<UserBriefInfoInterface>(`${domain}/api/users/whoami`)),
+        );
     }
 
     /**
@@ -71,9 +91,10 @@ export class ShikimoriClient {
      * @return {Observable} shikimori user info by id or nickname
      */
     getUser(idOrUsername: ResourceIdType): Observable<UserInterface> {
-        const url = `${this.baseUri}/api/users/${idOrUsername}`;
-
-        return this.http.get<UserInterface>(url);
+        return this.shikimoriDomain$.pipe(
+            take(1),
+            switchMap((domain) => this.http.get<UserInterface>(`${domain}/api/users/${idOrUsername}`)),
+        );
     }
 
     /**
@@ -94,24 +115,26 @@ export class ShikimoriClient {
      * @return {Observable} shikimori user shorter info by id or nickname
      */
     getUserBriefInfo(idOrUsername: ResourceIdType): Observable<UserBriefInfoInterface> {
-        const url = `${this.baseUri}/api/users/${idOrUsername}/info`;
-
-        return this.http.get<UserBriefInfoInterface>(url);
+        return this.shikimoriDomain$.pipe(
+            take(1),
+            switchMap((domain) => this.http.get<UserBriefInfoInterface>(`${domain}/api/users/${idOrUsername}/info`)),
+        );
     }
 
-    getUserRates(userId?: ResourceIdType) {
-        const url = `${this.baseUri}/api/v2/user_rates`;
+    getUserRates(userId?: ResourceIdType): Observable<UserBriefRateInterface[]> {
         let params = new HttpParams();
 
         if (userId) {
             params = params.set('user_id', userId);
         }
 
-        return this.http.get<UserBriefRateInterface[]>(url, { params });
+        return this.shikimoriDomain$.pipe(
+            take(1),
+            switchMap((domain) => this.http.get<UserBriefRateInterface[]>(`${domain}/api/v2/user_rates`, { params })),
+        );
     }
 
-    getUserAnimeRates(userId: ResourceIdType, query?: UserAnimeRatesQuery) {
-        const url = `${this.baseUri}/api/users/${userId}/anime_rates`;
+    getUserAnimeRates(userId: ResourceIdType, query?: UserAnimeRatesQuery): Observable<UserAnimeRate[]> {
         let params = setPaginationToParams(query);
 
         if (query?.censored) {
@@ -122,39 +145,51 @@ export class ShikimoriClient {
             params = params.set('status', query.status);
         }
 
-        return this.http.get<UserAnimeRate[]>(url, { params });
+        return this.shikimoriDomain$.pipe(
+            take(1),
+            switchMap(
+                (domain) => this.http.get<UserAnimeRate[]>(`${domain}/api/users/${userId}/anime_rates`, { params }),
+            ),
+        );
     }
 
-    findAnimes(query?: FindAnimeQuery) {
-        const url = `${this.baseUri}/api/animes`;
+    findAnimes(query?: FindAnimeQuery): Observable<AnimeBriefInfoInterface[]> {
         let params = setPaginationToParams(query);
 
         if (query?.search) {
             params = params.set('search', query.search);
         }
 
-        return this.http.get<AnimeBriefInfoInterface[]>(url, { params });
+        return this.shikimoriDomain$.pipe(
+            take(1),
+            switchMap((domain) => this.http.get<AnimeBriefInfoInterface[]>(`${domain}/api/animes`, { params })),
+        );
     }
 
-    getAnimeInfo(animeId: string) {
-        const url = `${this.baseUri}/api/animes/${animeId}`;
-
-        return this.http.get<AnimeBriefInfoInterface>(url);
+    getAnimeInfo(animeId: string): Observable<AnimeBriefInfoInterface> {
+        return this.shikimoriDomain$.pipe(
+            take(1),
+            switchMap((domain) => this.http.get<AnimeBriefInfoInterface>(`${domain}/api/animes/${animeId}`)),
+        );
     }
 
-    createUserRate(userRates: Partial<UserAnimeRate>) {
-        const url = `${this.baseUri}/api/v2/user_rates`;
-
-        return this.http.post<UserAnimeRate>(url, userRates);
+    createUserRate(userRates: Partial<UserAnimeRate>): Observable<UserAnimeRate> {
+        return this.shikimoriDomain$.pipe(
+            take(1),
+            switchMap((domain) => this.http.post<UserAnimeRate>(`${domain}/api/v2/user_rates`, userRates)),
+        );
     }
 
-    updateUserRate(userRates: Partial<UserAnimeRate>) {
-        const url = `${this.baseUri}/api/v2/user_rates/${userRates?.id}`;
-
-        return this.http.patch<UserAnimeRate>(url, userRates);
+    updateUserRate(userRates: Partial<UserAnimeRate>): Observable<UserAnimeRate> {
+        return this.shikimoriDomain$.pipe(
+            take(1),
+            switchMap(
+                (domain) => this.http.patch<UserAnimeRate>(`${domain}/api/v2/user_rates/${userRates?.id}`, userRates),
+            ),
+        );
     }
 
-    getTopics(animeId: number, episode?: number, revalidate = true) {
+    getTopics(animeId: number, episode?: number, revalidate = true): Observable<Topic[]> {
         let headers = new HttpHeaders();
         let params = new HttpParams()
             .set('kind', 'episode');
@@ -169,10 +204,15 @@ export class ShikimoriClient {
                 .set('Pragma', 'no-cache');
         }
 
-        return this.http.get<Topic[]>(`${this.baseUri}/api/animes/${animeId}/topics`, { params, headers });
+        return this.shikimoriDomain$.pipe(
+            take(1),
+            switchMap(
+                (domain) => this.http.get<Topic[]>(`${domain}/api/animes/${animeId}/topics`, { params, headers }),
+            ),
+        );
     }
 
-    createEpisodeTopic(animeId: ResourceIdType, episode: number) {
+    createEpisodeTopic(animeId: ResourceIdType, episode: number): Observable<EpisodeNotificationResponse> {
         const body: EpisodeNotification = {
             episode_notification: {
                 anime_id: animeId,
@@ -182,10 +222,15 @@ export class ShikimoriClient {
             token: this.episodeNotificationToken,
         };
 
-        return this.http.post<EpisodeNotificationResponse>(`${this.baseUri}/api/v2/episode_notifications`, body);
+        return this.shikimoriDomain$.pipe(
+            take(1),
+            switchMap(
+                (domain) => this.http.post<EpisodeNotificationResponse>(`${domain}/api/v2/episode_notifications`, body),
+            ),
+        );
     }
 
-    getComments(commentableId: ResourceIdType, page = 1, limit = 30, desc: '0' | '1' = '0') {
+    getComments(commentableId: ResourceIdType, page = 1, limit = 30, desc: '0' | '1' = '0'): Observable<Comment[]> {
         let params = new HttpParams()
             .set('commentable_id', `${commentableId}`)
             .set('commentable_type', 'Topic')
@@ -196,10 +241,13 @@ export class ShikimoriClient {
             params = params.set('desc', desc);
         }
 
-        return this.http.get<Comment[]>(`${this.baseUri}/api/comments`, { params });
+        return this.shikimoriDomain$.pipe(
+            take(1),
+            switchMap((domain) => this.http.get<Comment[]>(`${domain}/api/comments`, { params })),
+        );
     }
 
-    createComment(commentableId: ResourceIdType, comment: string) {
+    createComment(commentableId: ResourceIdType, comment: string): Observable<Comment> {
         const body: CreateComment = {
             comment: {
                 body: comment,
@@ -212,6 +260,9 @@ export class ShikimoriClient {
             frontend: false,
         };
 
-        return this.http.post<Comment>(`${this.baseUri}/api/comments`, body);
+        return this.shikimoriDomain$.pipe(
+            take(1),
+            switchMap((domain) => this.http.post<Comment>(`${domain}/api/comments`, body)),
+        );
     }
 }

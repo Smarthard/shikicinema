@@ -59,9 +59,6 @@ jobs:
       - name: Create artifact
         run: cd dist/ && zip -qr9 ../shikicinema-${{ github.ref_name }}-${{ matrix.manifest == 'v2' && 'firefox' || 'chrome' }}.zip . && cd -
 
-      - name: debug
-        run: ls -lahR
-
       - name: Release
         uses: softprops/action-gh-release@v2
         with:

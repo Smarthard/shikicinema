@@ -5,11 +5,17 @@ import {
     ChangeDetectionStrategy,
     Component,
     HostBinding,
+    Inject,
     OnInit,
     ViewEncapsulation,
 } from '@angular/core';
 import { ModalController, Platform } from '@ionic/angular';
-import { ReplaySubject, combineLatest, firstValueFrom } from 'rxjs';
+import {
+    Observable,
+    ReplaySubject,
+    combineLatest,
+    firstValueFrom,
+} from 'rxjs';
 import { Store } from '@ngrx/store';
 import { Title } from '@angular/platform-browser';
 import { ToastController } from '@ionic/angular/standalone';
@@ -28,6 +34,7 @@ import {
 
 import { AnimeBriefInfoInterface } from '@app/shared/types/shikimori/anime-brief-info.interface';
 import { NoPreferenceSymbol } from '@app/store/settings/types';
+import { SHIKIMORI_DOMAIN_TOKEN } from '@app/core/providers/shikimori-domain';
 import { VideoInfoInterface } from '@app/modules/player/types';
 import { VideoKindEnum } from '@app/modules/player/types/video-kind.enum';
 import { filterByEpisode } from '@app/shared/utils/filter-by-episode.function';
@@ -164,6 +171,8 @@ export class PlayerPage implements OnInit {
     );
 
     constructor(
+        @Inject(SHIKIMORI_DOMAIN_TOKEN)
+        readonly shikimoriDomain$: Observable<string>,
         private store: Store,
         private route: ActivatedRoute,
         private router: Router,
