@@ -232,7 +232,7 @@ export class PlayerPage implements OnInit {
             tap(([anime, episode]) => {
                 this.changeTitle(anime, episode);
 
-                this.store.dispatch(getTopicsAction({ animeId: anime.id, episode }));
+                this.store.dispatch(getTopicsAction({ animeId: anime.id, episode, revalidate: false }));
                 this.store.dispatch(getCommentsAction({ animeId: anime.id, episode, page: 1, limit: 30 }));
             }),
             untilDestroyed(this),

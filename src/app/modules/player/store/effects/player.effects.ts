@@ -150,7 +150,7 @@ export class PlayerEffects {
         ofType(getTopicsAction),
         concatLatestFrom(({ animeId, episode }) => this.store$.select(selectPlayerTopic(animeId, episode))),
         filter(([, topic]) => !topic?.id),
-        switchMap(([{ animeId, episode }]) => this.shikimori.getTopics(animeId, episode).pipe(
+        switchMap(([{ animeId, episode, revalidate }]) => this.shikimori.getTopics(animeId, episode, revalidate).pipe(
             map((topics) => getTopicsSuccessAction({ animeId, episode, topics })),
             catchError((errors) => of(getTopicsFailureAction({ errors }))),
         )),
