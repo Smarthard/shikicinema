@@ -20,6 +20,23 @@
             }
         },
         "VIDEO": {
+            "QUALITIES": {
+                "TV": "TV version",
+                "WEB": "Web version",
+                "DVD": "DVD release",
+                "BD": "Blu-Ray release",
+                "UNKNOWN": "Unknown"
+            },
+            "LANGUAGES": {
+                "RUSSIAN": "Russian",
+                "UKRANIAN": "Ukranian",
+                "BELORUSSIAN": "Belorussian",
+                "KAZAKH": "Kazakh",
+                "ENGLISH": "English",
+                "JAPANESE": "Japanese",
+                "CHINESE": "Chinese",
+                "KOREAN": "Korean"
+            },
             "KINDS": {
                 "DUBBING": "Dubbing",
                 "SUBTITLES": "Subtitles",
@@ -55,6 +72,11 @@
                 "LOGIN": {
                     "SUCCESS": "Logged in as {{ nickname }}",
                     "FAILURE": "Couldn't login to Shikimori"
+                }
+            },
+            "SHIKICINEMA": {
+                "UPLOAD_TOKEN": {
+                    "FAILURE": "Couldn't get upload token"
                 }
             }
         },
@@ -95,6 +117,48 @@
                 "PLACEHOLDER": "Enter your comment",
                 "SEND_SUCCESS": "Comment sent",
                 "SEND_FAILURE": "Failed to send comment"
+            },
+            "UPLOAD_VIDEO": {
+                "TITLE": "Uploading for \"{{ anime }}\"",
+                "FORM": {
+                    "URL": {
+                        "LABEL": "Link to the video",
+                        "PLACEHOLDER": "https://example.com/player/123"
+                    },
+                    "AUTHOR": {
+                        "LABEL": "Author of Dubs/Subs",
+                        "PLACEHOLDER": "Animaze"
+                    },
+                    "EPISODE": {
+                        "LABEL": "Episode",
+                        "PLACEHOLDER": "1"
+                    },
+                    "KIND": {
+                        "LABEL": "Kind",
+                        "PLACEHOLDER": "Dubbing, subtitles or original VO"
+                    },
+                    "QUALITY": {
+                        "LABEL": "Quality",
+                        "PLACEHOLDER": "TV"
+                    },
+                    "LANGUAGE": {
+                        "LABEL": "Language",
+                        "PLACEHOLDER": "English"
+                    }
+                },
+                "FORM_ACTIONS": {
+                    "CANCEL": "Cancel",
+                    "UPLOAD": "Upload"
+                },
+                "STATUSES": {
+                    "SUCCESS": "Thank you for the upload!",
+                    "FAILURE": "Couldn't upload video",
+                    "ERROR_CODES": {
+                        "400": "Same URL already exists",
+                        "401": "Update Shikimori authorization",
+                        "500": "Retry later"
+                    }
+                }
             }
         }
     }

@@ -1,0 +1,14 @@
+@if (isMinified) {
+    <ion-button class="side-panel__upload-btn" fill="clear" (click)="onOpenUploadModal()">
+        <ion-icon slot="icon-only" name="cloud-upload-outline" />
+    </ion-button>
+} @else {
+    <ion-button class="side-panel__upload-btn" fill="clear" (click)="onOpenUploadModal()">
+        <ion-icon slot="start" name="cloud-upload-outline" />
+        Загрузить
+    </ion-button>
+}
+
+<ion-button class="side-panel__settings-btn" fill="clear" disabled>
+    <ion-icon slot="icon-only" name="settings-outline" />
+</ion-button>

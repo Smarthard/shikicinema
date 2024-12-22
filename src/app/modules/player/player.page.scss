@@ -58,55 +58,34 @@
 
         justify-content: center;
 
-        grid-template:  "info"
-                        "player"
-                        "conpan"
-                        "kind"
-                        "video"
-                        "comments"
-                        "comment-form";
-
-        @media (orientation: landscape) {
-            grid-template-columns: 90vw min-content;
-        }
+        grid-template:  "info info"
+                        "player player"
+                        "conpan sidepan"
+                        "comments comments"
+                        "comment-form comment-form";
 
         &--mobile {
-            @media (orientation: portrait) {
-                grid-template:  "info"
-                                "player"
-                                "conpan"
-                                "comments"
-                                "comment-form";
-
-                grid-template-rows: auto;
-                grid-template-columns: 90vw min-content;
-            }
-
-            @media (orientation: landscape) {
-                grid-template:  "info"
-                                "player"
-                                "conpan"
-                                "comments"
-                                "comment-form";
-
-                grid-template-rows: auto;
-                grid-template-columns: 90vw min-content;
+            @include media-breakpoint-up('md') {
+                justify-content: unset;
             }
         }
 
         @include media-breakpoint-up('lg') {
-            margin-top: .5rem;
-            padding: 0 5%;
+            // чтобы не сломалось отображение на планшетах
+            &:not(.player-page__wrapper--mobile) {
+                margin-top: .5rem;
+                padding: 0 5%;
 
-            grid-template:  "info   kind"
-                            "player video"
-                            "conpan ."
-                            "comments comments"
-                            "comment-form comment-form";
+                grid-template:  "info   kind"
+                                "player video"
+                                "conpan sidepan"
+                                "comments comments"
+                                "comment-form comment-form";
 
-            column-gap: 2.75rem;
-            grid-template-rows: auto 60vh;
-            grid-template-columns: calc(60vh * (16/9)) min-content;
+                column-gap: 2.75rem;
+                grid-template-rows: auto 60vh;
+                grid-template-columns: calc(60vh * (16/9)) min-content;
+            }
         }
 
         @include media-breakpoint-up('xxxl') {
@@ -115,7 +94,7 @@
 
             grid-template:  "info   kind"
                             "player video"
-                            "conpan ."
+                            "conpan sidepan"
                             "comments comments"
                             "comment-form comment-form";
 
@@ -128,6 +107,10 @@
     &__comments {
         grid-area: comments;
         margin-top: .5rem;
+    }
+
+    &__side-panel {
+        grid-area: sidepan;
     }
 
     .common-info {

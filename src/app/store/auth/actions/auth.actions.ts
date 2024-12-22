@@ -25,4 +25,3 @@ export const changeShikimoriCredentialsAction = createAction(
 export const logoutShikimoriAction = createAction(
     '[Auth] OAuth2 shikimori logout',
 );
-

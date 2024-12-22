@@ -47,7 +47,7 @@ export class ShikimoriApiInterceptor implements HttpInterceptor {
 
     intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
         // if this is refresh token request - do not handle it
-        if (request?.params?.get('refresh_token')) {
+        if (!request?.url?.startsWith('https:\\shikimori') || request?.params?.get('refresh_token')) {
             return next.handle(request);
         }
 

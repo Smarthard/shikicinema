@@ -20,6 +20,23 @@
             }
         },
         "VIDEO": {
+            "QUALITIES": {
+                "TV": "TV версия",
+                "WEB": "Web версия",
+                "DVD": "DVD издание",
+                "BD": "Blu-Ray издание",
+                "UNKNOWN": "Неизвестное"
+            },
+            "LANGUAGES": {
+                "RUSSIAN": "Русский",
+                "UKRANIAN": "Украинский",
+                "BELORUSSIAN": "Белорусский",
+                "KAZAKH": "Казахский",
+                "ENGLISH": "Английский",
+                "JAPANESE": "Японский",
+                "CHINESE": "Китайский",
+                "KOREAN": "Корейский"
+            },
             "KINDS": {
                 "DUBBING": "Озвучка",
                 "SUBTITLES": "Субтитры",
@@ -55,6 +72,11 @@
                 "LOGIN": {
                     "SUCCESS": "Успешно вошли как {{ nickname }}",
                     "FAILURE": "Не удалось выполнить вход в Shikimori"
+                }
+            },
+            "SHIKICINEMA": {
+                "UPLOAD_TOKEN": {
+                    "FAILURE": "Не удалось получить токен для загрузки видео"
                 }
             }
         },
@@ -95,6 +117,48 @@
                 "PLACEHOLDER": "Введите свой комментарий",
                 "SEND_SUCCESS": "Комментарий отправлен",
                 "SEND_FAILURE": "Не удалось отправить комментарий"
+            },
+            "UPLOAD_VIDEO": {
+                "TITLE": "Загрузка видео для \"{{ anime }}\"",
+                "FORM": {
+                    "URL": {
+                        "LABEL": "Ссылка на видео",
+                        "PLACEHOLDER": "https://example.com/player/123"
+                    },
+                    "AUTHOR": {
+                        "LABEL": "Автор дубляжа/субтитров",
+                        "PLACEHOLDER": "AniDUB"
+                    },
+                    "EPISODE": {
+                        "LABEL": "Эпизод",
+                        "PLACEHOLDER": "1"
+                    },
+                    "KIND": {
+                        "LABEL": "Тип",
+                        "PLACEHOLDER": "Озвучка, субтитры или оригинал"
+                    },
+                    "QUALITY": {
+                        "LABEL": "Качество",
+                        "PLACEHOLDER": "TV"
+                    },
+                    "LANGUAGE": {
+                        "LABEL": "Язык",
+                        "PLACEHOLDER": "Русский"
+                    }
+                },
+                "FORM_ACTIONS": {
+                    "CANCEL": "Отмена",
+                    "UPLOAD": "Загрузить"
+                },
+                "STATUSES": {
+                    "SUCCESS": "Спасибо за загрузку!",
+                    "FAILURE": "Не удалось загрузить видео",
+                    "ERROR_CODES": {
+                        "400": "Видео с таким URL уже загружено",
+                        "401": "Обновите авторизацию Шикимори",
+                        "500": "Попробуйте позднее"
+                    }
+                }
             }
         }
     }

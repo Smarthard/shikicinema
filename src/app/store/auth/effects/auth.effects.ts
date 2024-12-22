@@ -1,6 +1,6 @@
 import {
-    Actions, CreateEffectMetadata,
-    concatLatestFrom,
+    Actions,
+    CreateEffectMetadata,
     createEffect,
     ofType,
 } from '@ngrx/effects';
@@ -8,6 +8,7 @@ import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { ToastController } from '@ionic/angular';
 import { TranslocoService } from '@ngneat/transloco';
+import { concatLatestFrom } from '@ngrx/operators';
 import { delay, map, tap } from 'rxjs/operators';
 
 import { ShikimoriClient } from '@app/shared/services/shikimori-client.service';

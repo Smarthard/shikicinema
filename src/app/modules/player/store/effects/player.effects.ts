@@ -18,7 +18,7 @@ import { concatLatestFrom } from '@ngrx/operators';
 import { merge, of, switchMap } from 'rxjs';
 
 import { KodikClient } from '@app/shared/services/kodik-client.service';
-import { ShikicinemaV1ClientService, ShikimoriClient } from '@app/shared/services';
+import { ShikicinemaV1Client, ShikimoriClient } from '@app/shared/services';
 import { UserAnimeRate } from '@app/shared/types/shikimori/user-anime-rate';
 import { UserRateStatusType } from '@app/shared/types/shikimori/user-rate-status.type';
 import {
@@ -224,7 +224,7 @@ export class PlayerEffects {
     constructor(
         private actions$: Actions,
         private store$: Store,
-        private shikivideos: ShikicinemaV1ClientService,
+        private shikivideos: ShikicinemaV1Client,
         private shikimori: ShikimoriClient,
         private kodik: KodikClient,
         private toast: ToastController,

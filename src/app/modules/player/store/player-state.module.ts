@@ -4,7 +4,7 @@ import { NgModule } from '@angular/core';
 import { StoreModule } from '@ngrx/store';
 
 import { PlayerEffects } from '@app/modules/player/store/effects/player.effects';
-import { ShikicinemaV1ClientService } from '@app/shared/services/shikicinema-v1-client.service';
+import { ShikicinemaV1Client } from '@app-root/app/shared/services/shikicinema-v1.client';
 import { ShikimoriClient } from '@app/shared/services';
 import { metaReducers, reducers } from '@app/modules/player/store/reducers/player-state.reducer';
 
@@ -19,7 +19,7 @@ import { metaReducers, reducers } from '@app/modules/player/store/reducers/playe
         ]),
     ],
     providers: [
-        ShikicinemaV1ClientService,
+        ShikicinemaV1Client,
         ShikimoriClient,
     ],
 })

@@ -5,6 +5,7 @@ import { NgModule } from '@angular/core';
 import { AppComponent } from '@app/app.component';
 import { AppRoutingModule } from '@app/app-routing.module';
 import { CoreModule } from '@app/core/core.module';
+import { ShikicinemaApiInterceptor } from '@app-root/app/shared/interceptors/shikicinema-api.interceptor';
 import { ShikimoriApiInterceptor } from '@app/shared/interceptors/shikimori-api.interceptor';
 
 @NgModule({
@@ -16,6 +17,7 @@ import { ShikimoriApiInterceptor } from '@app/shared/interceptors/shikimori-api.
     providers: [
         { provide: LocationStrategy, useClass: HashLocationStrategy },
         { provide: HTTP_INTERCEPTORS, useClass: ShikimoriApiInterceptor, multi: true },
+        { provide: HTTP_INTERCEPTORS, useClass: ShikicinemaApiInterceptor, multi: true },
     ],
     bootstrap: [AppComponent],
 })
