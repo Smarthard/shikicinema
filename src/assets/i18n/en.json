@@ -72,6 +72,9 @@
                 "LOGIN": {
                     "SUCCESS": "Logged in as {{ nickname }}",
                     "FAILURE": "Couldn't login to Shikimori"
+                },
+                "REFRESH": {
+                    "FAILURE": "Couldn't refresh Shikimori token"
                 }
             },
             "SHIKICINEMA": {

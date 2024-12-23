@@ -1,5 +1,5 @@
 import { ShikivideosKindType } from '@app/shared/types/shikicinema/v1';
-import { VideoKindEnum } from '@app-root/app/modules/player/types';
+import { VideoKindEnum } from '@app/modules/player/types';
 
 export function mapVideoKindToShikicinema(kind: VideoKindEnum): ShikivideosKindType {
     switch (kind) {

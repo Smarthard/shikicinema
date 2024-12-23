@@ -72,6 +72,9 @@
                 "LOGIN": {
                     "SUCCESS": "Успешно вошли как {{ nickname }}",
                     "FAILURE": "Не удалось выполнить вход в Shikimori"
+                },
+                "REFRESH": {
+                    "FAILURE": "Не удалось обновить токен Шикимори"
                 }
             },
             "SHIKICINEMA": {

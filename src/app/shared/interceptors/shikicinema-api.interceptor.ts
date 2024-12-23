@@ -14,13 +14,11 @@ import {
 import { Store } from '@ngrx/store';
 import {
     catchError,
-    combineLatestWith,
     exhaustMap,
     filter,
     map,
     skip,
     switchMap,
-    take,
     tap,
 } from 'rxjs/operators';
 
@@ -28,8 +26,12 @@ import AuthStoreInterface from '@app/store/auth/types/auth-store.interface';
 import { PersistenceService } from '@app/shared/services/persistence.service';
 import { ShikicinemaStoreInterface } from '@app/store/shikicinema/types/shikicinema-store.interface';
 import { UploadToken } from '@app/shared/types/shikicinema/v1';
-import { authShikimoriAction, authShikimoriSuccessAction } from '@app/store/auth/actions/auth.actions';
-import { concatLatestFrom } from '@ngrx/operators';
+import {
+    authShikimoriAction,
+    authShikimoriRefreshAction,
+    authShikimoriRefreshSuccessAction,
+    authShikimoriSuccessAction,
+} from '@app/store/auth/actions/auth.actions';
 import {
     getUploadTokenAction,
     getUploadTokenSuccessAction,
@@ -102,15 +104,17 @@ export class ShikicinemaApiInterceptor implements HttpInterceptor {
 
         // можем обновить токен Шикимори
         if (isFreshToken(shikimoriRefreshToken, refreshExpireTimeMs)) {
-            // TODO: сделать отдельный экшен для обновления токенов
-            this.store.dispatch(authShikimoriAction());
+            this.store.dispatch(authShikimoriRefreshAction({ refreshToken: shikimoriRefreshToken }));
         } else {
             this.store.dispatch(authShikimoriAction());
         }
 
         // ждём новые токены Шикимори для обновления upload token и повторяем запрос
         return this.actions$.pipe(
-            ofType(authShikimoriSuccessAction),
+            ofType(
+                authShikimoriSuccessAction,
+                authShikimoriRefreshSuccessAction,
+            ),
             tap(({ credentials: shikimoriToken }) => this.store.dispatch(getUploadTokenAction({ shikimoriToken }))),
             switchMap(() => this.store.select(selectShikicinemaTokenProcessing).pipe(
                 skip(1),

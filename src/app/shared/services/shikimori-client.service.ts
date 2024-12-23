@@ -38,6 +38,8 @@ import { toShikimoriCredentials } from '@app/shared/types/shikimori/mappers/auth
 })
 export class ShikimoriClient {
     readonly episodeNotificationToken = environment.shikimori.episodeNotificationToken;
+    readonly shikimoriClientId = environment.shikimori.authClientId;
+    readonly shikimoriClientSecret = environment.shikimori.authClientSecret;
 
     constructor(
         @Inject(SHIKIMORI_DOMAIN_TOKEN)
@@ -64,8 +66,8 @@ export class ShikimoriClient {
     refreshToken(refreshToken: string): Observable<ShikimoriCredentials> {
         const params = new HttpParams()
             .set('grant_type', 'refresh_token')
-            .set('client_id', environment.shikimori.authClientId)
-            .set('client_secret', environment.shikimori.authClientSecret)
+            .set('client_id', this.shikimoriClientId)
+            .set('client_secret', this.shikimoriClientSecret)
             .set('refresh_token', refreshToken);
 
         return this.shikimoriDomain$.pipe(

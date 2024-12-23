@@ -25,3 +25,18 @@ export const changeShikimoriCredentialsAction = createAction(
 export const logoutShikimoriAction = createAction(
     '[Auth] OAuth2 shikimori logout',
 );
+
+export const authShikimoriRefreshAction = createAction(
+    '[Auth] OAuth2 shikimori refresh token',
+    props<{ refreshToken: string }>(),
+);
+
+export const authShikimoriRefreshSuccessAction = createAction(
+    '[Auth] OAuth2 shikimori refresh token success',
+    props<{ credentials: ShikimoriCredentials }>(),
+);
+
+export const authShikimoriRefreshFailureAction = createAction(
+    '[Auth] OAuth2 shikimori refresh token failure',
+    props<{ errors: unknown }>(),
+);

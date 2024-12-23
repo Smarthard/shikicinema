@@ -2,6 +2,7 @@ import { createReducer, on } from '@ngrx/store';
 
 import AuthStoreInterface, { ShikimoriCredentials } from '@app/store/auth/types/auth-store.interface';
 import {
+    authShikimoriRefreshSuccessAction,
     authShikimoriSuccessAction,
     changeShikimoriCredentialsAction,
     logoutShikimoriAction,
@@ -22,6 +23,7 @@ const reducer = createReducer(
     initialState,
     on(
         authShikimoriSuccessAction,
+        authShikimoriRefreshSuccessAction,
         changeShikimoriCredentialsAction,
         (state, { credentials }) => ({
             ...state,

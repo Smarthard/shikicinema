@@ -68,7 +68,7 @@ import {
     selectPlayerVideosLoading,
 } from '@app/modules/player/store/selectors/player.selectors';
 import { updatePlayerPreferencesAction } from '@app/store/settings/actions/settings.actions';
-import { uploadVideoAction } from '@app-root/app/store/shikicinema/actions/upload-video.action';
+import { uploadVideoAction } from '@app/store/shikicinema/actions/upload-video.action';
 
 
 @UntilDestroy()

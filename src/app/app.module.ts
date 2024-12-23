@@ -5,7 +5,7 @@ import { NgModule } from '@angular/core';
 import { AppComponent } from '@app/app.component';
 import { AppRoutingModule } from '@app/app-routing.module';
 import { CoreModule } from '@app/core/core.module';
-import { ShikicinemaApiInterceptor } from '@app-root/app/shared/interceptors/shikicinema-api.interceptor';
+import { ShikicinemaApiInterceptor } from '@app/shared/interceptors/shikicinema-api.interceptor';
 import { ShikimoriApiInterceptor } from '@app/shared/interceptors/shikimori-api.interceptor';
 
 @NgModule({
