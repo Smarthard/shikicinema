@@ -1,5 +1,6 @@
-import { UserBriefInfoInterface } from '@app/shared/types/shikimori/user-brief-info.interface';
 import { createAction, props } from '@ngrx/store';
+
+import { UserBriefInfoInterface } from '@app/shared/types/shikimori/user-brief-info.interface';
 
 export const getCurrentUserAction = createAction('[Shikimori API] get current user');
 

@@ -53,12 +53,21 @@
                 [userRate]="userRate$ | async"
                 [isWatched]="isWatched"
                 [isRewatching]="isRewatching$ | async"
-                [isMinified]="isControlPanelMinified$ | async"
+                [isMinified]="isPanelsMinified$ | async"
                 (selection)="onEpisodeChange($event)"
                 (watch)="onWatch($event, isWatched)"
                 (openVideoModal)="onOpenVideoSelectorModal()"
             />
         </ng-container>
+
+        <app-side-panel
+            class="player-page__side-panel"
+            [anime]="anime$ | async"
+            [episode]="episode$ | async"
+            [isLoading]="isAnimeLoading$ | async"
+            [isMinified]="isPanelsMinified$ | async"
+            (uploaded)="onVideoUpload($event)"
+        />
 
         <app-comments
             class="player-page__comments"

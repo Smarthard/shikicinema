@@ -11,15 +11,9 @@ import {
 import { InputCustomEvent } from '@ionic/angular';
 import {
     IonButton,
-    IonButtons,
     IonIcon,
     IonInput,
     IonItem,
-    IonPicker,
-    IonPickerColumn,
-    IonPickerColumnOption,
-    IonTitle,
-    IonToolbar,
 } from '@ionic/angular/standalone';
 
 import { EpisodeSelectorComponent } from '@app/modules/player/components/episode-selector/episode-selector.component';
@@ -33,14 +27,8 @@ import { adjustEpisode } from '@app/shared/utils/adjust-episode.function';
         EpisodeSelectorComponent,
         IonIcon,
         IonButton,
-        IonButtons,
         IonItem,
         IonInput,
-        IonTitle,
-        IonToolbar,
-        IonPicker,
-        IonPickerColumn,
-        IonPickerColumnOption,
     ],
     templateUrl: './control-panel.component.html',
     styleUrl: './control-panel.component.scss',

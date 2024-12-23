@@ -1,0 +1,131 @@
+@import 'src/scss/mixins';
+
+.video-upload-modal {
+    background-color: var(--ion-item-background);
+
+    &__header {
+        margin-top: .5rem;
+        margin-left: 1rem;
+    }
+
+    &__demo {
+        display: contents;
+    }
+
+    &__player {
+        background-color: var(--ion-color-light);
+        border-radius: 1rem;
+        margin: 1rem;
+
+        &--dummy {
+            display: flex;
+            flex-direction: column;
+
+            align-items: center;
+            justify-content: space-between;
+        }
+    }
+
+    &__helper-text {
+        margin-top: 1rem;
+    }
+
+    &__shrug-chan {
+        height: 10rem;
+        width: auto;
+
+        @include media-breakpoint-up('lg') {
+            height: 14.5rem;
+        }
+    }
+
+    &__form {
+        display: flex;
+        flex-direction: column;
+        gap: .5rem;
+
+        padding: .5rem 0;
+    }
+
+    &__item {
+
+        &--url {
+            grid-area: url;
+        }
+
+        &--author {
+            grid-area: author;
+            --inner-padding-end: 0;
+        }
+
+        &--episode {
+            grid-area: episode;
+            --padding-start: 0;
+        }
+
+        &--kind {
+            grid-area: kind;
+
+            @include media-breakpoint-up('lg') {
+                --inner-padding-end: 0;
+            }
+        }
+
+        &--quality {
+            grid-area: quality;
+
+            @include media-breakpoint-up('lg') {
+                --padding-start: 0;
+                --inner-padding-end: 0;
+            }
+        }
+
+        &--language {
+            grid-area: language;
+
+            @include media-breakpoint-up('lg') {
+                --padding-start: 0;
+            }
+        }
+    }
+
+    &__video-inputs-wrap {
+        display: grid;
+        gap: .25rem .5rem;
+
+        grid-template:
+            "url url"
+            "author episode"
+            "kind kind"
+            "quality quality"
+            "language language";
+
+        @include media-breakpoint-up('lg') {
+            grid-template:
+                "url url url"
+                "author author episode"
+                "kind quality language";
+        }
+    }
+
+    &__controls {
+        display: flex;
+        justify-content: space-between;
+
+        padding: 0 1rem;
+    }
+
+    &__select {
+        min-width: 5rem;
+
+        @include media-breakpoint-up('lg') {
+            min-width: 10rem;
+        }
+    }
+
+    // правка кривых плавающих лейблов ionic
+    ion-input,
+    ion-select {
+        padding-top: .25rem !important;
+    }
+}

@@ -9,6 +9,7 @@ import { AuthWebExtensionEffects } from '@app/store/auth/effects/auth.web-extens
 import { CacheEffects } from '@app/store/cache/effects/cache.effects';
 import { ElectronIpcProxyService } from '@app/shared/services/electron-ipc-proxy.service';
 import { SettingsEffects } from '@app/store/settings/effects/settings.effects';
+import { ShikicinemaEffects } from '@app/store/shikicinema/effects/shikicinema.effects';
 import { ShikimoriClient } from '@app/shared/services/shikimori-client.service';
 import { ShikimoriEffects } from '@app/store/shikimori/effects/shikimori.effects';
 import { authEffectFactory } from '@app/store/auth/factories/auth-effects.factories';
@@ -20,6 +21,8 @@ import { environment } from '@app-env/environment';
 import { loggerMetaReducer } from '@app/store/logger/reducers/logger.meta-reducer';
 import { settingsLocalStorageSyncReducer } from '@app/store/settings/reducers/settings.meta-reducer';
 import { settingsReducer } from '@app/store/settings/reducers/settings.reducer';
+import { shikicinemaLocalStorageSyncReducer } from '@app/store/shikicinema/reducers/shikicinema.meta-reducer';
+import { shikicinemaReducer } from '@app/store/shikicinema/reducers/shikicinema.reducer';
 import { shikimoriReducer } from '@app/store/shikimori/reducers/shikimori.reducer';
 
 const storeConfig: RootStoreConfig<AppStoreInterface> = {
@@ -27,6 +30,7 @@ const storeConfig: RootStoreConfig<AppStoreInterface> = {
         authLocalStorageSyncReducer,
         cacheLocalStorageSyncReducer,
         settingsLocalStorageSyncReducer,
+        shikicinemaLocalStorageSyncReducer,
         loggerMetaReducer,
     ],
 };
@@ -43,11 +47,13 @@ const storeDevtoolsConfig: StoreDevtoolsOptions = {
             auth: authReducer,
             settings: settingsReducer,
             shikimori: shikimoriReducer,
+            shikicinema: shikicinemaReducer,
             cache: cacheReducer,
         }, storeConfig),
         EffectsModule.forRoot([
             SettingsEffects,
             ShikimoriEffects,
+            ShikicinemaEffects,
             CacheEffects,
         ]),
         StoreDevtoolsModule.instrument(storeDevtoolsConfig),

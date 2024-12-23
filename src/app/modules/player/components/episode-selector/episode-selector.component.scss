@@ -34,7 +34,9 @@
         font-weight: 600;
 
         &--watched {
-            color: rgba(var(--shc-watched-episode-color-rgb), 0.85) !important;
+            background-color: rgba(var(--shc-watched-episode-color-rgb), 0.85) !important;
+            color: var(--ion-color-light) !important;
+            border-color: transparent;
         }
 
         &--selected {

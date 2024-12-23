@@ -12,7 +12,7 @@ import {
     Validators,
 } from '@angular/forms';
 import { IonButton, IonIcon, IonTextarea } from '@ionic/angular/standalone';
-import { NoWhitespacesValidator } from '@app-root/app/shared/validators/no-whitespaces.validator';
+import { NoWhitespacesValidator } from '@app/shared/validators/no-whitespaces.validator';
 import { TranslocoModule } from '@ngneat/transloco';
 
 @Component({

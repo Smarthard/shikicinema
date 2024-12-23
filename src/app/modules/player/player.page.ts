@@ -68,6 +68,7 @@ import {
     selectPlayerVideosLoading,
 } from '@app/modules/player/store/selectors/player.selectors';
 import { updatePlayerPreferencesAction } from '@app/store/settings/actions/settings.actions';
+import { uploadVideoAction } from '@app/store/shikicinema/actions/upload-video.action';
 
 
 @UntilDestroy()
@@ -92,7 +93,7 @@ export class PlayerPage implements OnInit {
         Breakpoints.Medium,
     ]).pipe(map(({ matches }) => matches));
 
-    readonly isControlPanelMinified$ = combineLatest([
+    readonly isPanelsMinified$ = combineLatest([
         this.isMobile$,
         this.isOrientationPortraitSubject$,
         this.isSmallScreen$,
@@ -356,5 +357,11 @@ export class PlayerPage implements OnInit {
         const episode = await firstValueFrom(this.episode$);
 
         this.store.dispatch(sendCommentAction({ animeId, episode, commentText }));
+    }
+
+    async onVideoUpload(video: VideoInfoInterface): Promise<void> {
+        const animeId = await firstValueFrom(this.animeId$);
+
+        this.store.dispatch(uploadVideoAction({ animeId, video }));
     }
 }
