@@ -1,0 +1,16 @@
+.video-selector-modal {
+    &__selector-wrap {
+        height: 100%;
+
+        display: flex;
+        flex-direction: column;
+    }
+
+    &__video-selector {
+        flex-grow: 1;
+    }
+
+    .kind-selector {
+        border-radius: unset;
+    }
+}

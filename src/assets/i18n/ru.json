@@ -1,0 +1,101 @@
+{
+    "GLOBAL": {
+        "APP_NAME": "Shikicinema",
+        "SHIKIMORI": {
+            "ANIME_KINDS": {
+                "TV" : "TV сериал",
+                "OVA" : "OVA",
+                "ONA" : "ONA",
+                "MOVIE" : "Фильм",
+                "SPECIAL" : "Спешл",
+                "MUSIC": "Клип",
+                "TV_SPECIAL": "ТВ Спецвыпуск",
+                "PV": "Проморолик",
+                "CM": "Реклама"
+            },
+            "ANIME_STATUSES": {
+                "ANONS": "анонс",
+                "ONGOING": "онгоинг",
+                "RELEASED": "вышло"
+            }
+        },
+        "VIDEO": {
+            "KINDS": {
+                "DUBBING": "Озвучка",
+                "SUBTITLES": "Субтитры",
+                "ORIGINAL": "Оригинал"
+            },
+            "AUTHORS": {
+                "DEFAULT_NAME": "Неизвестно"
+            },
+            "WELL_KNOWN_UPLOADERS": {
+                "KODIK": "Кодик",
+                "DELETED_UPLOADER": "Аноним"
+            }
+        },
+        "HEADER": {
+            "SEARCHBAR": {
+                "NOTHING_FOUND": "Ничего не найдено",
+                "SEARCH_SOMETHING": "Введите название для поиска"
+            },
+            "TOOLBAR_MENU": {
+                "SIGN_IN": "Войти",
+                "TO_PROFILE": "В профиль",
+                "ANIME_LIST": "Список аниме",
+                "MANGA_LIST": "Список манги",
+                "SETTINGS": "Настройки",
+                "EXIT": "Выход"
+            }
+        },
+        "GO_EXTERNAL_PAGE": {
+            "MESSAGE": "Вы покидаете Shikicinema, редирект на страницу {{ link }}"
+        },
+        "AUTH": {
+            "SHIKIMORI": {
+                "LOGIN": {
+                    "SUCCESS": "Успешно вошли как {{ nickname }}",
+                    "FAILURE": "Не удалось выполнить вход в Shikimori"
+                }
+            }
+        },
+        "COMMON": {
+            "DATES": {
+                "YEAR": "{{ year }} год"
+            }
+        }
+    },
+    "HOME_MODULE": {
+        "HOME_PAGE": {
+            "PAGE_TITLE": "Список аниме {{ nickname }}",
+            "ANIME_SEARCHBAR_PLACEHOLDER": "Поиск аниме...",
+            "GRIDS": {
+                "PLANNED": "Запланировано",
+                "WATCHING": "Смотрю",
+                "REWATCHING": "Пересматриваю",
+                "COMPLETED": "Просмотрено",
+                "ON_HOLD": "Отложено",
+                "DROPPED": "Брошено"
+            }
+        }
+    },
+    "PLAYER_MODULE": {
+        "PLAYER_PAGE": {
+            "PAGE_TITLE": {
+                "MOVIE": "{{ title }} | фильм",
+                "SERIES": "{{ title }} | серия {{ episode }}"
+            },
+            "WATCH_ACTION": {
+                "SUCCESS": "Просмотрено",
+                "FAILURE": "Ошибка"
+            },
+            "RELEVANT_VIDEOS_MISSING": "Не смогли найти похожие видео",
+            "COMMENT_REPLY_MISSING": "Комментарий был удален",
+            "USER_COMMENT_FORM": {
+                "LABEL": "Ваш комментарий",
+                "PLACEHOLDER": "Введите свой комментарий",
+                "SEND_SUCCESS": "Комментарий отправлен",
+                "SEND_FAILURE": "Не удалось отправить комментарий"
+            }
+        }
+    }
+}

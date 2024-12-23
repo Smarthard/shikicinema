@@ -1,0 +1,61 @@
+<ion-accordion-group class="w-100"
+                     multiple
+                     [value]="openedByDefaultAuthors$ | async">
+    @for (author of authors$ | async; track author) {
+        <ion-accordion class="author-accordion w-100"
+                       [value]="author"
+                       (click)="onAuthorSectionToggle(author)">
+                <ion-item slot="header"
+                          class="author-accordion__item">
+                    <ion-label class="author-accordion__header"
+                               [color]="(selected$ | async)?.author | isSameAuthor: author | getColorForSelectable">
+                        {{ author }}
+                    </ion-label>
+
+                    <div class="author-accordion__qualities">
+                        @if (videos$ | async | filterByAuthor: author | hasQualities: VideoQualityEnum.DVD) {
+                            <div class="author-accordion__icon-wrap">
+                                <img class="author-accordion__icon author-accordion__icon--dvd" src="/assets/dvd.svg" alt="includes DVD" />
+                            </div>
+                        }
+
+                        @if (videos$ | async | filterByAuthor: author | hasQualities: VideoQualityEnum.BD) {
+                            <div class="author-accordion__icon-wrap">
+                                <img class="author-accordion__icon author-accordion__icon--bd" src="/assets/bd.svg" alt="includes BD" />
+                            </div>
+                        }
+                    </div>
+                </ion-item>
+
+                <div class="ion-padding author-accordion__content" slot="content">
+                    @for (video of (videos$ | async | filterByAuthor: author | sortByDomain); track video?.url; let first = $first) {
+                        <ion-button
+                            fill="clear"
+                            expand="block"
+                            [color]="(selected$ | async) | isSameVideo: video | getColorForSelectable"
+                            [title]="video?.url"
+                            (click)="$event.stopPropagation(); onSelectionChange(video)">
+
+                            {{ video?.url | getUrlDomain }}
+
+                            <img
+                                [class.ion-hide]="video.quality !== VideoQualityEnum.DVD"
+                                class="author-accordion__icon author-accordion__icon--inline author-accordion__icon--dvd"
+                                src="/assets/dvd.svg"
+                                alt="includes DVD"
+                                slot="end"
+                            />
+
+                            <img
+                                [class.ion-hide]="video.quality !== VideoQualityEnum.BD"
+                                class="author-accordion__icon author-accordion__icon--inline author-accordion__icon--bd"
+                                src="/assets/bd.svg"
+                                alt="includes BD"
+                                slot="end"
+                            />
+                        </ion-button>
+                    }
+                </div>
+        </ion-accordion>
+    }
+</ion-accordion-group>

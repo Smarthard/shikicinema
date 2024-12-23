@@ -1,0 +1,22 @@
+@use 'sass:math';
+
+@mixin responsive($width, $height) {
+    $ratio: math.div($width, $height);
+
+    @supports (aspect-ratio: $ratio) {
+        aspect-ratio: $ratio;
+    }
+}
+
+.responsive-16by9 {
+    @include responsive(16, 9);
+}
+
+.responsive-9by16 {
+    @include responsive(9, 16);
+}
+
+/* kinda frustrating, but anime cards looks better in this ratio */
+.responsive-9by13 {
+    @include responsive(9, 13);
+}

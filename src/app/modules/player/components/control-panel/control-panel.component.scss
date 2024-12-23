@@ -1,0 +1,59 @@
+.control-panel {
+    $inputMinHeight: 2rem;
+
+    display: flex;
+
+    gap: .5rem;
+    align-items: center;
+    justify-content: space-between;
+
+    &__controls {
+        display: flex;
+        gap: .5rem;
+
+        &--minified {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+
+    &__btn {
+        margin: 0;
+        max-width: 5rem;
+        align-self: center;
+    }
+
+    &__episode-wrapper {
+        min-width: 4.625rem;
+        max-width: 4.625rem;
+        justify-content: center;
+        justify-self: center;
+        align-self: center;
+
+        --min-height: $inputMinHeight;
+        --border-width: 0.125rem;
+        --border-radius: 0.25rem;
+    }
+
+    &__episode {
+        text-align: center;
+        min-height: $inputMinHeight !important;
+    }
+
+    &__episode-selector {
+        min-width: 30vw;
+        max-width: 50vw;
+        flex-grow: 1;
+
+        &--modal {
+            --height: auto;
+            align-items: end;
+        }
+    }
+
+    .watch-btn {
+        &--watched {
+            color: var(--shc-watched-episode-color);
+        }
+    }
+}

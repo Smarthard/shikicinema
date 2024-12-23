@@ -1,0 +1,79 @@
+@import 'src/scss/mixins';
+
+@mixin items-in-row($itemsCount) {
+    padding: 0;
+    margin: 0;
+    justify-content: space-between;
+    grid-template-columns: repeat($itemsCount, minmax(calc(100% / ($itemsCount + 1)), 1fr));
+}
+
+.anime-grid {
+    @include items-in-row(2);
+
+    display: grid;
+    gap: .5rem;
+    margin: 0 .5rem;
+    justify-content: space-evenly;
+
+    @include media-breakpoint-up('sm') {
+        @include items-in-row(3);
+    }
+
+    @include media-breakpoint-up('md') {
+        @include items-in-row(4);
+    }
+
+    @include media-breakpoint-up('lg') {
+        @include items-in-row(5);
+    }
+
+    @include media-breakpoint-up('xl') {
+        @include items-in-row(6);
+    }
+
+    &__item {
+        margin: 0;
+    }
+
+    .skeleton-item {
+        display: grid;
+        gap: 0.25rem;
+        // 2 cards
+        grid-template-rows:  8fr 1fr;
+
+        @include media-breakpoint-up('sm') {
+            // 3 cards
+            grid-template-rows: 10fr 1fr;
+        }
+
+        @include media-breakpoint-up('md') {
+            // 4 cards
+            grid-template-rows: 8fr 1fr;
+        }
+
+        @include media-breakpoint-up('lg') {
+            // 5 cards
+            grid-template-rows: 12fr 1fr;
+        }
+
+        @include media-breakpoint-up('xl') {
+            // 6 cards
+            grid-template-rows: 6fr 1fr;
+        }
+
+        @include media-breakpoint-up('xxl') {
+            // 6 cards
+            grid-template-rows: 8fr 1fr;
+        }
+
+        @include media-breakpoint-up('xxxl') {
+            // 6 cards
+            grid-template-rows: 16fr 1fr;
+        }
+
+        @include media-breakpoint-up('x4k') {
+            // 6 cards
+            grid-template-rows: 30fr 1fr;
+        }
+    }
+}

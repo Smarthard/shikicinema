@@ -1,0 +1,83 @@
+@import 'src/scss/mixins';
+
+$grid-side-columns-width: 160px;
+$grid-searchbar-column-width: 10fr;
+
+.toolbar {
+    display: grid;
+    align-items: center;
+    grid-template-columns: $grid-searchbar-column-width repeat(2, calc($grid-side-columns-width / 2));
+    min-height: 64px;
+
+    &__search {
+        padding: 0 10px;
+    }
+
+    @include media-breakpoint-down('md') {
+        &--searchbar_focused {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @include media-breakpoint-up('lg') {
+        grid-template-columns: $grid-side-columns-width $grid-searchbar-column-width repeat(2, calc($grid-side-columns-width / 2));
+
+        &__menu-btn {
+            margin-left: auto;
+        }
+
+        &__search {
+            margin: 0;
+        }
+
+        &__title {
+            margin: 0 auto;
+
+            a {
+                color: var(--ion-text-color);
+            }
+        }
+
+        &__title,
+        &__search,
+        &__menu-btn {
+            padding: 0;
+        }
+    }
+}
+
+.user-item {
+
+    &__avatar {
+        border-radius: 100%;
+        max-height: 38px;
+        font-size: 38px;
+    }
+}
+
+.menu-item {
+
+    &--nolinks {
+        cursor: default;
+        user-select: none;
+    }
+
+    &__icon {
+
+        &--rotated {
+            transform: rotate(30grad);
+            transform-origin: center top;
+        }
+
+        &--pull-right {
+            margin-left: auto;
+        }
+    }
+
+    &__label {
+
+        &--with-icon {
+            margin-left: 10px;
+        }
+    }
+}

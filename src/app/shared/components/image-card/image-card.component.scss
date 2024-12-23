@@ -1,0 +1,9 @@
+.image-card {
+    &__img {
+        display: block;
+        position: relative;
+        background-repeat: no-repeat;
+        background-position: center;
+        background-color: var(--ion-color-step-100);
+    }
+}

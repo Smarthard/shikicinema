@@ -1,0 +1,63 @@
+name: "Build new tag"
+
+on:
+    push:
+        tags:
+            - 'v[0-9]+.[0-9]+.[0-9]+'
+
+
+jobs:
+  build:
+    strategy:
+        matrix:
+            manifest: ['v2', 'v3']
+
+    runs-on: ubuntu-latest
+
+    permissions:
+      checks: write
+      pull-requests: write
+      contents: write
+
+    name: Tags CI
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Make .env
+        uses: SpicyPizza/create-envfile@v2.0
+        with:
+            file_name: .env
+            envkey_NODE_ENV: 'production'
+            envkey_MANIFEST_VERSION: ${{ matrix.manifest }}
+            envkey_PLATFORM_TARGET: 'web-extension'
+            envkey_KODIK_API_URI: ${{ secrets.KODIK_API_URI }}
+            envkey_KODIK_AUTH_TOKEN: ${{ secrets.KODIK_AUTH_TOKEN }}
+            envkey_SHIKIMORI_API_URI: ${{ secrets.SHIKIMORI_API_URI }}
+            envkey_SHIKIMORI_CLIENT_ID: ${{ secrets.SHIKIMORI_CLIENT_ID }}
+            envkey_SHIKIMORI_CLIENT_SECRET: ${{ secrets.SHIKIMORI_CLIENT_SECRET }}
+            envkey_SHIKIMORI_EPISODE_NOTIFICATION_TOKEN: ${{ secrets.SHIKIMORI_EPISODE_NOTIFICATION_TOKEN }}
+            envkey_SMARTHARD_API_URI: ${{ secrets.SMARTHARD_API_URI }}
+            envkey_SMARTHARD_CLIENT_ID: ${{ secrets.SMARTHARD_CLIENT_ID }}
+            envkey_SMARTHARD_CLIENT_SECRET: ${{ secrets.SMARTHARD_CLIENT_SECRET }}
+
+      - name: Generate Angular Environment
+        run: npm run set-env
+
+      - name: Generate build
+        run: npm run build:prod
+
+      - name: Create artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: shikicinema-${{ github.ref_name }}-${{ matrix.manifest == 'v2' && 'firefox' || 'chrome' }})
+          path: dist/**

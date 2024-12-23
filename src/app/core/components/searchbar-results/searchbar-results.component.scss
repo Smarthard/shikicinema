@@ -1,0 +1,79 @@
+@import 'src/scss/mixins';
+
+.anime-search-list {
+
+    &-item {
+        max-height: 7rem;
+        margin: 5px;
+        border-left: 5px solid transparent;
+
+        &:hover {
+            border-left-color: var(--ion-color-primary);
+        }
+
+        &--info {
+            border-left-color: var(--ion-color-secondary) !important;
+        }
+
+        &--warning {
+            border-left-color: var(--ion-color-danger) !important;
+        }
+
+        &__image {
+            max-height: 6rem;
+        }
+
+        &__info {
+            flex: 1;
+            margin-left: 12px;
+        }
+    }
+}
+
+.anime-info {
+    &__title {
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: repeat(2, 1fr);
+        font-size: small;
+
+        @include media-breakpoint-up('sm') {
+            display: flex;
+            font-size: larger;
+        }
+
+        & :not(:first-child) {
+            &::before {
+                display: inline-block;
+                content: '/';
+                color: var(--ion-text-color);
+                margin-left: 5px;
+            }
+        }
+    }
+
+    &__status {
+        font-size: smaller;
+
+        &--anons {
+            color: var(--ion-color-danger);
+        }
+
+        &--ongoing {
+            color: var(--ion-color-secondary);
+        }
+
+        &--released {
+            color: var(--ion-color-success);
+        }
+    }
+
+    &__kind,
+    &__title,
+    &__year {
+        & .skeleton {
+            display: inline-block;
+            margin: 2px;
+        }
+    }
+}

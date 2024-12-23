@@ -1,0 +1,33 @@
+{
+    "appId": "net.smarthard.shikicinema",
+    "electronVersion": "22.3.25",
+    "directories": {
+        "buildResources": "resources"
+    },
+    "files": [
+        "assets/**/*",
+        "build/**/*",
+        "capacitor.config.*",
+        "app/**/*"
+    ],
+    "publish": {
+        "provider": "github"
+    },
+    "nsis": {
+        "allowElevation": true,
+        "oneClick": false,
+        "allowToChangeInstallationDirectory": true
+    },
+    "win": {
+        "target": "portable",
+        "icon": "assets/appIcon.ico"
+    },
+    "mac": {
+        "target": "dmg",
+        "category": "Player"
+    },
+    "linux": {
+        "target": "zip",
+        "category": "Player"
+    }
+}

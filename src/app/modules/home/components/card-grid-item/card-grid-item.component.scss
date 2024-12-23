@@ -1,0 +1,32 @@
+@import 'src/scss/mixins';
+
+.card-grid-item {
+    display: flex;
+    flex-direction: column;
+
+    :focus {
+        outline: 0.25rem solid var(--ion-color-primary);
+        border-radius: .25rem;
+        z-index: 10;
+    }
+
+    &__name {
+        margin: 5px 0 0;
+        font-size: .9rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    &__other-info {
+        font-size: .7rem;
+        color: var(--ion-color-medium);
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
+    .wrapper {
+        display: contents;
+    }
+}

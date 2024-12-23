@@ -1,0 +1,57 @@
+.episode-selector {
+    display: flex;
+    gap: .25rem;
+    padding: .5rem .25rem;
+    background-color: var(--ion-color-light);
+    border-radius: .25rem;
+
+    .scrollbar {
+        --scrollbar-thumb-color: rgba(var(--ion-color-primary-rgb), 1);
+        --scrollbar-track-color: rgba(var(--ion-color-primary-rgb), 0.5);
+        --_horizontal-left: .625rem;
+        --_horizontal-right: .625rem;
+    }
+
+    &__wrapper {
+        display: flex;
+        gap: 0.25rem;
+        overflow: hidden;
+    }
+
+    &__item {
+        // <-- for ionic ripple effect
+        position: relative;
+        overflow: hidden;
+        // for ionic ripple effect -->
+
+        user-select: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 100vmax;
+        border: 0.125rem solid var(--ion-color-medium-tint);
+        min-width: 2rem;
+        min-height: 2rem;
+        padding: .25rem;
+        font-weight: 600;
+
+        &--watched {
+            color: rgba(var(--shc-watched-episode-color-rgb), 0.85) !important;
+        }
+
+        &--selected {
+            $selectedColor: var(--ion-color-primary);
+
+            color: $selectedColor;
+            border-color: $selectedColor;
+        }
+
+        &--long {
+            min-width: 3.2rem;
+        }
+
+        &--skeleton {
+            border-color: var(--ion-color-step-450);
+        }
+    }
+}

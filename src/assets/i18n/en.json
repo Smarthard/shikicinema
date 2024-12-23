@@ -1,0 +1,101 @@
+{
+    "GLOBAL": {
+        "APP_NAME": "Shikicinema",
+        "SHIKIMORI": {
+            "ANIME_KINDS": {
+                "TV" : "TV Series",
+                "OVA" : "OVA",
+                "ONA" : "ONA",
+                "MOVIE" : "Movie",
+                "SPECIAL" : "Special",
+                "MUSIC": "Music",
+                "TV_SPECIAL": "TV Special",
+                "PV": "Promotional Video",
+                "CM": "Commercial Message"
+            },
+            "ANIME_STATUSES": {
+                "ANONS": "planned",
+                "ONGOING": "airing",
+                "RELEASED": "released"
+            }
+        },
+        "VIDEO": {
+            "KINDS": {
+                "DUBBING": "Dubbing",
+                "SUBTITLES": "Subtitles",
+                "ORIGINAL": "Original"
+            },
+            "AUTHORS": {
+                "DEFAULT_NAME": "Unknown"
+            },
+            "WELL_KNOWN_UPLOADERS": {
+                "KODIK": "Kodik",
+                "DELETED_UPLOADER": "Anonym"
+            }
+        },
+        "HEADER": {
+            "SEARCHBAR": {
+                "NOTHING_FOUND": "Nothing found",
+                "SEARCH_SOMETHING": "Type something to search"
+            },
+            "TOOLBAR_MENU": {
+                "SIGN_IN": "Sign In",
+                "TO_PROFILE": "Profile",
+                "ANIME_LIST": "Anime list",
+                "MANGA_LIST": "Manga list",
+                "SETTINGS": "Settings",
+                "EXIT": "Exit"
+            }
+        },
+        "GO_EXTERNAL_PAGE": {
+            "MESSAGE": "You're going outside of the Shikicinema, now redirecting to {{ link }}"
+        },
+        "AUTH": {
+            "SHIKIMORI": {
+                "LOGIN": {
+                    "SUCCESS": "Logged in as {{ nickname }}",
+                    "FAILURE": "Couldn't login to Shikimori"
+                }
+            }
+        },
+        "COMMON": {
+            "DATES": {
+                "YEAR": "{{ year }}"
+            }
+        }
+    },
+    "HOME_MODULE": {
+        "HOME_PAGE": {
+            "PAGE_TITLE": "{{ nickname }} anime list",
+            "ANIME_SEARCHBAR_PLACEHOLDER": "Search anime...",
+            "GRIDS": {
+                "PLANNED": "Planned to watch",
+                "WATCHING": "Watching",
+                "REWATCHING": "Rewatching",
+                "COMPLETED": "Completed",
+                "ON_HOLD": "On hold",
+                "DROPPED": "Dropped"
+            }
+        }
+    },
+    "PLAYER_MODULE": {
+        "PLAYER_PAGE": {
+            "PAGE_TITLE": {
+                "MOVIE": "{{ title }} | movie",
+                "SERIES": "{{ title }} | episode {{ episode }}"
+            },
+            "WATCH_ACTION": {
+                "SUCCESS": "Watched",
+                "FAILURE": "Failed"
+            },
+            "RELEVANT_VIDEOS_MISSING": "We couldn't find relevant videos",
+            "COMMENT_REPLY_MISSING": "Reply was deleted",
+            "USER_COMMENT_FORM": {
+                "LABEL": "Comment",
+                "PLACEHOLDER": "Enter your comment",
+                "SEND_SUCCESS": "Comment sent",
+                "SEND_FAILURE": "Failed to send comment"
+            }
+        }
+    }
+}

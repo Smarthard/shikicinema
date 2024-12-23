@@ -1,0 +1,6 @@
+{
+    "appId": "net.smarthard.shikicinema",
+    "appName": "Shikicinema",
+    "webDir": "dist",
+    "bundledWebRuntime": false
+}

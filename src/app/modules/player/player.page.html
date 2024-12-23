@@ -1,0 +1,76 @@
+<ion-content [fullscreen]="true" class="page-content ion-padding"
+    appSwipe
+    (appSwipeRight)="onOpenVideoSelectorModal()">
+    <div class="player-page__wrapper"
+        [class.player-page__wrapper--mobile]="isMobile$ | async">
+        <div class="player-page__anime-info common-info">
+            <div class="common-info__title">
+                @if (isAnimeLoading$ | async) {
+                    <app-skeleton-block height="2rem" [width]="(isMobile$ | async) ? '15rem' : '30rem'" />
+                } @else {
+                    <ion-text>
+                        <h1 class="player-page__title text-ellipsis"
+                            [title]="(animeName$ | async)">
+                            <a [href]="'https://shikimori.one/animes/' + (animeId$ | async)">
+                                {{ animeName$ | async }}
+                            </a>
+                        </h1>
+                    </ion-text>
+                }
+            </div>
+
+            <div class="common-info__video">
+                <app-uploader [uploader]="(currentVideo$ | async)?.uploader | toUploader | async" />
+            </div>
+        </div>
+
+        <app-kind-selector
+            class="player-page__kind"
+            [class.ion-hide]="isVideoSelectionHidden$ | async"
+            [kinds]="episodeVideos$ | async | getActiveKinds"
+            [selected]="currentKind$ | async"
+            (selection)="onKindChange($event)"
+        />
+
+        <app-player class="player-page__player"
+            [loading]="isVideosLoading$ | async"
+            [source]="(currentVideo$ | async)?.url"
+        />
+
+        <app-video-selector
+            class="player-page__video-selector"
+            [class.ion-hide]="isVideoSelectionHidden$ | async"
+            [videos]="episodeVideos$ | async | filterByKind: (currentKind$ | async)"
+            [selected]="currentVideo$ | async"
+            (selection)="onVideoChange($event)"
+        />
+
+        <ng-container *ngLet="isWatched$ | async as isWatched">
+            <app-control-panel
+                class="player-page__control-panel"
+                [episodes]="videos$ | async | getEpisodes"
+                [selected]="episode$ | async"
+                [userRate]="userRate$ | async"
+                [isWatched]="isWatched"
+                [isRewatching]="isRewatching$ | async"
+                [isMinified]="isControlPanelMinified$ | async"
+                (selection)="onEpisodeChange($event)"
+                (watch)="onWatch($event, isWatched)"
+                (openVideoModal)="onOpenVideoSelectorModal()"
+            />
+        </ng-container>
+
+        <app-comments
+            class="player-page__comments"
+            [comments]="comments$ | async"
+            [isLoading]="isCommentsLoading$ | async"
+            [showMoreButton]="(isShownAllComments$ | async) === false"
+            (showMoreComments)="onShowMoreComments()"
+        />
+
+        <app-user-comment-form
+            class="player-page__comment-form"
+            (send)="onCommentSend($event)"
+        />
+    </div>
+</ion-content>

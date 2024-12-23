@@ -1,0 +1,37 @@
+<ng-container *ngIf="userAnimeRates?.length > 0; else skeletonTemplate">
+    <app-card-grid-item
+        *ngFor="let rate of userAnimeRates; trackBy: trackById"
+        class="anime-grid__item"
+        height="100%"
+        width="auto"
+        [link]="rate.anime | getPlayerLink"
+        [imageUrl]="'https://nyaa.shikimori.one' + rate.anime.image.original"
+        [name]="getAnimeName(rate.anime, currentLang$ | async)"
+        [kind]="rate.anime.kind"
+        [releaseDate]="rate.anime.released_on || rate.anime.aired_on"
+    ></app-card-grid-item>
+
+    <ng-container
+        *ngIf="isLoading"
+        [ngTemplateOutlet]="skeletonTemplate"
+    ></ng-container>
+</ng-container>
+
+<ng-template #skeletonTemplate>
+    <div
+        *ngFor="let _ of userAnimeRatesFake"
+        class="anime-grid__item skeleton-item"
+    >
+        <app-skeleton-block
+            class="skeleton-item__img responsive-9by13"
+            height="100%"
+            width="auto"
+        ></app-skeleton-block>
+
+        <app-skeleton-block
+            class="skeleton-item__text"
+            [height]="'33px'"
+            width="100%"
+        ></app-skeleton-block>
+    </div>
+</ng-template>

@@ -1,0 +1,11 @@
+{
+    "name": "shikicinema",
+    "integrations": {
+        "capacitor": {}
+    },
+    "type": "angular",
+    "hooks": {
+        "serve:before": "./extension-webpack.hook.js",
+        "build:before": "./extension-webpack.hook.js"
+    }
+}

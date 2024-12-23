@@ -1,0 +1,142 @@
+@import 'src/scss/mixins';
+
+.player-page {
+    --shc-watched-episode-color-rgb: 41, 196, 103;
+    --shc-watched-episode-color: rgb(var(--shc-watched-episode-color-rgb));
+
+    &__title {
+        max-width: 50vw;
+    }
+
+    &__anime-info {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+
+        grid-area: info;
+    }
+
+    &__kind {
+        grid-area: kind;
+    }
+
+    &__player {
+        grid-area: player;
+
+        &.skeleton {
+            @media (orientation: portrait) {
+                min-height: 20vh;
+            }
+
+            @media (orientation: landscape) {
+                min-height: 100vh;
+
+            }
+
+            @include media-breakpoint-up('lg') {
+                min-height: 50vh;
+            }
+        }
+    }
+
+    &__comment-form {
+        grid-area: comment-form;
+    }
+
+    &__control-panel {
+        grid-area: conpan;
+    }
+
+    &__video-selector {
+        grid-area: video;
+        max-height: 90vh;
+    }
+
+    &__wrapper {
+        display: grid;
+        row-gap: 1rem;
+
+        justify-content: center;
+
+        grid-template:  "info"
+                        "player"
+                        "conpan"
+                        "kind"
+                        "video"
+                        "comments"
+                        "comment-form";
+
+        @media (orientation: landscape) {
+            grid-template-columns: 90vw min-content;
+        }
+
+        &--mobile {
+            @media (orientation: portrait) {
+                grid-template:  "info"
+                                "player"
+                                "conpan"
+                                "comments"
+                                "comment-form";
+
+                grid-template-rows: auto;
+                grid-template-columns: 90vw min-content;
+            }
+
+            @media (orientation: landscape) {
+                grid-template:  "info"
+                                "player"
+                                "conpan"
+                                "comments"
+                                "comment-form";
+
+                grid-template-rows: auto;
+                grid-template-columns: 90vw min-content;
+            }
+        }
+
+        @include media-breakpoint-up('lg') {
+            margin-top: .5rem;
+            padding: 0 5%;
+
+            grid-template:  "info   kind"
+                            "player video"
+                            "conpan ."
+                            "comments comments"
+                            "comment-form comment-form";
+
+            column-gap: 2.75rem;
+            grid-template-rows: auto 60vh;
+            grid-template-columns: calc(60vh * (16/9)) min-content;
+        }
+
+        @include media-breakpoint-up('xxxl') {
+            margin-top: .5rem;
+            padding: 0 5%;
+
+            grid-template:  "info   kind"
+                            "player video"
+                            "conpan ."
+                            "comments comments"
+                            "comment-form comment-form";
+
+            column-gap: 2.75rem;
+            grid-template-rows: auto 70vh;
+            grid-template-columns: calc(70vh * (16/9)) min-content;
+        }
+    }
+
+    &__comments {
+        grid-area: comments;
+        margin-top: .5rem;
+    }
+
+    .common-info {
+        &__title {
+            white-space: nowrap;
+
+            @include media-breakpoint-down('lg') {
+                max-width: 60%;
+            }
+        }
+    }
+}

@@ -1,0 +1,9 @@
+@import 'src/scss/mixins';
+
+.image-viewer-modal {
+    &__image {
+        @include media-breakpoint-up('lg') {
+            margin: 0 100px;
+        }
+    }
+}

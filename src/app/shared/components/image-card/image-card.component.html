@@ -1,0 +1,24 @@
+<div
+    class="image-card__img"
+    [class.ion-hide]="isLoading"
+    [ngStyle]="{
+        'background-image': 'url(' + imageUrl + ')',
+        'background-size': getBgSize(loadedImg$ | async | isImageWidthLarger),
+        height: height,
+        width: width
+    }"
+></div>
+
+<app-skeleton-block
+    *ngIf="isLoading"
+    class="image-card__skeleton"
+    [height]="height"
+    [width]="width"
+></app-skeleton-block>
+
+<img
+    class="ion-hide"
+    [src]="imageUrl"
+    [alt]="name"
+    (load)="onImageLoad($event?.target)"
+/>
