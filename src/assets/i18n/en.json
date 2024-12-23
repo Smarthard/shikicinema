@@ -120,6 +120,7 @@
             },
             "UPLOAD_VIDEO": {
                 "TITLE": "Uploading for \"{{ anime }}\"",
+                "EMPTY_DEMO_TEXT": "I'll show you something if you'd fill the URL field",
                 "FORM": {
                     "URL": {
                         "LABEL": "Link to the video",

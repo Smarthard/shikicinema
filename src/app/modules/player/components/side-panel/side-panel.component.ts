@@ -8,6 +8,7 @@ import {
     ViewEncapsulation,
 } from '@angular/core';
 import { IonButton, IonIcon, ModalController } from '@ionic/angular/standalone';
+import { TranslocoPipe } from '@ngneat/transloco';
 
 import { AnimeBriefInfoInterface } from '@app/shared/types/shikimori/anime-brief-info.interface';
 import { VideoInfoInterface } from '@app/modules/player/types';
@@ -18,6 +19,7 @@ import { VideoInfoInterface } from '@app/modules/player/types';
     imports: [
         IonButton,
         IonIcon,
+        TranslocoPipe,
     ],
     templateUrl: './side-panel.component.html',
     styleUrl: './side-panel.component.scss',
