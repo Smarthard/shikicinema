@@ -64,6 +64,7 @@ export const getTopicsAction = createAction(
     props<{
         animeId: number,
         episode: number,
+        revalidate: boolean,
     }>(),
 );
 

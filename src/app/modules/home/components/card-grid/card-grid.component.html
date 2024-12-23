@@ -5,7 +5,7 @@
         height="100%"
         width="auto"
         [link]="rate.anime | getPlayerLink"
-        [imageUrl]="'https://nyaa.shikimori.one' + rate.anime.image.original"
+        [imageUrl]="(shikimoriDomain$ | async) + rate.anime.image.original"
         [name]="getAnimeName(rate.anime, currentLang$ | async)"
         [kind]="rate.anime.kind"
         [releaseDate]="rate.anime.released_on || rate.anime.aired_on"

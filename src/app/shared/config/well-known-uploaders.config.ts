@@ -13,6 +13,6 @@ export const WELL_KNOWN_UPLOADERS_MAP = {
     [DELETED_UPLOADER]: {
         id: DELETED_UPLOADER,
         name: 'GLOBAL.VIDEO.WELL_KNOWN_UPLOADERS.DELETED_UPLOADER',
-        avatar: 'https://shikimori.one/assets/globals/missing.jpg',
+        avatar: '/assets/shikimori-404.png',
     },
 } as WellKnownType;

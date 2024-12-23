@@ -1,0 +1,174 @@
+<h2 class="video-upload-modal__header">
+    {{ 'PLAYER_MODULE.PLAYER_PAGE.UPLOAD_VIDEO.TITLE' | transloco: { anime: getAnimeName(anime, lang$ | async) } }}
+</h2>
+
+<div class="video-upload-modal__demo">
+    @if (url) {
+        <app-player class="video-upload-modal__player responsive-16by9" [source]="url" [loading]="false" />
+    } @else {
+        <div class="video-upload-modal__player video-upload-modal__player--dummy responsive-16by9">
+            <div class="video-upload-modal__helper-text">
+                {{ 'PLAYER_MODULE.PLAYER_PAGE.UPLOAD_VIDEO.EMPTY_DEMO_TEXT' | transloco }}
+            </div>
+
+            <img class="video-upload-modal__shrug-chan" src="/assets/shrug-chan.png" alt="shrug-chan" />
+        </div>
+    }
+</div>
+
+<form class="video-upload-modal__form" [formGroup]="uploadForm">
+    <div class="video-upload-modal__video-inputs-wrap">
+        <ion-item class="video-upload-modal__item video-upload-modal__item--url">
+            <ion-input
+                formControlName="url"
+                type="url"
+                labelPlacement="floating"
+                fill="outline"
+                [label]="'PLAYER_MODULE.PLAYER_PAGE.UPLOAD_VIDEO.FORM.URL.LABEL' | transloco"
+                [placeholder]="'PLAYER_MODULE.PLAYER_PAGE.UPLOAD_VIDEO.FORM.URL.PLACEHOLDER' | transloco"
+            />
+        </ion-item>
+
+        <ion-item class="video-upload-modal__item video-upload-modal__item--author">
+            <ion-input
+                formControlName="author"
+                type="text"
+                labelPlacement="floating"
+                fill="outline"
+                [label]="'PLAYER_MODULE.PLAYER_PAGE.UPLOAD_VIDEO.FORM.AUTHOR.LABEL' | transloco"
+                [placeholder]="'PLAYER_MODULE.PLAYER_PAGE.UPLOAD_VIDEO.FORM.AUTHOR.PLACEHOLDER' | transloco"
+            />
+        </ion-item>
+
+        <ion-item class="video-upload-modal__item video-upload-modal__item--episode">
+            <ion-input
+                formControlName="episode"
+                type="number"
+                labelPlacement="floating"
+                fill="outline"
+                min="1"
+                [max]="getLastAiredEpisode(anime)"
+                [label]="'PLAYER_MODULE.PLAYER_PAGE.UPLOAD_VIDEO.FORM.EPISODE.LABEL' | transloco"
+                [placeholder]="'PLAYER_MODULE.PLAYER_PAGE.UPLOAD_VIDEO.FORM.EPISODE.PLACEHOLDER' | transloco"
+            />
+        </ion-item>
+
+        <ion-item class="video-upload-modal__item video-upload-modal__item--kind">
+            <ion-select
+                formControlName="kind"
+                labelPlacement="floating"
+                fill="outline"
+                class="video-upload-modal__select"
+                [label]="'PLAYER_MODULE.PLAYER_PAGE.UPLOAD_VIDEO.FORM.KIND.LABEL' | transloco"
+                [placeholder]="'PLAYER_MODULE.PLAYER_PAGE.UPLOAD_VIDEO.FORM.KIND.PLACEHOLDER' | transloco">
+
+                <ion-select-option [value]="VideoKindEnum.DUBBING">
+                    {{ 'GLOBAL.VIDEO.KINDS.DUBBING' | transloco }}
+                </ion-select-option>
+
+                <ion-select-option [value]="VideoKindEnum.SUBTITLES">
+                    {{ 'GLOBAL.VIDEO.KINDS.SUBTITLES' | transloco }}
+                </ion-select-option>
+
+                <ion-select-option [value]="VideoKindEnum.ORIGINAL">
+                    {{ 'GLOBAL.VIDEO.KINDS.ORIGINAL' | transloco }}
+                </ion-select-option>
+
+            </ion-select>
+        </ion-item>
+
+        <ion-item class="video-upload-modal__item video-upload-modal__item--quality">
+            <ion-select
+                formControlName="quality"
+                labelPlacement="floating"
+                fill="outline"
+                class="video-upload-modal__select"
+                [label]="'PLAYER_MODULE.PLAYER_PAGE.UPLOAD_VIDEO.FORM.QUALITY.LABEL' | transloco"
+                [placeholder]="'PLAYER_MODULE.PLAYER_PAGE.UPLOAD_VIDEO.FORM.QUALITY.PLACEHOLDER' | transloco">
+
+                <ion-select-option [value]="VideoQualityEnum.UNKNOWN">
+                    {{ 'GLOBAL.VIDEO.QUALITIES.UNKNOWN' | transloco }}
+                </ion-select-option>
+
+                <ion-select-option [value]="VideoQualityEnum.TV">
+                    {{ 'GLOBAL.VIDEO.QUALITIES.TV' | transloco }}
+                </ion-select-option>
+
+                <ion-select-option [value]="VideoQualityEnum.WEB">
+                    {{ 'GLOBAL.VIDEO.QUALITIES.WEB' | transloco }}
+                </ion-select-option>
+
+                <ion-select-option [value]="VideoQualityEnum.DVD">
+                    {{ 'GLOBAL.VIDEO.QUALITIES.DVD' | transloco }}
+                </ion-select-option>
+
+                <ion-select-option [value]="VideoQualityEnum.BD">
+                    {{ 'GLOBAL.VIDEO.QUALITIES.BD' | transloco }}
+                </ion-select-option>
+
+            </ion-select>
+        </ion-item>
+
+        <ion-item class="video-upload-modal__item video-upload-modal__item--language">
+            <ion-select
+                formControlName="language"
+                labelPlacement="floating"
+                fill="outline"
+                class="video-upload-modal__select"
+                [label]="'PLAYER_MODULE.PLAYER_PAGE.UPLOAD_VIDEO.FORM.LANGUAGE.LABEL' | transloco"
+                [placeholder]="'PLAYER_MODULE.PLAYER_PAGE.UPLOAD_VIDEO.FORM.LANGUAGE.PLACEHOLDER' | transloco">
+
+                <!-- TODO: сортировать по алфавиту для разных языков автоматически -->
+
+                <ion-select-option [value]="VideoLanguageEnum.Russian">
+                    {{ 'GLOBAL.VIDEO.LANGUAGES.RUSSIAN' | transloco }}
+                </ion-select-option>
+
+                <ion-select-option [value]="VideoLanguageEnum.Ukranian">
+                    {{ 'GLOBAL.VIDEO.LANGUAGES.UKRANIAN' | transloco }}
+                </ion-select-option>
+
+                <ion-select-option [value]="VideoLanguageEnum.Belorussian">
+                    {{ 'GLOBAL.VIDEO.LANGUAGES.BELORUSSIAN' | transloco }}
+                </ion-select-option>
+
+                <ion-select-option [value]="VideoLanguageEnum.Kazakh">
+                    {{ 'GLOBAL.VIDEO.LANGUAGES.KAZAKH' | transloco }}
+                </ion-select-option>
+
+                <ion-select-option [value]="VideoLanguageEnum.English">
+                    {{ 'GLOBAL.VIDEO.LANGUAGES.ENGLISH' | transloco }}
+                </ion-select-option>
+
+                <ion-select-option [value]="VideoLanguageEnum.Japanese">
+                    {{ 'GLOBAL.VIDEO.LANGUAGES.JAPANESE' | transloco }}
+                </ion-select-option>
+
+                <ion-select-option [value]="VideoLanguageEnum.Chinese">
+                    {{ 'GLOBAL.VIDEO.LANGUAGES.CHINESE' | transloco }}
+                </ion-select-option>
+
+                <ion-select-option [value]="VideoLanguageEnum.Korean">
+                    {{ 'GLOBAL.VIDEO.LANGUAGES.KOREAN' | transloco }}
+                </ion-select-option>
+
+            </ion-select>
+        </ion-item>
+    </div>
+
+    <div class="video-upload-modal__controls">
+        <ion-button
+            type="button"
+            color="danger"
+            (click)="cancel()">
+            {{ 'PLAYER_MODULE.PLAYER_PAGE.UPLOAD_VIDEO.FORM_ACTIONS.CANCEL' | transloco }}
+        </ion-button>
+
+        <ion-button
+            type="button"
+            [disabled]="uploadForm.invalid"
+            (click)="submit()">
+            {{ 'PLAYER_MODULE.PLAYER_PAGE.UPLOAD_VIDEO.FORM_ACTIONS.UPLOAD' | transloco }}
+        </ion-button>
+    </div>
+</form>

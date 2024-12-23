@@ -3,11 +3,13 @@ import {
     Observable,
     Subject,
     combineLatest,
+    firstValueFrom,
 } from 'rxjs';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import {
     ChangeDetectionStrategy,
     Component,
+    Inject,
     OnInit,
     ViewEncapsulation,
 } from '@angular/core';
@@ -24,6 +26,7 @@ import {
 import { AnimeBriefInfoInterface } from '@app/shared/types/shikimori/anime-brief-info.interface';
 import { NavigationExtras, Router } from '@angular/router';
 import { ResultOpenTarget, SearchbarResult } from '@app/shared/types/searchbar.types';
+import { SHIKIMORI_DOMAIN_TOKEN } from '@app/core/providers/shikimori-domain';
 import { UserBriefInfoInterface } from '@app/shared/types/shikimori/user-brief-info.interface';
 import { authShikimoriAction, logoutShikimoriAction } from '@app/store/auth/actions/auth.actions';
 import {
@@ -58,6 +61,8 @@ export class HeaderComponent implements OnInit {
     private searchbarFocusedSubject$: Subject<boolean>;
 
     constructor(
+        @Inject(SHIKIMORI_DOMAIN_TOKEN)
+        private shikimoriDomain$: Observable<string>,
         private store: Store,
         private router: Router,
         private breakpointObserver: BreakpointObserver,
@@ -120,13 +125,14 @@ export class HeaderComponent implements OnInit {
     }
 
     async openResult([result, target]: [SearchbarResult, ResultOpenTarget]): Promise<void> {
+        const shikimoriDomain = await firstValueFrom(this.shikimoriDomain$);
         this.isAnimeListPopoverOpen = false;
 
         if (target === 'internal') {
             await this.router.navigate(['/player', result.id]);
         } else {
             const extras: NavigationExtras = {
-                queryParams: { link: toBase64('https://shikimori.one' + result.url) },
+                queryParams: { link: toBase64(shikimoriDomain + result.url) },
             };
 
             await this.router.navigate(['/external'], extras);

@@ -1,7 +1,7 @@
 /* eslint-disable no-use-before-define */
-export function getAuthorizationCode(shikimoriOAuthClientId: string): Promise<string> {
-    return new Promise((resolve, reject) => {
-        const codeUrl = new URL('https://shikimori.one/oauth/authorize');
+export function getAuthorizationCode(shikimoriDomain: string, shikimoriOAuthClientId: string): Promise<string> {
+    return new Promise(async (resolve, reject) => {
+        const codeUrl = new URL(`${shikimoriDomain}/oauth/authorize`);
         codeUrl.searchParams.set('client_id', shikimoriOAuthClientId);
         codeUrl.searchParams.set('redirect_uri', 'urn:ietf:wg:oauth:2.0:oob');
         codeUrl.searchParams.set('response_type', 'code');

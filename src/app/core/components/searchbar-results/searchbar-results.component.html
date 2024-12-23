@@ -19,7 +19,7 @@
             >
                 <app-image-card
                     class="anime-search-list-item__image"
-                    [imageUrl]="'https://shikimori.one' + result.image.original"
+                    [imageUrl]="(shikimoriDomain$ | async) + result.image.original"
                     [name]="result.name"
                     [backgroundSize]="'cover'"
                     [height]="'85px'"

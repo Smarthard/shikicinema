@@ -8,8 +8,6 @@
     .scrollbar {
         --scrollbar-thumb-color: rgba(var(--ion-color-primary-rgb), 1);
         --scrollbar-track-color: rgba(var(--ion-color-primary-rgb), 0.5);
-        --_horizontal-left: .625rem;
-        --_horizontal-right: .625rem;
     }
 
     &__wrapper {
@@ -36,7 +34,9 @@
         font-weight: 600;
 
         &--watched {
-            color: rgba(var(--shc-watched-episode-color-rgb), 0.85) !important;
+            background-color: rgba(var(--shc-watched-episode-color-rgb), 0.85) !important;
+            color: var(--ion-color-light) !important;
+            border-color: transparent;
         }
 
         &--selected {

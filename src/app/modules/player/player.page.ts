@@ -5,11 +5,17 @@ import {
     ChangeDetectionStrategy,
     Component,
     HostBinding,
+    Inject,
     OnInit,
     ViewEncapsulation,
 } from '@angular/core';
 import { ModalController, Platform } from '@ionic/angular';
-import { ReplaySubject, combineLatest, firstValueFrom } from 'rxjs';
+import {
+    Observable,
+    ReplaySubject,
+    combineLatest,
+    firstValueFrom,
+} from 'rxjs';
 import { Store } from '@ngrx/store';
 import { Title } from '@angular/platform-browser';
 import { ToastController } from '@ionic/angular/standalone';
@@ -28,6 +34,7 @@ import {
 
 import { AnimeBriefInfoInterface } from '@app/shared/types/shikimori/anime-brief-info.interface';
 import { NoPreferenceSymbol } from '@app/store/settings/types';
+import { SHIKIMORI_DOMAIN_TOKEN } from '@app/core/providers/shikimori-domain';
 import { VideoInfoInterface } from '@app/modules/player/types';
 import { VideoKindEnum } from '@app/modules/player/types/video-kind.enum';
 import { filterByEpisode } from '@app/shared/utils/filter-by-episode.function';
@@ -61,6 +68,7 @@ import {
     selectPlayerVideosLoading,
 } from '@app/modules/player/store/selectors/player.selectors';
 import { updatePlayerPreferencesAction } from '@app/store/settings/actions/settings.actions';
+import { uploadVideoAction } from '@app/store/shikicinema/actions/upload-video.action';
 
 
 @UntilDestroy()
@@ -85,7 +93,7 @@ export class PlayerPage implements OnInit {
         Breakpoints.Medium,
     ]).pipe(map(({ matches }) => matches));
 
-    readonly isControlPanelMinified$ = combineLatest([
+    readonly isPanelsMinified$ = combineLatest([
         this.isMobile$,
         this.isOrientationPortraitSubject$,
         this.isSmallScreen$,
@@ -164,6 +172,8 @@ export class PlayerPage implements OnInit {
     );
 
     constructor(
+        @Inject(SHIKIMORI_DOMAIN_TOKEN)
+        readonly shikimoriDomain$: Observable<string>,
         private store: Store,
         private route: ActivatedRoute,
         private router: Router,
@@ -223,7 +233,7 @@ export class PlayerPage implements OnInit {
             tap(([anime, episode]) => {
                 this.changeTitle(anime, episode);
 
-                this.store.dispatch(getTopicsAction({ animeId: anime.id, episode }));
+                this.store.dispatch(getTopicsAction({ animeId: anime.id, episode, revalidate: false }));
                 this.store.dispatch(getCommentsAction({ animeId: anime.id, episode, page: 1, limit: 30 }));
             }),
             untilDestroyed(this),
@@ -347,5 +357,11 @@ export class PlayerPage implements OnInit {
         const episode = await firstValueFrom(this.episode$);
 
         this.store.dispatch(sendCommentAction({ animeId, episode, commentText }));
+    }
+
+    async onVideoUpload(video: VideoInfoInterface): Promise<void> {
+        const animeId = await firstValueFrom(this.animeId$);
+
+        this.store.dispatch(uploadVideoAction({ animeId, video }));
     }
 }

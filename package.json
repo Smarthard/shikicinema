@@ -70,7 +70,7 @@
         "deep-object-diff": "^1.1.9",
         "ng-let": "^18.0.1",
         "ngrx-store-localstorage": "^17.0.0",
-        "ngx-scrollbar": "^15.1.2",
+        "ngx-scrollbar": "^16.1.1",
         "ngx-tippy-wrapper": "^6.2.2",
         "ngx-visibility": "~1.5.0",
         "rxjs": "~7.8.1",

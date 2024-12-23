@@ -1,0 +1,27 @@
+@import 'src/scss/mixins';
+
+.side-panel {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    &--minified {
+        justify-content: unset;
+    }
+
+    &__upload-btn {
+        height: 100%;
+    }
+
+    &__upload-modal {
+        --height: auto;
+
+        @include media-breakpoint-down('lg') {
+            align-items: end;
+        }
+
+        @include media-breakpoint-up('lg') {
+            --width: auto;
+        }
+    }
+}
