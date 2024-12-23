@@ -64,6 +64,7 @@
             class="player-page__side-panel"
             [anime]="anime$ | async"
             [episode]="episode$ | async"
+            [isLoading]="isAnimeLoading$ | async"
             [isMinified]="isPanelsMinified$ | async"
             (uploaded)="onVideoUpload($event)"
         />

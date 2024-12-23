@@ -37,6 +37,9 @@ export class SidePanelComponent {
     episode: number;
 
     @Input()
+    isLoading: boolean = true;
+
+    @Input()
     @HostBinding('class.side-panel--minified')
     isMinified: boolean = false;
 

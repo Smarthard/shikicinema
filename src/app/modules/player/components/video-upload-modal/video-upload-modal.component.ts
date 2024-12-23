@@ -7,6 +7,7 @@ import {
     HostBinding,
     Input,
     NgZone,
+    OnInit,
     ViewEncapsulation,
 } from '@angular/core';
 import {
@@ -59,7 +60,7 @@ import { getLastAiredEpisode } from '@app/modules/player/utils';
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class VideoUploadModalComponent extends IonModal {
+export class VideoUploadModalComponent extends IonModal implements OnInit {
     @HostBinding('class.video-upload-modal')
     private videoUploadModalClass = true;
 
@@ -77,16 +78,7 @@ export class VideoUploadModalComponent extends IonModal {
         return this._episode;
     }
 
-    uploadForm = new FormGroup({
-        url: new FormControl('', [Validators.required]),
-        author: new FormControl(''),
-        episode: new FormControl(this.episode, [Validators.required]),
-        kind: new FormControl<VideoKindEnum>(VideoKindEnum.DUBBING),
-        quality: new FormControl<VideoQualityEnum>(VideoQualityEnum.UNKNOWN),
-        // TODO: использовать системный язык пользователя
-        language: new FormControl<VideoLanguageEnum>(VideoLanguageEnum.Russian),
-        urlType: new FormControl<string>({ value: 'iframe', disabled: true }),
-    });
+    uploadForm: FormGroup;
 
     get url(): string {
         return this.uploadForm.get('url').value;
@@ -108,6 +100,19 @@ export class VideoUploadModalComponent extends IonModal {
         private readonly _zone: NgZone,
     ) {
         super(_changeDetectorRef, _elementRef, _zone);
+    }
+
+    ngOnInit(): void {
+        this.uploadForm = new FormGroup({
+            url: new FormControl('', [Validators.required]),
+            author: new FormControl(''),
+            episode: new FormControl(this.episode, [Validators.required]),
+            kind: new FormControl<VideoKindEnum>(VideoKindEnum.DUBBING),
+            quality: new FormControl<VideoQualityEnum>(VideoQualityEnum.UNKNOWN),
+            // TODO: использовать системный язык пользователя
+            language: new FormControl<VideoLanguageEnum>(VideoLanguageEnum.Russian),
+            urlType: new FormControl<string>({ value: 'iframe', disabled: true }),
+        });
     }
 
     cancel() {
