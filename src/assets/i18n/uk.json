@@ -1,0 +1,169 @@
+{
+    "GLOBAL": {
+        "APP_NAME": "Shikicinema",
+        "SHIKIMORI": {
+            "ANIME_KINDS": {
+                "TV" : "ТБ Серіал",
+                "OVA" : "ОВА",
+                "ONA" : "ОНА",
+                "MOVIE" : "Фільм",
+                "SPECIAL" : "Спешл",
+                "MUSIC": "Кліп",
+                "TV_SPECIAL": "ТБ Спецвипуск",
+                "PV": "Промовідео",
+                "CM": "Реклама"
+            },
+            "ANIME_STATUSES": {
+                "ANONS": "заплановано",
+                "ONGOING": "онгоїнг",
+                "RELEASED": "вийшло"
+            }
+        },
+        "VIDEO": {
+            "QUALITIES": {
+                "TV": "ТБ версія",
+                "WEB": "Веб версія",
+                "DVD": "DVD випуск",
+                "BD": "Blu-Ray випуск",
+                "UNKNOWN": "Невідоме"
+            },
+            "LANGUAGES": {
+                "RUSSIAN": "Россійський",
+                "UKRANIAN": "Український",
+                "BELORUSSIAN": "Білоруський",
+                "KAZAKH": "Казахський",
+                "ENGLISH": "Англійський",
+                "JAPANESE": "Японський",
+                "CHINESE": "Китайський",
+                "KOREAN": "Корейський"
+            },
+            "KINDS": {
+                "DUBBING": "Озвучка",
+                "SUBTITLES": "Субтитри",
+                "ORIGINAL": "Оригінал"
+            },
+            "AUTHORS": {
+                "DEFAULT_NAME": "Невідомо"
+            },
+            "WELL_KNOWN_UPLOADERS": {
+                "KODIK": "Кодік",
+                "DELETED_UPLOADER": "Анонім"
+            }
+        },
+        "HEADER": {
+            "SEARCHBAR": {
+                "NOTHING_FOUND": "Нічого не знайдено",
+                "SEARCH_SOMETHING": "Почніть писати назву аніме для пошуку"
+            },
+            "TOOLBAR_MENU": {
+                "SIGN_IN": "Увійти",
+                "TO_PROFILE": "Профіль",
+                "ANIME_LIST": "Список аніме",
+                "MANGA_LIST": "Список манги",
+                "SETTINGS": "Налаштування",
+                "EXIT": "Вихід"
+            }
+        },
+        "GO_EXTERNAL_PAGE": {
+            "MESSAGE": "Ви покидаєте Shikicinema та направляєтесь на {{ link }}"
+        },
+        "AUTH": {
+            "SHIKIMORI": {
+                "LOGIN": {
+                    "SUCCESS": "Вхід виконано як {{ nickname }}",
+                    "FAILURE": "Не вдалося виконати вхід до Shikimori"
+                },
+                "REFRESH": {
+                    "FAILURE": "Не вдалося обновити токен Shikimori"
+                }
+            },
+            "SHIKICINEMA": {
+                "UPLOAD_TOKEN": {
+                    "FAILURE": "Не вдалося отримати токен для завантаження відео"
+                }
+            }
+        },
+        "COMMON": {
+            "DATES": {
+                "YEAR": "{{ year }}"
+            }
+        }
+    },
+    "HOME_MODULE": {
+        "HOME_PAGE": {
+            "PAGE_TITLE": "Список аніме {{ nickname }}",
+            "ANIME_SEARCHBAR_PLACEHOLDER": "Шукати аніме...",
+            "GRIDS": {
+                "PLANNED": "Заплановано",
+                "WATCHING": "Переглядаю",
+                "REWATCHING": "Повторний перегляд",
+                "COMPLETED": "Завершено",
+                "ON_HOLD": "Відкладено",
+                "DROPPED": "Кинуто"
+            }
+        }
+    },
+    "PLAYER_MODULE": {
+        "PLAYER_PAGE": {
+            "PAGE_TITLE": {
+                "MOVIE": "{{ title }} | фільм",
+                "SERIES": "{{ title }} | серія {{ episode }}"
+            },
+            "WATCH_ACTION": {
+                "SUCCESS": "Переглянуто",
+                "FAILURE": "Помилка"
+            },
+            "RELEVANT_VIDEOS_MISSING": "Схожі відео не було знайдено",
+            "COMMENT_REPLY_MISSING": "Коментарій було видалено",
+            "USER_COMMENT_FORM": {
+                "LABEL": "Ваш коментар",
+                "PLACEHOLDER": "Введіть ваш коментар",
+                "SEND_SUCCESS": "Коментар відправлено",
+                "SEND_FAILURE": "Не вдалося відправити коментар"
+            },
+            "UPLOAD_VIDEO": {
+                "TITLE": "Завантаження відео для \"{{ anime }}\"",
+                "EMPTY_DEMO_TEXT": "Покажу мультик, якщо заповниш поле URL",
+                "FORM": {
+                    "URL": {
+                        "LABEL": "Посилання на відео",
+                        "PLACEHOLDER": "https://example.com/player/123"
+                    },
+                    "AUTHOR": {
+                        "LABEL": "Автор дубляжа/субтитрів",
+                        "PLACEHOLDER": "AniDUB"
+                    },
+                    "EPISODE": {
+                        "LABEL": "Серія",
+                        "PLACEHOLDER": "1"
+                    },
+                    "KIND": {
+                        "LABEL": "Тип",
+                        "PLACEHOLDER": "Дубляж, субтитри або оригінал"
+                    },
+                    "QUALITY": {
+                        "LABEL": "Якість",
+                        "PLACEHOLDER": "ТВ"
+                    },
+                    "LANGUAGE": {
+                        "LABEL": "Мова",
+                        "PLACEHOLDER": "Українська"
+                    }
+                },
+                "FORM_ACTIONS": {
+                    "CANCEL": "Скасувати",
+                    "UPLOAD": "Завантажити"
+                },
+                "STATUSES": {
+                    "SUCCESS": "Дякую за завантаження!",
+                    "FAILURE": "Не вдалося завантажити відео",
+                    "ERROR_CODES": {
+                        "400": "Відео з таким URL уже існує",
+                        "401": "Поновіть авторизацію Shikimori",
+                        "500": "Спробуйте пізніше"
+                    }
+                }
+            }
+        }
+    }
+}
