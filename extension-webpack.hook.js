@@ -3,10 +3,12 @@ const path = require('path');
 const ESLintPlugin = require('eslint-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
+const dotenv = require('dotenv');
 
+dotenv.config();
 
 const isProduction = process.env.NODE_ENV === 'production';
-const manifestVersion = process.env.MANIFEST_VERSION ?? 'v2';
+const manifestVersion = process.env.MANIFEST_VERSION || 'v2';
 
 function processManifest(content) {
     const manifestContents = JSON.parse(content.toString());
