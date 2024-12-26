@@ -18,7 +18,7 @@ export class TranslocoHttpLoader implements TranslocoLoader {
     }
 }
 
-export const defaultAvailableLangs = ['en', 'ru'];
+export const defaultAvailableLangs = ['en', 'ru', 'uk'];
 
 @NgModule({
     exports: [TranslocoModule],
