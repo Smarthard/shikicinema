@@ -4,12 +4,15 @@ import { SettingsStoreInterface } from '@app/store/settings/types/settings-store
 import { defaultAvailableLangs } from '@app/core/transloco-root.module';
 import {
     resetSettingsAction,
+    updateLanguageAction,
     updatePlayerPreferencesAction,
     updateSettingsAction,
+    updateThemeAction,
 } from '@app/store/settings/actions/settings.actions';
 
 const initialState: SettingsStoreInterface = {
     language: '',
+    theme: 'dark',
     availableLangs: defaultAvailableLangs,
     animePaginationSize: 100,
     authorPreferences: {},
@@ -46,6 +49,20 @@ const reducer = createReducer(
                 ...state.domainPreferences,
                 [animeId]: domain,
             },
+        }),
+    ),
+    on(
+        updateThemeAction,
+        (state, { theme }) => ({
+            ...state,
+            theme,
+        }),
+    ),
+    on(
+        updateLanguageAction,
+        (state, { language }) => ({
+            ...state,
+            language,
         }),
     ),
 );

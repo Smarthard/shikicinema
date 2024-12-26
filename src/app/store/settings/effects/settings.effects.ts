@@ -1,8 +1,8 @@
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Injectable } from '@angular/core';
+import { TranslocoService } from '@ngneat/transloco';
 import { tap } from 'rxjs/operators';
 
-import { TranslocoService } from '@ngneat/transloco';
 import { updateSettingsAction } from '@app/store/settings/actions/settings.actions';
 
 @Injectable()

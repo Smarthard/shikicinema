@@ -9,12 +9,12 @@ import {
 import { DOCUMENT } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { distinctUntilChanged, tap } from 'rxjs/operators';
 import { getBrowserLang } from '@ngneat/transloco';
-import { tap } from 'rxjs/operators';
 
 import { getCurrentUserAction } from '@app/store/shikimori/actions/get-current-user.action';
-import { selectLanguage } from '@app/store/settings/selectors/settings.selectors';
-import { updateSettingsAction } from '@app/store/settings/actions/settings.actions';
+import { selectLanguage, selectTheme } from '@app/store/settings/selectors/settings.selectors';
+import { updateLanguageAction } from '@app/store/settings/actions/settings.actions';
 
 @UntilDestroy()
 @Component({
@@ -33,24 +33,41 @@ export class AppComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
-        this.initializeLocale();
-        this.initializeUser();
+        this.initTheme();
+        this.initLocale();
+        this.initUser();
     }
 
-    initializeLocale(): void {
+    initLocale(): void {
         this._store.select(selectLanguage).pipe(
-            untilDestroyed(this),
             tap((storedLanguage) => {
                 const browserLang = getBrowserLang();
                 const language = storedLanguage || browserLang || 'en';
 
                 this._renderer.setAttribute(this._document.documentElement, 'lang', language);
-                this._store.dispatch(updateSettingsAction({ config: { language } }));
+                this._store.dispatch(updateLanguageAction({ language }));
             }),
+            untilDestroyed(this),
         ).subscribe();
     }
 
-    initializeUser(): void {
+    initTheme(): void {
+        this._store.select(selectTheme).pipe(
+            distinctUntilChanged(),
+            tap((theme) => {
+                const darkThemeClass = 'ion-palette-dark';
+
+                if (!theme || theme === 'dark') {
+                    this._renderer.addClass(this._document.documentElement, darkThemeClass);
+                } else {
+                    this._renderer.removeClass(this._document.documentElement, darkThemeClass);
+                }
+            }),
+            untilDestroyed(this),
+        ).subscribe();
+    }
+
+    initUser(): void {
         this._store.dispatch(getCurrentUserAction());
     }
 }

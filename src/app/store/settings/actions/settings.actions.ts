@@ -17,3 +17,13 @@ export const updatePlayerPreferencesAction = createAction(
 export const resetSettingsAction = createAction(
     '[Settings] Reset',
 );
+
+export const updateThemeAction = createAction(
+    '[Settings] Update theme',
+    props<{ theme: SettingsStoreInterface['theme'] }>(),
+);
+
+export const updateLanguageAction = createAction(
+    '[Settings] Update language',
+    props<{ language: string }>(),
+);
