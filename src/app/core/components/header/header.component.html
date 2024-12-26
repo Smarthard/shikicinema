@@ -130,9 +130,11 @@
                     ></ion-icon>
                 </ion-button>
             </ion-item>
+
             <ion-item
                 class="menu-item menu-item--nolinks"
                 [button]="true"
+                [disabled]="true"
             >
                 <ion-icon
                     class="menu-item__icon"
@@ -156,9 +158,11 @@
                     ></ion-icon>
                 </ion-button>
             </ion-item>
+
             <ion-item
                 class="menu-item"
                 [routerLink]="['settings']"
+                [disabled]="true"
             >
                 <ion-icon
                     class="menu-item__icon"
@@ -168,6 +172,18 @@
                     {{ 'GLOBAL.HEADER.TOOLBAR_MENU.SETTINGS' | transloco }}
                 </ion-text>
             </ion-item>
+
+            <ion-item class="menu-item">
+                <ion-toggle
+                    labelPlacement="end"
+                    justify="start"
+                    [checked]="(theme$ | async) === 'dark'"
+                    (ionChange)="onChangeTheme()"
+                >
+                    {{ 'GLOBAL.HEADER.TOOLBAR_MENU.THEME_TOGGLE.' + (theme$ | async | uppercase) | transloco }}
+                </ion-toggle>
+            </ion-item>
+
             <ion-item
                 color="danger"
                 class="menu-item"
@@ -205,9 +221,11 @@
                     {{ 'GLOBAL.HEADER.TOOLBAR_MENU.SIGN_IN' | transloco }}
                 </ion-text>
             </ion-item>
+
             <ion-item
                 class="menu-item"
                 [routerLink]="['settings']"
+                [disabled]="true"
             >
                 <ion-icon
                     class="menu-item__icon"
@@ -217,6 +235,18 @@
                     {{ 'GLOBAL.HEADER.TOOLBAR_MENU.SETTINGS' | transloco }}
                 </ion-text>
             </ion-item>
+
+            <ion-item class="menu-item">
+                <ion-toggle
+                    labelPlacement="end"
+                    justify="start"
+                    [checked]="(theme$ | async) === 'dark'"
+                    (ionChange)="onChangeTheme()"
+                >
+                    {{ 'GLOBAL.HEADER.TOOLBAR_MENU.THEME_TOGGLE.' + (theme$ | async | uppercase) | transloco }}
+                </ion-toggle>
+            </ion-item>
+
             <ion-item
                 color="danger"
                 class="menu-item"

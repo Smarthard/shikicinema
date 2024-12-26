@@ -32,6 +32,7 @@
         min-height: 2rem;
         padding: .25rem;
         font-weight: 600;
+        cursor: pointer;
 
         &--watched {
             background-color: rgba(var(--shc-watched-episode-color-rgb), 0.85) !important;

@@ -61,6 +61,10 @@
                 "ANIME_LIST": "Anime list",
                 "MANGA_LIST": "Manga list",
                 "SETTINGS": "Settings",
+                "THEME_TOGGLE": {
+                    "LIGHT": "Light theme",
+                    "DARK": "Dark theme"
+                },
                 "EXIT": "Exit"
             }
         },
