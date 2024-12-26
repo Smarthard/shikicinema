@@ -30,10 +30,11 @@ export class AuthWebExtensionEffects extends AuthEffects {
     override oauthShikimori$ = createEffect(() => this.actions$.pipe(
         ofType(authShikimoriAction),
         concatLatestFrom(() => this.shikimoriDomain$),
-        exhaustMap(([_, shikimoriDomain]) => from(getAuthorizationCode(shikimoriDomain, this.shikimoriClientId))),
-        switchMap((code) => this.shikimoriClient.getNewToken(code)),
-        map((credentials) => authShikimoriSuccessAction({ credentials })),
-        catchError((errors) => of(authShikimoriFailureAction({ errors }))),
+        exhaustMap(([_, shikimoriDomain]) => from(getAuthorizationCode(shikimoriDomain, this.shikimoriClientId)).pipe(
+            switchMap((code) => this.shikimoriClient.getNewToken(code)),
+            map((credentials) => authShikimoriSuccessAction({ credentials })),
+            catchError((errors) => of(authShikimoriFailureAction({ errors }))),
+        )),
     ));
 
     constructor(

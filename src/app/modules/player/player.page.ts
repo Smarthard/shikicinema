@@ -91,6 +91,7 @@ export class PlayerPage implements OnInit {
         Breakpoints.XSmall,
         Breakpoints.Small,
         Breakpoints.Medium,
+        '(min-width: 768px) and (max-width: 1399.98px)',
     ]).pipe(map(({ matches }) => matches));
 
     readonly isPanelsMinified$ = combineLatest([

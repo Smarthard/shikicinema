@@ -37,7 +37,6 @@ export class AuthEffects {
     protected finalizeShikimoriAuth$ = createEffect(() => this.actions$.pipe(
         ofType(
             authShikimoriSuccessAction,
-            authShikimoriFailureAction,
             logoutShikimoriAction,
         ),
         map(() => getCurrentUserAction()),

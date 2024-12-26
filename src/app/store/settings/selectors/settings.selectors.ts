@@ -58,3 +58,8 @@ export const selectDomainPreferencesByAnime = (animeId: ResourceIdType) => creat
         domainPreferences[animeId] ?? getMostPopularPreference(domainPreferences),
     ),
 );
+
+export const selectTheme = createSelector(
+    selectSettings,
+    (state) => state.theme || 'dark',
+);

@@ -33,7 +33,9 @@ $grid-searchbar-column-width: 10fr;
         &__title {
             margin: 0 auto;
 
-            a {
+            a,
+            a:active,
+            a:visited {
                 color: var(--ion-text-color);
             }
         }

@@ -16,8 +16,11 @@ import {
     IonItem,
 } from '@ionic/angular/standalone';
 
+import { AnimeBriefInfoInterface } from '@app/shared/types/shikimori/anime-brief-info.interface';
 import { EpisodeSelectorComponent } from '@app/modules/player/components/episode-selector/episode-selector.component';
+import { SidePanelComponent } from '@app/modules/player/components/side-panel/side-panel.component';
 import { UserAnimeRate } from '@app/shared/types/shikimori/user-anime-rate';
+import { VideoInfoInterface } from '@app/modules/player/types';
 import { adjustEpisode } from '@app/shared/utils/adjust-episode.function';
 
 @Component({
@@ -25,6 +28,7 @@ import { adjustEpisode } from '@app/shared/utils/adjust-episode.function';
     standalone: true,
     imports: [
         EpisodeSelectorComponent,
+        SidePanelComponent,
         IonIcon,
         IonButton,
         IonItem,
@@ -62,7 +66,16 @@ export class ControlPanelComponent {
     userRate: UserAnimeRate;
 
     @Input()
+    anime: AnimeBriefInfoInterface;
+
+    @Input()
+    isLoading: boolean = true;
+
+    @Input()
     isWatched = false;
+
+    @Input()
+    showSidePanel = false;
 
     @Input()
     isRewatching = false;
@@ -78,6 +91,9 @@ export class ControlPanelComponent {
 
     @Output()
     openVideoModal = new EventEmitter<void>();
+
+    @Output()
+    uploaded = new EventEmitter<VideoInfoInterface>();
 
     get maxEpisode(): number {
         return this._maxEpisode;

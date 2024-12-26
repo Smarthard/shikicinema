@@ -123,15 +123,18 @@
                     [routerLink]="[ '/external' ]"
                     [queryParams]="{ link: (currentUser.url + '/list/anime') | b64encode }"
                     [skipLocationChange]="true"
+                    (click)="$event.stopPropagation()"
                 >
                     <ion-icon
                         icon="open-outline"
                     ></ion-icon>
                 </ion-button>
             </ion-item>
+
             <ion-item
                 class="menu-item menu-item--nolinks"
-                [routerLink]="null"
+                [button]="true"
+                [disabled]="true"
             >
                 <ion-icon
                     class="menu-item__icon"
@@ -148,15 +151,18 @@
                     [routerLink]="[ '/external' ]"
                     [queryParams]="{ link: (currentUser.url + '/list/manga') | b64encode }"
                     [skipLocationChange]="true"
+                    (click)="$event.stopPropagation()"
                 >
                     <ion-icon
                         icon="open-outline"
                     ></ion-icon>
                 </ion-button>
             </ion-item>
+
             <ion-item
                 class="menu-item"
                 [routerLink]="['settings']"
+                [disabled]="true"
             >
                 <ion-icon
                     class="menu-item__icon"
@@ -166,9 +172,37 @@
                     {{ 'GLOBAL.HEADER.TOOLBAR_MENU.SETTINGS' | transloco }}
                 </ion-text>
             </ion-item>
+
+            <ion-item
+                class="menu-item"
+                id="languages-popover"
+                [button]="true"
+            >
+                <ion-icon
+                    class="menu-item__icon"
+                    icon="language-outline"
+                ></ion-icon>
+                <ion-text class="menu-item__label menu-item__label--with-icon">
+                    {{ 'GLOBAL.HEADER.TOOLBAR_MENU.LANGUAGE' | transloco }}
+                </ion-text>
+            </ion-item>
+
+            <ion-item class="menu-item">
+                <ion-toggle
+                    labelPlacement="end"
+                    justify="start"
+                    [checked]="(theme$ | async) === 'dark'"
+                    (ionChange)="onChangeTheme()"
+                >
+                    {{ 'GLOBAL.HEADER.TOOLBAR_MENU.THEME_TOGGLE.' + (theme$ | async | uppercase) | transloco }}
+                </ion-toggle>
+            </ion-item>
+
             <ion-item
                 color="danger"
                 class="menu-item"
+                [button]="true"
+                [disabled]="true"
                 (click)="shikimoriLogout()"
             >
                 <ion-icon
@@ -181,6 +215,8 @@
             </ion-item>
         </ion-list>
     </ion-content>
+
+    <ng-template [ngTemplateOutlet]="languagesPopover"></ng-template>
 </ng-template>
 
 <ng-template
@@ -190,8 +226,8 @@
         <ion-list>
             <ion-item
                 class="menu-item menu-item--nolinks"
+                [button]="true"
                 (click)="shikimoriLogin()"
-                routerLink="#"
             >
                 <ion-icon
                     class="menu-item__icon"
@@ -201,9 +237,11 @@
                     {{ 'GLOBAL.HEADER.TOOLBAR_MENU.SIGN_IN' | transloco }}
                 </ion-text>
             </ion-item>
+
             <ion-item
                 class="menu-item"
                 [routerLink]="['settings']"
+                [disabled]="true"
             >
                 <ion-icon
                     class="menu-item__icon"
@@ -213,10 +251,37 @@
                     {{ 'GLOBAL.HEADER.TOOLBAR_MENU.SETTINGS' | transloco }}
                 </ion-text>
             </ion-item>
+
+            <ion-item
+                class="menu-item"
+                id="languages-popover"
+                [button]="true"
+            >
+                <ion-icon
+                    class="menu-item__icon"
+                    icon="language-outline"
+                ></ion-icon>
+                <ion-text class="menu-item__label menu-item__label--with-icon">
+                    {{ 'GLOBAL.HEADER.TOOLBAR_MENU.LANGUAGE' | transloco }}
+                </ion-text>
+            </ion-item>
+
+            <ion-item class="menu-item">
+                <ion-toggle
+                    labelPlacement="end"
+                    justify="start"
+                    [checked]="(theme$ | async) === 'dark'"
+                    (ionChange)="onChangeTheme()"
+                >
+                    {{ 'GLOBAL.HEADER.TOOLBAR_MENU.THEME_TOGGLE.' + (theme$ | async | uppercase) | transloco }}
+                </ion-toggle>
+            </ion-item>
+
             <ion-item
                 color="danger"
                 class="menu-item"
-                [routerLink]="['exit']"
+                [button]="true"
+                [disabled]="true"
             >
                 <ion-icon
                     class="menu-item__icon"
@@ -228,4 +293,22 @@
             </ion-item>
         </ion-list>
     </ion-content>
+
+    <ng-template [ngTemplateOutlet]="languagesPopover"></ng-template>
+</ng-template>
+
+<ng-template #languagesPopover>
+    <ion-popover trigger="languages-popover" side="start" [dismissOnSelect]="true">
+        <ng-template>
+            <ion-content>
+                @for (lang of availableLangs; track $index) {
+                    <ion-list>
+                        <ion-item [button]="true" (click)="onChangeLanguage(lang)">
+                            {{ 'GLOBAL.LANGUAGES.' + (lang | uppercase) | transloco }}
+                        </ion-item>
+                    </ion-list>
+                }
+            </ion-content>
+        </ng-template>
+    </ion-popover>
 </ng-template>

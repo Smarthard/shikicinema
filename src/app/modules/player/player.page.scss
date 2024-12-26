@@ -65,12 +65,20 @@
                         "comment-form comment-form";
 
         &--mobile {
+            display: flex;
+            flex-direction: column;
+
+            .control-panel__episode-wrapper {
+                min-width: 3.125rem;
+                max-width: 3.125rem;
+            }
+
             @include media-breakpoint-up('md') {
                 justify-content: unset;
             }
         }
 
-        @include media-breakpoint-up('lg') {
+        @include media-breakpoint-up('xxl') {
             // чтобы не сломалось отображение на планшетах
             &:not(.player-page__wrapper--mobile) {
                 margin-top: .5rem;
@@ -85,6 +93,27 @@
                 column-gap: 2.75rem;
                 grid-template-rows: auto 60vh;
                 grid-template-columns: calc(60vh * (16/9)) min-content;
+            }
+        }
+
+        @include media-breakpoint-between('lg', 'xxl') {
+            &:not(.player-page__wrapper--mobile) {
+                grid-template-rows: auto 50vh;
+                grid-template-columns: calc(50vh * (16/9)) min-content;
+            }
+        }
+
+        @include media-breakpoint-between('md', 'lg') {
+            &:not(.player-page__wrapper--mobile) {
+                grid-template-rows: auto 40vh;
+                grid-template-columns: calc(40vh * (16/9)) min-content;
+            }
+        }
+
+        @include media-breakpoint-between('sm', 'md') {
+            &:not(.player-page__wrapper--mobile) {
+                grid-template-rows: auto 30vh;
+                grid-template-columns: calc(30vh * (16/9)) min-content;
             }
         }
 

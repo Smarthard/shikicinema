@@ -8,11 +8,9 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {
     catchError,
-    distinctUntilChanged,
+    first,
     shareReplay,
-    skipWhile,
     switchMap,
-    take,
     timeout,
 } from 'rxjs/operators';
 
@@ -36,9 +34,7 @@ export class ShikimoriDomainsService {
 
         return merge(...domainsRequests)
             .pipe(
-                skipWhile((domain) => domain === null),
-                take(1),
-                distinctUntilChanged(),
+                first((domain) => Boolean(domain)),
                 shareReplay(1),
             );
     }

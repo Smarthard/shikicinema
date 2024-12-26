@@ -14,6 +14,7 @@ import {
     ViewEncapsulation,
 } from '@angular/core';
 import { Store } from '@ngrx/store';
+import { TranslocoService } from '@ngneat/transloco';
 import {
     distinctUntilChanged,
     filter,
@@ -38,7 +39,9 @@ import {
     selectShikimoriCurrentUser,
     selectShikimoriFoundAnimes,
 } from '@app/store/shikimori/selectors/shikimori.selectors';
+import { selectTheme } from '@app/store/settings/selectors/settings.selectors';
 import { toBase64 } from '@app/shared/utils/base64-utils';
+import { updateLanguageAction, updateThemeAction } from '@app-root/app/store/settings/actions/settings.actions';
 
 @Component({
     selector: 'app-header',
@@ -48,7 +51,10 @@ import { toBase64 } from '@app/shared/utils/base64-utils';
     encapsulation: ViewEncapsulation.None,
 })
 export class HeaderComponent implements OnInit {
+    readonly availableLangs = this.transloco.getAvailableLangs() as string[];
+
     currentUser$: Observable<UserBriefInfoInterface>;
+    theme$: Observable<string>;
     avatarImg$: Observable<string>;
     nickname$: Observable<string>;
     profileLink$: Observable<string>;
@@ -66,6 +72,7 @@ export class HeaderComponent implements OnInit {
         private store: Store,
         private router: Router,
         private breakpointObserver: BreakpointObserver,
+        private transloco: TranslocoService,
     ) {}
 
     ngOnInit() {
@@ -75,6 +82,7 @@ export class HeaderComponent implements OnInit {
     initializeValues(): void {
         this.searchbarFocusedSubject$ = new BehaviorSubject<boolean>(false);
         this.currentUser$ = this.store.select(selectShikimoriCurrentUser);
+        this.theme$ = this.store.select(selectTheme);
         this.foundAnimes$ = this.store.select(selectShikimoriFoundAnimes);
         this.isSearchResultsLoading$ = this.store.select(selectShikimoriAnimeSearchLoading);
         this.avatarImg$ = this.currentUser$.pipe(map((user) => user?.image?.x64 || user?.avatar));
@@ -137,5 +145,16 @@ export class HeaderComponent implements OnInit {
 
             await this.router.navigate(['/external'], extras);
         }
+    }
+
+    async onChangeTheme(): Promise<void> {
+        const currentTheme = await firstValueFrom(this.theme$);
+        const theme = currentTheme === 'dark' ? 'light' : 'dark';
+
+        this.store.dispatch(updateThemeAction({ theme }));
+    }
+
+    onChangeLanguage(language: string): void {
+        this.store.dispatch(updateLanguageAction({ language }));
     }
 }

@@ -36,7 +36,7 @@ export function getAuthorizationCode(shikimoriDomain: string, shikimoriOAuthClie
                         return;
                     }
 
-                    if (error || message) {
+                    if (error || message || !code) {
                         reject(new Error(error || message));
                     } else {
                         resolve(code);

@@ -8,13 +8,13 @@ import {
 } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { Store } from '@ngrx/store';
+import { TranslocoService, getBrowserLang } from '@ngneat/transloco';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { getBrowserLang } from '@ngneat/transloco';
-import { tap } from 'rxjs/operators';
+import { distinctUntilChanged, tap } from 'rxjs/operators';
 
 import { getCurrentUserAction } from '@app/store/shikimori/actions/get-current-user.action';
-import { selectLanguage } from '@app/store/settings/selectors/settings.selectors';
-import { updateSettingsAction } from '@app/store/settings/actions/settings.actions';
+import { selectLanguage, selectTheme } from '@app/store/settings/selectors/settings.selectors';
+import { updateLanguageAction } from '@app/store/settings/actions/settings.actions';
 
 @UntilDestroy()
 @Component({
@@ -30,27 +30,49 @@ export class AppComponent implements OnInit {
         private readonly _document: Document,
         private readonly _store: Store,
         private readonly _renderer: Renderer2,
+        private readonly _transloco: TranslocoService,
     ) {}
 
     ngOnInit(): void {
-        this.initializeLocale();
-        this.initializeUser();
+        this.initTheme();
+        this.initLocale();
+        this.initUser();
     }
 
-    initializeLocale(): void {
+    initLocale(): void {
         this._store.select(selectLanguage).pipe(
-            untilDestroyed(this),
             tap((storedLanguage) => {
+                const availableLangs = this._transloco.getAvailableLangs() as string[];
                 const browserLang = getBrowserLang();
-                const language = storedLanguage || browserLang || 'en';
+                const defaultLang = availableLangs.includes(browserLang)
+                    ? browserLang
+                    : 'en';
+                const language = storedLanguage || defaultLang;
 
                 this._renderer.setAttribute(this._document.documentElement, 'lang', language);
-                this._store.dispatch(updateSettingsAction({ config: { language } }));
+                this._store.dispatch(updateLanguageAction({ language }));
             }),
+            untilDestroyed(this),
         ).subscribe();
     }
 
-    initializeUser(): void {
+    initTheme(): void {
+        this._store.select(selectTheme).pipe(
+            distinctUntilChanged(),
+            tap((theme) => {
+                const darkThemeClass = 'ion-palette-dark';
+
+                if (!theme || theme === 'dark') {
+                    this._renderer.addClass(this._document.documentElement, darkThemeClass);
+                } else {
+                    this._renderer.removeClass(this._document.documentElement, darkThemeClass);
+                }
+            }),
+            untilDestroyed(this),
+        ).subscribe();
+    }
+
+    initUser(): void {
         this._store.dispatch(getCurrentUserAction());
     }
 }
