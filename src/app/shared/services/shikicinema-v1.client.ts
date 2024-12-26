@@ -41,14 +41,21 @@ export class ShikicinemaV1Client {
 
     uploadVideo(animeId: ResourceIdType, video: VideoInfoInterface) {
         const url = `${this.baseUri}/api/shikivideos`;
-        const params = new HttpParams()
+
+        let params = new HttpParams()
             .set('anime_id', animeId)
             .set('episode', video.episode)
             .set('kind', mapVideoKindToShikicinema(video.kind))
             .set('language', video.language)
-            .set('author', video.author || null)
-            .set('quality', video.quality || null)
             .set('url', video.url);
+
+        if (video.author) {
+            params = params.set('author', video.author);
+        }
+
+        if (video.quality) {
+            params = params.set('quality', video.quality);
+        }
 
         return this.http.post<ShikivideosInterface>(url, null, { params });
     }
