@@ -2,11 +2,14 @@
     appSwipe
     (appSwipeRight)="onOpenVideoSelectorModal()">
     <div class="player-page__wrapper"
-        [class.player-page__wrapper--mobile]="isMobile$ | async">
+        [class.player-page__wrapper--mobile]="(isMobile$ | async) || (isSmallScreen$ | async)">
         <div class="player-page__anime-info common-info">
             <div class="common-info__title">
                 @if (isAnimeLoading$ | async) {
-                    <app-skeleton-block height="2rem" [width]="(isMobile$ | async) ? '15rem' : '30rem'" />
+                    <app-skeleton-block
+                        height="2rem"
+                        [width]="(isMobile$ | async) || (isSmallScreen$ | async) ? '10rem' : '30rem'"
+                    />
                 } @else {
                     <ion-text>
                         <h1 class="player-page__title text-ellipsis"
@@ -48,10 +51,13 @@
         <ng-container *ngLet="isWatched$ | async as isWatched">
             <app-control-panel
                 class="player-page__control-panel"
+                [anime]="anime$ | async"
                 [episodes]="videos$ | async | getEpisodes"
                 [selected]="episode$ | async"
                 [userRate]="userRate$ | async"
+                [isLoading]="isAnimeLoading$ | async"
                 [isWatched]="isWatched"
+                [showSidePanel]="(isMobile$ | async) || (isSmallScreen$ | async)"
                 [isRewatching]="isRewatching$ | async"
                 [isMinified]="isPanelsMinified$ | async"
                 (selection)="onEpisodeChange($event)"
@@ -60,14 +66,16 @@
             />
         </ng-container>
 
-        <app-side-panel
-            class="player-page__side-panel"
-            [anime]="anime$ | async"
-            [episode]="episode$ | async"
-            [isLoading]="isAnimeLoading$ | async"
-            [isMinified]="isPanelsMinified$ | async"
-            (uploaded)="onVideoUpload($event)"
-        />
+        @if (!(isMobile$ | async) && !(isSmallScreen$ | async)) {
+            <app-side-panel
+                class="player-page__side-panel"
+                [anime]="anime$ | async"
+                [episode]="episode$ | async"
+                [isLoading]="isAnimeLoading$ | async"
+                [isMinified]="isPanelsMinified$ | async"
+                (uploaded)="onVideoUpload($event)"
+            />
+        }
 
         <app-comments
             class="player-page__comments"

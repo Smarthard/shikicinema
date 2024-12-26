@@ -35,6 +35,17 @@
             <ion-icon slot="icon-only" name="list-outline" />
         </ion-button>
     }
+
+    @if (showSidePanel) {
+        <app-side-panel
+            class="player-page__side-panel"
+            [anime]="anime"
+            [episode]="selected"
+            [isLoading]="isLoading"
+            [isMinified]="true"
+            (uploaded)="uploaded.emit($event)"
+        />
+    }
 </div>
 
 @if (!isMinified) {

@@ -1,3 +1,5 @@
+@import 'src/scss/mixins';
+
 .control-panel {
     $inputMinHeight: 2rem;
 
@@ -6,6 +8,10 @@
     gap: .5rem;
     align-items: center;
     justify-content: space-between;
+
+    @include media-breakpoint-down('md') {
+        justify-content: flex-start;
+    }
 
     &__controls {
         display: flex;
@@ -44,6 +50,14 @@
         min-width: 30vw;
         max-width: 50vw;
         flex-grow: 1;
+
+        @include media-breakpoint-down('md') {
+            max-width: 60vw;
+        }
+
+        @include media-breakpoint-between('md', 'xl') {
+            max-width: 70vw;
+        }
 
         &--modal {
             --height: auto;
