@@ -8,9 +8,9 @@ import {
 } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { Store } from '@ngrx/store';
+import { TranslocoService, getBrowserLang } from '@ngneat/transloco';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { distinctUntilChanged, tap } from 'rxjs/operators';
-import { getBrowserLang } from '@ngneat/transloco';
 
 import { getCurrentUserAction } from '@app/store/shikimori/actions/get-current-user.action';
 import { selectLanguage, selectTheme } from '@app/store/settings/selectors/settings.selectors';
@@ -30,6 +30,7 @@ export class AppComponent implements OnInit {
         private readonly _document: Document,
         private readonly _store: Store,
         private readonly _renderer: Renderer2,
+        private readonly _transloco: TranslocoService,
     ) {}
 
     ngOnInit(): void {
@@ -41,8 +42,12 @@ export class AppComponent implements OnInit {
     initLocale(): void {
         this._store.select(selectLanguage).pipe(
             tap((storedLanguage) => {
+                const availableLangs = this._transloco.getAvailableLangs() as string[];
                 const browserLang = getBrowserLang();
-                const language = storedLanguage || browserLang || 'en';
+                const defaultLang = availableLangs.includes(browserLang)
+                    ? browserLang
+                    : 'en';
+                const language = storedLanguage || defaultLang;
 
                 this._renderer.setAttribute(this._document.documentElement, 'lang', language);
                 this._store.dispatch(updateLanguageAction({ language }));
