@@ -123,6 +123,7 @@
                     [routerLink]="[ '/external' ]"
                     [queryParams]="{ link: (currentUser.url + '/list/anime') | b64encode }"
                     [skipLocationChange]="true"
+                    (click)="$event.stopPropagation()"
                 >
                     <ion-icon
                         icon="open-outline"
@@ -131,7 +132,7 @@
             </ion-item>
             <ion-item
                 class="menu-item menu-item--nolinks"
-                [routerLink]="null"
+                [button]="true"
             >
                 <ion-icon
                     class="menu-item__icon"
@@ -148,6 +149,7 @@
                     [routerLink]="[ '/external' ]"
                     [queryParams]="{ link: (currentUser.url + '/list/manga') | b64encode }"
                     [skipLocationChange]="true"
+                    (click)="$event.stopPropagation()"
                 >
                     <ion-icon
                         icon="open-outline"
@@ -169,6 +171,8 @@
             <ion-item
                 color="danger"
                 class="menu-item"
+                [button]="true"
+                [disabled]="true"
                 (click)="shikimoriLogout()"
             >
                 <ion-icon
@@ -190,8 +194,8 @@
         <ion-list>
             <ion-item
                 class="menu-item menu-item--nolinks"
+                [button]="true"
                 (click)="shikimoriLogin()"
-                routerLink="#"
             >
                 <ion-icon
                     class="menu-item__icon"
@@ -216,7 +220,8 @@
             <ion-item
                 color="danger"
                 class="menu-item"
-                [routerLink]="['exit']"
+                [button]="true"
+                [disabled]="true"
             >
                 <ion-icon
                     class="menu-item__icon"
