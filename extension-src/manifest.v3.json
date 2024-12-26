@@ -1,7 +1,7 @@
 {
     "manifest_version": 3,
     "name": "shikicinema",
-    "version": "0.9.0",
+    "version": "0.9.1",
 
     "icons": {
       "64": "assets/icon64.png",
