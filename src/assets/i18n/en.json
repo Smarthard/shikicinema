@@ -27,16 +27,6 @@
                 "BD": "Blu-Ray release",
                 "UNKNOWN": "Unknown"
             },
-            "LANGUAGES": {
-                "RUSSIAN": "Russian",
-                "UKRANIAN": "Ukranian",
-                "BELORUSSIAN": "Belorussian",
-                "KAZAKH": "Kazakh",
-                "ENGLISH": "English",
-                "JAPANESE": "Japanese",
-                "CHINESE": "Chinese",
-                "KOREAN": "Korean"
-            },
             "KINDS": {
                 "DUBBING": "Dubbing",
                 "SUBTITLES": "Subtitles",
@@ -49,6 +39,16 @@
                 "KODIK": "Kodik",
                 "DELETED_UPLOADER": "Anonym"
             }
+        },
+        "LANGUAGES": {
+            "RU": "Russian",
+            "UK": "Ukranian",
+            "BE": "Belorussian",
+            "KK": "Kazakh",
+            "EN": "English",
+            "JA": "Japanese",
+            "ZH": "Chinese",
+            "KO": "Korean"
         },
         "HEADER": {
             "SEARCHBAR": {
@@ -65,6 +65,7 @@
                     "LIGHT": "Light theme",
                     "DARK": "Dark theme"
                 },
+                "LANGUAGE": "Language",
                 "EXIT": "Exit"
             }
         },

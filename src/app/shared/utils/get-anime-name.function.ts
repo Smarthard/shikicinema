@@ -5,9 +5,10 @@ export function getAnimeName(anime: AnimeBriefInfoInterface | AnimeRate, languag
     switch (language) {
         case 'ru':
             return anime.russian || anime.name;
-        case 'en':
-            return anime?.english?.[0] || anime.name;
         case 'original':
             return anime?.japanese?.[0] || anime.name;
+        case 'en':
+        default:
+            return anime?.english?.[0] || anime.name;
     }
 }

@@ -14,6 +14,7 @@ import {
     ViewEncapsulation,
 } from '@angular/core';
 import { Store } from '@ngrx/store';
+import { TranslocoService } from '@ngneat/transloco';
 import {
     distinctUntilChanged,
     filter,
@@ -40,7 +41,7 @@ import {
 } from '@app/store/shikimori/selectors/shikimori.selectors';
 import { selectTheme } from '@app/store/settings/selectors/settings.selectors';
 import { toBase64 } from '@app/shared/utils/base64-utils';
-import { updateThemeAction } from '@app-root/app/store/settings/actions/settings.actions';
+import { updateLanguageAction, updateThemeAction } from '@app-root/app/store/settings/actions/settings.actions';
 
 @Component({
     selector: 'app-header',
@@ -50,6 +51,8 @@ import { updateThemeAction } from '@app-root/app/store/settings/actions/settings
     encapsulation: ViewEncapsulation.None,
 })
 export class HeaderComponent implements OnInit {
+    readonly availableLangs = this.transloco.getAvailableLangs() as string[];
+
     currentUser$: Observable<UserBriefInfoInterface>;
     theme$: Observable<string>;
     avatarImg$: Observable<string>;
@@ -69,6 +72,7 @@ export class HeaderComponent implements OnInit {
         private store: Store,
         private router: Router,
         private breakpointObserver: BreakpointObserver,
+        private transloco: TranslocoService,
     ) {}
 
     ngOnInit() {
@@ -148,5 +152,9 @@ export class HeaderComponent implements OnInit {
         const theme = currentTheme === 'dark' ? 'light' : 'dark';
 
         this.store.dispatch(updateThemeAction({ theme }));
+    }
+
+    onChangeLanguage(language: string): void {
+        this.store.dispatch(updateLanguageAction({ language }));
     }
 }

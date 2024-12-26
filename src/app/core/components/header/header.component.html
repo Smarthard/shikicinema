@@ -173,6 +173,20 @@
                 </ion-text>
             </ion-item>
 
+            <ion-item
+                class="menu-item"
+                id="languages-popover"
+                [button]="true"
+            >
+                <ion-icon
+                    class="menu-item__icon"
+                    icon="language-outline"
+                ></ion-icon>
+                <ion-text class="menu-item__label menu-item__label--with-icon">
+                    {{ 'GLOBAL.HEADER.TOOLBAR_MENU.LANGUAGE' | transloco }}
+                </ion-text>
+            </ion-item>
+
             <ion-item class="menu-item">
                 <ion-toggle
                     labelPlacement="end"
@@ -201,6 +215,8 @@
             </ion-item>
         </ion-list>
     </ion-content>
+
+    <ng-template [ngTemplateOutlet]="languagesPopover"></ng-template>
 </ng-template>
 
 <ng-template
@@ -236,6 +252,20 @@
                 </ion-text>
             </ion-item>
 
+            <ion-item
+                class="menu-item"
+                id="languages-popover"
+                [button]="true"
+            >
+                <ion-icon
+                    class="menu-item__icon"
+                    icon="language-outline"
+                ></ion-icon>
+                <ion-text class="menu-item__label menu-item__label--with-icon">
+                    {{ 'GLOBAL.HEADER.TOOLBAR_MENU.LANGUAGE' | transloco }}
+                </ion-text>
+            </ion-item>
+
             <ion-item class="menu-item">
                 <ion-toggle
                     labelPlacement="end"
@@ -263,4 +293,22 @@
             </ion-item>
         </ion-list>
     </ion-content>
+
+    <ng-template [ngTemplateOutlet]="languagesPopover"></ng-template>
+</ng-template>
+
+<ng-template #languagesPopover>
+    <ion-popover trigger="languages-popover" side="start" [dismissOnSelect]="true">
+        <ng-template>
+            <ion-content>
+                @for (lang of availableLangs; track $index) {
+                    <ion-list>
+                        <ion-item [button]="true" (click)="onChangeLanguage(lang)">
+                            {{ 'GLOBAL.LANGUAGES.' + (lang | uppercase) | transloco }}
+                        </ion-item>
+                    </ion-list>
+                }
+            </ion-content>
+        </ng-template>
+    </ion-popover>
 </ng-template>
