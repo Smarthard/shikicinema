@@ -29,8 +29,7 @@ async function correctContributions(element) {
   let cInfoDiv = document.querySelector('div.c-info');
   let activityDiv = document.querySelector('div.c-additionals');
   let nickname = `${window.location}`.split('/').slice(-1)[0];
-  let user = await fetch(`/api/users/${nickname}?is_nickname=1`)
-    .then(res => res.json());
+  let user = JSON.parse(document.body?.getAttribute('data-user'));
 
   if (user && user.id) {
     let contributions = await fetch(`${SHIKIVIDEOS_API}/contributions?uploader=${user.id}`)
@@ -40,7 +39,7 @@ async function correctContributions(element) {
     element.classList.add('uploader_contributions');
     element.innerHTML = `<span><a href="#">${contributions.count} ${upload} видео</a></span>`;
     element.onclick = () => {
-      chrome.runtime.sendMessage({ openUrl: `${PLAYER_URL}#/videos?uploader=${user.nickname}` });
+      chrome.runtime.sendMessage({ openUrl: `${PLAYER_URL}#/videos?uploader=${nickname}` });
     };
 
     if (
