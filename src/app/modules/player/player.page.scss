@@ -6,14 +6,23 @@
 
     &__title {
         max-width: 50vw;
+
+        @include media-breakpoint-down('lg') {
+            max-width: 80vw;
+            font-size: 1rem;
+        }
     }
 
     &__anime-info {
         display: flex;
-        align-items: flex-end;
+        align-items: center;
         justify-content: space-between;
 
         grid-area: info;
+
+        @include media-breakpoint-up('lg') {
+            align-items: flex-end;
+        }
     }
 
     &__kind {
@@ -147,7 +156,7 @@
             white-space: nowrap;
 
             @include media-breakpoint-down('lg') {
-                max-width: 60%;
+                max-width: 80%;
             }
         }
     }

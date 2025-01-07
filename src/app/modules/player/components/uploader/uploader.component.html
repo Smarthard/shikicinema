@@ -8,7 +8,7 @@
 
 <ng-template #uploaderTempl>
     @if (uploader?.name; as name) {
-        <span class="uploader__name">
+        <span class="uploader__name ion-hide-md-down">
             @if (uploader?.id | isWellKnownUploader) {
                 {{ name | transloco }}
             } @else {
