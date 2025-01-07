@@ -1,3 +1,5 @@
+@import 'src/scss/mixins';
+
 .player {
     display: flex;
 
@@ -6,5 +8,34 @@
         overflow: hidden;
         background-color: var(--box-shadow);
         border: 0;
+
+        &--dummy {
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+
+            background-color: var(--ion-color-light);
+            background-image: url('https://media1.tenor.com/m/ga1mWmzDJMAAAAAd/legend-of-the-galactic-heroes-yang-wenli.gif');
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+    }
+
+    &__fail-placeholder {
+        margin-bottom: 0.125rem;
+        text-align: center;
+        color: yellow;
+        text-shadow:    2px 0 0 black,
+                        0 -2px 0 black,
+                        0 2px 0 black,
+                        -2px 0 0 black;
+
+        max-width: 95%;
+        font-size: large;
+
+        @include media-breakpoint-up('lg') {
+            max-width: 100%;
+            font-size: x-large;
+        }
     }
 }

@@ -27,9 +27,13 @@ import {
     ModalController,
 } from '@ionic/angular/standalone';
 import { TranslocoPipe, TranslocoService } from '@ngneat/transloco';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { distinctUntilChanged, tap } from 'rxjs';
 
 import { AnimeBriefInfoInterface } from '@app/shared/types/shikimori/anime-brief-info.interface';
 import { PlayerComponent } from '@app/modules/player/components/player/player.component';
+import { ResourceStateEnum } from '@app/shared/types/resource-state.enum';
+import { ResourceStateValidator } from '@app/shared/validators/resource-state.validator';
 import {
     VideoInfoInterface,
     VideoKindEnum,
@@ -40,6 +44,7 @@ import { getAnimeName } from '@app/shared/utils/get-anime-name.function';
 import { getLastAiredEpisode } from '@app/modules/player/utils';
 
 
+@UntilDestroy()
 @Component({
     selector: 'app-video-upload-modal',
     standalone: true,
@@ -105,6 +110,7 @@ export class VideoUploadModalComponent extends IonModal implements OnInit {
     ngOnInit(): void {
         this.uploadForm = new FormGroup({
             url: new FormControl('', [Validators.required]),
+            urlState: new FormControl(ResourceStateEnum.INIT, [ResourceStateValidator()]),
             author: new FormControl(''),
             episode: new FormControl(this.episode, [Validators.required]),
             kind: new FormControl<VideoKindEnum>(VideoKindEnum.DUBBING),
@@ -113,6 +119,24 @@ export class VideoUploadModalComponent extends IonModal implements OnInit {
             language: new FormControl<VideoLanguageEnum>(VideoLanguageEnum.Russian),
             urlType: new FormControl<string>({ value: 'iframe', disabled: true }),
         });
+
+        this.uploadForm.get('url').valueChanges
+            .pipe(
+                distinctUntilChanged(),
+                tap(() => this.onUrlLoadReset()),
+                untilDestroyed(this),
+            )
+            .subscribe();
+    }
+
+    onUrlLoadReset(): void {
+        this.uploadForm.get('urlState').patchValue(ResourceStateEnum.LOADING);
+    }
+
+    onUrlLoad(isLoaded: boolean): void {
+        const status = isLoaded ? ResourceStateEnum.LOAD_SUCCESS : ResourceStateEnum.LOAD_FAILED;
+
+        this.uploadForm.get('urlState').patchValue(status);
     }
 
     cancel() {

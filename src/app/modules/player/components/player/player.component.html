@@ -1,4 +1,10 @@
-@if (source) {
+@if (timeout$ | async) {
+    <div class="responsive-16by9 player__video player__video--dummy">
+        <div class="player__fail-placeholder">
+            {{ 'PLAYER_MODULE.PLAYER_PAGE.PLAYER.FAILED_PLACEHOLDER' | transloco }}
+        </div>
+    </div>
+} @else {
     <iframe
         class="responsive-16by9 player__video"
         allowfullscreen=""

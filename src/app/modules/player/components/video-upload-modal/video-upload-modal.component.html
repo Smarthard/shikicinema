@@ -5,7 +5,13 @@
 
 <div class="video-upload-modal__demo">
     @if (url) {
-        <app-player class="video-upload-modal__player responsive-16by9" [source]="url" [loading]="false" />
+        <app-player
+            class="video-upload-modal__player responsive-16by9"
+            [source]="url"
+            [loading]="false"
+            (loaded)="onUrlLoad(true)"
+            (timedOut)="onUrlLoad(false)"
+        />
     } @else {
         <div class="video-upload-modal__player video-upload-modal__player--dummy responsive-16by9">
             <div class="video-upload-modal__helper-text">
