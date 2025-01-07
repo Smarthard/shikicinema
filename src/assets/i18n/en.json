@@ -126,6 +126,9 @@
                 "SEND_SUCCESS": "Comment sent",
                 "SEND_FAILURE": "Failed to send comment"
             },
+            "PLAYER": {
+                "FAILED_PLACEHOLDER": "This video has been removed or never existed"
+            },
             "UPLOAD_VIDEO": {
                 "TITLE": "Uploading for \"{{ anime }}\"",
                 "EMPTY_DEMO_TEXT": "I'll show you something if you'd fill the URL field",

@@ -71,6 +71,4 @@ async function appendWatchButtonTo(element, anime) {
     PLAYER_BUTTON.classList.add('upload-video');
     PLAYER_BUTTON.classList.remove('watch-online');
   }
-
-  OBSERVER.disconnect();
 }
