@@ -3,5 +3,6 @@ export enum VideoQualityEnum {
     WEB = 'web',
     DVD = 'dvd',
     BD = 'bd',
-    UNKNOWN = null,
+    VHS = 'vhs',
+    UNKNOWN = 'unknown',
 }

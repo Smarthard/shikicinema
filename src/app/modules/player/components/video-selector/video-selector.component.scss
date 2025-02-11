@@ -56,6 +56,12 @@
                 max-height: .875rem;
                 margin-top: .25rem;
             }
+
+            &--vhs {
+                height: 1rem;
+                background-color: white;
+                padding: 1px;
+            }
         }
 
         &__content {

@@ -24,7 +24,7 @@ export const shikicinemaVideoMapper: VideoMapperFn<ShikivideosInterface[]> = (vi
         ...others,
         kind: mapShikicinemaKindToCommon(kind),
         urlType: 'iframe',
-        quality: quality.toLocaleLowerCase() as VideoQualityEnum,
+        quality: quality as VideoQualityEnum,
         uploader: uploader as UploaderIdType,
     }),
 );

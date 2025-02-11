@@ -25,6 +25,7 @@
                 "WEB": "Web version",
                 "DVD": "DVD release",
                 "BD": "Blu-Ray release",
+                "VHS": "VHS release",
                 "UNKNOWN": "Unknown"
             },
             "KINDS": {
