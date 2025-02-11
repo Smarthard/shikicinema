@@ -130,7 +130,8 @@
                 "FAILED_PLACEHOLDER": "Это видео было удалено или никогда не существовало"
             },
             "UPLOAD_VIDEO": {
-                "TITLE": "Загрузка видео для \"{{ anime }}\"",
+                "TITLE": "Загрузка видео",
+                "ANIME_NAME_SUBTITLE": "для: \"{{ anime }}\"",
                 "EMPTY_DEMO_TEXT": "Покажу мультик, если заполнишь поле URL",
                 "FORM": {
                     "URL": {

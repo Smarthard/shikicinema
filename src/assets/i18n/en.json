@@ -130,7 +130,8 @@
                 "FAILED_PLACEHOLDER": "This video has been removed or never existed"
             },
             "UPLOAD_VIDEO": {
-                "TITLE": "Uploading for \"{{ anime }}\"",
+                "TITLE": "Uploading video",
+                "ANIME_NAME_SUBTITLE": "for \"{{ anime }}\"",
                 "EMPTY_DEMO_TEXT": "I'll show you something if you'd fill the URL field",
                 "FORM": {
                     "URL": {
