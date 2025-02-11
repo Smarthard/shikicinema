@@ -29,10 +29,10 @@ async function correctContributions(element) {
   let cInfoDiv = document.querySelector('div.c-info');
   let activityDiv = document.querySelector('div.c-additionals');
   let nickname = `${window.location}`.split('/').slice(-1)[0];
-  let user = JSON.parse(document.body?.getAttribute('data-user'));
+  let userId = document.querySelector('.profile-head')?.getAttribute('data-user-id');
 
-  if (user && user.id) {
-    let contributions = await fetch(`${SHIKIVIDEOS_API}/contributions?uploader=${user.id}`)
+  if (userId) {
+    let contributions = await fetch(`${SHIKIVIDEOS_API}/contributions?uploader=${userId}`)
       .then(res => res.json());
     let upload = `загруз${contributions.count === 1 ? 'ка' : contributions.count < 5 ? 'ки' : 'ок'}`;
 
