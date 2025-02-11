@@ -24,6 +24,12 @@
                                 <img class="author-accordion__icon author-accordion__icon--bd" src="/assets/bd.svg" alt="includes BD" />
                             </div>
                         }
+
+                        @if (videos$ | async | filterByAuthor: author | hasQualities: VideoQualityEnum.VHS) {
+                            <div class="author-accordion__icon-wrap">
+                                <img class="author-accordion__icon author-accordion__icon--vhs" src="/assets/vhs.svg" alt="includes VHS" />
+                            </div>
+                        }
                     </div>
                 </ion-item>
 
@@ -42,7 +48,7 @@
                                 [class.ion-hide]="video.quality !== VideoQualityEnum.DVD"
                                 class="author-accordion__icon author-accordion__icon--inline author-accordion__icon--dvd"
                                 src="/assets/dvd.svg"
-                                alt="includes DVD"
+                                alt="DVD"
                                 slot="end"
                             />
 
@@ -50,7 +56,15 @@
                                 [class.ion-hide]="video.quality !== VideoQualityEnum.BD"
                                 class="author-accordion__icon author-accordion__icon--inline author-accordion__icon--bd"
                                 src="/assets/bd.svg"
-                                alt="includes BD"
+                                alt="BD"
+                                slot="end"
+                            />
+
+                            <img
+                                [class.ion-hide]="video.quality !== VideoQualityEnum.VHS"
+                                class="author-accordion__icon author-accordion__icon--inline author-accordion__icon--vhs"
+                                src="/assets/vhs.svg"
+                                alt="VHS"
                                 slot="end"
                             />
                         </ion-button>

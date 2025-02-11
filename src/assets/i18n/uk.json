@@ -25,6 +25,7 @@
                 "WEB": "Веб версія",
                 "DVD": "DVD випуск",
                 "BD": "Blu-Ray випуск",
+                "VHS": "VHS випуск",
                 "UNKNOWN": "Невідома"
             },
             "KINDS": {
@@ -130,7 +131,8 @@
                 "FAILED_PLACEHOLDER": "Це відео було видалено або ніколи не існувало"
             },
             "UPLOAD_VIDEO": {
-                "TITLE": "Завантаження відео для \"{{ anime }}\"",
+                "TITLE": "Завантаження відео",
+                "ANIME_NAME_SUBTITLE": "для \"{{ anime }}\"",
                 "EMPTY_DEMO_TEXT": "Покажу мультик, якщо заповниш поле URL",
                 "FORM": {
                     "URL": {

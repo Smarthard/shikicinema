@@ -1,7 +1,10 @@
-<h2 class="video-upload-modal__header text-ellipsis"
-    [title]="'PLAYER_MODULE.PLAYER_PAGE.UPLOAD_VIDEO.TITLE' | transloco: { anime: getAnimeName(anime, lang$ | async) }">
-    {{ 'PLAYER_MODULE.PLAYER_PAGE.UPLOAD_VIDEO.TITLE' | transloco: { anime: getAnimeName(anime, lang$ | async) } }}
+<h2 class="video-upload-modal__header">
+    {{ 'PLAYER_MODULE.PLAYER_PAGE.UPLOAD_VIDEO.TITLE' | transloco }}
 </h2>
+
+<h5 class="video-upload-modal__title text-ellipsis" [title]="getAnimeName(anime, lang$ | async)">
+    {{ 'PLAYER_MODULE.PLAYER_PAGE.UPLOAD_VIDEO.ANIME_NAME_SUBTITLE' | transloco: { anime: getAnimeName(anime, lang$ | async) } }}
+</h5>
 
 <div class="video-upload-modal__demo">
     @if (url) {
@@ -111,6 +114,10 @@
 
                 <ion-select-option [value]="VideoQualityEnum.BD">
                     {{ 'GLOBAL.VIDEO.QUALITIES.BD' | transloco }}
+                </ion-select-option>
+
+                <ion-select-option [value]="VideoQualityEnum.VHS">
+                    {{ 'GLOBAL.VIDEO.QUALITIES.VHS' | transloco }}
                 </ion-select-option>
 
             </ion-select>

@@ -109,7 +109,7 @@ export class VideoUploadModalComponent extends IonModal implements OnInit {
 
     ngOnInit(): void {
         this.uploadForm = new FormGroup({
-            url: new FormControl('', [Validators.required]),
+            url: new FormControl('', [Validators.required, Validators.pattern(/^https?:\/\//)]),
             urlState: new FormControl(ResourceStateEnum.INIT, [ResourceStateValidator()]),
             author: new FormControl(''),
             episode: new FormControl(this.episode, [Validators.required]),
