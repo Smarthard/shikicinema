@@ -1,6 +1,7 @@
 'use strict';
 
 import { fetch } from './fetch-timeout';
+import { getShikimoriLocale } from './get-shikimori-locale';
 
 let timeout = null;
 
@@ -46,6 +47,7 @@ async function correctContributions(element) {
   const cInfoDiv = document.querySelector('div.c-info');
   const nickname = `${window.location.pathname}`.split('/').slice(-1)[0];
   const userId = document.querySelector('.profile-head')?.getAttribute('data-user-id');
+  const isEnglishLocale = getShikimoriLocale() === 'en';
 
   let activityDiv = document.querySelector('div.c-additionals');
 
@@ -53,9 +55,10 @@ async function correctContributions(element) {
     const contribPageUrl = `${PLAYER_URL}#/videos?uploader=${nickname}`;
     const contributions = await getContributionsCount(userId);
     const uploadsTextRu = `${contributions} загруз${contributions === 1 ? 'ка' : contributions < 5 ? 'ки' : 'ок'} видео`;
+    const uploadsTextEn = `${contributions} video upload${contributions > 1 ? 's' : ''}`;
 
     element.classList.add(CONTRIBUTIONS_ELEMENT_CLASS_NAME);
-    element.innerHTML = `<span><a href="${contribPageUrl}">${uploadsTextRu}</a></span>`;
+    element.innerHTML = `<span><a href="${contribPageUrl}">${isEnglishLocale ? uploadsTextEn : uploadsTextRu}</a></span>`;
 
     // если нет списка активности вообще, создаём
     if (
@@ -66,7 +69,7 @@ async function correctContributions(element) {
       cInfoDiv.classList.add('uploader_contributions');
       activityDiv = document.createElement('div');
       activityDiv.classList.add('c-additionals');
-      activityDiv.innerHTML = '<b>Активность:</b>';
+      activityDiv.innerHTML = isEnglishLocale ? '<b>Activity</b>' : '<b>Активность:</b>';
       cInfoDiv.appendChild(activityDiv);
     }
 
