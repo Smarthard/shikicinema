@@ -3,49 +3,65 @@
 import { fetch } from './fetch-timeout';
 
 let timeout = null;
+
 const PLAYER_URL = chrome.runtime.getURL('/index.html');
 const SHIKIVIDEOS_API = 'https://smarthard.net/api/shikivideos';
-const SHIKIMORI_API = `https://${document.domain}`;
+const CONTRIBUTIONS_ELEMENT_CLASS_NAME = 'uploader_contributions';
 
-let observer = new MutationObserver(() => {
-  let uploads = document.querySelector('div[data-type="video_uploads"]') || document.createElement('div');
-  let profileBody = document.querySelector('body#profiles_show');
-  let isAnimePage = `${window.location}`.includes('/animes/');
-  let isContributionsAppended = uploads.classList.contains('uploader_contributions');
+function hasAppendedCotributions(htmlEl) {
+    return htmlEl && htmlEl instanceof HTMLElement && htmlEl.classList.contains('uploader_contributions');
+}
 
-  if (timeout)
-    clearTimeout(timeout);
+async function getContributionsCount(uploader) {
+    return await fetch(`${SHIKIVIDEOS_API}/contributions?uploader=${uploader}`)
+        .then(res => res.json())
+        .then((contributions) => contributions && contributions.count)
+        .catch(() => 0);
+}
 
-  timeout = setTimeout(async () => {
-    if (profileBody && !isAnimePage && !isContributionsAppended) {
+async function checkAndAppendContribs() {
+    const uploads = document.querySelector('div[data-type="video_uploads"]') || document.createElement('div');
+    const profileBody = document.querySelector('body#profiles_show');
+    const isOtherShikimoriPage = /\/(animes)|(mangas)|(ranobe)(forum)|(clubs)|(collections)|(articles)|(users)|(contests)|(ongoings)|(about)|(moderations)|(list)\//i.test(window.location);
+    const isContributionsAppended = hasAppendedCotributions(uploads);
+
+    if (profileBody && !isOtherShikimoriPage && !isContributionsAppended) {
       await correctContributions(uploads);
     }
-  }, 150);
+}
+
+let observer = new MutationObserver(() => {
+  if (timeout) {
+    clearTimeout(timeout);
+  }
+
+  checkAndAppendContribs()
+
+  timeout = setTimeout(checkAndAppendContribs, 150);
 });
 
 observer.observe(window.document, {childList: true, subtree: true});
 
 async function correctContributions(element) {
-  let cInfoDiv = document.querySelector('div.c-info');
+  const cInfoDiv = document.querySelector('div.c-info');
+  const nickname = `${window.location.pathname}`.split('/').slice(-1)[0];
+  const userId = document.querySelector('.profile-head')?.getAttribute('data-user-id');
+
   let activityDiv = document.querySelector('div.c-additionals');
-  let nickname = `${window.location}`.split('/').slice(-1)[0];
-  let userId = document.querySelector('.profile-head')?.getAttribute('data-user-id');
 
   if (userId) {
-    let contributions = await fetch(`${SHIKIVIDEOS_API}/contributions?uploader=${userId}`)
-      .then(res => res.json());
-    let upload = `загруз${contributions.count === 1 ? 'ка' : contributions.count < 5 ? 'ки' : 'ок'}`;
+    const contribPageUrl = `${PLAYER_URL}#/videos?uploader=${nickname}`;
+    const contributions = await getContributionsCount(userId);
+    const uploadsTextRu = `${contributions} загруз${contributions === 1 ? 'ка' : contributions < 5 ? 'ки' : 'ок'} видео`;
 
-    element.classList.add('uploader_contributions');
-    element.innerHTML = `<span><a href="#">${contributions.count} ${upload} видео</a></span>`;
-    element.onclick = () => {
-      chrome.runtime.sendMessage({ openUrl: `${PLAYER_URL}#/videos?uploader=${nickname}` });
-    };
+    element.classList.add(CONTRIBUTIONS_ELEMENT_CLASS_NAME);
+    element.innerHTML = `<span><a href="${contribPageUrl}">${uploadsTextRu}</a></span>`;
 
+    // если нет списка активности вообще, создаём
     if (
-      contributions.count > 0 &&
+      contributions > 0 &&
       !activityDiv &&
-      !cInfoDiv.classList.contains('uploader_contributions')
+      !hasAppendedCotributions(cInfoDiv)
     ) {
       cInfoDiv.classList.add('uploader_contributions');
       activityDiv = document.createElement('div');
@@ -54,14 +70,17 @@ async function correctContributions(element) {
       cInfoDiv.appendChild(activityDiv);
     }
 
+    // если список активности есть, но нет загрузок, добавляем
     if (
-      contributions.count > 0 &&
+      contributions > 0 &&
       !element.hasAttribute('data-type') &&
-      !activityDiv.classList.contains('uploader_contributions')
+      !hasAppendedCotributions(activityDiv)
     ) {
       activityDiv.classList.add('uploader_contributions');
       element.setAttribute('data-type', 'video_uploads');
-      activityDiv.appendChild(element);
+      activityDiv?.appendChild(element);
     }
   }
+
+  clearTimeout(timeout);
 }
