@@ -5,6 +5,8 @@ const CopyPlugin = require('copy-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const dotenv = require('dotenv');
 
+const packageJson = require('./package.json');
+
 dotenv.config();
 
 const isProduction = process.env.NODE_ENV === 'production';
@@ -12,6 +14,8 @@ const manifestVersion = process.env.MANIFEST_VERSION || 'v2';
 
 function processManifest(content) {
     const manifestContents = JSON.parse(content.toString());
+
+    manifestContents.version = packageJson.version;
 
     if (manifestVersion !== 'v3') {
         manifestContents.content_security_policy += isProduction ? '' : ' \'unsafe-eval\'';
