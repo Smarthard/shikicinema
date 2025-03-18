@@ -10,7 +10,7 @@ const SHIKIVIDEOS_API = 'https://smarthard.net/api/shikivideos';
 const CONTRIBUTIONS_ELEMENT_CLASS_NAME = 'uploader_contributions';
 
 function hasAppendedCotributions(htmlEl) {
-    return htmlEl && htmlEl instanceof HTMLElement && htmlEl.classList.contains('uploader_contributions');
+    return htmlEl && htmlEl instanceof HTMLElement && htmlEl.classList.contains(CONTRIBUTIONS_ELEMENT_CLASS_NAME);
 }
 
 async function getContributionsCount(uploader) {
@@ -52,7 +52,7 @@ async function correctContributions(element) {
   let activityDiv = document.querySelector('div.c-additionals');
 
   if (userId) {
-    const contribPageUrl = `${PLAYER_URL}#/videos?uploader=${nickname}`;
+    const contribPageUrl = `${PLAYER_URL}#/contributions?uploader=${nickname}`;
     const contributions = await getContributionsCount(userId);
     const uploadsTextRu = `${contributions} загруз${contributions === 1 ? 'ка' : contributions < 5 ? 'ки' : 'ок'} видео`;
     const uploadsTextEn = `${contributions} video upload${contributions > 1 ? 's' : ''}`;
@@ -66,7 +66,7 @@ async function correctContributions(element) {
       !activityDiv &&
       !hasAppendedCotributions(cInfoDiv)
     ) {
-      cInfoDiv.classList.add('uploader_contributions');
+      cInfoDiv.classList.add(CONTRIBUTIONS_ELEMENT_CLASS_NAME);
       activityDiv = document.createElement('div');
       activityDiv.classList.add('c-additionals');
       activityDiv.innerHTML = isEnglishLocale ? '<b>Activity</b>' : '<b>Активность:</b>';
@@ -79,7 +79,7 @@ async function correctContributions(element) {
       !element.hasAttribute('data-type') &&
       !hasAppendedCotributions(activityDiv)
     ) {
-      activityDiv.classList.add('uploader_contributions');
+      activityDiv.classList.add(CONTRIBUTIONS_ELEMENT_CLASS_NAME);
       element.setAttribute('data-type', 'video_uploads');
       activityDiv?.appendChild(element);
     }
