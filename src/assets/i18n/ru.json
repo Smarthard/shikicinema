@@ -109,6 +109,11 @@
             }
         }
     },
+    "CONTRIBUTIONS_MODULE": {
+        "CONTRIBUTIONS_PAGE": {
+            "PAGE_TITLE": "Загрузки от {{ uploader }}"
+        }
+    },
     "PLAYER_MODULE": {
         "PLAYER_PAGE": {
             "PAGE_TITLE": {

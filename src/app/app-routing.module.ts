@@ -17,6 +17,11 @@ const routes: Routes = [
         loadChildren: () => import('./modules/player/player.module').then(({ PlayerModule }) => PlayerModule),
     },
     {
+        path: 'contributions',
+        loadChildren: () => import('./modules/contributions/contributions.module')
+            .then(({ ContributionsModule }) => ContributionsModule),
+    },
+    {
         path: '',
         redirectTo: 'home',
         pathMatch: 'full',
