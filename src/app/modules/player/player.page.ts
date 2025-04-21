@@ -83,29 +83,21 @@ export class PlayerPage implements OnInit {
     @HostBinding('class.player-page')
     private playerPageClass = true;
 
-    private isMobileSubject$ = new ReplaySubject<boolean>(1);
     private isOrientationPortraitSubject$ = new ReplaySubject<boolean>(1);
 
-    readonly isMobile$ = this.isMobileSubject$.asObservable();
     readonly isSmallScreen$ = this.breakpointObserver.observe([
-        Breakpoints.XSmall,
-        Breakpoints.Small,
-        Breakpoints.Medium,
-        '(min-width: 768px) and (max-width: 1399.98px)',
+        '(max-width: 1599px) and (max-resolution: 1dppx)',
+        '(max-width: 1399px) and (min-resolution: 2dppx)',
     ]).pipe(map(({ matches }) => matches));
 
     readonly isPanelsMinified$ = combineLatest([
-        this.isMobile$,
         this.isOrientationPortraitSubject$,
         this.isSmallScreen$,
     ]).pipe(
-        map(([isMobile, isPortrait, isSmallScreen]) => isMobile && isPortrait || !isMobile && isSmallScreen),
+        map(([isPortrait, isSmallScreen]) => isPortrait || isSmallScreen),
     );
 
-    readonly isVideoSelectionHidden$ = combineLatest([
-        this.isMobile$,
-        this.isSmallScreen$,
-    ]).pipe(map(([isMobile, isSmall]) => isMobile || isSmall));
+    readonly isVideoSelectionHidden$ = this.isSmallScreen$;
 
     animeId$ = this.route.params.pipe(
         map(({ animeId }) => animeId as string),
@@ -259,7 +251,6 @@ export class PlayerPage implements OnInit {
 
     private onResize(): void {
         this.isOrientationPortraitSubject$.next(this.platform.isPortrait());
-        this.isMobileSubject$.next(this.platform.is('mobile') || this.platform.is('mobileweb'));
     }
 
     private async updateUserPreferences(): Promise<void> {

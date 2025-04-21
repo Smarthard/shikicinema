@@ -2,13 +2,13 @@
     appSwipe
     (appSwipeRight)="onOpenVideoSelectorModal()">
     <div class="player-page__wrapper"
-        [class.player-page__wrapper--mobile]="(isMobile$ | async) || (isSmallScreen$ | async)">
+        [class.player-page__wrapper--mobile]="isSmallScreen$ | async">
         <div class="player-page__anime-info common-info">
             <div class="common-info__title">
                 @if (isAnimeLoading$ | async) {
                     <app-skeleton-block
                         height="2rem"
-                        [width]="(isMobile$ | async) || (isSmallScreen$ | async) ? '10rem' : '30rem'"
+                        [width]="(isSmallScreen$ | async) ? '10rem' : '30rem'"
                     />
                 } @else {
                     <ion-text>
@@ -57,7 +57,7 @@
                 [userRate]="userRate$ | async"
                 [isLoading]="isAnimeLoading$ | async"
                 [isWatched]="isWatched"
-                [showSidePanel]="(isMobile$ | async) || (isSmallScreen$ | async)"
+                [showSidePanel]="isSmallScreen$ | async"
                 [isRewatching]="isRewatching$ | async"
                 [isMinified]="isPanelsMinified$ | async"
                 (selection)="onEpisodeChange($event)"
@@ -66,7 +66,7 @@
             />
         </ng-container>
 
-        @if (!(isMobile$ | async) && !(isSmallScreen$ | async)) {
+        @if ((isSmallScreen$ | async) === false) {
             <app-side-panel
                 class="player-page__side-panel"
                 [anime]="anime$ | async"
