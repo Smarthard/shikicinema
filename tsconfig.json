@@ -17,9 +17,6 @@
             "dom"
         ],
         "paths": {
-            "@app-root/*": [
-                "<rootDir>/../src/*"
-            ],
             "@app-env/*": [
                 "<rootDir>/../src/environments/*"
             ],
@@ -31,6 +28,9 @@
             ],
             "@app-electron/*": [
                 "<rootDir>/../electron/*"
+            ],
+            "@app-root/*": [
+                "<rootDir>/../src/*"
             ]
         }
     },
