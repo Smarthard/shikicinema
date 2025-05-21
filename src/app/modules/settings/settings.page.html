@@ -1,0 +1,146 @@
+<ion-content [fullscreen]="true" class="ion-padding page-content">
+    <form class="settings-page__form" [formGroup]="settingsForm">
+        <!-- Общие Настройки -->
+        <app-settings-group
+            class="settings-page__section"
+            icon="settings-outline"
+            [title]="'SETTINGS_MODULE.SETTINGS_PAGE.SETTING_GROUPS.GENERAL.TITLE' | transloco"
+        >
+            <ion-select
+                formControlName="language"
+                interface="popover"
+                fill="outline"
+                labelPlacement="floating"
+                [label]="'SETTINGS_MODULE.SETTINGS_PAGE.SETTING_GROUPS.GENERAL.LANGUAGE.LABEL' | transloco"
+            >
+                @for (lang of availableLangs; track $index) {
+                    <ion-select-option [value]="lang">
+                        {{ 'GLOBAL.LANGUAGES.' + (lang | uppercase) | transloco }}
+                    </ion-select-option>
+                }
+            </ion-select>
+
+            <ion-select
+                formControlName="theme"
+                interface="popover"
+                fill="outline"
+                labelPlacement="floating"
+                [label]="'SETTINGS_MODULE.SETTINGS_PAGE.SETTING_GROUPS.GENERAL.THEME.LABEL' | transloco"
+            >
+                <ion-select-option value="light">
+                    {{ 'SETTINGS_MODULE.SETTINGS_PAGE.SETTING_GROUPS.GENERAL.THEME.OPTIONS.LIGHT' | transloco }}
+                </ion-select-option>
+
+                <ion-select-option value="dark">
+                    {{ 'SETTINGS_MODULE.SETTINGS_PAGE.SETTING_GROUPS.GENERAL.THEME.OPTIONS.DARK' | transloco }}
+                </ion-select-option>
+
+                <ion-select-option value="custom">
+                    {{ 'SETTINGS_MODULE.SETTINGS_PAGE.SETTING_GROUPS.GENERAL.THEME.OPTIONS.CUSTOM' | transloco }}
+                </ion-select-option>
+            </ion-select>
+        </app-settings-group>
+
+        <!-- Плеер -->
+        <app-settings-group
+            class="settings-page__section"
+            icon="film-outline"
+            [title]="'SETTINGS_MODULE.SETTINGS_PAGE.SETTING_GROUPS.PLAYER_PAGE.TITLE' | transloco"
+        >
+            <ion-toggle formControlName="preferencesToggle"
+                labelPlacement="end"
+                enableOnOffLabels
+                [helperText]="'SETTINGS_MODULE.SETTINGS_PAGE.SETTING_GROUPS.PLAYER_PAGE.PREFERENCE_TOGGLE.HELP' | transloco">
+                {{ 'SETTINGS_MODULE.SETTINGS_PAGE.SETTING_GROUPS.PLAYER_PAGE.PREFERENCE_TOGGLE.LABEL' | transloco }}
+            </ion-toggle>
+
+            <ion-select
+                formControlName="playerMode"
+                interface="popover"
+                fill="outline"
+                labelPlacement="floating"
+                [label]="'SETTINGS_MODULE.SETTINGS_PAGE.SETTING_GROUPS.PLAYER_PAGE.PLAYER_MODE.LABEL' | transloco"
+                [helperText]="'SETTINGS_MODULE.SETTINGS_PAGE.SETTING_GROUPS.PLAYER_PAGE.PLAYER_MODE.OPTIONS_HELP.' + playerModeCtrl?.value | uppercase | transloco"
+            >
+                <ion-select-option value="auto">
+                    {{ 'SETTINGS_MODULE.SETTINGS_PAGE.SETTING_GROUPS.PLAYER_PAGE.PLAYER_MODE.OPTIONS.AUTO' | transloco }}
+                </ion-select-option>
+
+                <ion-select-option value="compact">
+                    {{ 'SETTINGS_MODULE.SETTINGS_PAGE.SETTING_GROUPS.PLAYER_PAGE.PLAYER_MODE.OPTIONS.COMPACT' | transloco }}
+                </ion-select-option>
+
+                <ion-select-option value="full">
+                    {{ 'SETTINGS_MODULE.SETTINGS_PAGE.SETTING_GROUPS.PLAYER_PAGE.PLAYER_MODE.OPTIONS.FULL' | transloco }}
+                </ion-select-option>
+            </ion-select>
+
+            <ion-select
+                formControlName="playerKindDisplayMode"
+                interface="popover"
+                fill="outline"
+                labelPlacement="floating"
+                [label]="'SETTINGS_MODULE.SETTINGS_PAGE.SETTING_GROUPS.PLAYER_PAGE.PLAYER_KIND_DISPLAY_MODE.LABEL' | transloco"
+                [helperText]="'SETTINGS_MODULE.SETTINGS_PAGE.SETTING_GROUPS.PLAYER_PAGE.PLAYER_KIND_DISPLAY_MODE.OPTIONS_HELP.' + playerKindDisplayModeCtrl?.value | uppercase | transloco"
+            >
+                <ion-select-option value="off">
+                    {{ 'SETTINGS_MODULE.SETTINGS_PAGE.SETTING_GROUPS.PLAYER_PAGE.PLAYER_KIND_DISPLAY_MODE.OPTIONS.OFF' | transloco }}
+                </ion-select-option>
+
+                <ion-select-option value="special-only">
+                    {{ 'SETTINGS_MODULE.SETTINGS_PAGE.SETTING_GROUPS.PLAYER_PAGE.PLAYER_KIND_DISPLAY_MODE.OPTIONS.SPECIAL-ONLY' | transloco }}
+                </ion-select-option>
+
+                <ion-select-option value="all">
+                    {{ 'SETTINGS_MODULE.SETTINGS_PAGE.SETTING_GROUPS.PLAYER_PAGE.PLAYER_KIND_DISPLAY_MODE.OPTIONS.ALL' | transloco }}
+                </ion-select-option>
+            </ion-select>
+        </app-settings-group>
+
+        <!-- Профиль -->
+        <app-settings-group
+            class="settings-page__section"
+            icon="person-outline"
+            [title]="'SETTINGS_MODULE.SETTINGS_PAGE.SETTING_GROUPS.PROFILE_SETTINGS.TITLE' | transloco"
+        >
+            <app-profile-info
+                serviceName="Shikimori"
+                [serviceIcon]="'/favicon.ico' | getShikimoriPage | async"
+                [isAuthorized]="!!(shikimoriUser$ | async)"
+                [avatar]="shikimoriAvatarImg$ | async"
+                [nickname]="shikimoriNickname$ | async"
+                (login)="shikimoriLogin()"
+                (login)="shikimoriLogout()"
+            />
+        </app-settings-group>
+
+        <!-- Хранилище -->
+        <app-settings-group
+            class="settings-page__section storage"
+            icon="server-outline"
+            [title]="'SETTINGS_MODULE.SETTINGS_PAGE.SETTING_GROUPS.STORAGE.TITLE' | transloco"
+        >
+            <ion-progress-bar
+                class="storage__progressbar"
+                type="determinate"
+                [value]="((localStorageUsage$ | async) + (localStorageCache$ | async)) / localStorageLimit"
+            />
+
+            <span class="storage__text">
+                {{ 'SETTINGS_MODULE.SETTINGS_PAGE.SETTING_GROUPS.STORAGE.INFO' | transloco: {
+                    used: ((localStorageUsage$ | async) + (localStorageCache$ | async)  | toHumanReadableBytes),
+                    cached: localStorageCache$ | async | toHumanReadableBytes,
+                    total: localStorageLimit | toHumanReadableBytes,
+                } }}
+            </span>
+
+            <ion-button
+                expand="full"
+                color="danger"
+                (click)="clearCache()">
+                <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+                {{ 'SETTINGS_MODULE.SETTINGS_PAGE.SETTING_GROUPS.STORAGE.CLEAR_CACHE_BTN' | transloco }}
+            </ion-button>
+        </app-settings-group>
+    </form>
+</ion-content>

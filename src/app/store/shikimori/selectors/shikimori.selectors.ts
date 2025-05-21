@@ -23,3 +23,23 @@ export const selectShikimoriFoundAnimes = createSelector(
     selectShikimori,
     (state) => state.foundAnimes,
 );
+
+export const selectShikimoriCurrentUserAvatar = createSelector(
+    selectShikimori,
+    (state) => state.currentUser?.image?.x80 || state.currentUser?.image?.x64 || state.currentUser?.avatar,
+);
+
+export const selectShikimoriCurrentUserAvatarHiRes = createSelector(
+    selectShikimori,
+    (state) => state.currentUser?.image?.x160 || state.currentUser?.image?.x148 || state.currentUser?.avatar,
+);
+
+export const selectShikimoriCurrentUserNickname = createSelector(
+    selectShikimori,
+    (state) => state.currentUser?.nickname,
+);
+
+export const selectShikimoriCurrentUserProfileLink = createSelector(
+    selectShikimori,
+    (state) => state.currentUser?.url,
+);

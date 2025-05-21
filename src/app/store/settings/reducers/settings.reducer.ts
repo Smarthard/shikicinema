@@ -13,6 +13,10 @@ import {
 const initialState: SettingsStoreInterface = {
     language: '',
     theme: 'dark',
+    customTheme: '',
+    preferencesToggle: true,
+    playerMode: 'auto',
+    playerKindDisplayMode: 'special-only',
     availableLangs: defaultAvailableLangs,
     animePaginationSize: 100,
     authorPreferences: {},

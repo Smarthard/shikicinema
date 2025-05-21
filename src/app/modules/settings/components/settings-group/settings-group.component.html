@@ -1,0 +1,11 @@
+<h3 class="settings-group__title ion-text">
+    @if (icon) {
+        <ion-icon [name]="icon" />
+    }
+
+    {{ title }}
+</h3>
+
+<div class="settings-group__content">
+    <ng-content></ng-content>
+</div>

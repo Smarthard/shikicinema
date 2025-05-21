@@ -22,6 +22,10 @@ const routes: Routes = [
             .then(({ ContributionsModule }) => ContributionsModule),
     },
     {
+        path: 'settings',
+        loadChildren: () => import('./modules/settings/settings.module').then(({ SettingsModule }) => SettingsModule),
+    },
+    {
         path: '',
         redirectTo: 'home',
         pathMatch: 'full',

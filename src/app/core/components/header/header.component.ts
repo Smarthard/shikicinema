@@ -37,6 +37,9 @@ import {
 import {
     selectShikimoriAnimeSearchLoading,
     selectShikimoriCurrentUser,
+    selectShikimoriCurrentUserAvatar,
+    selectShikimoriCurrentUserNickname,
+    selectShikimoriCurrentUserProfileLink,
     selectShikimoriFoundAnimes,
 } from '@app/store/shikimori/selectors/shikimori.selectors';
 import { selectTheme } from '@app/store/settings/selectors/settings.selectors';
@@ -85,9 +88,9 @@ export class HeaderComponent implements OnInit {
         this.theme$ = this.store.select(selectTheme);
         this.foundAnimes$ = this.store.select(selectShikimoriFoundAnimes);
         this.isSearchResultsLoading$ = this.store.select(selectShikimoriAnimeSearchLoading);
-        this.avatarImg$ = this.currentUser$.pipe(map((user) => user?.image?.x64 || user?.avatar));
-        this.nickname$ = this.currentUser$.pipe(map((user) => user?.nickname));
-        this.profileLink$ = this.currentUser$.pipe(map((user) => user?.url));
+        this.avatarImg$ = this.store.select(selectShikimoriCurrentUserAvatar);
+        this.nickname$ = this.store.select(selectShikimoriCurrentUserNickname);
+        this.profileLink$ = this.store.select(selectShikimoriCurrentUserProfileLink);
         this.isAnimeListPopoverOpen = false;
         this.isSearchbarFocusedOnMobile$ = combineLatest([
             this.searchbarFocusedSubject$,
