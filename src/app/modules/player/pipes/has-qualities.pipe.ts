@@ -9,6 +9,6 @@ import { VideoInfoInterface, VideoQualityEnum } from '@app/modules/player/types'
 })
 export class HasQualitiesPipe implements PipeTransform {
     transform(videos: VideoInfoInterface[], ...qualities: VideoQualityEnum[]): boolean {
-        return videos.some(({ quality }) => qualities.includes(quality));
+        return videos?.some(({ quality }) => qualities?.includes(quality));
     }
 }

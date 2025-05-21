@@ -1,6 +1,6 @@
 import { Actions, ofType } from '@ngrx/effects';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { BreakpointObserver } from '@angular/cdk/layout';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -206,9 +206,12 @@ export class PlayerPage implements OnInit {
                 this.authorPreferences$,
                 this.domainPreferences$,
                 this.kindPreferences$,
+                this.isPreferencesToggleOn$,
             ),
-            map(([videos, author, domain, kind]) => {
-                const relevantVideos = filterVideosByPreferences(videos, author, domain, kind);
+            map(([videos, author, domain, kind, isPreferencesToggleOn]) => {
+                const relevantVideos = isPreferencesToggleOn
+                    ? filterVideosByPreferences(videos, author, domain, kind)
+                    : videos;
 
                 if (!relevantVideos &&
                     author !== NoPreferenceSymbol &&
