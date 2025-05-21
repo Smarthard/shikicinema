@@ -2,6 +2,7 @@ import { PlayerKindDisplayMode } from '@app/store/settings/types/player-kind-dis
 import { PlayerModeType } from '@app/store/settings/types/player-mode.type';
 import { PreferencesInterface } from '@app/store/settings/types/preferences.interface';
 import { ThemeSettingsType } from '@app/store/settings/types/theme-settings.type';
+import { VisitedAnimePages } from '@app/store/settings/types/visited-anime-page.interface';
 
 export interface SettingsStoreInterface {
     language: string;
@@ -15,4 +16,6 @@ export interface SettingsStoreInterface {
     authorPreferences: PreferencesInterface<string>;
     kindPreferences: PreferencesInterface<string>;
     domainPreferences: PreferencesInterface<string>;
+    visitedAnimePages: VisitedAnimePages;
+    lastPage: string;
 }

@@ -17,6 +17,10 @@
         background-color: var(--ion-background-color-step-50);
     }
 
+    &__back-btn {
+        --border-radius: 15px;
+    }
+
     .storage {
         .settings-group__content {
             gap: .5rem;

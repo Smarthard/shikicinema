@@ -7,14 +7,15 @@ import {
     ViewEncapsulation,
 } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
+import { NavigationEnd, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { TranslocoService, getBrowserLang } from '@ngneat/transloco';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { distinctUntilChanged, tap } from 'rxjs/operators';
+import { distinctUntilChanged, filter, tap } from 'rxjs/operators';
 
 import { getCurrentUserAction } from '@app/store/shikimori/actions/get-current-user.action';
 import { selectLanguage, selectTheme } from '@app/store/settings/selectors/settings.selectors';
-import { updateLanguageAction } from '@app/store/settings/actions/settings.actions';
+import { updateLanguageAction, visitedPageAction } from '@app/store/settings/actions/settings.actions';
 
 @UntilDestroy()
 @Component({
@@ -31,12 +32,14 @@ export class AppComponent implements OnInit {
         private readonly _store: Store,
         private readonly _renderer: Renderer2,
         private readonly _transloco: TranslocoService,
+        private readonly _router: Router,
     ) {}
 
     ngOnInit(): void {
         this.initTheme();
         this.initLocale();
         this.initUser();
+        this.initOnNavigation();
     }
 
     initLocale(): void {
@@ -74,5 +77,16 @@ export class AppComponent implements OnInit {
 
     initUser(): void {
         this._store.dispatch(getCurrentUserAction());
+    }
+
+    initOnNavigation(): void {
+        this._router.events
+            .pipe(
+                untilDestroyed(this),
+                filter((event) => event instanceof NavigationEnd),
+                filter<NavigationEnd>(({ url }) => url !== '/settings'),
+                tap<NavigationEnd>(({ url }) => this._store.dispatch(visitedPageAction({ url }))),
+            )
+            .subscribe();
     }
 }

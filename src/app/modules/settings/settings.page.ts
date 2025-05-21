@@ -1,5 +1,10 @@
 import { AsyncPipe, UpperCasePipe } from '@angular/common';
-import { BehaviorSubject, firstValueFrom, tap } from 'rxjs';
+import {
+    BehaviorSubject,
+    filter,
+    firstValueFrom,
+    tap,
+} from 'rxjs';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -17,6 +22,8 @@ import {
 import {
     IonButton,
     IonContent,
+    IonFab,
+    IonFabButton,
     IonIcon,
     IonProgressBar,
     IonSelect,
@@ -32,13 +39,14 @@ import { PersistenceService } from '@app/shared/services/persistence.service';
 import { PlayerKindDisplayMode } from '@app/store/settings/types/player-kind-display-mode.type';
 import { PlayerModeType } from '@app/store/settings/types/player-mode.type';
 import { ProfileInfoComponent } from '@app/modules/settings/components/profile-info/profile-info.component';
+import { Router } from '@angular/router';
 import { SettingsGroupComponent } from '@app/modules/settings/components/settings-group/settings-group.component';
 import { ThemeSettingsType } from '@app/store/settings/types/theme-settings.type';
 import { ToHumanReadableBytesPipe } from '@app/shared/pipes/to-human-readable-bytes/to-human-readable-bytes.pipe';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { authShikimoriAction, logoutShikimoriAction } from '@app/store/auth/actions/auth.actions';
 import { resetCacheAction } from '@app/store/cache/actions';
-import { selectSettings } from '@app/store/settings/selectors/settings.selectors';
+import { selectLastVisitedPage, selectSettings } from '@app/store/settings/selectors/settings.selectors';
 import {
     selectShikimoriCurrentUser,
     selectShikimoriCurrentUserAvatarHiRes,
@@ -65,6 +73,8 @@ import { updateSettingsAction } from '@app/store/settings/actions/settings.actio
         IonProgressBar,
         IonButton,
         IonIcon,
+        IonFab,
+        IonFabButton,
         SettingsGroupComponent,
         ProfileInfoComponent,
         ToHumanReadableBytesPipe,
@@ -79,13 +89,19 @@ export class SettingsPage implements OnInit {
     private settingsPageClass = true;
 
     constructor(
-        private transloco: TranslocoService,
-        private title: Title,
-        private store: Store,
-        readonly persistenceService: PersistenceService,
+        private readonly transloco: TranslocoService,
+        private readonly title: Title,
+        private readonly store: Store,
+        private readonly persistenceService: PersistenceService,
+        private readonly router: Router,
     ) {}
 
     readonly settings$ = this.store.select(selectSettings);
+    readonly lastVisitedPage$ = this.store.select(selectLastVisitedPage);
+
+    readonly hasLastVisitedPage$ = this.lastVisitedPage$.pipe(
+        filter((url) => url && url !== '/settings'),
+    );
 
     readonly availableLangs = this.transloco.getAvailableLangs() as string[];
 
@@ -143,5 +159,12 @@ export class SettingsPage implements OnInit {
     clearCache(): void {
         this.store.dispatch(resetCacheAction());
         this.localStorageCache$.next(this.persistenceService.getCacheBytes());
+    }
+
+    async goToLastPage(): Promise<void> {
+        const lastPage = await firstValueFrom(this.lastVisitedPage$);
+
+        console.log('???', lastPage);
+        await this.router.navigateByUrl(lastPage);
     }
 }

@@ -143,4 +143,15 @@
             </ion-button>
         </app-settings-group>
     </form>
+
+    @if (hasLastVisitedPage$ | async) {
+        <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+            <ion-fab-button
+                class="settings-page__back-btn"
+                color="success"
+                (click)="goToLastPage()">
+              <ion-icon name="return-up-back-outline"></ion-icon>
+            </ion-fab-button>
+        </ion-fab>
+    }
 </ion-content>

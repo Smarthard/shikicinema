@@ -1,14 +1,16 @@
 import { createReducer, on } from '@ngrx/store';
 
 import { SettingsStoreInterface } from '@app/store/settings/types/settings-store.interface';
-import { defaultAvailableLangs } from '@app/core/transloco-root.module';
 import {
+    addVisitedAnimePageAction,
     resetSettingsAction,
     updateLanguageAction,
     updatePlayerPreferencesAction,
     updateSettingsAction,
     updateThemeAction,
+    visitedPageAction,
 } from '@app/store/settings/actions/settings.actions';
+import { defaultAvailableLangs } from '@app/core/transloco-root.module';
 
 const initialState: SettingsStoreInterface = {
     language: '',
@@ -22,6 +24,8 @@ const initialState: SettingsStoreInterface = {
     authorPreferences: {},
     kindPreferences: {},
     domainPreferences: {},
+    visitedAnimePages: {},
+    lastPage: undefined,
 };
 
 const reducer = createReducer(
@@ -67,6 +71,23 @@ const reducer = createReducer(
         (state, { language }) => ({
             ...state,
             language,
+        }),
+    ),
+    on(
+        visitedPageAction,
+        (state, { url }) => ({
+            ...state,
+            lastPage: url,
+        }),
+    ),
+    on(
+        addVisitedAnimePageAction,
+        (state, { animeId, episode }) => ({
+            ...state,
+            visitedAnimePages: {
+                ...state.visitedAnimePages,
+                [animeId]: episode,
+            },
         }),
     ),
 );

@@ -78,3 +78,13 @@ export const selectPlayerKindDisplayMode = createSelector(
     selectSettings,
     (state) => state.playerKindDisplayMode || 'special-only',
 );
+
+export const selectLastVisitedPage = createSelector(
+    selectSettings,
+    (state) => state.lastPage,
+);
+
+export const selectVisitedAnimePages = createSelector(
+    selectSettings,
+    (state) => state.visitedAnimePages,
+);
