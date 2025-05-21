@@ -2,7 +2,8 @@
     appSwipe
     (appSwipeRight)="onOpenVideoSelectorModal()">
     <div class="player-page__wrapper"
-        [class.player-page__wrapper--mobile]="isSmallScreen$ | async">
+        [class.player-page__wrapper--mobile]="isSmallScreen$ | async"
+        [class.player-page__wrapper--compact]="(playerMode$ | async) === 'compact'">
         <div class="player-page__anime-info common-info">
             <div class="common-info__title">
                 @if (isAnimeLoading$ | async) {

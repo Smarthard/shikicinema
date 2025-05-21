@@ -147,6 +147,16 @@
             grid-template-rows: auto 70vh;
             grid-template-columns: calc(70vh * (16/9)) min-content;
         }
+
+        &--compact {
+            &:not(.player-page__wrapper--mobile) {
+                grid-template:  "info   kind"
+                                "player video"
+                                "conpan sidepan"
+                                "comments comments"
+                                "comment-form comment-form";
+            }
+        }
     }
 
     &__comments {

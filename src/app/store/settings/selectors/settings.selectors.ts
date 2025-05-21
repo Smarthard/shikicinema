@@ -63,3 +63,18 @@ export const selectTheme = createSelector(
     selectSettings,
     (state) => state.theme || 'dark',
 );
+
+export const selectPreferencesToggle = createSelector(
+    selectSettings,
+    (state) => state.preferencesToggle,
+);
+
+export const selectPlayerMode = createSelector(
+    selectSettings,
+    (state) => state.playerMode || 'auto',
+);
+
+export const selectPlayerKindDisplayMode = createSelector(
+    selectSettings,
+    (state) => state.playerKindDisplayMode || 'special-only',
+);

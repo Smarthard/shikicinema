@@ -56,6 +56,9 @@ import {
     selectAuthorPreferencesByAnime,
     selectDomainPreferencesByAnime,
     selectKindPreferencesByAnime,
+    selectPlayerKindDisplayMode,
+    selectPlayerMode,
+    selectPreferencesToggle,
 } from '@app/store/settings/selectors/settings.selectors';
 import {
     selectPlayerAnime,
@@ -85,10 +88,19 @@ export class PlayerPage implements OnInit {
 
     private isOrientationPortraitSubject$ = new ReplaySubject<boolean>(1);
 
-    readonly isSmallScreen$ = this.breakpointObserver.observe([
-        '(max-width: 1599px) and (max-resolution: 1dppx)',
-        '(max-width: 1399px) and (min-resolution: 2dppx)',
-    ]).pipe(map(({ matches }) => matches));
+    readonly isPreferencesToggleOn$ = this.store.select(selectPreferencesToggle);
+    readonly playerMode$ = this.store.select(selectPlayerMode);
+    readonly playerKindDisplayMode$ = this.store.select(selectPlayerKindDisplayMode);
+
+    readonly isSmallScreen$ = combineLatest([
+        this.playerMode$,
+        this.breakpointObserver.observe([
+            '(max-width: 1599px) and (max-resolution: 1dppx)',
+            '(max-width: 1399px) and (min-resolution: 2dppx)',
+        ]).pipe(map(({ matches }) => matches)),
+    ]).pipe(
+        map(([playerMode, isMediaMatch]) => playerMode !== 'compact' && isMediaMatch || playerMode === 'full'),
+    );
 
     readonly isPanelsMinified$ = combineLatest([
         this.isOrientationPortraitSubject$,
