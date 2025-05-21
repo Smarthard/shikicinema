@@ -46,6 +46,7 @@
             [class.ion-hide]="isVideoSelectionHidden$ | async"
             [videos]="episodeVideos$ | async | filterByKind: (currentKind$ | async)"
             [selected]="currentVideo$ | async"
+            [kindDisplayMode]="playerKindDisplayMode$ | async"
             (selection)="onVideoChange($event)"
         />
 
