@@ -70,7 +70,10 @@ import {
     selectPlayerVideos,
     selectPlayerVideosLoading,
 } from '@app/modules/player/store/selectors/player.selectors';
-import { updatePlayerPreferencesAction } from '@app/store/settings/actions/settings.actions';
+import {
+    togglePlayerModeAction,
+    updatePlayerPreferencesAction,
+} from '@app/store/settings/actions/settings.actions';
 import { uploadVideoAction } from '@app/store/shikicinema/actions/upload-video.action';
 
 
@@ -370,5 +373,9 @@ export class PlayerPage implements OnInit {
         const animeId = await firstValueFrom(this.animeId$);
 
         this.store.dispatch(uploadVideoAction({ animeId, video }));
+    }
+
+    togglePlayerMode(): void {
+        this.store.dispatch(togglePlayerModeAction());
     }
 }

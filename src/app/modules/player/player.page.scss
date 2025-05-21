@@ -84,7 +84,13 @@
 
             .control-panel__episode-wrapper {
                 min-width: 3.125rem;
-                max-width: 3.125rem;
+
+                @include media-breakpoint-down('xl') {
+                    --padding-start: 0;
+                    --padding-bottom: 0;
+                    --ion-safe-area-right: 0;
+                    max-width: 3.125rem;
+                }
             }
 
             @include media-breakpoint-up('md') {

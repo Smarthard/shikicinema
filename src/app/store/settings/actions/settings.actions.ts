@@ -38,3 +38,7 @@ export const addVisitedAnimePageAction = createAction(
     '[Settings] Add visited anime page',
     props<{ animeId: ResourceIdType, episode: ResourceIdType }>(),
 );
+
+export const togglePlayerModeAction = createAction(
+    '[Settings] Toggle player mode',
+);

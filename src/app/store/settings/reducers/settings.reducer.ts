@@ -4,6 +4,7 @@ import { SettingsStoreInterface } from '@app/store/settings/types/settings-store
 import {
     addVisitedAnimePageAction,
     resetSettingsAction,
+    togglePlayerModeAction,
     updateLanguageAction,
     updatePlayerPreferencesAction,
     updateSettingsAction,
@@ -88,6 +89,15 @@ const reducer = createReducer(
                 ...state.visitedAnimePages,
                 [animeId]: episode,
             },
+        }),
+    ),
+    on(
+        togglePlayerModeAction,
+        (state) => ({
+            ...state,
+            playerMode: state.playerMode === 'compact'
+                ? 'full' as const
+                : 'compact' as const,
         }),
     ),
 );

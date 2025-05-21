@@ -62,9 +62,11 @@
                 [showSidePanel]="isSmallScreen$ | async"
                 [isRewatching]="isRewatching$ | async"
                 [isMinified]="isPanelsMinified$ | async"
+                [playerMode]="playerMode$ | async"
                 (selection)="onEpisodeChange($event)"
                 (watch)="onWatch($event, isWatched)"
                 (openVideoModal)="onOpenVideoSelectorModal()"
+                (togglePlayerMode)="togglePlayerMode()"
             />
         </ng-container>
 
