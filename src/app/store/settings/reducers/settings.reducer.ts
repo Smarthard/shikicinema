@@ -87,7 +87,10 @@ const reducer = createReducer(
             ...state,
             visitedAnimePages: {
                 ...state.visitedAnimePages,
-                [animeId]: episode,
+                [animeId]: {
+                    episode,
+                    visited: new Date(),
+                },
             },
         }),
     ),
