@@ -19,6 +19,7 @@ import { cacheLocalStorageSyncReducer } from '@app/store/cache/reducers/cache.me
 import { cacheReducer } from '@app/store/cache/reducers/cache.reducer';
 import { environment } from '@app-env/environment';
 import { loggerMetaReducer } from '@app/store/logger/reducers/logger.meta-reducer';
+import { recentAnimesLocalStorageSyncReducer } from '@app/modules/home/store/recent-animes';
 import { settingsLocalStorageSyncReducer } from '@app/store/settings/reducers/settings.meta-reducer';
 import { settingsReducer } from '@app/store/settings/reducers/settings.reducer';
 import { shikicinemaLocalStorageSyncReducer } from '@app/store/shikicinema/reducers/shikicinema.meta-reducer';
@@ -32,6 +33,7 @@ const storeConfig: RootStoreConfig<AppStoreInterface> = {
         settingsLocalStorageSyncReducer,
         shikicinemaLocalStorageSyncReducer,
         loggerMetaReducer,
+        recentAnimesLocalStorageSyncReducer,
     ],
 };
 

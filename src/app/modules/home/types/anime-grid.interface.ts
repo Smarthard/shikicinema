@@ -5,7 +5,7 @@ import { UserRateStatusType } from '@app/shared/types/shikimori/user-rate-status
 
 export interface AnimeGridInterface {
     status: UserRateStatusType;
-    rates$: Observable<UserAnimeRate[]>;
-    isLoaded$: Observable<boolean>;
+    rates: Observable<UserAnimeRate[]>;
+    isLoaded: Observable<boolean>;
     label?: string;
 }

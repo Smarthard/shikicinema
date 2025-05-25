@@ -2,7 +2,7 @@ import {
     LoadStatusKeysType,
     StatusKeysType,
     StatusPageType,
-} from '@app/modules/home/store/anime-rates/types/anime-rates-store.interface';
+} from '@app/modules/home/store/anime-rates';
 import { UserRateStatusType } from '@app/shared/types/shikimori/user-rate-status.type';
 
 export function getRateLoadedKey(status: UserRateStatusType): LoadStatusKeysType {

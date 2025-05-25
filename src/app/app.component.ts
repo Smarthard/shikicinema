@@ -15,7 +15,7 @@ import { distinctUntilChanged, filter, tap } from 'rxjs/operators';
 
 import { getCurrentUserAction } from '@app/store/shikimori/actions/get-current-user.action';
 import { selectLanguage, selectTheme } from '@app/store/settings/selectors/settings.selectors';
-import { updateLanguageAction, visitedPageAction } from '@app/store/settings/actions/settings.actions';
+import { updateLanguageAction, visitPageAction } from '@app/store/settings/actions/settings.actions';
 
 @UntilDestroy()
 @Component({
@@ -85,7 +85,7 @@ export class AppComponent implements OnInit {
                 untilDestroyed(this),
                 filter((event) => event instanceof NavigationEnd),
                 filter<NavigationEnd>(({ url }) => url !== '/settings'),
-                tap<NavigationEnd>(({ url }) => this._store.dispatch(visitedPageAction({ url }))),
+                tap<NavigationEnd>(({ url }) => this._store.dispatch(visitPageAction({ url }))),
             )
             .subscribe();
     }

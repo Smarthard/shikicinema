@@ -75,6 +75,7 @@ import {
     updatePlayerPreferencesAction,
 } from '@app/store/settings/actions/settings.actions';
 import { uploadVideoAction } from '@app/store/shikicinema/actions/upload-video.action';
+import { visitAnimePageAction } from '@app/modules/home/store/recent-animes/actions';
 
 
 @UntilDestroy()
@@ -246,6 +247,7 @@ export class PlayerPage implements OnInit {
 
                 this.store.dispatch(getTopicsAction({ animeId: anime.id, episode, revalidate: false }));
                 this.store.dispatch(getCommentsAction({ animeId: anime.id, episode, page: 1, limit: 30 }));
+                this.store.dispatch(visitAnimePageAction({ anime, episode }));
             }),
             untilDestroyed(this),
         ).subscribe();

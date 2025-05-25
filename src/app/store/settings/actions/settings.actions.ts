@@ -1,6 +1,5 @@
 import { createAction, props } from '@ngrx/store';
 
-import { ResourceIdType } from '@app/shared/types/resource-id.type';
 import { SettingsStoreInterface } from '@app/store/settings/types/settings-store.interface';
 import { VideoKindEnum } from '@app/modules/player/types/video-kind.enum';
 
@@ -29,14 +28,9 @@ export const updateLanguageAction = createAction(
     props<{ language: string }>(),
 );
 
-export const visitedPageAction = createAction(
+export const visitPageAction = createAction(
     '[Settings] Visited page',
     props<{ url: string }>(),
-);
-
-export const addVisitedAnimePageAction = createAction(
-    '[Settings] Add visited anime page',
-    props<{ animeId: ResourceIdType, episode: ResourceIdType }>(),
 );
 
 export const togglePlayerModeAction = createAction(

@@ -8,3 +8,8 @@ export const selectKnownUploaders = createSelector(
     selectCache,
     ({ knownUploaders }) => knownUploaders,
 );
+
+export const selectAnimesCache = createSelector(
+    selectCache,
+    ({ animes }) => animes,
+);

@@ -2,10 +2,16 @@ import { createReducer, on } from '@ngrx/store';
 
 import { CacheStoreInterface } from '@app/store/cache/types';
 import { WELL_KNOWN_UPLOADERS_MAP } from '@app/shared/config/well-known-uploaders.config';
-import { resetCacheAction, updateCacheAction, updateUploadersCacheAction } from '@app/store/cache/actions';
+import {
+    resetCacheAction,
+    updateAnimesCacheAction,
+    updateCacheAction,
+    updateUploadersCacheAction,
+} from '@app/store/cache/actions';
 
 const initialState: CacheStoreInterface = {
     knownUploaders: WELL_KNOWN_UPLOADERS_MAP,
+    animes: {},
 };
 
 const reducer = createReducer(
@@ -24,6 +30,16 @@ const reducer = createReducer(
             knownUploaders: {
                 ...state.knownUploaders,
                 [uploaderId]: uploader,
+            },
+        }),
+    ),
+    on(
+        updateAnimesCacheAction,
+        (state, { anime }) => ({
+            ...state,
+            animes: {
+                ...state.animes,
+                [anime.id]: anime,
             },
         }),
     ),

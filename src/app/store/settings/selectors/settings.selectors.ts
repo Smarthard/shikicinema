@@ -83,8 +83,3 @@ export const selectLastVisitedPage = createSelector(
     selectSettings,
     (state) => state.lastPage,
 );
-
-export const selectVisitedAnimePages = createSelector(
-    selectSettings,
-    (state) => state.visitedAnimePages,
-);

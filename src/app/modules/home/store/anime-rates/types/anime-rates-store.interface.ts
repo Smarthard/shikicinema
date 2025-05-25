@@ -31,4 +31,4 @@ export type StatusKeysType = keyof RatesData;
 export type StatusPageType = keyof RatesPages;
 export type LoadStatusKeysType = keyof RatesLoadStatus;
 
-export default interface AnimeRatesStoreInterface extends RatesData, RatesPages, RatesLoadStatus {}
+export interface AnimeRatesStoreInterface extends RatesData, RatesPages, RatesLoadStatus {}

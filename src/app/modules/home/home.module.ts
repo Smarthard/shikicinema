@@ -13,7 +13,7 @@ import { HomePageRoutingModule } from '@app/modules/home/home-routing.module';
 import { HomeStateModule } from '@app/modules/home/store/home-state.module';
 import { ImageCardModule } from '@app/shared/components/image-card/image-card.module';
 import { SkeletonBlockModule } from '@app/shared/components/skeleton-block/skeleton-block.module';
-import { TypedTemplateDirective } from '@app/shared/directives/typed-template.directive';
+import { SortRatesByDateVisitedPipe } from '@app/modules/home/pipes/sort-rates-by-date-visited.pipe';
 
 
 @NgModule({
@@ -30,7 +30,7 @@ import { TypedTemplateDirective } from '@app/shared/directives/typed-template.di
         ImageCardModule,
         RouterModule,
         CardGridModule,
-        TypedTemplateDirective,
+        SortRatesByDateVisitedPipe,
     ],
     declarations: [
         HomePage,

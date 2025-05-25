@@ -100,6 +100,7 @@
             "PAGE_TITLE": "Список аниме {{ nickname }}",
             "ANIME_SEARCHBAR_PLACEHOLDER": "Поиск аниме...",
             "GRIDS": {
+                "RECENT": "Недавнее",
                 "PLANNED": "Запланировано",
                 "WATCHING": "Смотрю",
                 "REWATCHING": "Пересматриваю",
