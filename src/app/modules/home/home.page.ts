@@ -34,7 +34,7 @@ import {
     selectRatesByStatus,
 } from '@app/modules/home/store/anime-rates';
 import { recentAnimesToRates } from '@app/modules/home/store/recent-animes/utils/recent-animes-to-rates.function';
-import { selectAnimesCache } from '@app/store/cache/selectors/cache.selectors';
+import { selectCachedAnimes } from '@app/store/cache/selectors/cache.selectors';
 import { selectRecentAnimes } from '@app/modules/home/store/recent-animes';
 import { selectShikimoriCurrentUser } from '@app/store/shikimori/selectors/shikimori.selectors';
 
@@ -120,7 +120,7 @@ export class HomePage implements OnInit {
 
         this.recent$ = combineLatest([
             this._store.select(selectRecentAnimes),
-            this._store.select(selectAnimesCache),
+            this._store.select(selectCachedAnimes),
         ]).pipe(
             map(([recentAnimes, cachedAnimes]) => recentAnimesToRates(recentAnimes, cachedAnimes)),
             shareReplay(1),

@@ -68,6 +68,7 @@
         "@ngneat/until-destroy": "^10.0.0",
         "@ngrx/effects": "17.2.0",
         "@ngrx/store": "17.2.0",
+        "date-fns": "^4.1.0",
         "deep-object-diff": "^1.1.9",
         "ng-let": "^18.0.1",
         "ngrx-store-localstorage": "^17.0.0",

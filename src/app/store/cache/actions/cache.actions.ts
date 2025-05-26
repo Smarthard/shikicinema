@@ -1,7 +1,7 @@
 import { createAction, props } from '@ngrx/store';
 
 import { AnimeBriefInfoInterface } from '@app/shared/types/shikimori/anime-brief-info.interface';
-import { CacheStoreInterface } from '@app/store/cache/types';
+import { AnimeCacheType, CacheStoreInterface } from '@app/store/cache/types';
 import { UploaderIdType } from '@app/shared/types/uploader-id.type';
 import { UploaderInterface } from '@app/modules/player/types';
 
@@ -21,6 +21,15 @@ export const updateUploadersCacheAction = createAction(
 export const updateAnimesCacheAction = createAction(
     '[Cache] Update animes',
     props<{ anime: AnimeBriefInfoInterface }>(),
+);
+
+export const cacheHealthCheckUpAction = createAction(
+    '[Cache] Health check up',
+);
+
+export const cacheHealthCheckUpSuccessAction = createAction(
+    '[Cache] Health check up success',
+    props<{ animes: AnimeCacheType }>(),
 );
 
 export const resetCacheAction = createAction(

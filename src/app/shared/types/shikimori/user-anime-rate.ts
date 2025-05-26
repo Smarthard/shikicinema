@@ -35,7 +35,7 @@ export interface Rate<K = string, S = string> {
     status: S;
 }
 
-export interface AnimeRate extends Rate<AnimeKindType, UserRateStatusType> {
+export interface AnimeRate extends Rate<AnimeKindType, AnimeReleaseStatus> {
     episodes: number;
     episodes_aired: number;
 
@@ -44,7 +44,7 @@ export interface AnimeRate extends Rate<AnimeKindType, UserRateStatusType> {
     english: never;
 }
 
-export interface MangaRate extends Rate<MangaKindType, UserRateStatusType> {
+export interface MangaRate extends Rate<MangaKindType, MangaReleaseStatus> {
     volumes: number;
     chapters: number;
 }
