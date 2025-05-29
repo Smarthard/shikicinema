@@ -120,38 +120,37 @@
             icon="server-outline"
             [title]="'SETTINGS_MODULE.SETTINGS_PAGE.SETTING_GROUPS.STORAGE.TITLE' | transloco"
         >
-            <ion-progress-bar
-                class="storage__progressbar"
-                type="determinate"
-                [value]="((localStorageUsage$ | async) + (localStorageCache$ | async)) / localStorageLimit"
-            />
+            <div class="storage__used-info">
+                <ion-progress-bar
+                    class="storage__progressbar"
+                    type="determinate"
+                    [value]="((localStorageUsage$ | async) + (localStorageCache$ | async)) / localStorageLimit"
+                />
 
-            <span class="storage__text">
-                {{ 'SETTINGS_MODULE.SETTINGS_PAGE.SETTING_GROUPS.STORAGE.INFO' | transloco: {
-                    used: ((localStorageUsage$ | async) + (localStorageCache$ | async)  | toHumanReadableBytes),
-                    cached: localStorageCache$ | async | toHumanReadableBytes,
-                    total: localStorageLimit | toHumanReadableBytes,
-                } }}
-            </span>
+                <span class="storage__text">
+                    {{ 'SETTINGS_MODULE.SETTINGS_PAGE.SETTING_GROUPS.STORAGE.INFO' | transloco: {
+                        used: ((localStorageUsage$ | async) + (localStorageCache$ | async)  | toHumanReadableBytes),
+                        cached: localStorageCache$ | async | toHumanReadableBytes,
+                        total: localStorageLimit | toHumanReadableBytes,
+                    } }}
+                </span>
+            </div>
 
             <ion-button
-                expand="full"
                 color="danger"
+                [title]="'SETTINGS_MODULE.SETTINGS_PAGE.SETTING_GROUPS.STORAGE.CLEAR_CACHE_BTN' | transloco"
                 (click)="clearCache()">
                 <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
-                {{ 'SETTINGS_MODULE.SETTINGS_PAGE.SETTING_GROUPS.STORAGE.CLEAR_CACHE_BTN' | transloco }}
             </ion-button>
         </app-settings-group>
     </form>
 
     @if (hasLastVisitedPage$ | async) {
-        <ion-fab slot="fixed" vertical="bottom" horizontal="end">
-            <ion-fab-button
-                class="settings-page__back-btn"
-                color="success"
-                (click)="goToLastPage()">
-              <ion-icon name="return-up-back-outline"></ion-icon>
-            </ion-fab-button>
-        </ion-fab>
+        <ion-button
+            class="settings-page__back-btn"
+            expand="full"
+            (click)="goToLastPage()">
+            {{ 'SETTINGS_MODULE.SETTINGS_PAGE.CLOSE_BTN' | transloco }}
+        </ion-button>
     }
 </ion-content>

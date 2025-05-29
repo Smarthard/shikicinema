@@ -22,8 +22,6 @@ import {
 import {
     IonButton,
     IonContent,
-    IonFab,
-    IonFabButton,
     IonIcon,
     IonProgressBar,
     IonSelect,
@@ -73,8 +71,6 @@ import { updateSettingsAction } from '@app/store/settings/actions/settings.actio
         IonProgressBar,
         IonButton,
         IonIcon,
-        IonFab,
-        IonFabButton,
         SettingsGroupComponent,
         ProfileInfoComponent,
         ToHumanReadableBytesPipe,

@@ -185,6 +185,7 @@
     "SETTINGS_MODULE": {
         "SETTINGS_PAGE": {
             "PAGE_TITLE": "Настройки",
+            "CLOSE_BTN": "Закрыть настройки",
             "SETTING_GROUPS": {
                 "GENERAL": {
                     "TITLE": "Общее",

@@ -180,6 +180,7 @@
     "SETTINGS_MODULE": {
         "SETTINGS_PAGE": {
             "PAGE_TITLE": "Settings",
+            "CLOSE_BTN": "Exit settings",
             "SETTING_GROUPS": {
                 "GENERAL": {
                     "TITLE": "General",

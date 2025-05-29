@@ -19,10 +19,20 @@
 
     &__back-btn {
         --border-radius: 15px;
+        margin: .5rem;
     }
 
     .storage {
+        &__used-info {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            gap: .5rem;
+        }
+
         .settings-group__content {
+            align-items: center;
+            flex-direction: row;
             gap: .5rem;
         }
     }
