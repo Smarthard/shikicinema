@@ -194,6 +194,10 @@
                             "DARK": "Dark",
                             "CUSTOM": "Custom"
                         }
+                    },
+                    "CUSTOM_THEME": {
+                        "LABEL": "Custom theme",
+                        "HELP": "Enter your CSS to change the appearance of Shikicinema"
                     }
                 },
                 "PLAYER_PAGE": {

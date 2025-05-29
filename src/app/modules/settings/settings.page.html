@@ -39,6 +39,18 @@
                     {{ 'SETTINGS_MODULE.SETTINGS_PAGE.SETTING_GROUPS.GENERAL.THEME.OPTIONS.CUSTOM' | transloco }}
                 </ion-select-option>
             </ion-select>
+
+            @if (themeCtrl?.value === 'custom') {
+                <ion-textarea
+                    formControlName="customTheme"
+                    labelPlacement="stacked"
+                    fill="outline"
+                    rows="5"
+                    [autoGrow]="true"
+                    [label]="'SETTINGS_MODULE.SETTINGS_PAGE.SETTING_GROUPS.GENERAL.CUSTOM_THEME.LABEL' | transloco"
+                    [helperText]="'SETTINGS_MODULE.SETTINGS_PAGE.SETTING_GROUPS.GENERAL.CUSTOM_THEME.HELP' | transloco"
+                />
+            }
         </app-settings-group>
 
         <!-- Плеер -->

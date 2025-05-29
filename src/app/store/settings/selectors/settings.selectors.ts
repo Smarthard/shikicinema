@@ -64,6 +64,11 @@ export const selectTheme = createSelector(
     (state) => state.theme || 'dark',
 );
 
+export const selectCustomTheme = createSelector(
+    selectSettings,
+    (state) => state.customTheme || '',
+);
+
 export const selectPreferencesToggle = createSelector(
     selectSettings,
     (state) => state.preferencesToggle,

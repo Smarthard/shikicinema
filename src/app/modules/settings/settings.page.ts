@@ -26,6 +26,7 @@ import {
     IonProgressBar,
     IonSelect,
     IonSelectOption,
+    IonTextarea,
     IonToggle,
 } from '@ionic/angular/standalone';
 import { Store } from '@ngrx/store';
@@ -71,6 +72,7 @@ import { updateSettingsAction } from '@app/store/settings/actions/settings.actio
         IonProgressBar,
         IonButton,
         IonIcon,
+        IonTextarea,
         SettingsGroupComponent,
         ProfileInfoComponent,
         ToHumanReadableBytesPipe,
@@ -110,6 +112,7 @@ export class SettingsPage implements OnInit {
         playerKindDisplayMode: new FormControl<PlayerKindDisplayMode>('special-only'),
     });
 
+    readonly themeCtrl = this.settingsForm?.get('theme');
     readonly playerModeCtrl = this.settingsForm?.get('playerMode');
     readonly playerKindDisplayModeCtrl = this.settingsForm?.get('playerKindDisplayMode');
 

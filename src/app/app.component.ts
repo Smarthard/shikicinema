@@ -13,6 +13,7 @@ import { TranslocoService, getBrowserLang } from '@ngneat/transloco';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { addHours, compareAsc } from 'date-fns';
 import {
+    debounceTime,
     distinctUntilChanged,
     filter,
     tap,
@@ -23,7 +24,7 @@ import { PersistenceService } from '@app/shared/services';
 import { cacheHealthCheckUpAction, resetCacheAction } from '@app/store/cache/actions';
 import { getCurrentUserAction } from '@app/store/shikimori/actions/get-current-user.action';
 import { selectCacheLastCheckUp } from '@app/store/cache/selectors/cache.selectors';
-import { selectLanguage, selectTheme } from '@app/store/settings/selectors/settings.selectors';
+import { selectCustomTheme, selectLanguage, selectTheme } from '@app/store/settings/selectors/settings.selectors';
 import { updateLanguageAction, visitPageAction } from '@app/store/settings/actions/settings.actions';
 
 @UntilDestroy()
@@ -71,19 +72,51 @@ export class AppComponent implements OnInit {
     }
 
     initTheme(): void {
+        const darkThemeClass = 'ion-palette-dark';
+        const userCustomStyleId = 'user-custom-theme';
+        const headEl = this._document.head;
+
         this._store.select(selectTheme).pipe(
             distinctUntilChanged(),
-            tap((theme) => {
-                const darkThemeClass = 'ion-palette-dark';
+            tap(async (theme) => {
+                const customTheme = await firstValueFrom(this._store.select(selectCustomTheme));
 
-                if (!theme || theme === 'dark') {
+                if (!theme || theme === 'dark' || theme === 'custom') {
                     this._renderer.addClass(this._document.documentElement, darkThemeClass);
                 } else {
                     this._renderer.removeClass(this._document.documentElement, darkThemeClass);
                 }
+
+                if (theme === 'custom') {
+                    const styleEl: HTMLStyleElement = this._renderer.createElement('style');
+
+                    this._renderer.setAttribute(styleEl, 'id', userCustomStyleId);
+                    this._renderer.appendChild(headEl, styleEl);
+                    styleEl.innerHTML = customTheme;
+                } else {
+                    const styleEl = this._document.querySelector(`#${userCustomStyleId}`);
+
+                    if (styleEl) {
+                        this._renderer.removeChild(headEl, styleEl);
+                    }
+                }
             }),
             untilDestroyed(this),
         ).subscribe();
+
+        this._store.select(selectCustomTheme)
+            .pipe(
+                debounceTime(500),
+                tap((customTheme) => {
+                    const styleEl = this._document.querySelector(`#${userCustomStyleId}`);
+
+                    if (styleEl) {
+                        styleEl.innerHTML = customTheme;
+                    }
+                }),
+                untilDestroyed(this),
+            )
+            .subscribe();
     }
 
     initUser(): void {
