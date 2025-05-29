@@ -27,7 +27,7 @@ import {
 import {
     isDuplicateArrayFilter,
     sortAnimeRatesByUserRating,
-} from '@app/modules/home/store/anime-rates/helpers/anime-rates.helpers';
+} from '@app/modules/home/store/anime-rates/utils/anime-rates.helpers';
 import {
     loadAnimeRateByStatusAction,
     loadAnimeRateByStatusFailureAction,

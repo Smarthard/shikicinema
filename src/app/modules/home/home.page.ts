@@ -4,10 +4,18 @@ import {
     OnInit,
     ViewEncapsulation,
 } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
+import {
+    Observable,
+    Subject,
+    combineLatest,
+} from 'rxjs';
 import { Store } from '@ngrx/store';
+import { Title } from '@angular/platform-browser';
+import { TranslocoService } from '@ngneat/transloco';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
+    map,
+    shareReplay,
     skipWhile,
     take,
     tap,
@@ -16,18 +24,20 @@ import {
 
 import { AnimeGridInterface } from '@app/modules/home/types/anime-grid.interface';
 import { ResourceIdType } from '@app/shared/types/resource-id.type';
-import { Title } from '@angular/platform-browser';
-import { TranslocoService } from '@ngneat/transloco';
 import { UserAnimeRate } from '@app/shared/types/shikimori/user-anime-rate';
 import { UserBriefInfoInterface } from '@app/shared/types/shikimori/user-brief-info.interface';
 import { UserRateStatusType } from '@app/shared/types/shikimori/user-rate-status.type';
 import { VisibilityChangeInterface } from '@app/modules/home/types/visibility-change.interface';
-import { loadAnimeRateByStatusAction } from '@app/modules/home/store/anime-rates/actions/load-anime-rate.action';
 import {
+    loadAnimeRateByStatusAction,
     selectIsRatesLoadedByStatus,
     selectRatesByStatus,
-} from '@app/modules/home/store/anime-rates/selectors/anime-rates.selectors';
+} from '@app/modules/home/store/anime-rates';
+import { recentAnimesToRates } from '@app/modules/home/store/recent-animes/utils/recent-animes-to-rates.function';
+import { selectCachedAnimes } from '@app/store/cache/selectors/cache.selectors';
+import { selectRecentAnimes } from '@app/modules/home/store/recent-animes';
 import { selectShikimoriCurrentUser } from '@app/store/shikimori/selectors/shikimori.selectors';
+
 
 @UntilDestroy()
 @Component({
@@ -40,6 +50,8 @@ import { selectShikimoriCurrentUser } from '@app/store/shikimori/selectors/shiki
 export class HomePage implements OnInit {
     currentUser$: Observable<UserBriefInfoInterface>;
 
+    recent$: Observable<UserAnimeRate[]>;
+
     planned$: Observable<UserAnimeRate[]>;
     watching$: Observable<UserAnimeRate[]>;
     rewatching$: Observable<UserAnimeRate[]>;
@@ -47,6 +59,7 @@ export class HomePage implements OnInit {
     onHold$: Observable<UserAnimeRate[]>;
     dropped$: Observable<UserAnimeRate[]>;
 
+    isRecentLoaded$: Observable<boolean>;
     isPlannedLoaded$: Observable<boolean>;
     isWatchingLoaded$: Observable<boolean>;
     isRewatchingLoaded$: Observable<boolean>;
@@ -91,7 +104,7 @@ export class HomePage implements OnInit {
                 untilDestroyed(this),
                 withLatestFrom(this.currentUser$),
                 tap(([event, currentUser]) => {
-                    if (currentUser?.id) {
+                    if (currentUser?.id && event.isVisible) {
                         this.getUserAnimeRatesByStatus(currentUser.id, event.section);
                     }
                 }),
@@ -104,6 +117,14 @@ export class HomePage implements OnInit {
         this.sectionVisibilitySubject$ = new Subject<VisibilityChangeInterface>();
 
         this.currentUser$ = this._store.select(selectShikimoriCurrentUser);
+
+        this.recent$ = combineLatest([
+            this._store.select(selectRecentAnimes),
+            this._store.select(selectCachedAnimes),
+        ]).pipe(
+            map(([recentAnimes, cachedAnimes]) => recentAnimesToRates(recentAnimes, cachedAnimes)),
+            shareReplay(1),
+        );
 
         this.planned$ = this._store.select(selectRatesByStatus('planned'));
         this.watching$ = this._store.select(selectRatesByStatus('watching'));
@@ -122,33 +143,33 @@ export class HomePage implements OnInit {
         this.animeGrids = [
             {
                 status: 'planned',
-                rates$: this.planned$,
-                isLoaded$: this.isPlannedLoaded$,
+                rates: this.planned$,
+                isLoaded: this.isPlannedLoaded$,
             },
             {
                 status: 'watching',
-                rates$: this.watching$,
-                isLoaded$: this.isWatchingLoaded$,
+                rates: this.watching$,
+                isLoaded: this.isWatchingLoaded$,
             },
             {
                 status: 'rewatching',
-                rates$: this.rewatching$,
-                isLoaded$: this.isRewatchingLoaded$,
+                rates: this.rewatching$,
+                isLoaded: this.isRewatchingLoaded$,
             },
             {
                 status: 'completed',
-                rates$: this.completed$,
-                isLoaded$: this.isCompletedLoaded$,
+                rates: this.completed$,
+                isLoaded: this.isCompletedLoaded$,
             },
             {
                 status: 'on_hold',
-                rates$: this.onHold$,
-                isLoaded$: this.isOnHoldLoaded$,
+                rates: this.onHold$,
+                isLoaded: this.isOnHoldLoaded$,
             },
             {
                 status: 'dropped',
-                rates$: this.dropped$,
-                isLoaded$: this.isDroppedLoaded$,
+                rates: this.dropped$,
+                isLoaded: this.isDroppedLoaded$,
             },
         ];
     }
@@ -167,8 +188,10 @@ export class HomePage implements OnInit {
         this.sectionVisibilitySubject$.next({ section, isVisible });
     }
 
-    getUserAnimeRatesByStatus(userId: ResourceIdType, status: UserRateStatusType) {
-        this._store.dispatch(loadAnimeRateByStatusAction({ userId, status }));
+    getUserAnimeRatesByStatus(userId: ResourceIdType, status: UserRateStatusType): void {
+        if (status !== 'recent' as UserRateStatusType) {
+            this._store.dispatch(loadAnimeRateByStatusAction({ userId, status }));
+        }
     }
 
     isSectionHidden(isLoaded: boolean, rates: UserAnimeRate[]): boolean {

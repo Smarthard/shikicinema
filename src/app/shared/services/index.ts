@@ -3,3 +3,4 @@ export * from './platform-api';
 export * from './electron-ipc-proxy.service';
 export * from './persistence.service';
 export * from './shikimori-client.service';
+export * from './kodik-client.service';

@@ -36,6 +36,13 @@
         </ion-button>
     }
 
+    @if (playerMode !== 'auto') {
+        <ion-button class="control-panel__btn" fill="clear"
+            (click)="togglePlayerMode.emit()">
+            <ion-icon slot="icon-only" name="resize-outline" />
+        </ion-button>
+    }
+
     @if (showSidePanel) {
         <app-side-panel
             class="player-page__side-panel"

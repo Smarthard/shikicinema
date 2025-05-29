@@ -59,4 +59,18 @@ export class ShikicinemaV1Client {
 
         return this.http.post<ShikivideosInterface>(url, null, { params });
     }
+
+    getContributions(uploaderId: ResourceIdType, page = 1) {
+        const limit = 100;
+        const url = `${this.baseUri}/api/shikivideos/search`;
+        let params = new HttpParams()
+            .set('limit', limit)
+            .set('uploader', uploaderId);
+
+        if (page > 1) {
+            params = params.set('offset', (page - 1) * limit);
+        }
+
+        return this.http.get<ShikivideosInterface[]>(url, { params });
+    }
 }

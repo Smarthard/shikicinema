@@ -100,6 +100,7 @@
             "PAGE_TITLE": "{{ nickname }} anime list",
             "ANIME_SEARCHBAR_PLACEHOLDER": "Search anime...",
             "GRIDS": {
+                "RECENT": "Recent",
                 "PLANNED": "Planned to watch",
                 "WATCHING": "Watching",
                 "REWATCHING": "Rewatching",
@@ -172,6 +173,76 @@
                         "401": "Update Shikimori authorization",
                         "500": "Retry later"
                     }
+                }
+            }
+        }
+    },
+    "SETTINGS_MODULE": {
+        "SETTINGS_PAGE": {
+            "PAGE_TITLE": "Settings",
+            "CLOSE_BTN": "Exit settings",
+            "SETTING_GROUPS": {
+                "GENERAL": {
+                    "TITLE": "General",
+                    "LANGUAGE": {
+                        "LABEL": "Language"
+                    },
+                    "THEME": {
+                        "LABEL": "Theme",
+                        "OPTIONS": {
+                            "LIGHT": "Light",
+                            "DARK": "Dark",
+                            "CUSTOM": "Custom"
+                        }
+                    },
+                    "CUSTOM_THEME": {
+                        "LABEL": "Custom theme",
+                        "HELP": "Enter your CSS to change the appearance of Shikicinema"
+                    }
+                },
+                "PLAYER_PAGE": {
+                    "TITLE": "Player",
+                    "PREFERENCE_TOGGLE": {
+                        "LABEL": "Automatic video selection based on preferences",
+                        "HELP": "When switching episodes, the player will select the appropriate video option based on the user's previous selections"
+                    },
+                    "PLAYER_MODE": {
+                        "LABEL": "Player display mode",
+                        "OPTIONS": {
+                            "AUTO": "Auto",
+                            "COMPACT": "Compact",
+                            "FULL": "Full screen"
+                        },
+                        "OPTIONS_HELP": {
+                            "AUTO": "The player display and the side menu for selecting videos will automatically change depending on the screen size",
+                            "COMPACT": "The video selection side menu is always displayed next to the player",
+                            "FULL": "Player full screen, side menu hidden, video selection via button under the player"
+                        }
+                    },
+                    "PLAYER_KIND_DISPLAY_MODE": {
+                        "LABEL": "Display a kind of the video",
+                        "OPTIONS": {
+                            "OFF": "Hide",
+                            "SPECIAL-ONLY": "Only for special",
+                            "ALL": "Display all"
+                        },
+                        "OPTIONS_HELP": {
+                            "OFF": "The video kind will be hidden",
+                            "SPECIAL-ONLY": "Display only on videos of Blu-Ray, DVD or VHS quality",
+                            "ALL": "Display for all video types"
+                        }
+                    }
+                },
+                "PROFILE_SETTINGS": {
+                    "TITLE": "Profile",
+                    "CONNECTION_INFO": {
+                        "SYNC_TEXT": "Account for synchronization with the service"
+                    }
+                },
+                "STORAGE": {
+                    "TITLE": "Storage",
+                    "INFO": "{{ used }} (cached {{ cached }}) of {{ total }}",
+                    "CLEAR_CACHE_BTN": "Clear cache"
                 }
             }
         }

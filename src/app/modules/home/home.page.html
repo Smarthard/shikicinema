@@ -1,27 +1,38 @@
 <ion-content [fullscreen]="true" class="page-content">
+    <!-- recent visited (in player) animes -->
+    <ng-template
+        [ngTemplateOutlet]="animeRatesGrid"
+        [ngTemplateOutletContext]="{
+            label: 'HOME_MODULE.HOME_PAGE.GRIDS.RECENT',
+            status: 'recent',
+            rates: recent$ | async | sortRatesByDateVisited | slice: 0: 6,
+            isLoaded: true,
+        }"
+    ></ng-template>
+
+    <!-- user's rates from shikimori -->
     <ng-template
         *ngFor="let grid of animeGrids"
         [ngTemplateOutlet]="animeRatesGrid"
         [ngTemplateOutletContext]="{
             label: 'HOME_MODULE.HOME_PAGE.GRIDS.' + (grid.status | uppercase),
             status: grid.status,
-            rates$: grid.rates$,
-            isLoaded$: grid.isLoaded$
+            rates: grid.rates | async,
+            isLoaded: grid.isLoaded | async
         }"
     ></ng-template>
 </ion-content>
 
 <ng-template
     #animeRatesGrid
-    [templateType]="animeGrids[0]"
     let-label="label"
     let-status="status"
-    let-rates$="rates$"
-    let-isLoaded$="isLoaded$"
+    let-rates="rates"
+    let-isLoaded="isLoaded"
 >
     <section
         [id]="status"
-        [class.ion-hide]="isSectionHidden(isLoaded$ | async, rates$ | async)"
+        [class.ion-hide]="isSectionHidden(isLoaded, rates)"
         (ngxVisibility)="onSectionVisibilityChange(status, $event)"
         class="anime-rates"
     >
@@ -29,10 +40,10 @@
             <ion-text class="anime-rates__text">
                 {{ label | transloco | uppercase }}
                 <span
-                    *ngIf="(isLoaded$ | async) === true"
+                    *ngIf="isLoaded"
                     class="anime-rates__counter"
                 >
-                    ({{ (rates$ | async)?.length || 0 }})
+                    ({{ rates?.length || 0 }})
                 </span>
             </ion-text>
 
@@ -53,8 +64,8 @@
         <app-card-grid
             class="anime-rates__grid"
             [class.ion-hide]="getHiddenGridStatus(status)"
-            [userAnimeRates]="rates$ | async"
-            [isLoading]="(isLoaded$ | async) === false"
+            [userAnimeRates]="rates"
+            [isLoading]="!isLoaded"
         ></app-card-grid>
     </section>
 </ng-template>

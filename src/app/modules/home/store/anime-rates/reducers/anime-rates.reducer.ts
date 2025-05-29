@@ -1,6 +1,6 @@
 import { createReducer, on } from '@ngrx/store';
 
-import AnimeRatesStoreInterface from '@app/modules/home/store/anime-rates/types/anime-rates-store.interface';
+import { AnimeRatesStoreInterface } from '@app/modules/home/store/anime-rates/types/anime-rates-store.interface';
 import {
     allPagesLoadedForStatusAction,
     incrementPageForStatusAction,
@@ -9,7 +9,7 @@ import {
     getRateLoadedKey,
     getRatePageKey,
     getRateStoreKey,
-} from '@app/modules/home/store/anime-rates/helpers/anime-rates-store-key.helpers';
+} from '@app/modules/home/store/anime-rates/utils/anime-rates-store-key.helpers';
 import { loadAnimeRateByStatusSuccessAction } from '@app/modules/home/store/anime-rates/actions/load-anime-rate.action';
 
 const initialState: AnimeRatesStoreInterface = {

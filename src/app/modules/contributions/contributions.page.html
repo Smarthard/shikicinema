@@ -1,0 +1,49 @@
+<ion-content [fullscreen]="true" class="page-content">
+    <ion-grid class="contribuitons-grid">
+        <ion-row class="contribuitons-grid__header">
+            <ion-col size="1">ID</ion-col>
+            <ion-col size="1">ANIME ID</ion-col>
+            <ion-col size="1">EPISODE</ion-col>
+            <ion-col size="1">KIND</ion-col>
+            <ion-col size="1">LANGUAGE</ion-col>
+            <ion-col size="2">QUALITY</ion-col>
+            <ion-col size="4">URL</ion-col>
+        </ion-row>
+
+        @for (video of (contributions$ | async); track trackById) {
+            <ion-row class="contribuitons-grid__row">
+                <ion-col size="1">
+                    <a [routerLink]="['/player', video.anime_id, video.episode]" [queryParams]="{ id: video.id }">
+                        {{ video.id }}
+                    </a>
+                </ion-col>
+
+                <ion-col size="1">
+                    <a [href]="'https://shikimori.one/animes/' + video.anime_id" target="_blank">{{ video.anime_id }}</a>
+                </ion-col>
+
+                <ion-col size="1">
+                    <ion-text>{{ video.episode }}</ion-text>
+                </ion-col>
+
+                <ion-col size="1">
+                    <ion-text>{{ video.kind | titlecase }}</ion-text>
+                </ion-col>
+
+                <ion-col size="1">
+                    <ion-text [title]="video.language">
+                        {{ 'GLOBAL.LANGUAGES.' + (video.language | uppercase) | transloco }}
+                    </ion-text>
+                </ion-col>
+
+                <ion-col size="2">
+                    <ion-text>{{ 'GLOBAL.VIDEO.QUALITIES.' + (video.quality | uppercase) | transloco }}</ion-text>
+                </ion-col>
+
+                <ion-col size="4">
+                    <a [href]="video.url" target="_blank">{{ video.url }}</a>
+                </ion-col>
+            </ion-row>
+        }
+    </ion-grid>
+</ion-content>

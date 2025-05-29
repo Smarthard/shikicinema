@@ -51,7 +51,21 @@ export const watchAnimeAction = createAction(
 
 export const watchAnimeSuccessAction = createAction(
     '[Player] watch anime success',
-    props<{ userRate: UserAnimeRate }>(),
+    props<{ animeId: ResourceIdType, userRate: UserAnimeRate }>(),
+);
+
+export const getUserRateAction = createAction(
+    '[Player] get user rate by id',
+    props<{ id: ResourceIdType, animeId: ResourceIdType }>(),
+);
+
+export const getUserRateSuccessAction = createAction(
+    '[Player] get user rate by id success',
+    props<{ userRate: UserAnimeRate, animeId: ResourceIdType }>(),
+);
+
+export const getUserRateFailureAction = createAction(
+    '[Player] get user rate by id failure',
 );
 
 export const watchAnimeFailureAction = createAction(

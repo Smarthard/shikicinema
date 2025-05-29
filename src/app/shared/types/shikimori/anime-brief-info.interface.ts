@@ -1,6 +1,5 @@
 import { AnimeKindType } from '@app/shared/types/shikimori/anime-kind.type';
-import { UserAnimeRate } from '@app/shared/types/shikimori/user-anime-rate';
-import { UserRateStatusType } from '@app/shared/types/shikimori/user-rate-status.type';
+import { AnimeReleaseStatus, UserAnimeRate } from '@app/shared/types/shikimori/user-anime-rate';
 
 export interface AnimeBriefInfoInterface {
     id: number;
@@ -29,7 +28,7 @@ export interface AnimeBriefInfoInterface {
     url: string;
     kind: AnimeKindType;
     score: string;
-    status: UserRateStatusType;
+    status: AnimeReleaseStatus;
     episodes: number;
     episodes_aired: number;
     aired_on: string;

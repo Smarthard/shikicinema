@@ -1,0 +1,18 @@
+.settings-group {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+
+    &__title {
+        display: flex;
+        align-items: center;
+        gap: .75rem;
+        color: var(--ion-color-primary);
+    }
+
+    &__content {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+    }
+}

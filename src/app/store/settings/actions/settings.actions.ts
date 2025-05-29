@@ -27,3 +27,12 @@ export const updateLanguageAction = createAction(
     '[Settings] Update language',
     props<{ language: string }>(),
 );
+
+export const visitPageAction = createAction(
+    '[Settings] Visited page',
+    props<{ url: string }>(),
+);
+
+export const togglePlayerModeAction = createAction(
+    '[Settings] Toggle player mode',
+);

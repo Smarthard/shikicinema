@@ -4,20 +4,27 @@ import { SettingsStoreInterface } from '@app/store/settings/types/settings-store
 import { defaultAvailableLangs } from '@app/core/transloco-root.module';
 import {
     resetSettingsAction,
+    togglePlayerModeAction,
     updateLanguageAction,
     updatePlayerPreferencesAction,
     updateSettingsAction,
     updateThemeAction,
+    visitPageAction,
 } from '@app/store/settings/actions/settings.actions';
 
 const initialState: SettingsStoreInterface = {
     language: '',
     theme: 'dark',
+    customTheme: '',
+    preferencesToggle: true,
+    playerMode: 'auto',
+    playerKindDisplayMode: 'special-only',
     availableLangs: defaultAvailableLangs,
     animePaginationSize: 100,
     authorPreferences: {},
     kindPreferences: {},
     domainPreferences: {},
+    lastPage: undefined,
 };
 
 const reducer = createReducer(
@@ -63,6 +70,22 @@ const reducer = createReducer(
         (state, { language }) => ({
             ...state,
             language,
+        }),
+    ),
+    on(
+        visitPageAction,
+        (state, { url }) => ({
+            ...state,
+            lastPage: url,
+        }),
+    ),
+    on(
+        togglePlayerModeAction,
+        (state) => ({
+            ...state,
+            playerMode: state.playerMode === 'compact'
+                ? 'full' as const
+                : 'compact' as const,
         }),
     ),
 );

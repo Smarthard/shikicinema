@@ -1,12 +1,12 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 
-import AnimeRatesStoreInterface from '@app/modules/home/store/anime-rates/types/anime-rates-store.interface';
+import { AnimeRatesStoreInterface } from '@app/modules/home/store/anime-rates/types/anime-rates-store.interface';
 import { UserRateStatusType } from '@app/shared/types/shikimori/user-rate-status.type';
 import {
     getRateLoadedKey,
     getRatePageKey,
     getRateStoreKey,
-} from '@app/modules/home/store/anime-rates/helpers/anime-rates-store-key.helpers';
+} from '@app/modules/home/store/anime-rates/utils/anime-rates-store-key.helpers';
 
 export const selectAnimeRates = createFeatureSelector<AnimeRatesStoreInterface>('animeRates');
 

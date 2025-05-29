@@ -1,4 +1,4 @@
-import { AsyncPipe } from '@angular/common';
+import { AsyncPipe, UpperCasePipe } from '@angular/common';
 import { BehaviorSubject, Observable, ReplaySubject } from 'rxjs';
 import {
     ChangeDetectionStrategy,
@@ -33,6 +33,7 @@ import { GetUrlDomainPipe } from '@app/shared/pipes/get-url-domain/get-url-domai
 import { HasQualitiesPipe } from '@app/modules/player/pipes/has-qualities.pipe';
 import { IsSameAuthorPipe } from '@app/shared/pipes/is-same-author/is-same-author.pipe';
 import { IsSameVideoPipe } from '@app/shared/pipes/is-same-video/is-same-video.pipe';
+import { PlayerKindDisplayMode } from '@app/store/settings/types/player-kind-display-mode.type';
 import { SortByDomainModule } from '@app/shared/pipes/sort-by-domain/sort-by-domain.module';
 import { VideoInfoInterface, VideoQualityEnum } from '@app/modules/player/types';
 import { cleanAuthorName } from '@app/shared/utils/clean-author-name.function';
@@ -55,6 +56,7 @@ import { cleanAuthorName } from '@app/shared/utils/clean-author-name.function';
         IsSameVideoPipe,
         SortByDomainModule,
         HasQualitiesPipe,
+        UpperCasePipe,
     ],
     templateUrl: './video-selector.component.html',
     styleUrl: './video-selector.component.scss',
@@ -81,6 +83,9 @@ export class VideoSelectorComponent implements OnInit {
     set videos(videos: VideoInfoInterface[]) {
         this.videos$.next(videos);
     }
+
+    @Input()
+    kindDisplayMode: PlayerKindDisplayMode;
 
     @Output()
     selection = new EventEmitter<VideoInfoInterface>;

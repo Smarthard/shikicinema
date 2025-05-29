@@ -4,6 +4,11 @@
     --shc-watched-episode-color-rgb: 41, 196, 103;
     --shc-watched-episode-color: rgb(var(--shc-watched-episode-color-rgb));
 
+    $player-min-height: 30vh;
+    $player-max-height: 60vh;
+    $player-min-width: calc($player-min-height * 16/9);
+    $player-max-width: calc($player-max-height * 16/9);
+
     &__title {
         max-width: 50vw;
 
@@ -79,7 +84,13 @@
 
             .control-panel__episode-wrapper {
                 min-width: 3.125rem;
-                max-width: 3.125rem;
+
+                @include media-breakpoint-down('xl') {
+                    --padding-start: 0;
+                    --padding-bottom: 0;
+                    --ion-safe-area-right: 0;
+                    max-width: 3.125rem;
+                }
             }
 
             @include media-breakpoint-up('md') {
@@ -90,39 +101,41 @@
         @include media-breakpoint-up('xxl') {
             // чтобы не сломалось отображение на планшетах
             &:not(.player-page__wrapper--mobile) {
-                margin-top: .5rem;
-                padding: 0 5%;
 
-                grid-template:  "info   kind"
-                                "player video"
-                                "conpan sidepan"
-                                "comments comments"
-                                "comment-form comment-form";
+                // от 1400px до 1600px - скрываем боковые панели, т.к. для них слишком мало места
+                // для экранов с высоким DPI эта граница немного меньше
+                @media (max-width: 1599px) and (max-resolution: 1dppx),
+                (max-width: 1399px) and (min-resolution: 2dppx)
+                {
+                    grid-template-rows: auto $player-max-height;
+                    grid-template-columns: $player-max-width min-content;
+                }
 
-                column-gap: 2.75rem;
-                grid-template-rows: auto 60vh;
-                grid-template-columns: calc(60vh * (16/9)) min-content;
+                // тут стили для обычных десктопных 16:9 (или около того) экранов
+                @media (min-width: 1600px) and (max-resolution: 1dppx),
+                (min-width: 1400px) and (min-resolution: 2dppx)
+                {
+                    margin-top: .5rem;
+                    padding: 0 5%;
+
+                    grid-template:  "info   kind"
+                                    "player video"
+                                    "conpan sidepan"
+                                    "comments comments"
+                                    "comment-form comment-form";
+
+                    column-gap: 2.75rem;
+                    grid-template-rows: auto $player-max-height;
+                    grid-template-columns: $player-max-width min-content;
+                }
             }
         }
 
-        @include media-breakpoint-between('lg', 'xxl') {
+        @include media-breakpoint-down('xxl') {
             &:not(.player-page__wrapper--mobile) {
-                grid-template-rows: auto 50vh;
-                grid-template-columns: calc(50vh * (16/9)) min-content;
-            }
-        }
-
-        @include media-breakpoint-between('md', 'lg') {
-            &:not(.player-page__wrapper--mobile) {
-                grid-template-rows: auto 40vh;
-                grid-template-columns: calc(40vh * (16/9)) min-content;
-            }
-        }
-
-        @include media-breakpoint-between('sm', 'md') {
-            &:not(.player-page__wrapper--mobile) {
-                grid-template-rows: auto 30vh;
-                grid-template-columns: calc(30vh * (16/9)) min-content;
+                grid-template-rows: auto clamp($player-min-height, 70%, $player-max-height);
+                grid-template-columns: clamp($player-min-width, 70%, $player-max-width) min-content;
+                column-gap: 1rem;
             }
         }
 
@@ -139,6 +152,16 @@
             column-gap: 2.75rem;
             grid-template-rows: auto 70vh;
             grid-template-columns: calc(70vh * (16/9)) min-content;
+        }
+
+        &--compact {
+            &:not(.player-page__wrapper--mobile) {
+                grid-template:  "info   kind"
+                                "player video"
+                                "conpan sidepan"
+                                "comments comments"
+                                "comment-form comment-form";
+            }
         }
     }
 

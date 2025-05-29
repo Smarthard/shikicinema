@@ -1,6 +1,6 @@
 import { Actions, ofType } from '@ngrx/effects';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { BreakpointObserver } from '@angular/cdk/layout';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -56,6 +56,9 @@ import {
     selectAuthorPreferencesByAnime,
     selectDomainPreferencesByAnime,
     selectKindPreferencesByAnime,
+    selectPlayerKindDisplayMode,
+    selectPlayerMode,
+    selectPreferencesToggle,
 } from '@app/store/settings/selectors/settings.selectors';
 import {
     selectPlayerAnime,
@@ -67,8 +70,12 @@ import {
     selectPlayerVideos,
     selectPlayerVideosLoading,
 } from '@app/modules/player/store/selectors/player.selectors';
-import { updatePlayerPreferencesAction } from '@app/store/settings/actions/settings.actions';
+import {
+    togglePlayerModeAction,
+    updatePlayerPreferencesAction,
+} from '@app/store/settings/actions/settings.actions';
 import { uploadVideoAction } from '@app/store/shikicinema/actions/upload-video.action';
+import { visitAnimePageAction } from '@app/modules/home/store/recent-animes/actions';
 
 
 @UntilDestroy()
@@ -83,29 +90,30 @@ export class PlayerPage implements OnInit {
     @HostBinding('class.player-page')
     private playerPageClass = true;
 
-    private isMobileSubject$ = new ReplaySubject<boolean>(1);
     private isOrientationPortraitSubject$ = new ReplaySubject<boolean>(1);
 
-    readonly isMobile$ = this.isMobileSubject$.asObservable();
-    readonly isSmallScreen$ = this.breakpointObserver.observe([
-        Breakpoints.XSmall,
-        Breakpoints.Small,
-        Breakpoints.Medium,
-        '(min-width: 768px) and (max-width: 1399.98px)',
-    ]).pipe(map(({ matches }) => matches));
+    readonly isPreferencesToggleOn$ = this.store.select(selectPreferencesToggle);
+    readonly playerMode$ = this.store.select(selectPlayerMode);
+    readonly playerKindDisplayMode$ = this.store.select(selectPlayerKindDisplayMode);
+
+    readonly isSmallScreen$ = combineLatest([
+        this.playerMode$,
+        this.breakpointObserver.observe([
+            '(max-width: 1599px) and (max-resolution: 1dppx)',
+            '(max-width: 1399px) and (min-resolution: 2dppx)',
+        ]).pipe(map(({ matches }) => matches)),
+    ]).pipe(
+        map(([playerMode, isMediaMatch]) => playerMode !== 'compact' && isMediaMatch || playerMode === 'full'),
+    );
 
     readonly isPanelsMinified$ = combineLatest([
-        this.isMobile$,
         this.isOrientationPortraitSubject$,
         this.isSmallScreen$,
     ]).pipe(
-        map(([isMobile, isPortrait, isSmallScreen]) => isMobile && isPortrait || !isMobile && isSmallScreen),
+        map(([isPortrait, isSmallScreen]) => isPortrait || isSmallScreen),
     );
 
-    readonly isVideoSelectionHidden$ = combineLatest([
-        this.isMobile$,
-        this.isSmallScreen$,
-    ]).pipe(map(([isMobile, isSmall]) => isMobile || isSmall));
+    readonly isVideoSelectionHidden$ = this.isSmallScreen$;
 
     animeId$ = this.route.params.pipe(
         map(({ animeId }) => animeId as string),
@@ -202,9 +210,12 @@ export class PlayerPage implements OnInit {
                 this.authorPreferences$,
                 this.domainPreferences$,
                 this.kindPreferences$,
+                this.isPreferencesToggleOn$,
             ),
-            map(([videos, author, domain, kind]) => {
-                const relevantVideos = filterVideosByPreferences(videos, author, domain, kind);
+            map(([videos, author, domain, kind, isPreferencesToggleOn]) => {
+                const relevantVideos = isPreferencesToggleOn
+                    ? filterVideosByPreferences(videos, author, domain, kind)
+                    : videos;
 
                 if (!relevantVideos &&
                     author !== NoPreferenceSymbol &&
@@ -230,12 +241,17 @@ export class PlayerPage implements OnInit {
             this.anime$,
             this.episode$,
         ]).pipe(
+            distinctUntilChanged((
+                [prevAnime, prevEpisode],
+                [nextAnime, nextEpisode],
+            ) => prevAnime.id === nextAnime.id && prevEpisode === nextEpisode),
             filter(([anime]) => !!anime?.name),
             tap(([anime, episode]) => {
                 this.changeTitle(anime, episode);
 
                 this.store.dispatch(getTopicsAction({ animeId: anime.id, episode, revalidate: false }));
                 this.store.dispatch(getCommentsAction({ animeId: anime.id, episode, page: 1, limit: 30 }));
+                this.store.dispatch(visitAnimePageAction({ anime, episode }));
             }),
             untilDestroyed(this),
         ).subscribe();
@@ -259,7 +275,6 @@ export class PlayerPage implements OnInit {
 
     private onResize(): void {
         this.isOrientationPortraitSubject$.next(this.platform.isPortrait());
-        this.isMobileSubject$.next(this.platform.is('mobile') || this.platform.is('mobileweb'));
     }
 
     private async updateUserPreferences(): Promise<void> {
@@ -364,5 +379,9 @@ export class PlayerPage implements OnInit {
         const animeId = await firstValueFrom(this.animeId$);
 
         this.store.dispatch(uploadVideoAction({ animeId, video }));
+    }
+
+    togglePlayerMode(): void {
+        this.store.dispatch(togglePlayerModeAction());
     }
 }

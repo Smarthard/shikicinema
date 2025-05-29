@@ -18,6 +18,7 @@ import {
 
 import { AnimeBriefInfoInterface } from '@app/shared/types/shikimori/anime-brief-info.interface';
 import { EpisodeSelectorComponent } from '@app/modules/player/components/episode-selector/episode-selector.component';
+import { PlayerModeType } from '@app/store/settings/types';
 import { SidePanelComponent } from '@app/modules/player/components/side-panel/side-panel.component';
 import { UserAnimeRate } from '@app/shared/types/shikimori/user-anime-rate';
 import { VideoInfoInterface } from '@app/modules/player/types';
@@ -83,6 +84,9 @@ export class ControlPanelComponent {
     @Input()
     isMinified = false;
 
+    @Input()
+    playerMode: PlayerModeType;
+
     @Output()
     selection = new EventEmitter<number>();
 
@@ -94,6 +98,9 @@ export class ControlPanelComponent {
 
     @Output()
     uploaded = new EventEmitter<VideoInfoInterface>();
+
+    @Output()
+    togglePlayerMode = new EventEmitter<void>();
 
     get maxEpisode(): number {
         return this._maxEpisode;

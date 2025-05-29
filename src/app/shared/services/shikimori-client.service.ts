@@ -175,6 +175,13 @@ export class ShikimoriClient {
         );
     }
 
+    getUserRateById(id: ResourceIdType): Observable<UserAnimeRate> {
+        return this.shikimoriDomain$.pipe(
+            take(1),
+            switchMap((domain) => this.http.get<UserAnimeRate>(`${domain}/api/v2/user_rates/${id}`)),
+        );
+    }
+
     createUserRate(userRates: Partial<UserAnimeRate>): Observable<UserAnimeRate> {
         return this.shikimoriDomain$.pipe(
             take(1),

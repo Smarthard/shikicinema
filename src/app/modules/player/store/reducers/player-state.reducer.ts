@@ -11,6 +11,7 @@ import {
     getAnimeInfoSuccessAction,
     getCommentsSuccessAction,
     getTopicsSuccessAction,
+    getUserRateSuccessAction,
     setIsShownAllAction,
     watchAnimeSuccessAction,
 } from '@app/modules/player/store/actions';
@@ -45,12 +46,13 @@ export const reducers = createReducer(initialState,
     ),
     on(
         watchAnimeSuccessAction,
-        (state, { userRate }) => ({
+        getUserRateSuccessAction,
+        (state, { userRate, animeId }) => ({
             ...state,
             animeInfo: {
                 ...state.animeInfo,
-                [userRate.target_id]: {
-                    ...state.animeInfo[userRate.target_id],
+                [animeId]: {
+                    ...state.animeInfo[animeId],
                     user_rate: userRate,
                 } as AnimeBriefInfoInterface,
             },

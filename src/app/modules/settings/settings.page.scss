@@ -1,0 +1,41 @@
+.settings-page {
+    font-size: 1rem;
+
+    .page-content {
+        --padding-top: .5rem;
+        --padding-start: 0;
+        --padding-end: 0;
+        --padding-bottom: 0;
+    }
+
+    &__form {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    &__section {
+        padding: .5rem 1rem;
+        background-color: var(--ion-background-color-step-50);
+    }
+
+    &__back-btn {
+        --border-radius: 15px;
+        margin: .5rem;
+    }
+
+    .storage {
+        &__used-info {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            gap: .5rem;
+        }
+
+        .settings-group__content {
+            align-items: center;
+            flex-direction: row;
+            gap: .5rem;
+        }
+    }
+}

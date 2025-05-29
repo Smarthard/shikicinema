@@ -42,7 +42,7 @@ const components = [
     imports: [
         BrowserModule,
         BrowserAnimationsModule,
-        IonicModule.forRoot(),
+        IonicModule.forRoot({ mode: 'md' }),
         IonicStorageModule.forRoot(),
         CommonModule,
         HttpClientModule,

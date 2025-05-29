@@ -1,0 +1,42 @@
+.profile-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: .25rem;
+    border: 1px solid var(--ion-background-color-step-300);
+    border-radius: .25rem;
+    padding: .5rem;
+
+    &__avatar,
+    &__service-icon {
+        width: 2.5rem;
+        height: 2.5rem;
+    }
+
+    &__account,
+    &__service {
+        display: flex;
+        align-items: center;
+        gap: .25rem;
+    }
+
+    &__account {
+        background-color: var(--ion-background-color-step-150);
+        border-radius: .25rem;
+        padding: .25rem;
+    }
+
+    &__service-text-wrap {
+        display: flex;
+        flex-direction: column;
+    }
+
+    &__service-helper {
+        font-size: small;
+    }
+
+    &__nickname {
+        margin-right: 1rem;
+    }
+}

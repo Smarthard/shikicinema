@@ -1,3 +1,4 @@
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -10,11 +11,22 @@ import { DOCUMENT } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { TranslocoService, getBrowserLang } from '@ngneat/transloco';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { distinctUntilChanged, tap } from 'rxjs/operators';
+import { addHours, compareAsc } from 'date-fns';
+import { combineLatest, firstValueFrom } from 'rxjs';
+import {
+    debounceTime,
+    distinctUntilChanged,
+    filter,
+    map,
+    tap,
+} from 'rxjs/operators';
 
+import { PersistenceService } from '@app/shared/services';
+import { cacheHealthCheckUpAction, resetCacheAction } from '@app/store/cache/actions';
 import { getCurrentUserAction } from '@app/store/shikimori/actions/get-current-user.action';
-import { selectLanguage, selectTheme } from '@app/store/settings/selectors/settings.selectors';
-import { updateLanguageAction } from '@app/store/settings/actions/settings.actions';
+import { selectCacheLastCheckUp } from '@app/store/cache/selectors/cache.selectors';
+import { selectCustomTheme, selectLanguage, selectTheme } from '@app/store/settings/selectors/settings.selectors';
+import { updateLanguageAction, visitPageAction } from '@app/store/settings/actions/settings.actions';
 
 @UntilDestroy()
 @Component({
@@ -31,12 +43,21 @@ export class AppComponent implements OnInit {
         private readonly _store: Store,
         private readonly _renderer: Renderer2,
         private readonly _transloco: TranslocoService,
+        private readonly _router: Router,
+        private readonly _route: ActivatedRoute,
+        private readonly _persistenceService: PersistenceService,
     ) {}
+
+    readonly isCustomThemeHardDisable$ = this._route.queryParams.pipe(
+        map((params) => Boolean(params?.['customTheme'])),
+    );
 
     ngOnInit(): void {
         this.initTheme();
         this.initLocale();
         this.initUser();
+        this.initOnNavigation();
+        this.initCacheHealthCheckUp();
     }
 
     initLocale(): void {
@@ -57,22 +78,100 @@ export class AppComponent implements OnInit {
     }
 
     initTheme(): void {
-        this._store.select(selectTheme).pipe(
-            distinctUntilChanged(),
-            tap((theme) => {
-                const darkThemeClass = 'ion-palette-dark';
+        const darkThemeClass = 'ion-palette-dark';
+        const userCustomStyleId = 'user-custom-theme';
+        const headEl = this._document.head;
 
-                if (!theme || theme === 'dark') {
+        combineLatest([
+            this._store.select(selectTheme),
+            this.isCustomThemeHardDisable$,
+        ]).pipe(
+            distinctUntilChanged(),
+            tap(async ([theme, isCustomThemeDisabled]) => {
+                const customTheme = await firstValueFrom(this._store.select(selectCustomTheme));
+
+                if (!theme || theme === 'dark' || theme === 'custom') {
                     this._renderer.addClass(this._document.documentElement, darkThemeClass);
                 } else {
                     this._renderer.removeClass(this._document.documentElement, darkThemeClass);
                 }
+
+                if (theme === 'custom' && !isCustomThemeDisabled) {
+                    const styleEl: HTMLStyleElement = this._renderer.createElement('style');
+
+                    this._renderer.setAttribute(styleEl, 'id', userCustomStyleId);
+                    this._renderer.appendChild(headEl, styleEl);
+                    styleEl.innerHTML = customTheme;
+                } else {
+                    const styleEl = this._document.querySelector(`#${userCustomStyleId}`);
+
+                    if (styleEl) {
+                        this._renderer.removeChild(headEl, styleEl);
+                    }
+                }
             }),
             untilDestroyed(this),
         ).subscribe();
+
+        combineLatest([
+            this._store.select(selectCustomTheme),
+            this.isCustomThemeHardDisable$,
+        ])
+            .pipe(
+                filter(([_, isDisabled]) => !isDisabled),
+                debounceTime(500),
+                tap(([customTheme, _]) => {
+                    const styleEl = this._document.querySelector(`#${userCustomStyleId}`);
+
+                    if (styleEl) {
+                        styleEl.innerHTML = customTheme;
+                    }
+                }),
+                untilDestroyed(this),
+            )
+            .subscribe();
     }
 
     initUser(): void {
         this._store.dispatch(getCurrentUserAction());
+    }
+
+    initOnNavigation(): void {
+        this._router.events
+            .pipe(
+                untilDestroyed(this),
+                filter((event) => event instanceof NavigationEnd),
+                filter<NavigationEnd>(({ url }) => url !== '/settings'),
+                tap<NavigationEnd>(({ url }) => this._store.dispatch(visitPageAction({ url }))),
+            )
+            .subscribe();
+    }
+
+    async initCacheHealthCheckUp(): Promise<void> {
+        const CRITICAL_USAGE_RATIO = 0.95;
+
+        const HOURS_PER_CHECKS = 12;
+        const NOW = new Date();
+
+        const lastCheckUpTime = await firstValueFrom(this._store.select(selectCacheLastCheckUp));
+        const plannedChechUpTime = addHours(lastCheckUpTime, HOURS_PER_CHECKS);
+        const isDueTime = compareAsc(NOW, plannedChechUpTime) > 0;
+
+        const usedCacheRatio = this._persistenceService.getCacheBytes() / this._persistenceService.getMaxByxes();
+        const isCritical = usedCacheRatio > CRITICAL_USAGE_RATIO;
+
+        if (isCritical) {
+            console.warn('[Cache] Critical usage');
+
+            this._store.dispatch(resetCacheAction());
+        } else if (isDueTime) {
+            console.info('[Cache] Performing check up');
+
+            this._store.dispatch(cacheHealthCheckUpAction());
+        } else {
+            const usagePercent = (usedCacheRatio * 100).toFixed(2);
+
+            console.info(`[Cache] Healthy, usage ratio ${usagePercent}%`);
+        }
     }
 }

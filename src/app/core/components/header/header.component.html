@@ -162,7 +162,6 @@
             <ion-item
                 class="menu-item"
                 [routerLink]="['settings']"
-                [disabled]="true"
             >
                 <ion-icon
                     class="menu-item__icon"
@@ -187,16 +186,18 @@
                 </ion-text>
             </ion-item>
 
-            <ion-item class="menu-item">
-                <ion-toggle
-                    labelPlacement="end"
-                    justify="start"
-                    [checked]="(theme$ | async) === 'dark'"
-                    (ionChange)="onChangeTheme()"
-                >
-                    {{ 'GLOBAL.HEADER.TOOLBAR_MENU.THEME_TOGGLE.' + (theme$ | async | uppercase) | transloco }}
-                </ion-toggle>
-            </ion-item>
+            @if ((theme$ | async) !== 'custom') {
+                <ion-item class="menu-item">
+                    <ion-toggle
+                        labelPlacement="end"
+                        justify="start"
+                        [checked]="(theme$ | async) === 'dark'"
+                        (ionChange)="onChangeTheme()"
+                    >
+                        {{ 'GLOBAL.HEADER.TOOLBAR_MENU.THEME_TOGGLE.' + (theme$ | async | uppercase) | transloco }}
+                    </ion-toggle>
+                </ion-item>
+            }
 
             <ion-item
                 color="danger"
@@ -241,7 +242,6 @@
             <ion-item
                 class="menu-item"
                 [routerLink]="['settings']"
-                [disabled]="true"
             >
                 <ion-icon
                     class="menu-item__icon"

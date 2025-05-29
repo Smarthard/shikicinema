@@ -38,6 +38,11 @@
                     content: "/";
                 }
             }
+
+            .author-accordion__text {
+                display: contents;
+                margin: 0;
+            }
         }
 
         &__icon-wrap {
@@ -62,6 +67,11 @@
                 background-color: white;
                 padding: 1px;
             }
+        }
+
+        &__text {
+            margin-left: 1rem;
+            color: var(--ion-color-dark);
         }
 
         &__content {

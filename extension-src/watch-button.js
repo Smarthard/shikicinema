@@ -1,6 +1,7 @@
 'use strict';
 
 import { FETCH_RESOURCE_TIMEOUT, fetch } from './fetch-timeout';
+import { getShikimoriLocale } from './get-shikimori-locale';
 
 const PLAYER_URL = chrome.runtime.getURL('/index.html');
 const SHIKIVIDEOS_API = 'https://smarthard.net/api/shikivideos';
@@ -93,11 +94,12 @@ async function _getMaxUploadedEpisode(anime, timeout = FETCH_RESOURCE_TIMEOUT) {
 
 async function appendWatchButtonTo(element, anime) {
   const lastOrMaxEpisodeAvailable = await _getMaxUploadedEpisode(anime);
+  const isEnglishLocale = getShikimoriLocale() === 'en';
 
   PLAYER_BUTTON.id = 'watch_button';
   PLAYER_BUTTON.classList.add('b-link_button', 'dark', 'watch-online');
   PLAYER_BUTTON.classList.remove('upload-video');
-  PLAYER_BUTTON.textContent = 'Смотреть онлайн';
+  PLAYER_BUTTON.textContent = isEnglishLocale ? 'Watch online' : 'Смотреть онлайн';
   PLAYER_BUTTON.href = `${PLAYER_URL}#player/${anime.id}`
 
   INFO_DIV.classList.add('watch-button-div');
@@ -106,7 +108,7 @@ async function appendWatchButtonTo(element, anime) {
   element.appendChild(INFO_DIV);
 
   if (lastOrMaxEpisodeAvailable === 0 || anime.status === 'anons' && lastOrMaxEpisodeAvailable === 0) {
-    PLAYER_BUTTON.textContent = 'Загрузить видео';
+    PLAYER_BUTTON.textContent = isEnglishLocale ? 'Upload video' : 'Загрузить видео';
     PLAYER_BUTTON.classList.add('upload-video');
     PLAYER_BUTTON.classList.remove('watch-online');
   }
