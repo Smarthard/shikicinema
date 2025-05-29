@@ -10,6 +10,7 @@ import {
     updateUploadersCacheAction,
 } from '@app/store/cache/actions';
 import { getAnimeCacheTtl } from '@app/store/cache/utils';
+import { getUserRateSuccessAction, watchAnimeSuccessAction } from '@app/modules/player/store/actions';
 
 const initialState: CacheStoreInterface = {
     knownUploaders: WELL_KNOWN_UPLOADERS_MAP,
@@ -45,6 +46,23 @@ const reducer = createReducer(
                 [anime.id]: {
                     anime,
                     ttl: getAnimeCacheTtl(anime),
+                },
+            },
+        }),
+    ),
+    on(
+        watchAnimeSuccessAction,
+        getUserRateSuccessAction,
+        (state, { userRate, animeId }) => ({
+            ...state,
+            animes: {
+                ...state.animes,
+                [animeId]: {
+                    ...state.animes[animeId],
+                    anime: {
+                        ...state.animes[animeId].anime,
+                        user_rate: userRate,
+                    },
                 },
             },
         }),

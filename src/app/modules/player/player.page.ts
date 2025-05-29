@@ -241,6 +241,10 @@ export class PlayerPage implements OnInit {
             this.anime$,
             this.episode$,
         ]).pipe(
+            distinctUntilChanged((
+                [prevAnime, prevEpisode],
+                [nextAnime, nextEpisode],
+            ) => prevAnime.id === nextAnime.id && prevEpisode === nextEpisode),
             filter(([anime]) => !!anime?.name),
             tap(([anime, episode]) => {
                 this.changeTitle(anime, episode);

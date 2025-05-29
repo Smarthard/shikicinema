@@ -7,5 +7,5 @@ export function getAnimeCacheTtl(anime: AnimeBriefInfoInterface): string {
 
     return anime?.status !== 'released'
         ? addHours(now, 12).toISOString()
-        : addDays(now, 30).toISOString();
+        : addDays(now, 7).toISOString();
 }

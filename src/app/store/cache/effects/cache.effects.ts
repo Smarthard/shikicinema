@@ -9,9 +9,13 @@ import {
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 
-import { animeCacheEntitiesToCache, filterByTtl } from '@app/store/cache/utils';
-import { cacheHealthCheckUpAction, cacheHealthCheckUpSuccessAction } from '@app/store/cache/actions';
-import { selectCachedAnimes } from '@app/store/cache/selectors/cache.selectors';
+import {
+    animeCacheEntitiesToCache,
+    cacheHealthCheckUpAction,
+    cacheHealthCheckUpSuccessAction,
+    filterByTtl,
+    selectCachedAnimes,
+} from '@app/store/cache';
 
 @Injectable()
 export class CacheEffects {

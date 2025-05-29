@@ -10,10 +10,12 @@ import {
     iif,
     mergeMap,
     of,
+    take,
     tap,
 } from 'rxjs';
 
-import { selectCachedAnimeById } from '@app/store/cache/selectors/cache.selectors';
+import { getUserRateAction } from '@app/modules/player/store/actions';
+import { selectCachedAnimeById } from '@app/store/cache';
 
 @Injectable()
 export class CachedAnimeInterceptor implements HttpInterceptor {
@@ -26,11 +28,18 @@ export class CachedAnimeInterceptor implements HttpInterceptor {
             const [animeId = -1] = request?.url?.match(/\d+/);
 
             return this.store.select(selectCachedAnimeById(animeId)).pipe(
+                take(1),
                 tap((cached) => {
                     if (cached) {
+                        const { user_rate: userRate = null } = cached;
+
                         console.groupCollapsed(`[Cache] Hit for anime id ${animeId}`);
                         console.log('Result:', cached);
                         console.groupEnd();
+
+                        if (userRate?.id) {
+                            this.store.dispatch(getUserRateAction({ id: userRate.id, animeId }));
+                        }
                     }
                 }),
                 mergeMap((anime) => iif(

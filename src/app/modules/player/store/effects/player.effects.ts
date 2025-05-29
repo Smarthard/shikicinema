@@ -1,4 +1,5 @@
 import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { ToastController } from '@ionic/angular/standalone';
@@ -17,8 +18,7 @@ import {
 import { concatLatestFrom } from '@ngrx/operators';
 import { merge, of, switchMap } from 'rxjs';
 
-import { KodikClient } from '@app/shared/services/kodik-client.service';
-import { ShikicinemaV1Client, ShikimoriClient } from '@app/shared/services';
+import { KodikClient, ShikicinemaV1Client, ShikimoriClient } from '@app/shared/services';
 import { UserAnimeRate } from '@app/shared/types/shikimori/user-anime-rate';
 import { UserRateStatusType } from '@app/shared/types/shikimori/user-rate-status.type';
 import {
@@ -27,21 +27,22 @@ import {
     getAnimeInfoAction,
     getAnimeInfoFailureAction,
     getAnimeInfoSuccessAction,
-    watchAnimeAction,
-} from '@app/modules/player/store/actions';
-import {
     getCommentsAction,
     getCommentsFailureAction,
     getCommentsSuccessAction,
     getTopicsAction,
     getTopicsFailureAction,
     getTopicsSuccessAction,
+    getUserRateAction,
+    getUserRateFailureAction,
+    getUserRateSuccessAction,
     sendCommentAction,
     sendCommentFailureAction,
     sendCommentSuccessAction,
+    watchAnimeAction,
     watchAnimeFailureAction,
     watchAnimeSuccessAction,
-} from '@app/modules/player/store/actions/player.actions';
+} from '@app/modules/player/store/actions';
 import { getLastAiredEpisode, toUserRatesUpdate } from '@app/modules/player/utils';
 import { kodikVideoMapper } from '@app/shared/types/kodik/mappers';
 import {
@@ -113,7 +114,7 @@ export class PlayerEffects {
             ? this.shikimori.updateUserRate(userRate)
             : this.shikimori.createUserRate(userRate)
         ).pipe(
-            map((userRate) => watchAnimeSuccessAction({ userRate })),
+            map((userRate) => watchAnimeSuccessAction({ animeId: userRate.target_id, userRate })),
             catchError((errors) => of(watchAnimeFailureAction({ errors }))),
         )),
     ));
@@ -221,6 +222,23 @@ export class PlayerEffects {
             await toast.present();
         }),
     ), { dispatch: false });
+
+    getUserRate$ = createEffect(() => this.actions$.pipe(
+        ofType(getUserRateAction),
+        debounceTime(50),
+        switchMap(({ id, animeId }) => this.shikimori.getUserRateById(id).pipe(
+            map((userRate) => getUserRateSuccessAction({ animeId, userRate })),
+            catchError((error) => {
+                // возможно удален пользователем на самом сайте Шикимори
+                const isUserRateNotFound = error instanceof HttpErrorResponse &&
+                    error.status === HttpStatusCode.NotFound;
+
+                return isUserRateNotFound
+                    ? of(getUserRateSuccessAction({ animeId, userRate: null }))
+                    : of(getUserRateFailureAction());
+            }),
+        )),
+    ));
 
     constructor(
         private actions$: Actions,
