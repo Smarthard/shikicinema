@@ -78,9 +78,10 @@ export class PlayerEffects {
         debounceTime(50),
         concatLatestFrom(({ animeId }) => this.store$.select(selectPlayerAnime(animeId))),
         filter(([, anime]) => !anime?.id),
-        switchMap(([{ animeId }]) => this.shikimori.getAnimeInfo(animeId)),
-        map((anime) => getAnimeInfoSuccessAction({ anime })),
-        catchError(() => of(getAnimeInfoFailureAction())),
+        switchMap(([{ animeId }]) => this.shikimori.getAnimeInfo(animeId).pipe(
+            map((anime) => getAnimeInfoSuccessAction({ anime })),
+            catchError(() => of(getAnimeInfoFailureAction())),
+        )),
     ));
 
     watchAnime$ = createEffect(() => this.actions$.pipe(

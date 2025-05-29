@@ -27,9 +27,11 @@ export class CachedAnimeInterceptor implements HttpInterceptor {
 
             return this.store.select(selectCachedAnimeById(animeId)).pipe(
                 tap((cached) => {
-                    console.groupCollapsed(`[Cache] Hit for anime id ${animeId}`);
-                    console.log('Result:', cached);
-                    console.groupEnd();
+                    if (cached) {
+                        console.groupCollapsed(`[Cache] Hit for anime id ${animeId}`);
+                        console.log('Result:', cached);
+                        console.groupEnd();
+                    }
                 }),
                 mergeMap((anime) => iif(
                     () => Boolean(anime?.id),

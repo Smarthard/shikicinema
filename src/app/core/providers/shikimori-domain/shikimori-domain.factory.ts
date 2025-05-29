@@ -1,4 +1,9 @@
-import { Observable } from 'rxjs';
+import {
+    Observable,
+    catchError,
+    of,
+    timeout,
+} from 'rxjs';
 
 import { ShikimoriDomainsService } from '@app/core/services/shikimori-domain.service';
 
@@ -7,5 +12,8 @@ export const shikimoriDomainFactory = (shikimoriDomainService: ShikimoriDomainsS
         'https://shikimori.one',
         'https://shikimori.me',
         'https://shikimori.org',
+    ).pipe(
+        timeout({ first: 10_000 }),
+        catchError(() => of('https://shikimori.one')),
     );
 };
