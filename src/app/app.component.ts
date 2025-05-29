@@ -1,3 +1,4 @@
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -7,18 +8,18 @@ import {
     ViewEncapsulation,
 } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
-import { NavigationEnd, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { TranslocoService, getBrowserLang } from '@ngneat/transloco';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { addHours, compareAsc } from 'date-fns';
+import { combineLatest, firstValueFrom } from 'rxjs';
 import {
     debounceTime,
     distinctUntilChanged,
     filter,
+    map,
     tap,
 } from 'rxjs/operators';
-import { firstValueFrom } from 'rxjs';
 
 import { PersistenceService } from '@app/shared/services';
 import { cacheHealthCheckUpAction, resetCacheAction } from '@app/store/cache/actions';
@@ -43,8 +44,13 @@ export class AppComponent implements OnInit {
         private readonly _renderer: Renderer2,
         private readonly _transloco: TranslocoService,
         private readonly _router: Router,
+        private readonly _route: ActivatedRoute,
         private readonly _persistenceService: PersistenceService,
     ) {}
+
+    readonly isCustomThemeHardDisable$ = this._route.queryParams.pipe(
+        map((params) => Boolean(params?.['customTheme'])),
+    );
 
     ngOnInit(): void {
         this.initTheme();
@@ -76,9 +82,12 @@ export class AppComponent implements OnInit {
         const userCustomStyleId = 'user-custom-theme';
         const headEl = this._document.head;
 
-        this._store.select(selectTheme).pipe(
+        combineLatest([
+            this._store.select(selectTheme),
+            this.isCustomThemeHardDisable$,
+        ]).pipe(
             distinctUntilChanged(),
-            tap(async (theme) => {
+            tap(async ([theme, isCustomThemeDisabled]) => {
                 const customTheme = await firstValueFrom(this._store.select(selectCustomTheme));
 
                 if (!theme || theme === 'dark' || theme === 'custom') {
@@ -87,7 +96,7 @@ export class AppComponent implements OnInit {
                     this._renderer.removeClass(this._document.documentElement, darkThemeClass);
                 }
 
-                if (theme === 'custom') {
+                if (theme === 'custom' && !isCustomThemeDisabled) {
                     const styleEl: HTMLStyleElement = this._renderer.createElement('style');
 
                     this._renderer.setAttribute(styleEl, 'id', userCustomStyleId);
@@ -104,10 +113,14 @@ export class AppComponent implements OnInit {
             untilDestroyed(this),
         ).subscribe();
 
-        this._store.select(selectCustomTheme)
+        combineLatest([
+            this._store.select(selectCustomTheme),
+            this.isCustomThemeHardDisable$,
+        ])
             .pipe(
+                filter(([_, isDisabled]) => !isDisabled),
                 debounceTime(500),
-                tap((customTheme) => {
+                tap(([customTheme, _]) => {
                     const styleEl = this._document.querySelector(`#${userCustomStyleId}`);
 
                     if (styleEl) {
