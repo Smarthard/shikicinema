@@ -30,14 +30,14 @@
         "webpack-bundle-analyzer": "webpack-bundle-analyzer",
         "start": "ionic serve",
         "start:native": "npm-run-all -s 'ionic cap sync' 'npx cap sync @capacitor-community/electron' 'npx cap open @capacitor-community/electron'",
-        "build": "ionic build",
-        "build:prod": "ionic build --prod",
+        "build": "ionic build --c=development",
+        "build:prod": "ionic build --c=production",
         "test": "ng test",
         "lint": "ng lint",
         "e2e": "ng e2e",
         "set-env": "esrun setup-env.ts",
         "watch": "ionic build --watch --configuration development",
-        "analyze-bundle": "npm-run-all -s 'ionic build --prod --stats-json' 'webpack-bundle-analyzer dist/stats.json'"
+        "analyze-bundle": "npm-run-all -s 'ng build --stats-json' 'webpack-bundle-analyzer dist/stats.json'"
     },
     "workspaces": [
         "electron"
