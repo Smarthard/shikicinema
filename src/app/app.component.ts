@@ -8,10 +8,19 @@ import {
     ViewEncapsulation,
 } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
 import { Store } from '@ngrx/store';
 import { TranslocoService, getBrowserLang } from '@ngneat/transloco';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { addHours, compareAsc } from 'date-fns';
+import { addIcons } from 'ionicons';
+import {
+    chevronDown,
+    chevronUp,
+    notifications,
+    personCircle,
+} from 'ionicons/icons';
 import { combineLatest, firstValueFrom } from 'rxjs';
 import {
     debounceTime,
@@ -21,7 +30,11 @@ import {
     tap,
 } from 'rxjs/operators';
 
+import { CachedAnimeInterceptor } from '@app/shared/interceptors/cached-animes.interceptor';
+import { HeaderComponent } from '@app/core/components/header/header.component';
 import { PersistenceService } from '@app/shared/services';
+import { ShikicinemaApiInterceptor } from '@app/shared/interceptors/shikicinema-api.interceptor';
+import { ShikimoriApiInterceptor } from '@app/shared/interceptors/shikimori-api.interceptor';
 import { cacheHealthCheckUpAction, resetCacheAction } from '@app/store/cache/actions';
 import { getCurrentUserAction } from '@app/store/shikimori/actions/get-current-user.action';
 import { selectCacheLastCheckUp } from '@app/store/cache/selectors/cache.selectors';
@@ -33,6 +46,16 @@ import { updateLanguageAction, visitPageAction } from '@app/store/settings/actio
     selector: 'app-root',
     templateUrl: 'app.component.html',
     styleUrls: ['app.component.scss'],
+    imports: [
+        IonRouterOutlet,
+        IonApp,
+        HeaderComponent,
+    ],
+    providers: [
+        { provide: HTTP_INTERCEPTORS, useClass: ShikimoriApiInterceptor, multi: true },
+        { provide: HTTP_INTERCEPTORS, useClass: ShikicinemaApiInterceptor, multi: true },
+        { provide: HTTP_INTERCEPTORS, useClass: CachedAnimeInterceptor, multi: true },
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
 })
@@ -46,7 +69,14 @@ export class AppComponent implements OnInit {
         private readonly _router: Router,
         private readonly _route: ActivatedRoute,
         private readonly _persistenceService: PersistenceService,
-    ) {}
+    ) {
+        addIcons({
+            notifications,
+            personCircle,
+            chevronUp,
+            chevronDown,
+        });
+    }
 
     readonly isCustomThemeHardDisable$ = this._route.queryParams.pipe(
         map((params) => Boolean(params?.['customTheme'])),

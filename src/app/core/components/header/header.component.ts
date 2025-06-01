@@ -1,3 +1,4 @@
+import { AsyncPipe, NgTemplateOutlet, UpperCasePipe } from '@angular/common';
 import {
     BehaviorSubject,
     Observable,
@@ -13,8 +14,22 @@ import {
     OnInit,
     ViewEncapsulation,
 } from '@angular/core';
+import {
+    IonButton,
+    IonContent,
+    IonHeader,
+    IonIcon,
+    IonItem,
+    IonList,
+    IonPopover,
+    IonSearchbar,
+    IonText,
+    IonTitle,
+    IonToggle,
+    IonToolbar,
+} from '@ionic/angular/standalone';
 import { Store } from '@ngrx/store';
-import { TranslocoService } from '@ngneat/transloco';
+import { TranslocoPipe, TranslocoService } from '@ngneat/transloco';
 import {
     distinctUntilChanged,
     filter,
@@ -25,9 +40,11 @@ import {
 } from 'rxjs/operators';
 
 import { AnimeBriefInfoInterface } from '@app/shared/types/shikimori/anime-brief-info.interface';
-import { NavigationExtras, Router } from '@angular/router';
+import { B64encodePipe } from '@app/shared/pipes/base64/b64encode.pipe';
+import { NavigationExtras, Router, RouterLink } from '@angular/router';
 import { ResultOpenTarget, SearchbarResult } from '@app/shared/types/searchbar.types';
 import { SHIKIMORI_DOMAIN_TOKEN } from '@app/core/providers/shikimori-domain';
+import { SearchbarResultsComponent } from '@app/core/components/searchbar-results/searchbar-results.component';
 import { UserBriefInfoInterface } from '@app/shared/types/shikimori/user-brief-info.interface';
 import { authShikimoriAction, logoutShikimoriAction } from '@app/store/auth/actions/auth.actions';
 import {
@@ -50,6 +67,27 @@ import { updateLanguageAction, updateThemeAction } from '@app-root/app/store/set
     selector: 'app-header',
     templateUrl: './header.component.html',
     styleUrls: ['./header.component.scss'],
+    imports: [
+        IonHeader,
+        IonToolbar,
+        IonTitle,
+        IonSearchbar,
+        IonButton,
+        IonIcon,
+        IonPopover,
+        IonContent,
+        IonList,
+        IonItem,
+        IonText,
+        IonToggle,
+        AsyncPipe,
+        RouterLink,
+        UpperCasePipe,
+        TranslocoPipe,
+        B64encodePipe,
+        SearchbarResultsComponent,
+        NgTemplateOutlet,
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
 })

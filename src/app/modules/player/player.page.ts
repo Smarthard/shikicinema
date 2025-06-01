@@ -9,7 +9,14 @@ import {
     OnInit,
     ViewEncapsulation,
 } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import {
+    IonContent,
+    IonText,
+    ToastController,
+} from '@ionic/angular/standalone';
 import { ModalController, Platform } from '@ionic/angular';
+import { NgLetDirective } from 'ng-let';
 import {
     Observable,
     ReplaySubject,
@@ -18,7 +25,6 @@ import {
 } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { Title } from '@angular/platform-browser';
-import { ToastController } from '@ionic/angular/standalone';
 import { TranslocoService } from '@ngneat/transloco';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
@@ -33,10 +39,28 @@ import {
 } from 'rxjs/operators';
 
 import { AnimeBriefInfoInterface } from '@app/shared/types/shikimori/anime-brief-info.interface';
+import { CommentsComponent } from '@app/modules/player/components/comments/comments.component';
+import { ControlPanelComponent } from '@app/modules/player/components/control-panel/control-panel.component';
+import { FilterByKindPipe } from '@app/shared/pipes/filter-by-kind/filter-by-kind.pipe';
+import { GetActiveKindsPipe } from '@app/shared/pipes/get-active-kinds/get-active-kinds.pipe';
+import { GetEpisodesPipe } from '@app/shared/pipes/get-episodes/get-episodes.pipe';
+import { KindSelectorComponent } from '@app/modules/player/components/kind-selector/kind-selector.component';
 import { NoPreferenceSymbol } from '@app/store/settings/types';
+import { PlayerComponent } from '@app/modules/player/components/player/player.component';
+import { PlayerStateModule } from '@app/modules/player/store/player-state.module';
 import { SHIKIMORI_DOMAIN_TOKEN } from '@app/core/providers/shikimori-domain';
+import { ShikimoriAnimeLinkPipe } from '@app/shared/pipes/shikimori-anime-link/shikimori-anime-link.pipe';
+import { SidePanelComponent } from '@app/modules/player/components/side-panel/side-panel.component';
+import { SkeletonBlockComponent } from '@app/shared/components/skeleton-block/skeleton-block.component';
+import { SwipeDirective } from '@app/shared/directives/swipe.directive';
+import { ToUploaderPipe } from '@app/modules/player/pipes/to-uploader.pipe';
+import { UploaderComponent } from '@app/modules/player/components/uploader/uploader.component';
+import { UserCommentFormComponent } from '@app/modules/player/components/user-comment-form/user-comment-form.component';
 import { VideoInfoInterface } from '@app/modules/player/types';
 import { VideoKindEnum } from '@app/modules/player/types/video-kind.enum';
+import { VideoSelectorComponent } from '@app/modules/player/components/video-selector/video-selector.component';
+import { WELL_KNOWN_UPLOADERS_MAP } from '@app/shared/config/well-known-uploaders.config';
+import { WELL_KNOWN_UPLOADERS_TOKEN } from '@app/shared/types/well-known-uploaders.token';
 import { filterByEpisode } from '@app/shared/utils/filter-by-episode.function';
 import { filterVideosByPreferences } from '@app/modules/player/utils/filter-videos-by-preferences.function';
 import {
@@ -83,6 +107,32 @@ import { visitAnimePageAction } from '@app/modules/home/store/recent-animes/acti
     selector: 'app-player-page',
     templateUrl: './player.page.html',
     styleUrl: './player.page.scss',
+    imports: [
+        CommonModule,
+        PlayerStateModule,
+        PlayerComponent,
+        VideoSelectorComponent,
+        KindSelectorComponent,
+        SkeletonBlockComponent,
+        GetActiveKindsPipe,
+        FilterByKindPipe,
+        GetEpisodesPipe,
+        ControlPanelComponent,
+        UploaderComponent,
+        ToUploaderPipe,
+        SwipeDirective,
+        NgLetDirective,
+        CommentsComponent,
+        UserCommentFormComponent,
+        ShikimoriAnimeLinkPipe,
+        SidePanelComponent,
+        IonText,
+        IonContent,
+    ],
+    providers: [
+        ModalController,
+        { provide: WELL_KNOWN_UPLOADERS_TOKEN, useValue: WELL_KNOWN_UPLOADERS_MAP },
+    ],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
 })

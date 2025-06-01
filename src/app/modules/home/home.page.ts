@@ -4,14 +4,25 @@ import {
     OnInit,
     ViewEncapsulation,
 } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import {
+    IonButton,
+    IonContent,
+    IonIcon,
+    IonText,
+} from '@ionic/angular/standalone';
+import { LayoutModule } from '@angular/cdk/layout';
+import { NgxVisibilityModule } from 'ngx-visibility';
 import {
     Observable,
     Subject,
     combineLatest,
 } from 'rxjs';
+import { RouterModule } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Title } from '@angular/platform-browser';
-import { TranslocoService } from '@ngneat/transloco';
+import { TranslocoModule, TranslocoService } from '@ngneat/transloco';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
     map,
@@ -23,7 +34,9 @@ import {
 } from 'rxjs/operators';
 
 import { AnimeGridInterface } from '@app/modules/home/types/anime-grid.interface';
+import { CardGridComponent } from '@app/modules/home/components/card-grid/card-grid.component';
 import { ResourceIdType } from '@app/shared/types/resource-id.type';
+import { SortRatesByDateVisitedPipe } from '@app/modules/home/pipes/sort-rates-by-date-visited.pipe';
 import { UserAnimeRate } from '@app/shared/types/shikimori/user-anime-rate';
 import { UserBriefInfoInterface } from '@app/shared/types/shikimori/user-brief-info.interface';
 import { UserRateStatusType } from '@app/shared/types/shikimori/user-rate-status.type';
@@ -44,6 +57,20 @@ import { selectShikimoriCurrentUser } from '@app/store/shikimori/selectors/shiki
     selector: 'app-home',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
+    imports: [
+        CommonModule,
+        RouterModule,
+        FormsModule,
+        TranslocoModule,
+        LayoutModule,
+        NgxVisibilityModule,
+        CardGridComponent,
+        SortRatesByDateVisitedPipe,
+        IonIcon,
+        IonButton,
+        IonText,
+        IonContent,
+    ],
     templateUrl: 'home.page.html',
     styleUrls: ['home.page.scss'],
 })

@@ -1,6 +1,5 @@
 import {
     Actions,
-    concatLatestFrom,
     createEffect,
     ofType,
 } from '@ngrx/effects';
@@ -15,6 +14,7 @@ import {
     mergeMap,
     withLatestFrom,
 } from 'rxjs/operators';
+import { concatLatestFrom } from '@ngrx/operators';
 
 import { Action, Store } from '@ngrx/store';
 import { AnimeNameSortingConfig } from '@app/shared/utils/rx-anime-rates-functions';

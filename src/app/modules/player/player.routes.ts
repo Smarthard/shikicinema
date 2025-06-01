@@ -1,10 +1,9 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { Routes } from '@angular/router';
 
 import { PlayerPage } from '@app/modules/player/player.page';
 import { skipWatchedEpisodesGuard } from '@app/modules/player/guards/skip-watched-episodes';
 
-const routes: Routes = [
+export const PLAYER_ROUTES: Routes = [
     {
         path: ':animeId/:episode',
         component: PlayerPage,
@@ -20,9 +19,3 @@ const routes: Routes = [
         redirectTo: '/home',
     },
 ];
-
-@NgModule({
-    imports: [RouterModule.forChild(routes)],
-    exports: [RouterModule],
-})
-export class PlayerRoutingModule {}

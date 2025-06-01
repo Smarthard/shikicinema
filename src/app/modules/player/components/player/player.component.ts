@@ -19,12 +19,10 @@ import {
     Output,
     ViewEncapsulation,
 } from '@angular/core';
-import { IonIcon } from '@ionic/angular/standalone';
 import { TranslocoPipe } from '@ngneat/transloco';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { shareReplay, take } from 'rxjs/operators';
 
-import { SkeletonBlockModule } from '@app/shared/components/skeleton-block/skeleton-block.module';
 import { UrlSanitizerPipe } from '@app/shared/pipes/url-sanitizer/url-sanitizer.pipe';
 
 @UntilDestroy()
@@ -32,9 +30,7 @@ import { UrlSanitizerPipe } from '@app/shared/pipes/url-sanitizer/url-sanitizer.
     selector: 'app-player',
     standalone: true,
     imports: [
-        IonIcon,
         UrlSanitizerPipe,
-        SkeletonBlockModule,
         AsyncPipe,
         TranslocoPipe,
     ],

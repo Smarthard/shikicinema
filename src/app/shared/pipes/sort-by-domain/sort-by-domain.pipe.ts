@@ -6,6 +6,7 @@ import { VideoInfoInterface } from '@app/modules/player/types';
 @Pipe({
     name: 'sortByDomain',
     pure: true,
+    standalone: true,
 })
 export class SortByDomainPipe implements PipeTransform {
     constructor(private readonly domainPipe: GetUrlDomainPipe) {}

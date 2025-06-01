@@ -15,12 +15,13 @@
     ></app-image-card>
 </a>
 
-<app-skeleton-block
-    *ngIf="isLoading"
-    class="card-grid-item__name card-grid-item__name--skeleton"
-    [height]="'33px'"
-    [width]="width"
-></app-skeleton-block>
+@if (isLoading) {
+    <app-skeleton-block
+        class="card-grid-item__name card-grid-item__name--skeleton"
+        [height]="'33px'"
+        [width]="width"
+    ></app-skeleton-block>
+}
 
 <h2
     class="card-grid-item__name"

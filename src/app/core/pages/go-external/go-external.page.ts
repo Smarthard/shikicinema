@@ -1,4 +1,5 @@
 import { ActivatedRoute, Router } from '@angular/router';
+import { AsyncPipe } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -7,6 +8,8 @@ import {
     ViewEncapsulation,
 } from '@angular/core';
 import { EMPTY, Observable } from 'rxjs';
+import { IonContent, IonSpinner } from '@ionic/angular/standalone';
+import { TranslocoPipe } from '@ngneat/transloco';
 import {
     catchError,
     delay,
@@ -24,6 +27,12 @@ import { fromBase64 } from '@app/shared/utils/base64-utils';
     selector: 'app-go-external',
     templateUrl: './go-external.page.html',
     styleUrls: ['./go-external.page.scss'],
+    imports: [
+        IonContent,
+        IonSpinner,
+        TranslocoPipe,
+        AsyncPipe,
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
 })
@@ -35,7 +44,7 @@ export class GoExternalPage implements OnInit {
         private route: ActivatedRoute,
         private router: Router,
         @Inject(PLATFORM_API_TOKEN) private platformApi: PlatformApi,
-    ) { }
+    ) {}
 
     ngOnInit() {
         this.initializeValues();

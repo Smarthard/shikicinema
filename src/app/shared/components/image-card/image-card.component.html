@@ -9,12 +9,13 @@
     }"
 ></div>
 
-<app-skeleton-block
-    *ngIf="isLoading"
-    class="image-card__skeleton"
-    [height]="height"
-    [width]="width"
-></app-skeleton-block>
+@if (isLoading) {
+    <app-skeleton-block
+        class="image-card__skeleton"
+        [height]="height"
+        [width]="width"
+    ></app-skeleton-block>
+}
 
 <img
     class="ion-hide"

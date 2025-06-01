@@ -1,7 +1,6 @@
-import { Actions, EffectsModule, USER_PROVIDED_EFFECTS } from '@ngrx/effects';
-import { NgModule } from '@angular/core';
-import { RootStoreConfig, StoreModule } from '@ngrx/store';
-import { StoreDevtoolsModule, StoreDevtoolsOptions } from '@ngrx/store-devtools';
+import { Actions, USER_PROVIDED_EFFECTS, provideEffects } from '@ngrx/effects';
+import { RootStoreConfig, provideStore } from '@ngrx/store';
+import { StoreDevtoolsOptions, provideStoreDevtools } from '@ngrx/store-devtools';
 
 import { AppStoreInterface } from '@app/store/app-store.interface';
 import { AuthNativeAppEffects } from '@app/store/auth/effects/auth.native-app.effects';
@@ -43,24 +42,22 @@ const storeDevtoolsConfig: StoreDevtoolsOptions = {
     logOnly: environment.isProduction,
 };
 
-@NgModule({
-    imports: [
-        StoreModule.forRoot<AppStoreInterface>({
+export function provideAppState() {
+    return [
+        provideStore<AppStoreInterface>({
             auth: authReducer,
             settings: settingsReducer,
             shikimori: shikimoriReducer,
             shikicinema: shikicinemaReducer,
             cache: cacheReducer,
         }, storeConfig),
-        EffectsModule.forRoot([
+        provideEffects([
             SettingsEffects,
             ShikimoriEffects,
             ShikicinemaEffects,
             CacheEffects,
         ]),
-        StoreDevtoolsModule.instrument(storeDevtoolsConfig),
-    ],
-    providers: [
+        provideStoreDevtools(storeDevtoolsConfig),
         Actions,
         ElectronIpcProxyService,
         ShikimoriClient,
@@ -71,6 +68,5 @@ const storeDevtoolsConfig: StoreDevtoolsOptions = {
             useFactory: authEffectFactory,
             multi: true,
         },
-    ],
-})
-export class AppStateModule {}
+    ];
+}

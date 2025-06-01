@@ -78,7 +78,7 @@
                                     "maximumWarning": "2mb",
                                     "maximumError": "5mb"
                                 }
-                            ],
+                            ]
                         },
                         "development": {
                             "optimization": false,

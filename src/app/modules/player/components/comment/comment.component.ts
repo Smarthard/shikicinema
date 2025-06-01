@@ -11,7 +11,7 @@ import {
 import { DatePipe } from '@angular/common';
 
 import { Comment } from '@app/shared/types/shikimori/comment';
-import { ImageCardModule } from '@app/shared/components/image-card/image-card.module';
+import { ImageCardComponent } from '@app/shared/components/image-card/image-card.component';
 import { ProcessShikimoriHtmlPipe } from '@app/modules/player/pipes/process-shikimori-html.pipe';
 import { ToCommentUrlPipe } from '@app/modules/player/pipes/to-comment-url.pipe';
 
@@ -22,7 +22,7 @@ import { ToCommentUrlPipe } from '@app/modules/player/pipes/to-comment-url.pipe'
         DatePipe,
         ProcessShikimoriHtmlPipe,
         ToCommentUrlPipe,
-        ImageCardModule,
+        ImageCardComponent,
     ],
     templateUrl: './comment.component.html',
     styleUrl: './comment.component.scss',

@@ -39,19 +39,18 @@
                 [class.ion-hide-md-down]="(isSearchbarFocusedOnMobile$ | async) === true"
                 (auxclick)="toShikimoriProfilePage()"
             >
-                <img
-                    *ngIf="(avatarImg$ | async); else hasNoAvatar"
-                    [src]="avatarImg$ | async"
-                    [alt]="nickname$ | async"
-                    class="user-item__avatar"
-                />
-
-                <ng-template #hasNoAvatar>
+                @if (avatarImg$ | async) {
+                    <img
+                        [src]="avatarImg$ | async"
+                        [alt]="nickname$ | async"
+                        class="user-item__avatar"
+                    />
+                } @else {
                     <ion-icon
                         class="user-item__avatar"
                         name="person-circle"
                     ></ion-icon>
-                </ng-template>
+                }
             </ion-button>
         </div>
 
@@ -85,14 +84,16 @@
             alignment="end"
         >
             <ng-template>
-                <ng-container *ngIf="(currentUser$ | async) as currentUser; else noUserMenuTemplate">
+                @if (currentUser$ | async; as currentUser) {
                     <ng-template
                         [ngTemplateOutlet]="signedInUserMenuTemplate"
                         [ngTemplateOutletContext]="{
-                        currentUser: currentUser
-                    }"
+                            currentUser: currentUser
+                        }"
                     ></ng-template>
-                </ng-container>
+                } @else {
+                    <ng-template [ngTemplateOutlet]="noUserMenuTemplate"></ng-template>
+                }
             </ng-template>
         </ion-popover>
     </ion-toolbar>

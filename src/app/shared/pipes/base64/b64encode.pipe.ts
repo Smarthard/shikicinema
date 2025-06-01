@@ -5,6 +5,7 @@ import { toBase64 } from '@app/shared/utils/base64-utils';
 @Pipe({
     name: 'b64encode',
     pure: true,
+    standalone: true,
 })
 export class B64encodePipe implements PipeTransform {
     transform(value: string): unknown {

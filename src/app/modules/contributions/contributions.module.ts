@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 
-import { ContributionsRoutingModule } from '@app/modules/contributions/contributions-routing.module';
 import { ContributionsStateModule } from '@app/modules/contributions/store/contributions-state.module';
 
 
@@ -9,7 +8,6 @@ import { ContributionsStateModule } from '@app/modules/contributions/store/contr
     declarations: [],
     imports: [
         CommonModule,
-        ContributionsRoutingModule,
         ContributionsStateModule,
     ],
 })
