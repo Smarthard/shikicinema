@@ -17,7 +17,7 @@ import {
     IonItem,
     IonLabel,
 } from '@ionic/angular/standalone';
-import { TranslocoService } from '@ngneat/transloco';
+import { TranslocoService } from '@jsverse/transloco';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
     combineLatestWith,

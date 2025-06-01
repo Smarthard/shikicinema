@@ -12,7 +12,7 @@ import { DOCUMENT } from '@angular/common';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
 import { Store } from '@ngrx/store';
-import { TranslocoService, getBrowserLang } from '@ngneat/transloco';
+import { TranslocoService, getBrowserLang } from '@jsverse/transloco';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { addHours, compareAsc } from 'date-fns';
 import { addIcons } from 'ionicons';

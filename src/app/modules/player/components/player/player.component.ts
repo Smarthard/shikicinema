@@ -19,7 +19,7 @@ import {
     Output,
     ViewEncapsulation,
 } from '@angular/core';
-import { TranslocoPipe } from '@ngneat/transloco';
+import { TranslocoPipe } from '@jsverse/transloco';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { shareReplay, take } from 'rxjs/operators';
 

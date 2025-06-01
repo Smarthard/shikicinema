@@ -13,7 +13,7 @@ import {
 } from '@angular/forms';
 import { IonButton, IonIcon, IonTextarea } from '@ionic/angular/standalone';
 import { NoWhitespacesValidator } from '@app/shared/validators/no-whitespaces.validator';
-import { TranslocoModule } from '@ngneat/transloco';
+import { TranslocoModule } from '@jsverse/transloco';
 
 @Component({
     selector: 'app-user-comment-form',

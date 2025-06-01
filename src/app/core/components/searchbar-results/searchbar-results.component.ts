@@ -16,7 +16,7 @@ import {
     IonText,
 } from '@ionic/angular/standalone';
 import { RouterLink } from '@angular/router';
-import { TranslocoPipe } from '@ngneat/transloco';
+import { TranslocoPipe } from '@jsverse/transloco';
 
 import { ImageCardComponent } from '@app/shared/components/image-card/image-card.component';
 import { Observable } from 'rxjs';

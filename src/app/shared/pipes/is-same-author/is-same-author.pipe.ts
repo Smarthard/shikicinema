@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
-import { TranslocoService } from '@ngneat/transloco';
+import { TranslocoService } from '@jsverse/transloco';
 import { cleanAuthorName } from '@app/shared/utils/clean-author-name.function';
 
 @Pipe({

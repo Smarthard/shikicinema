@@ -8,7 +8,7 @@ import {
 import { DatePipe, NgStyle, UpperCasePipe } from '@angular/common';
 import { NgxTippyModule } from 'ngx-tippy-wrapper';
 import { RouterLink } from '@angular/router';
-import { TranslocoPipe } from '@ngneat/transloco';
+import { TranslocoPipe } from '@jsverse/transloco';
 
 import { AbstractImageCardComponent } from '@app/shared/components/abstract-image-card/abstract-image-card.component';
 import { AnimeKindType } from '@app/shared/types/shikimori/anime-kind.type';

@@ -64,7 +64,7 @@
         "@ionic/angular": "^8.5.8",
         "@ionic/core": "^8.5.8",
         "@ionic/storage-angular": "^4.0.0",
-        "@ngneat/transloco": "^6.0.4",
+        "@jsverse/transloco": "^7.6.1",
         "@ngneat/until-destroy": "^10.0.0",
         "@ngrx/effects": "^19.0.0",
         "@ngrx/operators": "^19.2.1",

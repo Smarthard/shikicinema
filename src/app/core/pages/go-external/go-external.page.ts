@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import { EMPTY, Observable } from 'rxjs';
 import { IonContent, IonSpinner } from '@ionic/angular/standalone';
-import { TranslocoPipe } from '@ngneat/transloco';
+import { TranslocoPipe } from '@jsverse/transloco';
 import {
     catchError,
     delay,

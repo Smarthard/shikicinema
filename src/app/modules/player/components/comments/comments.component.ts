@@ -14,7 +14,7 @@ import {
     ViewEncapsulation,
 } from '@angular/core';
 import { IonButton, ModalController, ToastController } from '@ionic/angular/standalone';
-import { TranslocoService } from '@ngneat/transloco';
+import { TranslocoService } from '@jsverse/transloco';
 
 import { Comment } from '@app/shared/types/shikimori/comment';
 import { CommentComponent } from '@app/modules/player/components/comment/comment.component';
