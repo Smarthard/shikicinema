@@ -14,4 +14,9 @@ export {
     serverOutline,
     settingsOutline,
     trashOutline,
+    playBackOutline,
+    playForwardOutline,
+    send,
+    checkmarkOutline,
+    cloudUploadOutline,
 } from 'ionicons/icons';

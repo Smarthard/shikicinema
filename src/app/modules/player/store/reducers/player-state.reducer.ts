@@ -1,5 +1,4 @@
 import {
-    MetaReducer,
     createReducer,
     on,
 } from '@ngrx/store';
@@ -23,7 +22,7 @@ const initialState: PlayerStoreInterface = {
     comments: {},
 };
 
-export const reducers = createReducer(initialState,
+export const playerReducer = createReducer(initialState,
     on(
         addVideosAction,
         (state, { animeId, videos }) => ({
@@ -112,6 +111,3 @@ export const reducers = createReducer(initialState,
         }),
     ),
 );
-
-
-export const metaReducers: MetaReducer<PlayerStoreInterface>[] = [];

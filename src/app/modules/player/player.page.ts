@@ -47,7 +47,6 @@ import { GetEpisodesPipe } from '@app/shared/pipes/get-episodes/get-episodes.pip
 import { KindSelectorComponent } from '@app/modules/player/components/kind-selector/kind-selector.component';
 import { NoPreferenceSymbol } from '@app/store/settings/types';
 import { PlayerComponent } from '@app/modules/player/components/player/player.component';
-import { PlayerStateModule } from '@app/modules/player/store/player-state.module';
 import { SHIKIMORI_DOMAIN_TOKEN } from '@app/core/providers/shikimori-domain';
 import { ShikimoriAnimeLinkPipe } from '@app/shared/pipes/shikimori-anime-link/shikimori-anime-link.pipe';
 import { SidePanelComponent } from '@app/modules/player/components/side-panel/side-panel.component';
@@ -109,7 +108,6 @@ import { visitAnimePageAction } from '@app/modules/home/store/recent-animes/acti
     styleUrl: './player.page.scss',
     imports: [
         CommonModule,
-        PlayerStateModule,
         PlayerComponent,
         VideoSelectorComponent,
         KindSelectorComponent,
@@ -128,10 +126,6 @@ import { visitAnimePageAction } from '@app/modules/home/store/recent-animes/acti
         SidePanelComponent,
         IonText,
         IonContent,
-    ],
-    providers: [
-        ModalController,
-        { provide: WELL_KNOWN_UPLOADERS_TOKEN, useValue: WELL_KNOWN_UPLOADERS_MAP },
     ],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
