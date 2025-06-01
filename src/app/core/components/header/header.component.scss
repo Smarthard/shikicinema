@@ -58,6 +58,7 @@ $grid-searchbar-column-width: 10fr;
 }
 
 .menu-item {
+    cursor: pointer;
 
     &--nolinks {
         cursor: default;

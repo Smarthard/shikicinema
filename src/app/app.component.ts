@@ -1,3 +1,4 @@
+import * as usedIcons from '@app/core/used-icons.config';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import {
     ChangeDetectionStrategy,
@@ -15,12 +16,6 @@ import { TranslocoService, getBrowserLang } from '@ngneat/transloco';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { addHours, compareAsc } from 'date-fns';
 import { addIcons } from 'ionicons';
-import {
-    chevronDown,
-    chevronUp,
-    notifications,
-    personCircle,
-} from 'ionicons/icons';
 import { combineLatest, firstValueFrom } from 'rxjs';
 import {
     debounceTime,
@@ -70,12 +65,7 @@ export class AppComponent implements OnInit {
         private readonly _route: ActivatedRoute,
         private readonly _persistenceService: PersistenceService,
     ) {
-        addIcons({
-            notifications,
-            personCircle,
-            chevronUp,
-            chevronDown,
-        });
+        addIcons(usedIcons);
     }
 
     readonly isCustomThemeHardDisable$ = this._route.queryParams.pipe(

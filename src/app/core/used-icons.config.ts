@@ -1,0 +1,17 @@
+export {
+    chevronDown,
+    chevronUp,
+    closeOutline,
+    filmOutline,
+    languageOutline,
+    libraryOutline,
+    logInOutline,
+    logOutOutline,
+    notifications,
+    openOutline,
+    personCircle,
+    personOutline,
+    serverOutline,
+    settingsOutline,
+    trashOutline,
+} from 'ionicons/icons';

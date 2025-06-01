@@ -163,7 +163,6 @@ export class SettingsPage implements OnInit {
     async goToLastPage(): Promise<void> {
         const lastPage = await firstValueFrom(this.lastVisitedPage$);
 
-        console.log('???', lastPage);
         await this.router.navigateByUrl(lastPage);
     }
 }
