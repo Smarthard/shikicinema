@@ -1,4 +1,4 @@
-@import 'src/scss/mixins';
+@use 'src/scss/mixins' as *;
 
 .player-page {
     --shc-watched-episode-color-rgb: 41, 196, 103;

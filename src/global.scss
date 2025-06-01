@@ -1,3 +1,4 @@
+@use "sass:meta";
 /*
  * App Global CSS
  * ----------------------------------------------------------------------------
@@ -10,27 +11,27 @@
  */
 
 /* Core CSS required for Ionic components to work properly */
-@import "~@ionic/angular/css/core.css";
+@include meta.load-css("@ionic/angular/css/core.css");
 
 /* Basic CSS for apps built with Ionic */
-@import "~@ionic/angular/css/normalize.css";
-@import "~@ionic/angular/css/structure.css";
-@import "~@ionic/angular/css/typography.css";
-@import '~@ionic/angular/css/display.css';
-@import '~@ionic/angular/css/palettes/dark.class.css';
+@include meta.load-css("@ionic/angular/css/normalize.css");
+@include meta.load-css("@ionic/angular/css/structure.css");
+@include meta.load-css("@ionic/angular/css/typography.css");
+@include meta.load-css("@ionic/angular/css/display.css");
+@include meta.load-css("@ionic/angular/css/palettes/dark.class.css");
 
 
 /* Optional CSS utils that can be commented out */
-@import "~@ionic/angular/css/padding.css";
-@import "~@ionic/angular/css/float-elements.css";
-@import "~@ionic/angular/css/text-alignment.css";
-@import "~@ionic/angular/css/text-transformation.css";
-@import "~@ionic/angular/css/flex-utils.css";
+@include meta.load-css("@ionic/angular/css/padding.css");
+@include meta.load-css("@ionic/angular/css/float-elements.css");
+@include meta.load-css("@ionic/angular/css/text-alignment.css");
+@include meta.load-css("@ionic/angular/css/text-transformation.css");
+@include meta.load-css("@ionic/angular/css/flex-utils.css");
 
-@import "scss/animations";
-@import "scss/common";
-@import "scss/content";
-@import "scss/responsive";
-@import "scss/shikimori";
+@include meta.load-css("scss/animations");
+@include meta.load-css("scss/common");
+@include meta.load-css("scss/content");
+@include meta.load-css("scss/responsive");
+@include meta.load-css("scss/shikimori");
 @import 'tippy.js/dist/tippy.css';
 @import 'tippy.js/dist/svg-arrow.css';

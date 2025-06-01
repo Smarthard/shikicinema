@@ -1,4 +1,4 @@
-@import 'src/scss/mixins';
+@use 'src/scss/mixins' as *;
 
 .control-panel {
     $inputMinHeight: 2rem;
