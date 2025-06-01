@@ -77,11 +77,13 @@
         </ion-popover>
 
         <ion-popover
+            #menuPopover
             class="menu-popover"
             trigger="menu-trigger"
             triggerAction="click"
             side="bottom"
             alignment="end"
+            (click)="menuPopover.dismiss()"
         >
             <ng-template>
                 @if (currentUser$ | async; as currentUser) {
