@@ -1,4 +1,4 @@
-import { AsyncPipe, DatePipe, NgFor, NgIf, UpperCasePipe } from '@angular/common';
+import { AsyncPipe, DatePipe, NgIf, UpperCasePipe } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
