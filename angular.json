@@ -11,7 +11,7 @@
             "schematics": {},
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:browser",
+                    "builder": "@angular-devkit/build-angular:browser-esbuild",
                     "options": {
                         "outputPath": "dist",
                         "index": "src/index.html",
@@ -19,6 +19,11 @@
                         "polyfills": "src/polyfills.ts",
                         "tsConfig": "tsconfig.app.json",
                         "deleteOutputPath": false,
+                        "stylePreprocessorOptions": {
+                            "includePaths": [
+                                "."
+                            ]
+                        },
                         "assets": [
                             {
                                 "glob": "**/*",
@@ -42,9 +47,7 @@
                         ],
                         "scripts": [],
                         "aot": true,
-                        "vendorChunk": true,
                         "extractLicenses": false,
-                        "buildOptimizer": false,
                         "sourceMap": true,
                         "optimization": false,
                         "namedChunks": true
@@ -70,8 +73,6 @@
                             "namedChunks": false,
                             "aot": true,
                             "extractLicenses": true,
-                            "vendorChunk": false,
-                            "buildOptimizer": true,
                             "budgets": [
                                 {
                                     "type": "initial",
@@ -86,8 +87,6 @@
                             "sourceMap": true,
                             "namedChunks": false,
                             "aot": true,
-                            "vendorChunk": false,
-                            "buildOptimizer": false
                         },
                         "ci": {
                             "progress": false
