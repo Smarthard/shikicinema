@@ -45,6 +45,10 @@
                             "src/global.scss",
                             "src/theme/variables.scss"
                         ],
+                        "allowedCommonJsDependencies": [
+                            "deepmerge",
+                            "localforage"
+                        ],
                         "scripts": [],
                         "aot": true,
                         "extractLicenses": false,
