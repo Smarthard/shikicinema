@@ -42,6 +42,7 @@
             }
         },
         "LANGUAGES": {
+            "ORIGINAL": "Original",
             "RU": "Russian",
             "UK": "Ukranian",
             "BE": "Belorussian",

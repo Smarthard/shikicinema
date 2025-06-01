@@ -25,6 +25,7 @@ import { Title } from '@angular/platform-browser';
 import { TranslocoPipe, TranslocoService } from '@ngneat/transloco';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
+import { LanguageToIsoCodePipe } from '@app/shared/pipes/language-to-iso-code/language-to-iso-code.pipe';
 import { ResourceIdType } from '@app/shared/types/resource-id.type';
 import { ShikivideosInterface } from '@app/shared/types/shikicinema/v1';
 import { getContributionsAction } from '@app/modules/contributions/store/actions/get-contributions.actions';
@@ -51,6 +52,7 @@ import { trackById } from '@app/shared/utils/common-ngfor-tracking';
         IonRow,
         IonCol,
         IonText,
+        LanguageToIsoCodePipe,
     ],
     templateUrl: 'contributions.page.html',
     styleUrl: 'contributions.page.scss',
