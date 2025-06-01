@@ -89,7 +89,7 @@
                             "outputHashing": "none",
                             "sourceMap": true,
                             "namedChunks": false,
-                            "aot": true,
+                            "aot": true
                         },
                         "ci": {
                             "progress": false
@@ -99,11 +99,11 @@
                 "serve": {
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "options": {
-                        "browserTarget": "app:build"
+                        "buildTarget": "app:build"
                     },
                     "configurations": {
                         "production": {
-                            "browserTarget": "app:build:production"
+                            "buildTarget": "app:build:production"
                         },
                         "ci": {}
                     }
@@ -111,7 +111,7 @@
                 "extract-i18n": {
                     "builder": "@angular-devkit/build-angular:extract-i18n",
                     "options": {
-                        "browserTarget": "app:build"
+                        "buildTarget": "app:build"
                     }
                 },
                 "test": {
@@ -152,17 +152,14 @@
                     }
                 },
                 "e2e": {
-                    "builder": "@angular-devkit/build-angular:protractor",
+                    "builder": "@puppeteer/ng-schematics:puppeteer",
                     "options": {
-                        "protractorConfig": "e2e/protractor.conf.js",
-                        "devServerTarget": "app:serve"
+                        "devServerTarget": "app:serve",
+                        "testRunner": "jest"
                     },
                     "configurations": {
                         "production": {
                             "devServerTarget": "app:serve:production"
-                        },
-                        "ci": {
-                            "devServerTarget": "app:serve:ci"
                         }
                     }
                 }
@@ -171,7 +168,9 @@
     },
     "cli": {
         "defaultCollection": "@ionic/angular-toolkit",
-        "schematicCollections": ["@ngrx/schematics"]
+        "schematicCollections": [
+            "@ngrx/schematics"
+        ]
     },
     "schematics": {
         "@ionic/angular-toolkit:component": {
