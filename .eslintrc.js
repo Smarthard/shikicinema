@@ -141,8 +141,6 @@ module.exports = {
         'node_modules',
         'dist',
         '**/index.ts',
-        'src/polyfills.ts',
         'src/test.ts',
-        'src/zone-flags.ts',
     ],
 };

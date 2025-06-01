@@ -1,5 +1,5 @@
 import { bootstrapApplication } from '@angular/platform-browser';
-import { enableProdMode } from '@angular/core';
+import { enableProdMode, provideExperimentalZonelessChangeDetection } from '@angular/core';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { provideIonicAngular } from '@ionic/angular/standalone';
@@ -26,6 +26,7 @@ if (environment.isProduction) {
 
 bootstrapApplication(AppComponent, {
     providers: [
+        provideExperimentalZonelessChangeDetection(),
         provideIonicAngular({ mode: 'md' }),
         provideAppRouting(),
         provideAppState(),
