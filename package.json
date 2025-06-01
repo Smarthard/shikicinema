@@ -1,6 +1,6 @@
 {
     "name": "shikicinema",
-    "version": "0.9.4",
+    "version": "0.9.5",
     "description": "Returns video player on Shikimori",
     "main": "src/shikicinema.js",
     "engines": {
