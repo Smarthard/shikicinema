@@ -3,6 +3,7 @@ import {
     Component,
     OnInit,
     ViewEncapsulation,
+    inject,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -75,6 +76,10 @@ import { selectShikimoriCurrentUser } from '@app/store/shikimori/selectors/shiki
     styleUrls: ['home.page.scss'],
 })
 export class HomePage implements OnInit {
+    private readonly store = inject(Store);
+    private readonly title = inject(Title);
+    private readonly transloco = inject(TranslocoService);
+
     currentUser$: Observable<UserBriefInfoInterface>;
 
     recent$: Observable<UserAnimeRate[]>;
@@ -100,12 +105,6 @@ export class HomePage implements OnInit {
 
     sectionVisibilitySubject$: Subject<VisibilityChangeInterface>;
 
-    constructor(
-        private readonly _store: Store,
-        private readonly _title: Title,
-        private readonly _transloco: TranslocoService,
-    ) {}
-
     ngOnInit() {
         this.initValues();
         this.initSubscriptions();
@@ -118,10 +117,10 @@ export class HomePage implements OnInit {
                 skipWhile((currentUser) => !currentUser?.id),
                 take(1),
                 tap(({ id, nickname }) => {
-                    const title = this._transloco.translate('HOME_MODULE.HOME_PAGE.PAGE_TITLE', { nickname });
+                    const title = this.transloco.translate('HOME_MODULE.HOME_PAGE.PAGE_TITLE', { nickname });
 
                     this.getUserAnimeRatesByStatus(id, 'planned');
-                    this._title.setTitle(title);
+                    this.title.setTitle(title);
                 }),
             )
             .subscribe();
@@ -143,29 +142,29 @@ export class HomePage implements OnInit {
         this.hiddenGridMap = new Map<UserRateStatusType, boolean>();
         this.sectionVisibilitySubject$ = new Subject<VisibilityChangeInterface>();
 
-        this.currentUser$ = this._store.select(selectShikimoriCurrentUser);
+        this.currentUser$ = this.store.select(selectShikimoriCurrentUser);
 
         this.recent$ = combineLatest([
-            this._store.select(selectRecentAnimes),
-            this._store.select(selectCachedAnimes),
+            this.store.select(selectRecentAnimes),
+            this.store.select(selectCachedAnimes),
         ]).pipe(
             map(([recentAnimes, cachedAnimes]) => recentAnimesToRates(recentAnimes, cachedAnimes)),
             shareReplay(1),
         );
 
-        this.planned$ = this._store.select(selectRatesByStatus('planned'));
-        this.watching$ = this._store.select(selectRatesByStatus('watching'));
-        this.rewatching$ = this._store.select(selectRatesByStatus('rewatching'));
-        this.completed$ = this._store.select(selectRatesByStatus('completed'));
-        this.onHold$ = this._store.select(selectRatesByStatus('on_hold'));
-        this.dropped$ = this._store.select(selectRatesByStatus('dropped'));
+        this.planned$ = this.store.select(selectRatesByStatus('planned'));
+        this.watching$ = this.store.select(selectRatesByStatus('watching'));
+        this.rewatching$ = this.store.select(selectRatesByStatus('rewatching'));
+        this.completed$ = this.store.select(selectRatesByStatus('completed'));
+        this.onHold$ = this.store.select(selectRatesByStatus('on_hold'));
+        this.dropped$ = this.store.select(selectRatesByStatus('dropped'));
 
-        this.isPlannedLoaded$ = this._store.select(selectIsRatesLoadedByStatus('planned'));
-        this.isWatchingLoaded$ = this._store.select(selectIsRatesLoadedByStatus('watching'));
-        this.isRewatchingLoaded$ = this._store.select(selectIsRatesLoadedByStatus('rewatching'));
-        this.isCompletedLoaded$ = this._store.select(selectIsRatesLoadedByStatus('completed'));
-        this.isOnHoldLoaded$ = this._store.select(selectIsRatesLoadedByStatus('on_hold'));
-        this.isDroppedLoaded$ = this._store.select(selectIsRatesLoadedByStatus('dropped'));
+        this.isPlannedLoaded$ = this.store.select(selectIsRatesLoadedByStatus('planned'));
+        this.isWatchingLoaded$ = this.store.select(selectIsRatesLoadedByStatus('watching'));
+        this.isRewatchingLoaded$ = this.store.select(selectIsRatesLoadedByStatus('rewatching'));
+        this.isCompletedLoaded$ = this.store.select(selectIsRatesLoadedByStatus('completed'));
+        this.isOnHoldLoaded$ = this.store.select(selectIsRatesLoadedByStatus('on_hold'));
+        this.isDroppedLoaded$ = this.store.select(selectIsRatesLoadedByStatus('dropped'));
 
         this.animeGrids = [
             {
@@ -217,7 +216,7 @@ export class HomePage implements OnInit {
 
     getUserAnimeRatesByStatus(userId: ResourceIdType, status: UserRateStatusType): void {
         if (status !== 'recent' as UserRateStatusType) {
-            this._store.dispatch(loadAnimeRateByStatusAction({ userId, status }));
+            this.store.dispatch(loadAnimeRateByStatusAction({ userId, status }));
         }
     }
 

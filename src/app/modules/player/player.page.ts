@@ -5,9 +5,9 @@ import {
     ChangeDetectionStrategy,
     Component,
     HostBinding,
-    Inject,
     OnInit,
     ViewEncapsulation,
+    inject,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
@@ -18,7 +18,6 @@ import {
 import { ModalController, Platform } from '@ionic/angular';
 import { NgLetDirective } from 'ng-let';
 import {
-    Observable,
     ReplaySubject,
     combineLatest,
     firstValueFrom,
@@ -58,8 +57,6 @@ import { UserCommentFormComponent } from '@app/modules/player/components/user-co
 import { VideoInfoInterface } from '@app/modules/player/types';
 import { VideoKindEnum } from '@app/modules/player/types/video-kind.enum';
 import { VideoSelectorComponent } from '@app/modules/player/components/video-selector/video-selector.component';
-import { WELL_KNOWN_UPLOADERS_MAP } from '@app/shared/config/well-known-uploaders.config';
-import { WELL_KNOWN_UPLOADERS_TOKEN } from '@app/shared/types/well-known-uploaders.token';
 import { filterByEpisode } from '@app/shared/utils/filter-by-episode.function';
 import { filterVideosByPreferences } from '@app/modules/player/utils/filter-videos-by-preferences.function';
 import {
@@ -134,8 +131,20 @@ export class PlayerPage implements OnInit {
     @HostBinding('class.player-page')
     private playerPageClass = true;
 
+    private readonly store = inject(Store);
+    private readonly route = inject(ActivatedRoute);
+    private readonly router = inject(Router);
+    private readonly title = inject(Title);
+    private readonly platform = inject(Platform);
+    private readonly breakpointObserver = inject(BreakpointObserver);
+    private readonly actions$ = inject(Actions);
+    private readonly toast = inject(ToastController);
+    private readonly transloco = inject(TranslocoService);
+    private readonly modalController = inject(ModalController);
+
     private isOrientationPortraitSubject$ = new ReplaySubject<boolean>(1);
 
+    readonly shikimoriDomain$ = inject(SHIKIMORI_DOMAIN_TOKEN);
     readonly isPreferencesToggleOn$ = this.store.select(selectPreferencesToggle);
     readonly playerMode$ = this.store.select(selectPlayerMode);
     readonly playerKindDisplayMode$ = this.store.select(selectPlayerKindDisplayMode);
@@ -223,21 +232,6 @@ export class PlayerPage implements OnInit {
     isCommentsLoading$ = combineLatest([this.animeId$, this.episode$]).pipe(
         switchMap(([animeId, episode]) => this.store.select(selectPlayerIsCommentsLoading(animeId, episode))),
     );
-
-    constructor(
-        @Inject(SHIKIMORI_DOMAIN_TOKEN)
-        readonly shikimoriDomain$: Observable<string>,
-        private store: Store,
-        private route: ActivatedRoute,
-        private router: Router,
-        private title: Title,
-        private platform: Platform,
-        private breakpointObserver: BreakpointObserver,
-        private actions$: Actions,
-        private toast: ToastController,
-        private transloco: TranslocoService,
-        private modalController: ModalController,
-    ) {}
 
     ngOnInit(): void {
         this.animeId$.pipe(

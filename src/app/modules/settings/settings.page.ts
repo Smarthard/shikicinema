@@ -11,6 +11,7 @@ import {
     HostBinding,
     OnInit,
     ViewEncapsulation,
+    inject,
 } from '@angular/core';
 import {
     FormControl,
@@ -86,13 +87,11 @@ export class SettingsPage implements OnInit {
     @HostBinding('class.settings-page')
     private settingsPageClass = true;
 
-    constructor(
-        private readonly transloco: TranslocoService,
-        private readonly title: Title,
-        private readonly store: Store,
-        private readonly persistenceService: PersistenceService,
-        private readonly router: Router,
-    ) {}
+    private readonly transloco = inject(TranslocoService);
+    private readonly title = inject(Title);
+    private readonly store = inject(Store);
+    private readonly persistenceService = inject(PersistenceService);
+    private readonly router = inject(Router);
 
     readonly settings$ = this.store.select(selectSettings);
     readonly lastVisitedPage$ = this.store.select(selectLastVisitedPage);
