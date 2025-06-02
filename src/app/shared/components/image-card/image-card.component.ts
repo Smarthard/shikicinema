@@ -3,9 +3,10 @@ import {
     ChangeDetectionStrategy,
     Component,
     HostBinding,
-    Input,
     ViewEncapsulation,
+    input,
 } from '@angular/core';
+import { outputToObservable } from '@angular/core/rxjs-interop';
 
 import { AbstractImageCardComponent } from '@app/shared/components/abstract-image-card/abstract-image-card.component';
 import { IsImageWidthLargerPipe } from '@app/shared/pipes/is-image-width-larger/is-image-width-larger.pipe';
@@ -29,18 +30,15 @@ export class ImageCardComponent extends AbstractImageCardComponent {
     @HostBinding('class.image-card')
     imageCardClass = true;
 
-    @Input()
-    height = '100%';
+    override height = input('100%');
 
-    @Input()
-    width = 'auto';
+    override width = input('auto');
 
-    @Input()
-    backgroundSize = 'cover';
+    override backgroundSize = input('cover');
 
-    isLoading = true;
+    override isLoading = true;
 
-    readonly loadedImg$ = this.imageLoad.asObservable();
+    readonly loadedImg$ = outputToObservable(this.imageLoad);
 
     protected getBgSize(isWidthLarger: boolean): 'cover' | 'contain' {
         return isWidthLarger ? 'contain' : 'cover';

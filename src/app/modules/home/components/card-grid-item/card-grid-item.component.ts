@@ -2,8 +2,8 @@ import {
     ChangeDetectionStrategy,
     Component,
     HostBinding,
-    Input,
     ViewEncapsulation,
+    input,
 } from '@angular/core';
 import { DatePipe, NgStyle, UpperCasePipe } from '@angular/common';
 import { NgxTippyModule } from 'ngx-tippy-wrapper';
@@ -40,14 +40,11 @@ export class CardGridItemComponent extends AbstractImageCardComponent {
     @HostBinding('class.card-grid-item')
     cardGridItemClass = true;
 
-    @Input()
-    kind: AnimeKindType;
+    kind = input<AnimeKindType>();
 
-    @Input()
-    releaseDate: string | Date;
+    releaseDate = input<string | Date>();
 
-    @Input()
-    link = '#';
+    link = input('#');
 
     mouseOver = false;
 }

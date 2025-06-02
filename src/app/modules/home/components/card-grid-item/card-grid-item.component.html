@@ -1,46 +1,46 @@
-<a class="wrapper" [routerLink]="['/' + link]">
+<a class="wrapper" [routerLink]="[link()]">
     <app-image-card
         class="card-grid-item__image responsive-9by13"
         tabindex="0"
         [@scale]="mouseOver"
-        [height]="height"
-        [width]="width"
-        [name]="name"
-        [imageUrl]="imageUrl"
+        [height]="height()"
+        [width]="width()"
+        [name]="name()"
+        [imageUrl]="imageUrl()"
         (imageLoad)="onImageLoad($event)"
         (mouseover)="mouseOver = true"
         (mouseleave)="mouseOver = false"
         (focus)="mouseOver = true"
         (focusout)="mouseOver = false"
-    ></app-image-card>
+    />
 </a>
 
 @if (isLoading) {
     <app-skeleton-block
         class="card-grid-item__name card-grid-item__name--skeleton"
         [height]="'33px'"
-        [width]="width"
-    ></app-skeleton-block>
+        [width]="width()"
+    />
 }
 
 <h2
     class="card-grid-item__name"
     [class.ion-hide]="isLoading"
-    [ngxTippy]="name"
+    [ngxTippy]="name()"
     [tippyProps]="{
         'placement': 'top'
     }"
     [ngStyle]="{
-        'max-width': width
+        'max-width': width()
     }"
 >
-    {{ name }}
+    {{ name() }}
 </h2>
 
 <footer
     class="card-grid-item__other-info"
     [class.ion-hide]="isLoading"
 >
-    <span>{{ 'GLOBAL.SHIKIMORI.ANIME_KINDS.' + (kind | uppercase) | transloco }}</span>
-    <time [dateTime]="releaseDate">{{ releaseDate | date: 'YYYY' }}</time>
+    <span>{{ 'GLOBAL.SHIKIMORI.ANIME_KINDS.' + (kind() | uppercase) | transloco }}</span>
+    <time [dateTime]="releaseDate()">{{ releaseDate() | date: 'YYYY' }}</time>
 </footer>
