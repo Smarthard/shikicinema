@@ -8,7 +8,10 @@
             <ion-button (click)="loadLastComments()">Посмотреть остальные комментарии</ion-button>
         }
 
-        @for (comment of (comments | slice: showMoreButton ? -(sliceLastComments$ | async) : 0 ); track trackById) {
+        @for (
+            comment of (comments | slice: showMoreButton ? -(sliceLastComments$ | async) : 0 );
+            track trackById($index, comment)
+        ) {
             <app-comment
                 id="comment-{{ comment.id }}"
                 #comment
