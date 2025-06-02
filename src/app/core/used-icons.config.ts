@@ -19,4 +19,6 @@ export {
     send,
     checkmarkOutline,
     cloudUploadOutline,
+    listOutline,
+    resizeOutline,
 } from 'ionicons/icons';
