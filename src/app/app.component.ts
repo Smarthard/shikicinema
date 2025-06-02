@@ -1,4 +1,3 @@
-import * as usedIcons from '@app/core/used-icons.config';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import {
     ChangeDetectionStrategy,
@@ -25,6 +24,7 @@ import {
     tap,
 } from 'rxjs/operators';
 
+import * as usedIcons from '@app/core/used-icons.config';
 import { CachedAnimeInterceptor } from '@app/shared/interceptors/cached-animes.interceptor';
 import { HeaderComponent } from '@app/core/components/header/header.component';
 import { PersistenceService } from '@app/shared/services';
