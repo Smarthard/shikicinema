@@ -7,8 +7,8 @@ export const authEffectFactory = () => {
 
     switch (targetPlatform) {
         case 'web-extension':
-            return [AuthWebExtensionEffects];
+            return AuthWebExtensionEffects;
         case 'native-app':
-            return [AuthNativeAppEffects];
+            return AuthNativeAppEffects;
     }
 };

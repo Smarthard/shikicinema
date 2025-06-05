@@ -1,9 +1,4 @@
-import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { Inject, Injectable } from '@angular/core';
-import { Observable, from, of } from 'rxjs';
-import { Store } from '@ngrx/store';
-import { ToastController } from '@ionic/angular';
-import { TranslocoService } from '@jsverse/transloco';
+import { Injectable, inject } from '@angular/core';
 import {
     catchError,
     exhaustMap,
@@ -11,10 +6,11 @@ import {
     switchMap,
 } from 'rxjs/operators';
 import { concatLatestFrom } from '@ngrx/operators';
+import { createEffect, ofType } from '@ngrx/effects';
+import { from, of } from 'rxjs';
 
 import { AuthEffects } from '@app/store/auth/effects/auth.effects';
 import { SHIKIMORI_DOMAIN_TOKEN } from '@app/core/providers/shikimori-domain';
-import { ShikimoriClient } from '@app/shared/services/shikimori-client.service';
 import {
     authShikimoriAction,
     authShikimoriFailureAction,
@@ -27,6 +23,8 @@ import { getAuthorizationCode } from '@app/shared/utils/shikimori-api.web-extens
 export class AuthWebExtensionEffects extends AuthEffects {
     readonly shikimoriClientId = environment.shikimori.authClientId;
 
+    readonly shikimoriDomain$ = inject(SHIKIMORI_DOMAIN_TOKEN);
+
     override oauthShikimori$ = createEffect(() => this.actions$.pipe(
         ofType(authShikimoriAction),
         concatLatestFrom(() => this.shikimoriDomain$),
@@ -36,22 +34,4 @@ export class AuthWebExtensionEffects extends AuthEffects {
             catchError((errors) => of(authShikimoriFailureAction({ errors }))),
         )),
     ));
-
-    constructor(
-        store: Store,
-        actions$: Actions,
-        shikimoriClient: ShikimoriClient,
-        translate: TranslocoService,
-        toast: ToastController,
-        @Inject(SHIKIMORI_DOMAIN_TOKEN)
-        private shikimoriDomain$: Observable<string>,
-    ) {
-        super(
-            store,
-            actions$,
-            shikimoriClient,
-            translate,
-            toast,
-        );
-    }
 }

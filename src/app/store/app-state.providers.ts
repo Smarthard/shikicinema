@@ -1,4 +1,4 @@
-import { Actions, USER_PROVIDED_EFFECTS, provideEffects } from '@ngrx/effects';
+import { Actions, provideEffects } from '@ngrx/effects';
 import { RootStoreConfig, provideStore } from '@ngrx/store';
 import { StoreDevtoolsOptions, provideStoreDevtools } from '@ngrx/store-devtools';
 
@@ -56,6 +56,7 @@ export function provideAppState() {
             ShikimoriEffects,
             ShikicinemaEffects,
             CacheEffects,
+            authEffectFactory(),
         ]),
         provideStoreDevtools(storeDevtoolsConfig),
         Actions,
@@ -63,10 +64,5 @@ export function provideAppState() {
         ShikimoriClient,
         AuthWebExtensionEffects,
         AuthNativeAppEffects,
-        {
-            provide: USER_PROVIDED_EFFECTS,
-            useFactory: authEffectFactory,
-            multi: true,
-        },
     ];
 }
