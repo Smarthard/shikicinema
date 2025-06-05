@@ -8,7 +8,6 @@ import {
     inject,
 } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
 import { Store } from '@ngrx/store';
 import { TranslocoService, getBrowserLang } from '@jsverse/transloco';
@@ -25,11 +24,8 @@ import {
 } from 'rxjs/operators';
 
 import * as usedIcons from '@app/core/used-icons.config';
-import { CachedAnimeInterceptor } from '@app/shared/interceptors/cached-animes.interceptor';
 import { HeaderComponent } from '@app/core/components/header/header.component';
 import { PersistenceService } from '@app/shared/services';
-import { ShikicinemaApiInterceptor } from '@app/shared/interceptors/shikicinema-api.interceptor';
-import { ShikimoriApiInterceptor } from '@app/shared/interceptors/shikimori-api.interceptor';
 import { cacheHealthCheckUpAction, resetCacheAction } from '@app/store/cache/actions';
 import { getCurrentUserAction } from '@app/store/shikimori/actions/get-current-user.action';
 import { selectCacheLastCheckUp } from '@app/store/cache/selectors/cache.selectors';
@@ -45,11 +41,6 @@ import { updateLanguageAction, visitPageAction } from '@app/store/settings/actio
         IonRouterOutlet,
         IonApp,
         HeaderComponent,
-    ],
-    providers: [
-        { provide: HTTP_INTERCEPTORS, useClass: ShikimoriApiInterceptor, multi: true },
-        { provide: HTTP_INTERCEPTORS, useClass: ShikicinemaApiInterceptor, multi: true },
-        { provide: HTTP_INTERCEPTORS, useClass: CachedAnimeInterceptor, multi: true },
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,

@@ -1,11 +1,12 @@
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { enableProdMode, provideExperimentalZonelessChangeDetection } from '@angular/core';
 import { provideAnimations } from '@angular/platform-browser/animations';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { provideIonicAngular } from '@ionic/angular/standalone';
 import { provideScrollbarPolyfill } from 'ngx-scrollbar';
 
 import { AppComponent } from '@app/app.component';
+import { CachedAnimeInterceptor } from '@app/shared/interceptors/cached-animes.interceptor';
 import {
     ElectronIpcProxyService,
     PLATFORM_API_TOKEN,
@@ -13,6 +14,8 @@ import {
     platformApiFactory,
 } from '@app/shared/services';
 import { SHIKIMORI_DOMAIN_TOKEN, shikimoriDomainFactory } from '@app/core/providers/shikimori-domain';
+import { ShikicinemaApiInterceptor } from '@app/shared/interceptors/shikicinema-api.interceptor';
+import { ShikimoriApiInterceptor } from '@app/shared/interceptors/shikimori-api.interceptor';
 import { ShikimoriDomainsService } from '@app/core/services/shikimori-domain.service';
 import { environment } from '@app-root/environments/environment';
 import { provideAppRouting } from '@app/app-routing.provider';
@@ -38,5 +41,8 @@ bootstrapApplication(AppComponent, {
         ShikimoriClient,
         { provide: PLATFORM_API_TOKEN, useFactory: platformApiFactory, deps: [ElectronIpcProxyService] },
         { provide: SHIKIMORI_DOMAIN_TOKEN, useFactory: shikimoriDomainFactory, deps: [ShikimoriDomainsService] },
+        { provide: HTTP_INTERCEPTORS, useClass: ShikimoriApiInterceptor, multi: true },
+        { provide: HTTP_INTERCEPTORS, useClass: ShikicinemaApiInterceptor, multi: true },
+        { provide: HTTP_INTERCEPTORS, useClass: CachedAnimeInterceptor, multi: true },
     ],
 }).catch((err) => console.log(err));
