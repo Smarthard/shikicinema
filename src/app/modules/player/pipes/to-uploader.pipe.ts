@@ -1,5 +1,6 @@
 import {
     Observable,
+    debounceTime,
     map,
     of,
     switchMap,
@@ -32,6 +33,7 @@ export class ToUploaderPipe implements PipeTransform {
 
         return uploadersCache$.pipe(
             map((cache) => cache[uploaderId || DELETED_UPLOADER]),
+            debounceTime(500),
             switchMap((cacheHit) => cacheHit
                 ? of(cacheHit)
                 : this.shikimori.getUser(uploaderId as string).pipe(
