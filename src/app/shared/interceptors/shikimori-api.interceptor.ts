@@ -10,8 +10,9 @@ import {
     HttpHandler,
     HttpInterceptor,
     HttpRequest,
+    HttpStatusCode,
 } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import {
     catchError,
@@ -27,27 +28,22 @@ import { changeShikimoriCredentialsAction, logoutShikimoriAction } from '@app/st
 
 @Injectable()
 export class ShikimoriApiInterceptor implements HttpInterceptor {
+    private readonly shikimoriClient = inject(ShikimoriClient);
+    private readonly persistenceService = inject(PersistenceService);
+    private readonly store = inject(Store);
+
     private isRefreshing = false;
     private refreshTokenSubject: BehaviorSubject<string> = null;
 
-    constructor(
-        private shikimoriClient: ShikimoriClient,
-        private persistenceService: PersistenceService,
-        private store: Store,
-    ) {}
-
     private static attachAccessToken(request: HttpRequest<unknown>, token: string) {
-        return request.clone({
-            setHeaders: {
-                // eslint-disable-next-line @typescript-eslint/naming-convention
-                Authorization: `Bearer ${token}`,
-            },
-        });
+        const headers = request.headers.set('Authorization', `Bearer ${token}`);
+
+        return request.clone({ headers });
     }
 
     intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-        // if this is refresh token request - do not handle it
-        if (!request?.url?.startsWith('https:\\shikimori') || request?.params?.get('refresh_token')) {
+        // Обрабатываем запросы в Шикимори, КРОМЕ запросов на обновление токенов
+        if (!request?.url?.startsWith('https://shikimori') || request?.params?.get('refresh_token')) {
             return next.handle(request);
         }
 
@@ -59,11 +55,29 @@ export class ShikimoriApiInterceptor implements HttpInterceptor {
 
         return next.handle(request).pipe(
             catchError((error) => {
-                if (error instanceof HttpErrorResponse && error.status === 401 && shikimoriBearerToken) {
+                /*
+                    Шикимори не разрешает использовать куки для отправки комментов
+                    за пределами своего домена. Их можно отправлять только ЧЕРЕЗ ТОКЕН!
+                    В противном случае будем получать ошибку 422
+                */
+                const isSendCommentReq = error instanceof HttpErrorResponse &&
+                    error.status === HttpStatusCode.UnprocessableEntity &&
+                    request.url.endsWith('/api/comments') &&
+                    shikimoriBearerToken;
+
+                const isGenericUnauthorizedReq = error instanceof HttpErrorResponse &&
+                    error.status === HttpStatusCode.Unauthorized &&
+                    shikimoriBearerToken;
+
+                const isTokensManuallyDeleted = error instanceof HttpErrorResponse &&
+                    error.status === HttpStatusCode.Unauthorized &&
+                    !shikimoriBearerToken;
+
+                if (isSendCommentReq || isGenericUnauthorizedReq) {
                     return this.handleUnauthorized(request, next);
                 }
 
-                if (error instanceof HttpErrorResponse && error.status === 401 && !shikimoriBearerToken) {
+                if (isTokensManuallyDeleted) {
                     this.store.dispatch(logoutShikimoriAction());
                 }
 
