@@ -91,7 +91,9 @@
 
         <app-user-comment-form
             class="player-page__comment-form"
+            [isAuthorized]="isUserAuthorized$ | async"
             (send)="onCommentSend($event)"
+            (login)="onCommentLogin()"
         />
     </div>
 </ion-content>

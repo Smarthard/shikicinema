@@ -1,9 +1,9 @@
 import {
     ChangeDetectionStrategy,
     Component,
-    EventEmitter,
-    Output,
     ViewEncapsulation,
+    input,
+    output,
 } from '@angular/core';
 import {
     FormControl,
@@ -37,11 +37,18 @@ export class UserCommentFormComponent {
         NoWhitespacesValidator(),
     ]);
 
-    @Output()
-    send = new EventEmitter<string>();
+    isAuthorized = input(false);
+
+    send = output<string>();
+
+    login = output<void>();
 
     onSend(comment: string): void {
         this.send.emit(comment);
         this.comment.reset();
+    }
+
+    onLogin(): void {
+        this.login.emit();
     }
 }

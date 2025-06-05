@@ -6,14 +6,26 @@
     [label]="'PLAYER_MODULE.PLAYER_PAGE.USER_COMMENT_FORM.LABEL' | transloco"
     [placeholder]="'PLAYER_MODULE.PLAYER_PAGE.USER_COMMENT_FORM.PLACEHOLDER' | transloco"
 >
-    <ion-button
-        type="button"
-        fill="clear"
-        slot="end"
-        aria-label="send"
-        (click)="onSend(comment.value)"
-        [disabled]="comment.invalid"
-    >
-        <ion-icon slot="icon-only" name="send" aria-hidden="true" />
-    </ion-button>
+    @if (isAuthorized()) {
+        <ion-button
+            type="button"
+            fill="clear"
+            slot="end"
+            aria-label="send"
+            (click)="onSend(comment.value)"
+            [disabled]="comment.invalid || !isAuthorized()"
+        >
+            <ion-icon slot="icon-only" name="send" aria-hidden="true" />
+        </ion-button>
+    } @else {
+        <ion-button
+            type="button"
+            fill="clear"
+            slot="end"
+            aria-label="login"
+            (click)="onLogin()"
+        >
+            <ion-icon slot="icon-only" name="log-in-outline" aria-hidden="true" />
+        </ion-button>
+    }
 </ion-textarea>

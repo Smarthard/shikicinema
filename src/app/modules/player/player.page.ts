@@ -57,6 +57,7 @@ import { UserCommentFormComponent } from '@app/modules/player/components/user-co
 import { VideoInfoInterface } from '@app/modules/player/types';
 import { VideoKindEnum } from '@app/modules/player/types/video-kind.enum';
 import { VideoSelectorComponent } from '@app/modules/player/components/video-selector/video-selector.component';
+import { authShikimoriAction } from '@app/store/auth/actions/auth.actions';
 import { filterByEpisode } from '@app/shared/utils/filter-by-episode.function';
 import { filterVideosByPreferences } from '@app/modules/player/utils/filter-videos-by-preferences.function';
 import {
@@ -80,6 +81,7 @@ import {
     selectPlayerMode,
     selectPreferencesToggle,
 } from '@app/store/settings/selectors/settings.selectors';
+import { selectIsAuthenticated } from '@app/store/auth/selectors/auth.selectors';
 import {
     selectPlayerAnime,
     selectPlayerAnimeLoading,
@@ -177,6 +179,8 @@ export class PlayerPage implements OnInit {
         map(({ episode }) => Number(episode)),
         distinctUntilChanged(),
     );
+
+    isUserAuthorized$ = this.store.select(selectIsAuthenticated);
 
     isVideosLoading$ = this.animeId$.pipe<boolean>(
         switchMap((animeId) => this.store.select(selectPlayerVideosLoading(animeId))),
@@ -421,5 +425,9 @@ export class PlayerPage implements OnInit {
 
     togglePlayerMode(): void {
         this.store.dispatch(togglePlayerModeAction());
+    }
+
+    onCommentLogin(): void {
+        this.store.dispatch(authShikimoriAction());
     }
 }

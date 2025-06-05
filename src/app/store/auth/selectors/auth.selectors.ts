@@ -17,10 +17,10 @@ export const selectShikimoriRefreshToken = createSelector(
 
 export const selectIsAuthenticated = createSelector(
     selectFeatureAuth,
-    (state) => state.shikimoriBearerToken && state.accessExpireTimeMs > Date.now(),
+    (state) => Boolean(state.shikimoriBearerToken && state.accessExpireTimeMs > Date.now()),
 );
 
 export const selectIsRefreshable = createSelector(
     selectFeatureAuth,
-    (state) => state.shikimoriRefreshToken && state.refreshExpireTimeMs > Date.now(),
+    (state) => Boolean(state.shikimoriRefreshToken && state.refreshExpireTimeMs > Date.now()),
 );
