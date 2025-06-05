@@ -1,6 +1,6 @@
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { ToastController } from '@ionic/angular/standalone';
 import { TranslocoService } from '@jsverse/transloco';
@@ -59,6 +59,14 @@ import { toVideoInfo } from '@app/shared/rxjs';
 
 @Injectable()
 export class PlayerEffects {
+    private readonly actions$ = inject(Actions);
+    private readonly store$ = inject(Store);
+    private readonly shikimori = inject(ShikimoriClient);
+    private readonly kodik = inject(KodikClient);
+    private readonly toast = inject(ToastController);
+    private readonly translate = inject(TranslocoService);
+    private readonly shikivideos = inject(ShikicinemaV1Client);
+
     findVideos$ = createEffect(() => this.actions$.pipe(
         ofType(findVideosAction),
         concatLatestFrom(({ animeId }) => this.store$.select(selectPlayerVideos(animeId))),
@@ -164,9 +172,10 @@ export class PlayerEffects {
             first((topic) => !!topic?.id),
             concatLatestFrom(() => this.store$.select(selectPlayerComments(animeId, episode))),
             filter(([topic, comments]) => comments?.length < topic?.comments_count),
-            mergeMap(([topic]) => this.shikimori.getComments(topic.id, page, limit)),
-            map((comments) => getCommentsSuccessAction({ animeId, episode, page, limit, comments })),
-            catchError((errors) => of(getCommentsFailureAction({ errors }))),
+            mergeMap(([topic]) => this.shikimori.getComments(topic.id, page, limit, '1').pipe(
+                map((comments) => getCommentsSuccessAction({ animeId, episode, page, limit, comments })),
+                catchError((errors) => of(getCommentsFailureAction({ errors }))),
+            )),
         )),
     ));
 
@@ -239,14 +248,4 @@ export class PlayerEffects {
             }),
         )),
     ));
-
-    constructor(
-        private actions$: Actions,
-        private store$: Store,
-        private shikivideos: ShikicinemaV1Client,
-        private shikimori: ShikimoriClient,
-        private kodik: KodikClient,
-        private toast: ToastController,
-        private translate: TranslocoService,
-    ) {}
 }

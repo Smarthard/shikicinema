@@ -3,11 +3,11 @@
         "APP_NAME": "Shikicinema",
         "SHIKIMORI": {
             "ANIME_KINDS": {
-                "TV" : "ТБ Серіал",
-                "OVA" : "ОВА",
-                "ONA" : "ОНА",
-                "MOVIE" : "Фільм",
-                "SPECIAL" : "Спешл",
+                "TV": "ТБ Серіал",
+                "OVA": "ОВА",
+                "ONA": "ОНА",
+                "MOVIE": "Фільм",
+                "SPECIAL": "Спешл",
                 "MUSIC": "Кліп",
                 "TV_SPECIAL": "ТБ Спецвипуск",
                 "PV": "Промовідео",
@@ -123,6 +123,7 @@
             },
             "RELEVANT_VIDEOS_MISSING": "Схожі відео не було знайдено",
             "COMMENT_REPLY_MISSING": "Коментарій було видалено",
+            "SHOW_MORE_COMMENTS_BTN": "Переглянути інші коментарі",
             "USER_COMMENT_FORM": {
                 "LABEL": "Ваш коментар",
                 "PLACEHOLDER": "Введіть ваш коментар",

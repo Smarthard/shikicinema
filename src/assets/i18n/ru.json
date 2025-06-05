@@ -3,11 +3,11 @@
         "APP_NAME": "Shikicinema",
         "SHIKIMORI": {
             "ANIME_KINDS": {
-                "TV" : "TV сериал",
-                "OVA" : "OVA",
-                "ONA" : "ONA",
-                "MOVIE" : "Фильм",
-                "SPECIAL" : "Спешл",
+                "TV": "TV сериал",
+                "OVA": "OVA",
+                "ONA": "ONA",
+                "MOVIE": "Фильм",
+                "SPECIAL": "Спешл",
                 "MUSIC": "Клип",
                 "TV_SPECIAL": "ТВ Спецвыпуск",
                 "PV": "Проморолик",
@@ -128,6 +128,7 @@
             },
             "RELEVANT_VIDEOS_MISSING": "Не смогли найти похожие видео",
             "COMMENT_REPLY_MISSING": "Комментарий был удален",
+            "SHOW_MORE_COMMENTS_BTN": "Посмотреть остальные комментарии",
             "USER_COMMENT_FORM": {
                 "LABEL": "Ваш комментарий",
                 "PLACEHOLDER": "Введите свой комментарий",

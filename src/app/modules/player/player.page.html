@@ -85,6 +85,7 @@
             class="player-page__comments"
             [comments]="comments$ | async"
             [isLoading]="isCommentsLoading$ | async"
+            [isPartialyLoading]="isCommentsPartiallyLoading$ | async"
             [showMoreButton]="(isShownAllComments$ | async) === false"
             (showMoreComments)="onShowMoreComments()"
         />

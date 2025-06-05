@@ -1,23 +1,31 @@
-import { AsyncPipe, SlicePipe } from '@angular/common';
-import { BehaviorSubject } from 'rxjs';
 import {
     ChangeDetectionStrategy,
     Component,
     ElementRef,
-    EventEmitter,
     HostBinding,
-    Input,
-    Output,
-    QueryList,
     Renderer2,
-    ViewChildren,
     ViewEncapsulation,
+    computed,
+    inject,
+    input,
+    output,
+    viewChildren,
 } from '@angular/core';
-import { IonButton, ModalController, ToastController } from '@ionic/angular/standalone';
-import { TranslocoService } from '@jsverse/transloco';
+import {
+    IonButton,
+    IonLabel,
+    IonSpinner,
+    ModalController,
+    ToastController,
+} from '@ionic/angular/standalone';
+import { NgTemplateOutlet } from '@angular/common';
+import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 
 import { Comment } from '@app/shared/types/shikimori/comment';
 import { CommentComponent } from '@app/modules/player/components/comment/comment.component';
+import { MakeEmptyArrayPipe } from '@app/shared/pipes/make-empty-array/make-empty-array.pipe';
+import { SortByCreatedAtPipe } from '@app/shared/pipes/sort-by-created-at/sort-by-created-at.pipe';
+import { isShowLastItemsPipe } from '@app/modules/player/pipes/is-show-last-items.pipe';
 import { trackById } from '@app/shared/utils/common-ngfor-tracking';
 
 @Component({
@@ -25,9 +33,14 @@ import { trackById } from '@app/shared/utils/common-ngfor-tracking';
     standalone: true,
     imports: [
         CommentComponent,
+        SortByCreatedAtPipe,
+        isShowLastItemsPipe,
+        MakeEmptyArrayPipe,
         IonButton,
-        AsyncPipe,
-        SlicePipe,
+        IonLabel,
+        IonSpinner,
+        NgTemplateOutlet,
+        TranslocoPipe,
     ],
     providers: [ModalController],
     templateUrl: './comments.component.html',
@@ -39,37 +52,32 @@ export class CommentsComponent {
     @HostBinding('class.comments')
     private commentsClass = true;
 
-    @ViewChildren('comment', { read: ElementRef })
-    private commentElRefs: QueryList<ElementRef<HTMLElement>>;
+    isLoading = input<boolean>(true);
 
-    private _isLoading = true;
-    private sliceLastCommentsSubject = new BehaviorSubject(20);
+    isPartialyLoading = input<boolean>(true);
 
-    readonly sliceLastComments$ = this.sliceLastCommentsSubject.asObservable();
-    readonly skeletonComments = new Array(20).fill(0);
+    showMoreButton = input<boolean>();
+
+    comments = input<Comment[]>();
+
+    showMoreComments = output<void>();
+
+    private commentElRefs = viewChildren('comment', { read: ElementRef });
+
+    private readonly _toast = inject(ToastController);
+    private readonly _renderer = inject(Renderer2);
+    private readonly _transloco = inject(TranslocoService);
+    private readonly _modalController = inject(ModalController);
+
+    readonly showLastCommentCount = computed<number>(() =>
+        this.showMoreButton()
+            ? 20
+            : this.isLoading()
+                ? 20
+                : this.comments().length,
+    );
+
     readonly trackById = trackById;
-
-    @Input() set isLoading(isLoading: boolean) {
-        this._isLoading = isLoading;
-    }
-
-    get isLoading(): boolean {
-        return this._isLoading;
-    }
-
-    @Input() comments: Comment[];
-
-    @Input() showMoreButton: boolean;
-
-    @Output()
-    showMoreComments = new EventEmitter<void>();
-
-    constructor(
-        private readonly _toast: ToastController,
-        private readonly _renderer: Renderer2,
-        private readonly _transloco: TranslocoService,
-        private readonly _modalController: ModalController,
-    ) {}
 
     private _flashComment(commentEl: HTMLElement): void {
         this._renderer.addClass(commentEl, 'comments__item--flashing');
@@ -89,19 +97,23 @@ export class CommentsComponent {
     }
 
     loadLastComments(): void {
-        this.sliceLastCommentsSubject.next(this.comments.length);
         this.showMoreComments.emit();
     }
 
     onOpenReply(commentId: string, isRecursive = false): void {
         const targetElementId = `comment-${commentId}`;
-        const comments = this.commentElRefs.map(({ nativeElement }) => nativeElement);
+        const comments: HTMLElement[] = this.commentElRefs().map(({ nativeElement }) => nativeElement);
         const targetComment = comments.find((el) => el.getAttribute('id') === targetElementId);
 
         if (targetComment) {
-            targetComment.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
+            if (targetComment?.classList?.contains('ion-hide')) {
+                this.loadLastComments();
+            }
 
-            this._flashComment(targetComment);
+            setTimeout(() => {
+                targetComment.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
+                this._flashComment(targetComment);
+            });
         } else if (!isRecursive) {
             this.loadLastComments();
 

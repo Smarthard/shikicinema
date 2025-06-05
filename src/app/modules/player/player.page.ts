@@ -87,6 +87,7 @@ import {
     selectPlayerAnimeLoading,
     selectPlayerComments,
     selectPlayerIsCommentsLoading,
+    selectPlayerIsCommentsPartiallyLoading,
     selectPlayerIsShownAllComments,
     selectPlayerUserRate,
     selectPlayerVideos,
@@ -236,6 +237,9 @@ export class PlayerPage implements OnInit {
     isCommentsLoading$ = combineLatest([this.animeId$, this.episode$]).pipe(
         switchMap(([animeId, episode]) => this.store.select(selectPlayerIsCommentsLoading(animeId, episode))),
     );
+    isCommentsPartiallyLoading$ = combineLatest([this.animeId$, this.episode$]).pipe(
+        switchMap(([animeId, episode]) => this.store.select(selectPlayerIsCommentsPartiallyLoading(animeId, episode))),
+    );
 
     ngOnInit(): void {
         this.animeId$.pipe(
@@ -289,11 +293,13 @@ export class PlayerPage implements OnInit {
             ) => prevAnime.id === nextAnime.id && prevEpisode === nextEpisode),
             filter(([anime]) => !!anime?.name),
             tap(([anime, episode]) => {
+                const { id: animeId } = anime;
+
                 this.changeTitle(anime, episode);
 
-                this.store.dispatch(getTopicsAction({ animeId: anime.id, episode, revalidate: false }));
-                this.store.dispatch(getCommentsAction({ animeId: anime.id, episode, page: 1, limit: 30 }));
                 this.store.dispatch(visitAnimePageAction({ anime, episode }));
+                this.store.dispatch(getTopicsAction({ animeId, episode, revalidate: false }));
+                this.store.dispatch(getCommentsAction({ animeId, episode, page: 1, limit: 30 }));
             }),
             untilDestroyed(this),
         ).subscribe();
@@ -397,17 +403,12 @@ export class PlayerPage implements OnInit {
         void this.updateUserPreferences();
     }
 
-    onShowMoreComments(): void {
+    async onShowMoreComments(): Promise<void> {
+        const animeId = await firstValueFrom(this.animeId$);
+        const episode = await firstValueFrom(this.episode$);
         const isShownAll = true;
 
-        combineLatest([
-            this.animeId$,
-            this.episode$,
-        ]).pipe(
-            take(1),
-            tap(([animeId, episode]) => this.store.dispatch(setIsShownAllAction({ animeId, episode, isShownAll }))),
-            untilDestroyed(this),
-        ).subscribe();
+        this.store.dispatch(setIsShownAllAction({ animeId, episode, isShownAll }));
     }
 
     async onCommentSend(commentText: string): Promise<void> {

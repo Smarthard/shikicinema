@@ -3,11 +3,11 @@
         "APP_NAME": "Shikicinema",
         "SHIKIMORI": {
             "ANIME_KINDS": {
-                "TV" : "TV Series",
-                "OVA" : "OVA",
-                "ONA" : "ONA",
-                "MOVIE" : "Movie",
-                "SPECIAL" : "Special",
+                "TV": "TV Series",
+                "OVA": "OVA",
+                "ONA": "ONA",
+                "MOVIE": "Movie",
+                "SPECIAL": "Special",
                 "MUSIC": "Music",
                 "TV_SPECIAL": "TV Special",
                 "PV": "Promotional Video",
@@ -123,6 +123,7 @@
             },
             "RELEVANT_VIDEOS_MISSING": "We couldn't find relevant videos",
             "COMMENT_REPLY_MISSING": "Reply was deleted",
+            "SHOW_MORE_COMMENTS_BTN": "Show more comments",
             "USER_COMMENT_FORM": {
                 "LABEL": "Comment",
                 "PLACEHOLDER": "Enter your comment",

@@ -1,25 +1,39 @@
-@if (isLoading) {
-    @for(_ of skeletonComments; track $index) {
-        <div class="comments__item comments__item--skeleton skeleton"></div>
-    }
+@if (isPartialyLoading()) {
+    <ng-template [ngTemplateOutlet]="loadingSkeleton"></ng-template>
 } @else {
-    @if (comments?.length) {
-        @if (showMoreButton) {
-            <ion-button (click)="loadLastComments()">Посмотреть остальные комментарии</ion-button>
+    @if (comments()?.length) {
+        @if (showMoreButton()) {
+            @if (isLoading()) {
+                <ion-spinner name="dots" color="primary"></ion-spinner>
+            } @else {
+                <ion-button
+                    class="w-100"
+                    (click)="loadLastComments()">
+                    <ion-label>
+                        {{ 'PLAYER_MODULE.PLAYER_PAGE.SHOW_MORE_COMMENTS_BTN' | transloco }}
+                    </ion-label>
+                </ion-button>
+            }
         }
 
-        @for (
-            comment of (comments | slice: showMoreButton ? -(sliceLastComments$ | async) : 0 );
-            track trackById($index, comment)
-        ) {
+        @for (comment of (comments() | sortByCreatedAt: false); track trackById($index, comment)) {
             <app-comment
                 id="comment-{{ comment.id }}"
                 #comment
-                class="comments__item"
+                class="comments__item w-100"
+                [class.ion-hide]="comments() | isShowLastItems: $index: showLastCommentCount()"
                 [comment]="comment"
                 (openReply)="onOpenReply($event)"
                 (openImage)="onOpenImage($event)">
             </app-comment>
         }
+    } @else {
+        <ng-template [ngTemplateOutlet]="loadingSkeleton"></ng-template>
     }
 }
+
+<ng-template #loadingSkeleton>
+    @for(_ of (3 | makeEmptyArray); track $index) {
+        <div class="comments__item comments__item--skeleton skeleton"></div>
+    }
+</ng-template>
