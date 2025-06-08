@@ -130,6 +130,10 @@
                 "SEND_SUCCESS": "Comment sent",
                 "SEND_FAILURE": "Failed to send comment"
             },
+            "COMMENT_ACTIONS": {
+                "EDIT": "Edit",
+                "DELETE": "Delete"
+            },
             "PLAYER": {
                 "FAILED_PLACEHOLDER": "This video has been removed or never existed"
             },

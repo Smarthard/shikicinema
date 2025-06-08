@@ -9,9 +9,16 @@ import {
     output,
 } from '@angular/core';
 import { DatePipe } from '@angular/common';
+import {
+    IonButton,
+    IonIcon,
+    IonPopover,
+} from '@ionic/angular/standalone';
+import { TranslocoPipe } from '@jsverse/transloco';
 
 import { Comment } from '@app/shared/types/shikimori/comment';
 import { ImageCardComponent } from '@app/shared/components/image-card/image-card.component';
+import { ModifyActionsPopoverComponent } from '@app/modules/player/components/modify-actions-popover';
 import { ProcessShikimoriHtmlPipe } from '@app/modules/player/pipes/process-shikimori-html.pipe';
 import { ToCommentUrlPipe } from '@app/modules/player/pipes/to-comment-url.pipe';
 
@@ -23,6 +30,11 @@ import { ToCommentUrlPipe } from '@app/modules/player/pipes/to-comment-url.pipe'
         ProcessShikimoriHtmlPipe,
         ToCommentUrlPipe,
         ImageCardComponent,
+        IonButton,
+        IonIcon,
+        IonPopover,
+        TranslocoPipe,
+        ModifyActionsPopoverComponent,
     ],
     templateUrl: './comment.component.html',
     styleUrl: './comment.component.scss',
@@ -40,6 +52,8 @@ export class CommentComponent {
     openReply = output<string>();
     toggleSpoiler = output<HTMLElement>();
     openImage = output<string>();
+    edit = output<void>();
+    delete = output<void>();
 
     private _toggleSpoiler(spoilerEl: HTMLElement): void {
         const openedClass = 'is-opened';

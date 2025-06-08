@@ -21,4 +21,6 @@ export {
     cloudUploadOutline,
     listOutline,
     resizeOutline,
+    pencilOutline,
+    ellipsisVerticalOutline,
 } from 'ionicons/icons';

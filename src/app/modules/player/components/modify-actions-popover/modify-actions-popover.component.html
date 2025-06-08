@@ -1,0 +1,33 @@
+<ion-content>
+    <ion-list>
+        <ion-item
+            class="menu-item"
+            (click)="edit.emit()"
+        >
+            <ion-icon
+                color="primary"
+                class="menu-item__icon"
+                name="pencil-outline"
+            />
+
+            <ion-text class="menu-item__label menu-item__label--with-icon">
+                {{ editLabel() }}
+            </ion-text>
+        </ion-item>
+
+        <ion-item
+            class="menu-item"
+            (click)="delete.emit()"
+        >
+            <ion-icon
+                class="menu-item__icon"
+                color="danger"
+                name="trash-outline"
+            />
+
+            <ion-text class="menu-item__label menu-item__label--with-icon">
+                {{ deleteLabel() }}
+            </ion-text>
+        </ion-item>
+    </ion-list>
+</ion-content>
