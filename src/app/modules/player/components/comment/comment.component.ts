@@ -1,12 +1,12 @@
 import {
     ChangeDetectionStrategy,
     Component,
-    EventEmitter,
     HostBinding,
-    Input,
-    Output,
     Renderer2,
     ViewEncapsulation,
+    inject,
+    input,
+    output,
 } from '@angular/core';
 import { DatePipe } from '@angular/common';
 
@@ -33,15 +33,13 @@ export class CommentComponent {
     @HostBinding('class.comment')
     private commentClass = true;
 
-    @Input() comment: Comment;
+    private readonly _renderer = inject(Renderer2);
 
-    @Output() openReply = new EventEmitter<string>();
-    @Output() toggleSpoiler = new EventEmitter<HTMLElement>();
-    @Output() openImage = new EventEmitter<string>();
+    comment = input<Comment>();
 
-    constructor(
-        private readonly _renderer: Renderer2,
-    ) {}
+    openReply = output<string>();
+    toggleSpoiler = output<HTMLElement>();
+    openImage = output<string>();
 
     private _toggleSpoiler(spoilerEl: HTMLElement): void {
         const openedClass = 'is-opened';
