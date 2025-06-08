@@ -24,8 +24,10 @@
                 [class.ion-hide]="comments() | isShowLastItems: $index: showLastCommentCount()"
                 [comment]="comment"
                 (openReply)="onOpenReply($event)"
-                (openImage)="onOpenImage($event)">
-            </app-comment>
+                (openImage)="onOpenImage($event)"
+                (edit)="onCommentEdit(comment)"
+                (delete)="onCommentDelete(comment)"
+            />
         }
     } @else {
         @if (isLoading()) {

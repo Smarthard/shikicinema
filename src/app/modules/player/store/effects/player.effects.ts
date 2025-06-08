@@ -23,6 +23,9 @@ import { UserAnimeRate } from '@app/shared/types/shikimori/user-anime-rate';
 import { UserRateStatusType } from '@app/shared/types/shikimori/user-rate-status.type';
 import {
     addVideosAction,
+    deleteCommentAction,
+    deleteCommentFailureAction,
+    deleteCommentSuccessAction,
     findVideosAction,
     getAnimeInfoAction,
     getAnimeInfoFailureAction,
@@ -262,4 +265,40 @@ export class PlayerEffects {
             }),
         )),
     ));
+
+    deleteComment$ = createEffect(() => this.actions$.pipe(
+        ofType(deleteCommentAction),
+        switchMap(({ animeId, episode, comment }) => this.shikimori.deleteComment(comment.id).pipe(
+            map(() => deleteCommentSuccessAction({ animeId, episode, commentId: comment.id })),
+            catchError((errors) => of(deleteCommentFailureAction({ errors }))),
+        )),
+    ));
+
+    deleteCommentSuccess$ = createEffect(() => this.actions$.pipe(
+        ofType(deleteCommentSuccessAction),
+        tap(async () => {
+            const toast = await this.toast.create({
+                id: 'shikimori-delete-comment-success',
+                message: this.translate.translate('PLAYER_MODULE.PLAYER_PAGE.COMMENT_ACTIONS.DELETE_SUCCESS'),
+                color: 'success',
+                duration: 1000,
+            });
+
+            await toast.present();
+        }),
+    ), { dispatch: false });
+
+    deleteCommentFailure$ = createEffect(() => this.actions$.pipe(
+        ofType(deleteCommentFailureAction),
+        tap(async () => {
+            const toast = await this.toast.create({
+                id: 'shikimori-delete-comment-failure',
+                message: this.translate.translate('PLAYER_MODULE.PLAYER_PAGE.COMMENT_ACTIONS.DELETE_FAILURE'),
+                color: 'danger',
+                duration: 1000,
+            });
+
+            await toast.present();
+        }),
+    ), { dispatch: false });
 }

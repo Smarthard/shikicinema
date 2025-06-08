@@ -153,3 +153,49 @@ export const sendCommentFailureAction = createAction(
     '[Player] send comment failure',
     props<{ errors: any }>(),
 );
+
+export const editCommentAction = createAction(
+    '[Player] edit comment',
+    props<{
+        animeId: ResourceIdType,
+        episode: number,
+        comment: Comment,
+    }>(),
+);
+
+export const editCommentSuccessAction = createAction(
+    '[Player] edit comment success',
+    props<{
+        animeId: ResourceIdType,
+        episode: number,
+        comment: Comment,
+    }>(),
+);
+
+export const editCommentFailureAction = createAction(
+    '[Player] edit comment failure',
+    props<{ errors: any }>(),
+);
+
+export const deleteCommentAction = createAction(
+    '[Player] delete comment',
+    props<{
+        animeId: ResourceIdType,
+        episode: number,
+        comment: Comment,
+    }>(),
+);
+
+export const deleteCommentSuccessAction = createAction(
+    '[Player] delete comment success',
+    props<{
+        animeId: ResourceIdType,
+        episode: number,
+        commentId: ResourceIdType,
+    }>(),
+);
+
+export const deleteCommentFailureAction = createAction(
+    '[Player] delete comment failure',
+    props<{ errors: any }>(),
+);

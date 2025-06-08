@@ -132,7 +132,11 @@
             },
             "COMMENT_ACTIONS": {
                 "EDIT": "Редагувати",
-                "DELETE": "Видалити"
+                "DELETE": "Видалити",
+                "EDIT_SUCCESS": "Коментар змінено",
+                "EDIT_FAILURE": "Неможливо змінити коментарі",
+                "DELETE_SUCCESS": "Коментар видалено",
+                "DELETE_FAILURE": "Неможливо видалити коментар"
             },
             "PLAYER": {
                 "FAILED_PLACEHOLDER": "Це відео було видалено або ніколи не існувало"

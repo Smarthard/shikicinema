@@ -132,7 +132,11 @@
             },
             "COMMENT_ACTIONS": {
                 "EDIT": "Edit",
-                "DELETE": "Delete"
+                "DELETE": "Delete",
+                "EDIT_SUCCESS": "Comment edited",
+                "EDIT_FAILURE": "Failed to edit comment",
+                "DELETE_SUCCESS": "Comment deleted",
+                "DELETE_FAILURE": "Failed to delete comment"
             },
             "PLAYER": {
                 "FAILED_PLACEHOLDER": "This video has been removed or never existed"

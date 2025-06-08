@@ -7,6 +7,7 @@ import { AnimeBriefInfoInterface } from '@app/shared/types/shikimori/anime-brief
 import { PlayerStoreInterface } from '@app/modules/player/store/types';
 import {
     addVideosAction,
+    deleteCommentSuccessAction,
     getAnimeInfoSuccessAction,
     getCommentsSuccessAction,
     getTopicsAction,
@@ -139,6 +140,22 @@ export const playerReducer = createReducer(initialState,
                     [episode]: {
                         ...state.comments?.[animeId]?.[episode] || {},
                         isShownAll,
+                    },
+                },
+            },
+        }),
+    ),
+    on(
+        deleteCommentSuccessAction,
+        (state, { animeId, episode, commentId: deletedId }) => ({
+            ...state,
+            comments: {
+                ...state.comments,
+                [animeId]: {
+                    ...state.comments?.[animeId] || {},
+                    [episode]: {
+                        comments: state.comments?.[animeId]?.[episode]?.comments
+                            ?.filter((comment) => comment.id !== deletedId),
                     },
                 },
             },

@@ -38,6 +38,7 @@ import {
 } from 'rxjs/operators';
 
 import { AnimeBriefInfoInterface } from '@app/shared/types/shikimori/anime-brief-info.interface';
+import { Comment } from '@app/shared/types/shikimori/comment';
 import { CommentsComponent } from '@app/modules/player/components/comments/comments.component';
 import { ControlPanelComponent } from '@app/modules/player/components/control-panel/control-panel.component';
 import { FilterByKindPipe } from '@app/shared/pipes/filter-by-kind/filter-by-kind.pipe';
@@ -58,9 +59,9 @@ import { VideoInfoInterface } from '@app/modules/player/types';
 import { VideoKindEnum } from '@app/modules/player/types/video-kind.enum';
 import { VideoSelectorComponent } from '@app/modules/player/components/video-selector/video-selector.component';
 import { authShikimoriAction } from '@app/store/auth/actions/auth.actions';
-import { filterByEpisode } from '@app/shared/utils/filter-by-episode.function';
-import { filterVideosByPreferences } from '@app/modules/player/utils/filter-videos-by-preferences.function';
 import {
+    deleteCommentAction,
+    editCommentAction,
     findVideosAction,
     getAnimeInfoAction,
     getCommentsAction,
@@ -70,6 +71,8 @@ import {
     watchAnimeAction,
     watchAnimeSuccessAction,
 } from '@app/modules/player/store/actions';
+import { filterByEpisode } from '@app/shared/utils/filter-by-episode.function';
+import { filterVideosByPreferences } from '@app/modules/player/utils/filter-videos-by-preferences.function';
 import { getAnimeName } from '@app/shared/utils/get-anime-name.function';
 import { getDomain } from '@app/shared/utils/get-domain.function';
 import { getLastAiredEpisode, isEpisodeWatched } from '@app/modules/player/utils';
@@ -430,5 +433,27 @@ export class PlayerPage implements OnInit {
 
     onCommentLogin(): void {
         this.store.dispatch(authShikimoriAction());
+    }
+
+    async onCommentEdit(comment: Comment): Promise<void> {
+        const animeId = await firstValueFrom(this.animeId$);
+        const episode = await firstValueFrom(this.episode$);
+
+        this.store.dispatch(editCommentAction({
+            animeId,
+            episode,
+            comment,
+        }));
+    }
+
+    async onCommentDelete(comment: Comment): Promise<void> {
+        const animeId = await firstValueFrom(this.animeId$);
+        const episode = await firstValueFrom(this.episode$);
+
+        this.store.dispatch(deleteCommentAction({
+            animeId,
+            episode,
+            comment,
+        }));
     }
 }

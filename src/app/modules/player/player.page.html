@@ -88,6 +88,8 @@
             [isPartialyLoading]="isCommentsPartiallyLoading$ | async"
             [showMoreButton]="(isShownAllComments$ | async) === false"
             (showMoreComments)="onShowMoreComments()"
+            (editComment)="onCommentEdit($event)"
+            (deleteComment)="onCommentDelete($event)"
         />
 
         <app-user-comment-form

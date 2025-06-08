@@ -274,4 +274,11 @@ export class ShikimoriClient {
             switchMap((domain) => this.http.post<Comment>(`${domain}/api/comments`, body)),
         );
     }
+
+    deleteComment(commentId: ResourceIdType): Observable<void> {
+        return this.shikimoriDomain$.pipe(
+            take(1),
+            switchMap((domain) => this.http.delete<void>(`${domain}/api/comments/${commentId}`)),
+        );
+    }
 }

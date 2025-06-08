@@ -62,6 +62,10 @@ export class CommentsComponent {
 
     showMoreComments = output<void>();
 
+    editComment = output<Comment>();
+
+    deleteComment = output<Comment>();
+
     private commentElRefs = viewChildren('comment', { read: ElementRef });
 
     private readonly _toast = inject(ToastController);
@@ -135,5 +139,13 @@ export class CommentsComponent {
         });
 
         modal.present();
+    }
+
+    onCommentEdit(comment: Comment): void {
+        this.editComment.emit(comment);
+    }
+
+    onCommentDelete(comment: Comment): void {
+        this.deleteComment.emit(comment);
     }
 }
