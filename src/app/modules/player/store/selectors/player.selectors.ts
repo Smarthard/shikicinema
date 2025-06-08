@@ -45,7 +45,8 @@ export const selectPlayerIsCommentsLoading = (animeId: string | number, episode:
 export const selectPlayerIsCommentsPartiallyLoading = (animeId: ResourceIdType, episode: ResourceIdType) =>
     createSelector(
         selectPlayer,
-        ({ comments }) => comments?.[animeId]?.[episode]?.comments?.length < 20,
+        ({ comments }) => comments?.[animeId]?.[episode]?.comments?.length < 20 &&
+            comments?.[animeId]?.[episode]?.comments?.length < comments?.[animeId]?.[episode]?.topic?.comments_count,
     );
 
 export const selectPlayerIsShownAllComments = (animeId: string | number, episode: string | number) => createSelector(

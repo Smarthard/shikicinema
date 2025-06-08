@@ -76,7 +76,7 @@ export const watchAnimeFailureAction = createAction(
 export const getTopicsAction = createAction(
     '[Player] get topics',
     props<{
-        animeId: number,
+        animeId: ResourceIdType,
         episode: number,
         revalidate: boolean,
     }>(),
@@ -85,7 +85,7 @@ export const getTopicsAction = createAction(
 export const getTopicsSuccessAction = createAction(
     '[Player] get topics success',
     props<{
-        animeId: number,
+        animeId: ResourceIdType,
         episode: number,
         topics: Topic[],
     }>(),

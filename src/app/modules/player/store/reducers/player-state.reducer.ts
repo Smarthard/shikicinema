@@ -9,8 +9,10 @@ import {
     addVideosAction,
     getAnimeInfoSuccessAction,
     getCommentsSuccessAction,
+    getTopicsAction,
     getTopicsSuccessAction,
     getUserRateSuccessAction,
+    sendCommentSuccessAction,
     setIsShownAllAction,
     watchAnimeSuccessAction,
 } from '@app/modules/player/store/actions';
@@ -58,6 +60,22 @@ export const playerReducer = createReducer(initialState,
         }),
     ),
     on(
+        getTopicsAction,
+        (state, { animeId, episode, revalidate }) => ({
+            ...state,
+            comments: {
+                ...state.comments,
+                [animeId]: {
+                    ...state.comments?.[animeId] || {},
+                    [episode]: {
+                        ...state.comments?.[animeId]?.[episode] || {},
+                        topic: revalidate ? null : state.comments?.[animeId]?.[episode]?.topic,
+                    },
+                },
+            },
+        }),
+    ),
+    on(
         getTopicsSuccessAction,
         (state, { topics, animeId, episode }) => ({
             ...state,
@@ -89,6 +107,22 @@ export const playerReducer = createReducer(initialState,
                         isShownAll: state.comments?.[animeId]?.[episode]?.isShownAll ?? comments?.length <= 20,
                         comments: [...state.comments?.[animeId]?.[episode]?.comments || [], ...comments]
                             .filter(filterDuplicatedIds),
+                    },
+                },
+            },
+        }),
+    ),
+    on(
+        sendCommentSuccessAction,
+        (state, { comment, animeId, episode }) => ({
+            ...state,
+            comments: {
+                ...state.comments,
+                [animeId]: {
+                    ...state.comments?.[animeId] || {},
+                    [episode]: {
+                        ...state.comments?.[animeId]?.[episode] || {},
+                        comments: [...state.comments?.[animeId]?.[episode]?.comments || [], comment],
                     },
                 },
             },

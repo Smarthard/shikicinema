@@ -198,7 +198,7 @@ export class ShikimoriClient {
         );
     }
 
-    getTopics(animeId: number, episode?: number, revalidate = false): Observable<Topic[]> {
+    getTopics(animeId: ResourceIdType, episode?: ResourceIdType, revalidate = false): Observable<Topic[]> {
         let headers = new HttpHeaders();
         let params = new HttpParams()
             .set('kind', 'episode');

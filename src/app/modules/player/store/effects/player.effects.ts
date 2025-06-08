@@ -189,19 +189,28 @@ export class PlayerEffects {
 
     sendComment$ = createEffect(() => this.actions$.pipe(
         ofType(sendCommentAction),
-        switchMap(({ animeId, episode, commentText }) => this.store$.select(selectPlayerTopic(animeId, episode)).pipe(
-            switchMap((topic) =>
-                !topic?.id
-                    ? this.shikimori.createEpisodeTopic(animeId, episode).pipe(
-                        // eslint-disable-next-line camelcase
-                        map(({ topic_id }) => topic_id),
-                    )
-                    : of(topic.id),
-            ),
-            exhaustMap((commentableId) => this.shikimori.createComment(commentableId, commentText)),
-            map((comment) => sendCommentSuccessAction({ animeId, episode, comment })),
-            catchError((errors) => of(sendCommentFailureAction({ errors }))),
-        )),
+        concatLatestFrom(({ animeId, episode }) => this.store$.select(selectPlayerTopic(animeId, episode))),
+        switchMap(([{ animeId, episode, commentText }, topic]) => (!topic?.id
+            // если топика для комментирования эпизода нет - его надо создать
+            ? this.shikimori.createEpisodeTopic(animeId, episode).pipe(
+                switchMap(() => this.shikimori.getTopics(animeId, episode, true).pipe(
+                    map((newTopic) => {
+                        const newTopicId = newTopic?.[0]?.id;
+
+                        if (!newTopicId) {
+                            throw new Error('Topic id missing');
+                        }
+
+                        return newTopicId;
+                    }),
+                )),
+            )
+            : of(topic.id))
+            .pipe(
+                exhaustMap((commentableId) => this.shikimori.createComment(commentableId, commentText)),
+                map((comment) => sendCommentSuccessAction({ animeId, episode, comment })),
+                catchError((errors) => of(sendCommentFailureAction({ errors }))),
+            )),
     ));
 
     sendCommentSuccess$ = createEffect(() => this.actions$.pipe(
@@ -217,6 +226,11 @@ export class PlayerEffects {
             await toast.present();
         }),
     ), { dispatch: false });
+
+    updateTopicAfterCommentSent$ = createEffect(() => this.actions$.pipe(
+        ofType(sendCommentSuccessAction),
+        map(({ animeId, episode }) => getTopicsAction({ animeId, episode, revalidate: true })),
+    ));
 
     sendCommentFailure$ = createEffect(() => this.actions$.pipe(
         ofType(sendCommentFailureAction),

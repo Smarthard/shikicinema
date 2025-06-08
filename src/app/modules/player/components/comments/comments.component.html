@@ -28,7 +28,9 @@
             </app-comment>
         }
     } @else {
-        <ng-template [ngTemplateOutlet]="loadingSkeleton"></ng-template>
+        @if (isLoading()) {
+            <ng-template [ngTemplateOutlet]="loadingSkeleton"></ng-template>
+        }
     }
 }
 
