@@ -164,8 +164,8 @@ export class AppComponent implements OnInit {
         const NOW = new Date();
 
         const lastCheckUpTime = await firstValueFrom(this.store.select(selectCacheLastCheckUp));
-        const plannedChechUpTime = addHours(lastCheckUpTime, HOURS_PER_CHECKS);
-        const isDueTime = compareAsc(NOW, plannedChechUpTime) > 0;
+        const plannedCheckUpTime = addHours(lastCheckUpTime, HOURS_PER_CHECKS);
+        const isDueTime = compareAsc(NOW, plannedCheckUpTime) > 0;
 
         const usedCacheRatio = this.persistenceService.getCacheBytes() / this.persistenceService.getMaxByxes();
         const isCritical = usedCacheRatio > CRITICAL_USAGE_RATIO;
