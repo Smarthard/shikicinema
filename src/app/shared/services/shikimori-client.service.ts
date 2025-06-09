@@ -275,6 +275,18 @@ export class ShikimoriClient {
         );
     }
 
+    editComment(comment: Comment): Observable<Comment> {
+        const body = {
+            comment,
+            frontend: false,
+        };
+
+        return this.shikimoriDomain$.pipe(
+            take(1),
+            switchMap((domain) => this.http.patch<Comment>(`${domain}/api/comments/${comment.id}`, body)),
+        );
+    }
+
     deleteComment(commentId: ResourceIdType): Observable<void> {
         return this.shikimoriDomain$.pipe(
             take(1),

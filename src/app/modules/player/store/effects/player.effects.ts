@@ -26,6 +26,9 @@ import {
     deleteCommentAction,
     deleteCommentFailureAction,
     deleteCommentSuccessAction,
+    editCommentAction,
+    editCommentFailureAction,
+    editCommentSuccessAction,
     findVideosAction,
     getAnimeInfoAction,
     getAnimeInfoFailureAction,
@@ -265,6 +268,42 @@ export class PlayerEffects {
             }),
         )),
     ));
+
+    editComment$ = createEffect(() => this.actions$.pipe(
+        ofType(editCommentAction),
+        switchMap(({ animeId, episode, comment }) => this.shikimori.editComment(comment).pipe(
+            map((edittedComment) => editCommentSuccessAction({ animeId, episode, comment: edittedComment })),
+            catchError((errors) => of(editCommentFailureAction({ errors }))),
+        )),
+    ));
+
+    editCommentSuccess$ = createEffect(() => this.actions$.pipe(
+        ofType(editCommentSuccessAction),
+        tap(async () => {
+            const toast = await this.toast.create({
+                id: 'shikimori-edit-comment-success',
+                message: this.translate.translate('PLAYER_MODULE.PLAYER_PAGE.COMMENT_ACTIONS.EDIT_SUCCESS'),
+                color: 'success',
+                duration: 1000,
+            });
+
+            await toast.present();
+        }),
+    ), { dispatch: false });
+
+    editCommentFailure$ = createEffect(() => this.actions$.pipe(
+        ofType(editCommentFailureAction),
+        tap(async () => {
+            const toast = await this.toast.create({
+                id: 'shikimori-edit-comment-failure',
+                message: this.translate.translate('PLAYER_MODULE.PLAYER_PAGE.COMMENT_ACTIONS.EDIT_FAILURE'),
+                color: 'danger',
+                duration: 1000,
+            });
+
+            await toast.present();
+        }),
+    ), { dispatch: false });
 
     deleteComment$ = createEffect(() => this.actions$.pipe(
         ofType(deleteCommentAction),

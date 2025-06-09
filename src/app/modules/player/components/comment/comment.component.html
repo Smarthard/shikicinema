@@ -22,7 +22,7 @@
         <div class="comment__actions">
             @if (comment()?.can_be_edited) {
                 <ion-button
-                    id="comment-actions-trigger"
+                    [id]="`comment-${comment().id}-actions-trigger`"
                     fill="clear"
                     size="small"
                 >
@@ -33,7 +33,7 @@
             <ion-popover
                 #commentActionsPopover
                 class="menu-popover"
-                trigger="comment-actions-trigger"
+                [trigger]="`comment-${comment().id}-actions-trigger`"
                 triggerAction="click"
                 side="bottom"
                 alignment="end"

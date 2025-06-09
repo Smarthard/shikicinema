@@ -95,7 +95,9 @@
         <app-user-comment-form
             class="player-page__comment-form"
             [isAuthorized]="isUserAuthorized$ | async"
+            [editComment]="editComment$ | async"
             (send)="onCommentSend($event)"
+            (sendEdited)="onCommentSendEdited($event)"
             (login)="onCommentLogin()"
         />
     </div>

@@ -1,5 +1,11 @@
 import { Actions, ofType } from '@ngrx/effects';
 import { ActivatedRoute, Router } from '@angular/router';
+import {
+    BehaviorSubject,
+    ReplaySubject,
+    combineLatest,
+    firstValueFrom,
+} from 'rxjs';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import {
     ChangeDetectionStrategy,
@@ -17,11 +23,6 @@ import {
 } from '@ionic/angular/standalone';
 import { ModalController, Platform } from '@ionic/angular';
 import { NgLetDirective } from 'ng-let';
-import {
-    ReplaySubject,
-    combineLatest,
-    firstValueFrom,
-} from 'rxjs';
 import { Store } from '@ngrx/store';
 import { Title } from '@angular/platform-browser';
 import { TranslocoService } from '@jsverse/transloco';
@@ -62,6 +63,7 @@ import { authShikimoriAction } from '@app/store/auth/actions/auth.actions';
 import {
     deleteCommentAction,
     editCommentAction,
+    editCommentSuccessAction,
     findVideosAction,
     getAnimeInfoAction,
     getCommentsAction,
@@ -149,6 +151,7 @@ export class PlayerPage implements OnInit {
     private readonly modalController = inject(ModalController);
 
     private isOrientationPortraitSubject$ = new ReplaySubject<boolean>(1);
+    private editCommentSubject$ = new BehaviorSubject<Comment>(null);
 
     readonly shikimoriDomain$ = inject(SHIKIMORI_DOMAIN_TOKEN);
     readonly isPreferencesToggleOn$ = this.store.select(selectPreferencesToggle);
@@ -172,6 +175,7 @@ export class PlayerPage implements OnInit {
         map(([isPortrait, isSmallScreen]) => isPortrait || isSmallScreen),
     );
 
+    readonly editComment$ = this.editCommentSubject$.asObservable();
     readonly isVideoSelectionHidden$ = this.isSmallScreen$;
 
     animeId$ = this.route.params.pipe(
@@ -435,7 +439,11 @@ export class PlayerPage implements OnInit {
         this.store.dispatch(authShikimoriAction());
     }
 
-    async onCommentEdit(comment: Comment): Promise<void> {
+    onCommentEdit(comment: Comment): void {
+        this.editCommentSubject$.next(comment);
+    }
+
+    async onCommentSendEdited(comment: Comment): Promise<void> {
         const animeId = await firstValueFrom(this.animeId$);
         const episode = await firstValueFrom(this.episode$);
 
@@ -444,6 +452,13 @@ export class PlayerPage implements OnInit {
             episode,
             comment,
         }));
+
+        this.actions$.pipe(
+            ofType(editCommentSuccessAction),
+            take(1),
+            tap(() => this.editCommentSubject$.next(null)),
+            untilDestroyed(this),
+        ).subscribe();
     }
 
     async onCommentDelete(comment: Comment): Promise<void> {

@@ -12,7 +12,9 @@
             fill="clear"
             slot="end"
             aria-label="send"
-            (click)="onSend(comment.value)"
+            (click)="isEditMode()
+                ? onSendEdited(comment.value)
+                : onSend(comment.value)"
             [disabled]="comment.invalid || !isAuthorized()"
         >
             <ion-icon slot="icon-only" name="send" aria-hidden="true" />

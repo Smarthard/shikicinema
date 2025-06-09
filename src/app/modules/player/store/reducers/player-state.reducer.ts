@@ -8,6 +8,7 @@ import { PlayerStoreInterface } from '@app/modules/player/store/types';
 import {
     addVideosAction,
     deleteCommentSuccessAction,
+    editCommentSuccessAction,
     getAnimeInfoSuccessAction,
     getCommentsSuccessAction,
     getTopicsAction,
@@ -17,6 +18,7 @@ import {
     setIsShownAllAction,
     watchAnimeSuccessAction,
 } from '@app/modules/player/store/actions';
+import { filterComments, patchComments } from '@app/modules/player/store/utils';
 import { filterDuplicatedIds } from '@app/shared/utils/filter-duplicated-ids.function';
 
 const initialState: PlayerStoreInterface = {
@@ -146,6 +148,21 @@ export const playerReducer = createReducer(initialState,
         }),
     ),
     on(
+        editCommentSuccessAction,
+        (state, { animeId, episode, comment }) => ({
+            ...state,
+            comments: {
+                ...state.comments,
+                [animeId]: {
+                    ...state.comments?.[animeId] || {},
+                    [episode]: {
+                        comments: patchComments(comment, state.comments?.[animeId]?.[episode]?.comments),
+                    },
+                },
+            },
+        }),
+    ),
+    on(
         deleteCommentSuccessAction,
         (state, { animeId, episode, commentId: deletedId }) => ({
             ...state,
@@ -154,8 +171,7 @@ export const playerReducer = createReducer(initialState,
                 [animeId]: {
                     ...state.comments?.[animeId] || {},
                     [episode]: {
-                        comments: state.comments?.[animeId]?.[episode]?.comments
-                            ?.filter((comment) => comment.id !== deletedId),
+                        comments: filterComments(deletedId, state.comments?.[animeId]?.[episode]?.comments),
                     },
                 },
             },
