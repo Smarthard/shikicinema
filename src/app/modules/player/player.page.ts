@@ -5,6 +5,7 @@ import {
     ReplaySubject,
     combineLatest,
     firstValueFrom,
+    timer,
 } from 'rxjs';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import {
@@ -48,6 +49,7 @@ import { GetEpisodesPipe } from '@app/shared/pipes/get-episodes/get-episodes.pip
 import { KindSelectorComponent } from '@app/modules/player/components/kind-selector/kind-selector.component';
 import { NoPreferenceSymbol } from '@app/store/settings/types';
 import { PlayerComponent } from '@app/modules/player/components/player/player.component';
+import { ResourceIdType } from '@app/shared/types/resource-id.type';
 import { SHIKIMORI_DOMAIN_TOKEN } from '@app/core/providers/shikimori-domain';
 import { ShikimoriAnimeLinkPipe } from '@app/shared/pipes/shikimori-anime-link/shikimori-anime-link.pipe';
 import { SidePanelComponent } from '@app/modules/player/components/side-panel/side-panel.component';
@@ -152,6 +154,7 @@ export class PlayerPage implements OnInit {
 
     private isOrientationPortraitSubject$ = new ReplaySubject<boolean>(1);
     private editCommentSubject$ = new BehaviorSubject<Comment>(null);
+    private highlightCommentSubject$ = new BehaviorSubject<ResourceIdType>(null);
 
     readonly shikimoriDomain$ = inject(SHIKIMORI_DOMAIN_TOKEN);
     readonly isPreferencesToggleOn$ = this.store.select(selectPreferencesToggle);
@@ -176,6 +179,7 @@ export class PlayerPage implements OnInit {
     );
 
     readonly editComment$ = this.editCommentSubject$.asObservable();
+    readonly highlightComment$ = this.highlightCommentSubject$.asObservable();
     readonly isVideoSelectionHidden$ = this.isSmallScreen$;
 
     animeId$ = this.route.params.pipe(
@@ -470,5 +474,20 @@ export class PlayerPage implements OnInit {
             episode,
             comment,
         }));
+    }
+
+    onHighlightComment(commentId: ResourceIdType): void {
+        this.highlightCommentSubject$.next(commentId);
+
+        // сбрасываем, чтобы повторная подсветка работала
+        timer(1000).pipe(
+            take(1),
+            tap(() => this.highlightCommentSubject$.next(null)),
+            untilDestroyed(this),
+        ).subscribe();
+    }
+
+    onCancelCommentEdit(): void {
+        this.editCommentSubject$.next(null);
     }
 }

@@ -6,6 +6,7 @@ import {
     Renderer2,
     ViewEncapsulation,
     computed,
+    effect,
     inject,
     input,
     output,
@@ -24,6 +25,7 @@ import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { Comment } from '@app/shared/types/shikimori/comment';
 import { CommentComponent } from '@app/modules/player/components/comment/comment.component';
 import { MakeEmptyArrayPipe } from '@app/shared/pipes/make-empty-array/make-empty-array.pipe';
+import { ResourceIdType } from '@app/shared/types/resource-id.type';
 import { SortByCreatedAtPipe } from '@app/shared/pipes/sort-by-created-at/sort-by-created-at.pipe';
 import { isShowLastItemsPipe } from '@app/modules/player/pipes/is-show-last-items.pipe';
 import { trackById } from '@app/shared/utils/common-ngfor-tracking';
@@ -60,6 +62,8 @@ export class CommentsComponent {
 
     comments = input<Comment[]>();
 
+    highlightComment = input<ResourceIdType>();
+
     showMoreComments = output<void>();
 
     editComment = output<Comment>();
@@ -67,6 +71,14 @@ export class CommentsComponent {
     deleteComment = output<Comment>();
 
     private commentElRefs = viewChildren('comment', { read: ElementRef });
+
+    private highlightCommentEffect = effect(() => {
+        const commentId = this.highlightComment();
+
+        if (commentId) {
+            this.onOpenReply(commentId);
+        }
+    });
 
     private readonly _toast = inject(ToastController);
     private readonly _renderer = inject(Renderer2);
@@ -104,7 +116,7 @@ export class CommentsComponent {
         this.showMoreComments.emit();
     }
 
-    onOpenReply(commentId: string, isRecursive = false): void {
+    onOpenReply(commentId: ResourceIdType, isRecursive = false): void {
         const targetElementId = `comment-${commentId}`;
         const comments: HTMLElement[] = this.commentElRefs().map(({ nativeElement }) => nativeElement);
         const targetComment = comments.find((el) => el.getAttribute('id') === targetElementId);

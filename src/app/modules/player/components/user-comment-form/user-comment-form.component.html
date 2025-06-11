@@ -1,3 +1,36 @@
+@if (isEditMode()) {
+    <div class="user-comment-form__edit">
+        <div class="user-comment-form__edit-wrap">
+            <div class="user-comment-form__edit-comment">
+                <img
+                    class="user-comment-form__edit-user"
+                    [src]="editComment().user.image.x64 || editComment().user.avatar"
+                    [alt]="editComment().user.name">
+
+                <span
+                    class="user-comment-form__edit-text text-ellipsis"
+                    tabindex="0"
+                    (click)="onHighlightEditComment()"
+                    (keydown.enter)="onHighlightEditComment()"
+                    (keydown.space)="onHighlightEditComment()"
+                    [innerHTML]="editComment().html_body">
+                </span>
+            </div>
+
+            <ion-icon
+                class="user-comment-form__edit-cancel shc-interactive"
+                name="close-outline"
+                color="danger"
+                tabindex="0"
+                [title]="'PLAYER_MODULE.PLAYER_PAGE.USER_COMMENT_FORM.EDIT_CANCEL_BTN' | transloco"
+                (click)="onCancelEdit()"
+                (keydown.enter)="onCancelEdit()"
+                (keydown.space)="onCancelEdit()"
+            />
+        </div>
+    </div>
+}
+
 <ion-textarea
     labelPlacement="floating"
     fill="outline"

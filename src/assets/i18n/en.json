@@ -128,7 +128,8 @@
                 "LABEL": "Comment",
                 "PLACEHOLDER": "Enter your comment",
                 "SEND_SUCCESS": "Comment sent",
-                "SEND_FAILURE": "Failed to send comment"
+                "SEND_FAILURE": "Failed to send comment",
+                "EDIT_CANCEL_BTN": "Cancel edit"
             },
             "COMMENT_ACTIONS": {
                 "EDIT": "Edit",

@@ -1,6 +1,7 @@
 import {
     ChangeDetectionStrategy,
     Component,
+    HostBinding,
     ViewEncapsulation,
     computed,
     effect,
@@ -18,6 +19,7 @@ import { TranslocoModule } from '@jsverse/transloco';
 
 import { Comment } from '@app/shared/types/shikimori/comment';
 import { NoWhitespacesValidator } from '@app/shared/validators/no-whitespaces.validator';
+import { ResourceIdType } from '@app/shared/types/resource-id.type';
 
 @Component({
     selector: 'app-user-comment-form',
@@ -36,6 +38,9 @@ import { NoWhitespacesValidator } from '@app/shared/validators/no-whitespaces.va
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserCommentFormComponent {
+    @HostBinding('class.user-comment-form')
+    private userCommentFormClass = true;
+
     comment = new FormControl('', [
         Validators.required,
         NoWhitespacesValidator(),
@@ -50,6 +55,10 @@ export class UserCommentFormComponent {
     sendEdited = output<Comment>();
 
     login = output<void>();
+
+    highlightEdit = output<ResourceIdType>();
+
+    cancelEdit = output<void>();
 
     isEditMode = computed(() => Boolean(this.editComment()?.id));
 
@@ -77,5 +86,14 @@ export class UserCommentFormComponent {
 
     onLogin(): void {
         this.login.emit();
+    }
+
+    onHighlightEditComment(): void {
+        this.highlightEdit.emit(this.editComment().id);
+    }
+
+    onCancelEdit(): void {
+        this.comment.reset();
+        this.cancelEdit.emit();
     }
 }
