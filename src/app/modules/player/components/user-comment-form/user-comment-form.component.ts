@@ -15,10 +15,11 @@ import {
     Validators,
 } from '@angular/forms';
 import { IonButton, IonIcon, IonTextarea } from '@ionic/angular/standalone';
-import { TranslocoModule } from '@jsverse/transloco';
+import { TranslocoPipe } from '@jsverse/transloco';
 
 import { Comment } from '@app/shared/types/shikimori/comment';
 import { NoWhitespacesValidator } from '@app/shared/validators/no-whitespaces.validator';
+import { ProcessShikimoriHtmlPipe } from '@app/modules/player/pipes/process-shikimori-html.pipe';
 import { ResourceIdType } from '@app/shared/types/resource-id.type';
 
 @Component({
@@ -28,9 +29,10 @@ import { ResourceIdType } from '@app/shared/types/resource-id.type';
         IonTextarea,
         IonButton,
         IonIcon,
-        TranslocoModule,
+        TranslocoPipe,
         FormsModule,
         ReactiveFormsModule,
+        ProcessShikimoriHtmlPipe,
     ],
     templateUrl: './user-comment-form.component.html',
     styleUrl: './user-comment-form.component.scss',

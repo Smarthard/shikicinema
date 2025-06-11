@@ -13,7 +13,7 @@
                     (click)="onHighlightEditComment()"
                     (keydown.enter)="onHighlightEditComment()"
                     (keydown.space)="onHighlightEditComment()"
-                    [innerHTML]="editComment().html_body">
+                    [innerHTML]="editComment() | processShikimoriHtml">
                 </span>
             </div>
 

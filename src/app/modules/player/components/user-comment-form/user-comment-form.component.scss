@@ -28,6 +28,8 @@
     }
 
     &__edit-text {
+        display: flex;
+
         cursor: pointer;
         user-select: none;
 
