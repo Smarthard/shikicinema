@@ -11,10 +11,12 @@ import { BreakpointObserver } from '@angular/cdk/layout';
 import {
     ChangeDetectionStrategy,
     Component,
+    ElementRef,
     HostBinding,
     OnInit,
     ViewEncapsulation,
     inject,
+    viewChild,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
@@ -30,6 +32,7 @@ import { TranslocoService } from '@jsverse/transloco';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
     debounceTime,
+    delay,
     distinctUntilChanged,
     filter,
     map,
@@ -155,6 +158,8 @@ export class PlayerPage implements OnInit {
     private isOrientationPortraitSubject$ = new ReplaySubject<boolean>(1);
     private editCommentSubject$ = new BehaviorSubject<Comment>(null);
     private highlightCommentSubject$ = new BehaviorSubject<ResourceIdType>(null);
+
+    private userCommentFormEl = viewChild('userCommentForm', { read: ElementRef });
 
     readonly shikimoriDomain$ = inject(SHIKIMORI_DOMAIN_TOKEN);
     readonly isPreferencesToggleOn$ = this.store.select(selectPreferencesToggle);
@@ -444,7 +449,30 @@ export class PlayerPage implements OnInit {
     }
 
     onCommentEdit(comment: Comment): void {
+        const userCommentFormEl: HTMLElement = this.userCommentFormEl()?.nativeElement;
+
         this.editCommentSubject$.next(comment);
+
+        if (userCommentFormEl) {
+            /*
+                TODO: зарепортить в ionic, либо проверить воспризведение после обновы
+
+                баг Ionic'а:
+                промотка, без ожидания завершения анимации закрытия ion-popover ~100мс,
+                будет отмыватываться обратно к месту с открытием поповера
+            */
+            timer(200)
+                .pipe(
+                    take(1),
+                    tap(() => userCommentFormEl.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'center',
+                        inline: 'center',
+                    })),
+                    untilDestroyed(this),
+                )
+                .subscribe();
+        }
     }
 
     async onCommentSendEdited(comment: Comment): Promise<void> {

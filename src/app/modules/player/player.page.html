@@ -94,6 +94,7 @@
         />
 
         <app-user-comment-form
+            #userCommentForm
             class="player-page__comment-form"
             [isAuthorized]="isUserAuthorized$ | async"
             [editComment]="editComment$ | async"
