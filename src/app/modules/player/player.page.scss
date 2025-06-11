@@ -113,7 +113,8 @@
 
                 // тут стили для обычных десктопных 16:9 (или около того) экранов
                 @media (min-width: 1600px) and (max-resolution: 1dppx),
-                (min-width: 1400px) and (min-resolution: 2dppx)
+                (min-width: 1400px) and (min-resolution: 2dppx),
+                (min-resolution: 1.01dppx) and (max-resolution: 1.99dppx)
                 {
                     margin-top: .5rem;
                     padding: 0 5%;
