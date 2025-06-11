@@ -6,9 +6,9 @@ import {
     ViewEncapsulation,
 } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
-import { TranslocoPipe } from '@ngneat/transloco';
+import { TranslocoPipe } from '@jsverse/transloco';
 
-import { SkeletonBlockModule } from '@app/shared/components/skeleton-block/skeleton-block.module';
+import { SkeletonBlockComponent } from '@app/shared/components/skeleton-block/skeleton-block.component';
 import { UploaderInterface } from '@app/modules/player/types';
 import { isWellKnownUploaderPipe } from '@app/modules/player/pipes/is-known-uploader.pipe';
 
@@ -17,7 +17,7 @@ import { isWellKnownUploaderPipe } from '@app/modules/player/pipes/is-known-uplo
     standalone: true,
     imports: [
         NgTemplateOutlet,
-        SkeletonBlockModule,
+        SkeletonBlockComponent,
         isWellKnownUploaderPipe,
         TranslocoPipe,
     ],

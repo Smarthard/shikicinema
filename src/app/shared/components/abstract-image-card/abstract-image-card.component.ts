@@ -1,10 +1,9 @@
 import {
     ChangeDetectionStrategy,
     Component,
-    EventEmitter,
-    Input,
-    Output,
     ViewEncapsulation,
+    input,
+    output,
 } from '@angular/core';
 
 @Component({
@@ -14,25 +13,19 @@ import {
     standalone: true,
 })
 export class AbstractImageCardComponent {
-    @Input()
-    imageUrl: string;
+    imageUrl = input<string>();
 
-    @Input()
-    name: string;
+    name = input<string>();
 
-    @Input()
-    height: string;
+    height = input<string>();
 
-    @Input()
-    width: string;
+    width = input<string>();
 
-    @Input()
-    backgroundSize: string;
+    backgroundSize = input<string>();
 
-    @Output()
-    imageLoad = new EventEmitter<HTMLImageElement>();
+    imageLoad = output<HTMLImageElement>();
 
-    isLoading: boolean;
+    protected isLoading: boolean;
 
     protected onImageLoad(image: EventTarget): void {
         this.isLoading = false;

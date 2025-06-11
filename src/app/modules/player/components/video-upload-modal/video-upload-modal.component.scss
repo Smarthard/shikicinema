@@ -1,4 +1,4 @@
-@import 'src/scss/mixins';
+@use 'src/scss/mixins' as *;
 
 .video-upload-modal {
     background-color: var(--ion-item-background);

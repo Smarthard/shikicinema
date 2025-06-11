@@ -1,7 +1,7 @@
 export enum VideoLanguageEnum {
     Russian = 'russian',
     Ukranian = 'ukranian',
-    Belorussian = 'belorussian',
+    Belarussian = 'belarussian',
     Kazakh = 'kazakh',
     English = 'english',
     Japanese = 'japanese',

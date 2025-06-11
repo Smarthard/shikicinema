@@ -1,3 +1,5 @@
+@use 'src/scss/mixins' as *;
+
 .comment {
     &__message {
         display: flex;
@@ -25,8 +27,27 @@
 
     &__header {
         display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    &__info {
+        display: flex;
         align-items: baseline;
         gap: 1rem;
+
+        @include media-breakpoint-down('lg') {
+            font-size: .825rem;
+        }
+    }
+
+    &__actions {
+        display: flex;
+        align-items: baseline;
+
+        @include media-breakpoint-up('lg') {
+            gap: .5rem;
+        }
     }
 
     &__author {

@@ -85,13 +85,24 @@
             class="player-page__comments"
             [comments]="comments$ | async"
             [isLoading]="isCommentsLoading$ | async"
+            [isPartialyLoading]="isCommentsPartiallyLoading$ | async"
             [showMoreButton]="(isShownAllComments$ | async) === false"
+            [highlightComment]="highlightComment$ | async"
             (showMoreComments)="onShowMoreComments()"
+            (editComment)="onCommentEdit($event)"
+            (deleteComment)="onCommentDelete($event)"
         />
 
         <app-user-comment-form
+            #userCommentForm
             class="player-page__comment-form"
+            [isAuthorized]="isUserAuthorized$ | async"
+            [editComment]="editComment$ | async"
             (send)="onCommentSend($event)"
+            (sendEdited)="onCommentSendEdited($event)"
+            (login)="onCommentLogin()"
+            (highlightEdit)="onHighlightComment($event)"
+            (cancelEdit)="onCancelCommentEdit()"
         />
     </div>
 </ion-content>

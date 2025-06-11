@@ -3,11 +3,11 @@
         "APP_NAME": "Shikicinema",
         "SHIKIMORI": {
             "ANIME_KINDS": {
-                "TV" : "TV сериал",
-                "OVA" : "OVA",
-                "ONA" : "ONA",
-                "MOVIE" : "Фильм",
-                "SPECIAL" : "Спешл",
+                "TV": "TV сериал",
+                "OVA": "OVA",
+                "ONA": "ONA",
+                "MOVIE": "Фильм",
+                "SPECIAL": "Спешл",
                 "MUSIC": "Клип",
                 "TV_SPECIAL": "ТВ Спецвыпуск",
                 "PV": "Проморолик",
@@ -42,6 +42,7 @@
             }
         },
         "LANGUAGES": {
+            "ORIGINAL": "Оригинал",
             "RU": "Русский",
             "UK": "Украинский",
             "BE": "Белорусский",
@@ -127,11 +128,21 @@
             },
             "RELEVANT_VIDEOS_MISSING": "Не смогли найти похожие видео",
             "COMMENT_REPLY_MISSING": "Комментарий был удален",
+            "SHOW_MORE_COMMENTS_BTN": "Посмотреть остальные комментарии",
             "USER_COMMENT_FORM": {
                 "LABEL": "Ваш комментарий",
                 "PLACEHOLDER": "Введите свой комментарий",
                 "SEND_SUCCESS": "Комментарий отправлен",
-                "SEND_FAILURE": "Не удалось отправить комментарий"
+                "SEND_FAILURE": "Не удалось отправить комментарий",
+                "EDIT_CANCEL_BTN": "Отменить редактирование"
+            },
+            "COMMENT_ACTIONS": {
+                "EDIT": "Редактировать",
+                "DELETE": "Удалить",
+                "EDIT_SUCCESS": "Комментарий изменен",
+                "EDIT_FAILURE": "Не удалось изменить комментарии",
+                "DELETE_SUCCESS": "Комментарий удален",
+                "DELETE_FAILURE": "Не удалось удалить комментарий"
             },
             "PLAYER": {
                 "FAILED_PLACEHOLDER": "Это видео было удалено или никогда не существовало"

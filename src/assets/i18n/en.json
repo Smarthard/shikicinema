@@ -3,11 +3,11 @@
         "APP_NAME": "Shikicinema",
         "SHIKIMORI": {
             "ANIME_KINDS": {
-                "TV" : "TV Series",
-                "OVA" : "OVA",
-                "ONA" : "ONA",
-                "MOVIE" : "Movie",
-                "SPECIAL" : "Special",
+                "TV": "TV Series",
+                "OVA": "OVA",
+                "ONA": "ONA",
+                "MOVIE": "Movie",
+                "SPECIAL": "Special",
                 "MUSIC": "Music",
                 "TV_SPECIAL": "TV Special",
                 "PV": "Promotional Video",
@@ -42,6 +42,7 @@
             }
         },
         "LANGUAGES": {
+            "ORIGINAL": "Original",
             "RU": "Russian",
             "UK": "Ukranian",
             "BE": "Belorussian",
@@ -122,11 +123,21 @@
             },
             "RELEVANT_VIDEOS_MISSING": "We couldn't find relevant videos",
             "COMMENT_REPLY_MISSING": "Reply was deleted",
+            "SHOW_MORE_COMMENTS_BTN": "Show more comments",
             "USER_COMMENT_FORM": {
                 "LABEL": "Comment",
                 "PLACEHOLDER": "Enter your comment",
                 "SEND_SUCCESS": "Comment sent",
-                "SEND_FAILURE": "Failed to send comment"
+                "SEND_FAILURE": "Failed to send comment",
+                "EDIT_CANCEL_BTN": "Cancel edit"
+            },
+            "COMMENT_ACTIONS": {
+                "EDIT": "Edit",
+                "DELETE": "Delete",
+                "EDIT_SUCCESS": "Comment edited",
+                "EDIT_FAILURE": "Failed to edit comment",
+                "DELETE_SUCCESS": "Comment deleted",
+                "DELETE_FAILURE": "Failed to delete comment"
             },
             "PLAYER": {
                 "FAILED_PLACEHOLDER": "This video has been removed or never existed"

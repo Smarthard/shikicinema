@@ -1,4 +1,4 @@
-@import 'src/scss/mixins';
+@use 'src/scss/mixins' as *;
 
 $grid-side-columns-width: 160px;
 $grid-searchbar-column-width: 10fr;
@@ -58,6 +58,7 @@ $grid-searchbar-column-width: 10fr;
 }
 
 .menu-item {
+    cursor: pointer;
 
     &--nolinks {
         cursor: default;

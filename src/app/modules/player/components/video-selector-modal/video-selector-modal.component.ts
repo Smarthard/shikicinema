@@ -11,7 +11,6 @@ import {
 import {
     IonButton,
     IonButtons,
-    IonContent,
     IonIcon,
     IonModal,
     IonTitle,
@@ -35,7 +34,6 @@ import { VideoSelectorComponent } from '@app/modules/player/components/video-sel
         IonButtons,
         IonButton,
         IonIcon,
-        IonContent,
         FilterByKindPipe,
         GetActiveKindsPipe,
         VideoSelectorComponent,

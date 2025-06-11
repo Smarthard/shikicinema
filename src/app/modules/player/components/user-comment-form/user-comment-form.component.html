@@ -1,3 +1,36 @@
+@if (isEditMode()) {
+    <div class="user-comment-form__edit">
+        <div class="user-comment-form__edit-wrap">
+            <div class="user-comment-form__edit-comment">
+                <img
+                    class="user-comment-form__edit-user"
+                    [src]="editComment().user.image.x64 || editComment().user.avatar"
+                    [alt]="editComment().user.name">
+
+                <span
+                    class="user-comment-form__edit-text text-ellipsis"
+                    tabindex="0"
+                    (click)="onHighlightEditComment()"
+                    (keydown.enter)="onHighlightEditComment()"
+                    (keydown.space)="onHighlightEditComment()"
+                    [innerHTML]="editComment() | processShikimoriHtml">
+                </span>
+            </div>
+
+            <ion-icon
+                class="user-comment-form__edit-cancel shc-interactive"
+                name="close-outline"
+                color="danger"
+                tabindex="0"
+                [title]="'PLAYER_MODULE.PLAYER_PAGE.USER_COMMENT_FORM.EDIT_CANCEL_BTN' | transloco"
+                (click)="onCancelEdit()"
+                (keydown.enter)="onCancelEdit()"
+                (keydown.space)="onCancelEdit()"
+            />
+        </div>
+    </div>
+}
+
 <ion-textarea
     labelPlacement="floating"
     fill="outline"
@@ -6,14 +39,28 @@
     [label]="'PLAYER_MODULE.PLAYER_PAGE.USER_COMMENT_FORM.LABEL' | transloco"
     [placeholder]="'PLAYER_MODULE.PLAYER_PAGE.USER_COMMENT_FORM.PLACEHOLDER' | transloco"
 >
-    <ion-button
-        type="button"
-        fill="clear"
-        slot="end"
-        aria-label="send"
-        (click)="onSend(comment.value)"
-        [disabled]="comment.invalid"
-    >
-        <ion-icon slot="icon-only" name="send" aria-hidden="true" />
-    </ion-button>
+    @if (isAuthorized()) {
+        <ion-button
+            type="button"
+            fill="clear"
+            slot="end"
+            aria-label="send"
+            (click)="isEditMode()
+                ? onSendEdited(comment.value)
+                : onSend(comment.value)"
+            [disabled]="comment.invalid || !isAuthorized()"
+        >
+            <ion-icon slot="icon-only" name="send" aria-hidden="true" />
+        </ion-button>
+    } @else {
+        <ion-button
+            type="button"
+            fill="clear"
+            slot="end"
+            aria-label="login"
+            (click)="onLogin()"
+        >
+            <ion-icon slot="icon-only" name="log-in-outline" aria-hidden="true" />
+        </ion-button>
+    }
 </ion-textarea>

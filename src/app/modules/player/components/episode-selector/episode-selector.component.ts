@@ -18,8 +18,6 @@ import { NgScrollbar, NgScrollbarModule } from 'ngx-scrollbar';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { tap } from 'rxjs/operators';
 
-import { SkeletonBlockModule } from '@app/shared/components/skeleton-block/skeleton-block.module';
-
 
 @UntilDestroy()
 @Component({
@@ -27,7 +25,6 @@ import { SkeletonBlockModule } from '@app/shared/components/skeleton-block/skele
     standalone: true,
     imports: [
         IonRippleEffect,
-        SkeletonBlockModule,
         NgScrollbarModule,
     ],
     templateUrl: './episode-selector.component.html',

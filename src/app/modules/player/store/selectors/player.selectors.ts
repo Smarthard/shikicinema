@@ -2,6 +2,7 @@ import { createFeatureSelector, createSelector } from '@ngrx/store';
 
 import { AnimeBriefInfoInterface } from '@app/shared/types/shikimori/anime-brief-info.interface';
 import { PlayerStoreInterface } from '@app/modules/player/store/types';
+import { ResourceIdType } from '@app/shared/types/resource-id.type';
 
 export const selectPlayer = createFeatureSelector<PlayerStoreInterface>('player');
 
@@ -40,6 +41,13 @@ export const selectPlayerIsCommentsLoading = (animeId: string | number, episode:
     selectPlayer,
     ({ comments }) => comments?.[animeId]?.[episode]?.isLoading,
 );
+
+export const selectPlayerIsCommentsPartiallyLoading = (animeId: ResourceIdType, episode: ResourceIdType) =>
+    createSelector(
+        selectPlayer,
+        ({ comments }) => comments?.[animeId]?.[episode]?.comments?.length < 20 &&
+            comments?.[animeId]?.[episode]?.comments?.length < comments?.[animeId]?.[episode]?.topic?.comments_count,
+    );
 
 export const selectPlayerIsShownAllComments = (animeId: string | number, episode: string | number) => createSelector(
     selectPlayer,

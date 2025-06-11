@@ -15,7 +15,7 @@ import { of } from 'rxjs';
 
 import { ShikicinemaV1Client } from '@app/shared/services';
 import { ToastController } from '@ionic/angular';
-import { TranslocoService } from '@ngneat/transloco';
+import { TranslocoService } from '@jsverse/transloco';
 import {
     getUploadTokenAction,
     getUploadTokenFailureAction,

@@ -5,6 +5,7 @@ import {
     Component,
     OnInit,
     ViewEncapsulation,
+    inject,
 } from '@angular/core';
 import {
     IonCol,
@@ -22,9 +23,10 @@ import {
 } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { Title } from '@angular/platform-browser';
-import { TranslocoPipe, TranslocoService } from '@ngneat/transloco';
+import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
+import { LanguageToIsoCodePipe } from '@app/shared/pipes/language-to-iso-code/language-to-iso-code.pipe';
 import { ResourceIdType } from '@app/shared/types/resource-id.type';
 import { ShikivideosInterface } from '@app/shared/types/shikicinema/v1';
 import { getContributionsAction } from '@app/modules/contributions/store/actions/get-contributions.actions';
@@ -51,6 +53,7 @@ import { trackById } from '@app/shared/utils/common-ngfor-tracking';
         IonRow,
         IonCol,
         IonText,
+        LanguageToIsoCodePipe,
     ],
     templateUrl: 'contributions.page.html',
     styleUrl: 'contributions.page.scss',
@@ -58,24 +61,22 @@ import { trackById } from '@app/shared/utils/common-ngfor-tracking';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ContributionsPage implements OnInit {
+    private readonly route = inject(ActivatedRoute);
+    private readonly store = inject(Store);
+    private readonly title = inject(Title);
+    private readonly transloco = inject(TranslocoService);
+
     readonly trackById = trackById;
 
     uploaderName$: Observable<string>;
     uploaderId$: Observable<ResourceIdType>;
     contributions$: Observable<ShikivideosInterface[]>;
 
-    constructor(
-        private readonly _route: ActivatedRoute,
-        private readonly _store: Store,
-        private readonly _title: Title,
-        private readonly _transloco: TranslocoService,
-    ) {}
-
     ngOnInit(): void {
-        this.uploaderId$ = this._store.select(selectUploaderId);
-        this.contributions$ = this._store.select(selectContributions);
+        this.uploaderId$ = this.store.select(selectUploaderId);
+        this.contributions$ = this.store.select(selectContributions);
 
-        this.uploaderName$ = this._route.queryParams.pipe(
+        this.uploaderName$ = this.route.queryParams.pipe(
             map((params) => params.uploader),
         );
 
@@ -83,10 +84,10 @@ export class ContributionsPage implements OnInit {
             .pipe(
                 untilDestroyed(this),
                 debounceTime(500),
-                tap((uploader) => this._title.setTitle(
-                    this._transloco.translate('CONTRIBUTIONS_MODULE.CONTRIBUTIONS_PAGE.PAGE_TITLE', { uploader }),
+                tap((uploader) => this.title.setTitle(
+                    this.transloco.translate('CONTRIBUTIONS_MODULE.CONTRIBUTIONS_PAGE.PAGE_TITLE', { uploader }),
                 )),
-                tap((uploaderName) => this._store.dispatch(getUploaderAction({ uploaderName }))),
+                tap((uploaderName) => this.store.dispatch(getUploaderAction({ uploaderName }))),
             )
             .subscribe();
 
@@ -94,7 +95,7 @@ export class ContributionsPage implements OnInit {
             .pipe(
                 untilDestroyed(this),
                 filter(Boolean),
-                tap((uploaderId) => this._store.dispatch(getContributionsAction({ uploaderId }))),
+                tap((uploaderId) => this.store.dispatch(getContributionsAction({ uploaderId }))),
             )
             .subscribe();
     }

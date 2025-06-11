@@ -1,4 +1,4 @@
-@import 'src/scss/mixins';
+@use 'src/scss/mixins' as *;
 
 @mixin items-in-row($itemsCount) {
     padding: 0;

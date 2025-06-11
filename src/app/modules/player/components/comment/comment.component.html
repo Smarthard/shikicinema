@@ -1,27 +1,60 @@
-<a class="comment__avatar-wrap" [href]="comment?.user?.url">
-    <app-image-card class="comment__avatar" [imageUrl]="comment?.user?.image?.x160 || comment?.user?.avatar" />
+<a class="comment__avatar-wrap" [href]="comment()?.user?.url">
+    <app-image-card class="comment__avatar" [imageUrl]="comment()?.user?.image?.x160 || comment()?.user?.avatar" />
 </a>
 
 <div class="comment__message">
     <div class="comment__header">
-        <div class="comment__author">
-            <a [href]="comment?.user?.url">{{ comment?.user?.nickname }}</a>
+        <div class="comment__info">
+            <div class="comment__author">
+                <a [href]="comment()?.user?.url">{{ comment()?.user?.nickname }}</a>
+            </div>
+
+            <div class="comment__date">
+                <time [dateTime]="comment()?.updated_at"
+                    [title]="comment()?.updated_at | date: 'dd.MM.YYYY hh:mm:ss'">
+                    {{ comment()?.updated_at | date: 'dd.MM.YYYY' }}
+                </time>
+            </div>
+
+            <a class="comment__link" [href]="comment() | toCommentUrl">#</a>
         </div>
 
-        <div class="comment__date">
-            <time [dateTime]="comment?.updated_at"
-                [title]="comment?.updated_at | date: 'dd.MM.YYYY hh:mm:ss'">
-                {{ comment?.updated_at | date: 'dd.MM.YYYY' }}
-            </time>
-        </div>
+        <div class="comment__actions">
+            @if (comment()?.can_be_edited) {
+                <ion-button
+                    [id]="`comment-${comment().id}-actions-trigger`"
+                    fill="clear"
+                    size="small"
+                >
+                    <ion-icon slot="icon-only" name="ellipsis-vertical-outline"></ion-icon>
+                </ion-button>
 
-        <a class="comment__link" [href]="comment | toCommentUrl">#</a>
+                <ion-popover
+                    #commentActionsPopover
+                    class="menu-popover"
+                    [trigger]="`comment-${comment().id}-actions-trigger`"
+                    triggerAction="click"
+                    side="bottom"
+                    alignment="end"
+                    (click)="commentActionsPopover.dismiss()"
+                >
+                    <ng-template>
+                        <app-modify-actions-popover
+                            [editLabel]="'PLAYER_MODULE.PLAYER_PAGE.COMMENT_ACTIONS.EDIT' | transloco"
+                            [deleteLabel]="'PLAYER_MODULE.PLAYER_PAGE.COMMENT_ACTIONS.DELETE' | transloco"
+                            (edit)="edit.emit()"
+                            (delete)="delete.emit()"
+                        />
+                    </ng-template>
+                </ion-popover>
+            }
+        </div>
     </div>
 
     <!-- используем всплывание событий при кликах для их обработки через target -->
     <div class="comment__body"
         tabindex="-1"
-        [innerHTML]="comment | processShikimoriHtml"
+        [innerHTML]="comment() | processShikimoriHtml"
         (click)="onClick($event)"
         (keydown.enter)="onClick($event)">
     </div>

@@ -4,10 +4,10 @@ import {
     createEffect,
     ofType,
 } from '@ngrx/effects';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { ToastController } from '@ionic/angular';
-import { TranslocoService } from '@ngneat/transloco';
+import { TranslocoService } from '@jsverse/transloco';
 import {
     catchError,
     delay,
@@ -33,6 +33,12 @@ import { selectShikimoriCurrentUser } from '@app/store/shikimori/selectors/shiki
 @Injectable()
 export class AuthEffects {
     protected declare oauthShikimori$: CreateEffectMetadata;
+
+    protected store = inject(Store);
+    protected actions$ = inject(Actions);
+    protected translate = inject(TranslocoService);
+    protected toast = inject(ToastController);
+    protected shikimoriClient = inject(ShikimoriClient);
 
     protected finalizeShikimoriAuth$ = createEffect(() => this.actions$.pipe(
         ofType(
@@ -93,12 +99,4 @@ export class AuthEffects {
             await toast.present();
         }),
     ), { dispatch: false });
-
-    constructor(
-        protected store: Store,
-        protected actions$: Actions,
-        protected shikimoriClient: ShikimoriClient,
-        protected translate: TranslocoService,
-        protected toast: ToastController,
-    ) {}
 }

@@ -1,16 +1,21 @@
-@import 'src/scss/mixins';
+@use 'src/scss/mixins' as *;
 
 .comments {
     display: flex;
     flex-direction: column;
+    align-items: center;
     gap: 1rem;
 
     &__item {
         display: flex;
         gap: .5rem;
-        padding: 1rem;
+        padding: .5rem;
         background-color: var(--ion-color-light);
         border-radius: 1rem;
+
+        @include media-breakpoint-up('lg') {
+            padding: 1rem;
+        }
 
         &--skeleton {
             width: 100%;

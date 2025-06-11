@@ -8,7 +8,7 @@ import {
     ViewEncapsulation,
 } from '@angular/core';
 import { IonLabel, IonSegment, IonSegmentButton } from '@ionic/angular/standalone';
-import { TranslocoPipe } from '@ngneat/transloco';
+import { TranslocoPipe } from '@jsverse/transloco';
 
 import { VideoKindEnum } from '@app/modules/player/types/video-kind.enum';
 

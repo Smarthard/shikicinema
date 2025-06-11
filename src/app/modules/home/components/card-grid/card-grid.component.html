@@ -1,37 +1,38 @@
-<ng-container *ngIf="userAnimeRates?.length > 0; else skeletonTemplate">
-    <app-card-grid-item
-        *ngFor="let rate of userAnimeRates; trackBy: trackById"
-        class="anime-grid__item"
-        height="100%"
-        width="auto"
-        [link]="rate.anime | getPlayerLink"
-        [imageUrl]="(shikimoriDomain$ | async) + rate.anime.image.original"
-        [name]="getAnimeName(rate.anime, currentLang$ | async)"
-        [kind]="rate.anime.kind"
-        [releaseDate]="rate.anime.released_on || rate.anime.aired_on"
-    ></app-card-grid-item>
-
-    <ng-container
-        *ngIf="isLoading"
-        [ngTemplateOutlet]="skeletonTemplate"
-    ></ng-container>
-</ng-container>
-
-<ng-template #skeletonTemplate>
-    <div
-        *ngFor="let _ of userAnimeRatesFake"
-        class="anime-grid__item skeleton-item"
-    >
-        <app-skeleton-block
-            class="skeleton-item__img responsive-9by13"
+@if (userAnimeRates?.length) {
+    @for (rate of userAnimeRates; track $index) {
+        <app-card-grid-item
+            class="anime-grid__item"
             height="100%"
             width="auto"
-        ></app-skeleton-block>
+            [link]="rate.anime | getPlayerLink"
+            [imageUrl]="rate?.anime?.image?.original | getShikimoriPage | async"
+            [name]="getAnimeName(rate.anime, currentLang$ | async)"
+            [kind]="rate.anime.kind"
+            [releaseDate]="rate.anime.released_on || rate.anime.aired_on"
+        />
+    }
 
-        <app-skeleton-block
-            class="skeleton-item__text"
-            [height]="'33px'"
-            width="100%"
-        ></app-skeleton-block>
-    </div>
+    @if (isLoading) {
+        <ng-container [ngTemplateOutlet]="skeletonTemplate" />
+    }
+} @else {
+    <ng-container [ngTemplateOutlet]="skeletonTemplate" />
+}
+
+<ng-template #skeletonTemplate>
+    @for (_ of userAnimeRatesFake; track $index) {
+        <div class="anime-grid__item skeleton-item">
+            <app-skeleton-block
+                class="skeleton-item__img responsive-9by13"
+                height="100%"
+                width="auto"
+            />
+
+            <app-skeleton-block
+                class="skeleton-item__text"
+                [height]="'33px'"
+                width="100%"
+            />
+        </div>
+    }
 </ng-template>

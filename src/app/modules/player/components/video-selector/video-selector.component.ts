@@ -17,7 +17,7 @@ import {
     IonItem,
     IonLabel,
 } from '@ionic/angular/standalone';
-import { TranslocoService } from '@ngneat/transloco';
+import { TranslocoService } from '@jsverse/transloco';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
     combineLatestWith,
@@ -34,7 +34,7 @@ import { HasQualitiesPipe } from '@app/modules/player/pipes/has-qualities.pipe';
 import { IsSameAuthorPipe } from '@app/shared/pipes/is-same-author/is-same-author.pipe';
 import { IsSameVideoPipe } from '@app/shared/pipes/is-same-video/is-same-video.pipe';
 import { PlayerKindDisplayMode } from '@app/store/settings/types/player-kind-display-mode.type';
-import { SortByDomainModule } from '@app/shared/pipes/sort-by-domain/sort-by-domain.module';
+import { SortByDomainPipe } from '@app/shared/pipes/sort-by-domain/sort-by-domain.pipe';
 import { VideoInfoInterface, VideoQualityEnum } from '@app/modules/player/types';
 import { cleanAuthorName } from '@app/shared/utils/clean-author-name.function';
 
@@ -54,7 +54,7 @@ import { cleanAuthorName } from '@app/shared/utils/clean-author-name.function';
         GetColorForSelectablePipe,
         IsSameAuthorPipe,
         IsSameVideoPipe,
-        SortByDomainModule,
+        SortByDomainPipe,
         HasQualitiesPipe,
         UpperCasePipe,
     ],

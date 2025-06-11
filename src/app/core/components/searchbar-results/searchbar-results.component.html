@@ -2,16 +2,16 @@
     *ngIf="results !== null; else searchSomething"
     class="anime-search-list"
 >
-    <ng-container *ngIf="isLoading">
+    @if (isLoading) {
         <ng-template [ngTemplateOutlet]="loadingSkeleton"></ng-template>
-    </ng-container>
+    }
 
-    <ng-container *ngIf="!isLoading && results.length === 0">
+    @if (!isLoading && results.length === 0) {
         <ng-template [ngTemplateOutlet]="nothingFound"></ng-template>
-    </ng-container>
+    }
 
-    <ng-container *ngIf="!isLoading && results.length > 0">
-        <ng-container *ngFor="let result of results; trackBy: trackById">
+    @if (!isLoading && results.length > 0) {
+        @for (result of results; track trackById($index, result)) {
             <ion-item
                 class="anime-search-list-item"
                 [routerLink]="'#'"
@@ -67,8 +67,8 @@
                     </ion-text>
                 </div>
             </ion-item>
-        </ng-container>
-    </ng-container>
+        }
+    }
 </ion-list>
 
 <ng-template #searchSomething>
@@ -96,39 +96,39 @@
 
 <ng-template #loadingSkeleton>
     <ion-list class="anime-search-list">
-        <ion-item
-            *ngFor="let _ of fakeResults"
-            class="anime-search-list-item"
-        >
-            <app-skeleton-block
-                [height]="'85px'"
-                [width]="'50px'"
-            ></app-skeleton-block>
+        @for (_ of fakeResults; track $index) {
+            <ion-item class="anime-search-list-item">
+                <app-skeleton-block
+                    [height]="'85px'"
+                    [width]="'50px'"
+                ></app-skeleton-block>
 
-            <div class="anime-search-list-item__info anime-info">
-                <ion-label class="anime-info__title">
-                    <app-skeleton-block
-                        class="skeleton"
-                        [height]="'27px'"
-                        [width]="'100vw'"
-                    ></app-skeleton-block>
-                </ion-label>
+                <div class="anime-search-list-item__info anime-info">
+                    <ion-label class="anime-info__title">
+                        <app-skeleton-block
+                            class="skeleton"
+                            [height]="'27px'"
+                            [width]="'100vw'"
+                        ></app-skeleton-block>
+                    </ion-label>
 
-                <ion-note class="anime-info__kind">
-                    <app-skeleton-block
-                        class="skeleton"
-                        [height]="'20px'"
-                        [width]="'50px'"
-                    ></app-skeleton-block>
-                </ion-note>
-                <ion-text class="anime-info__year">
-                    <app-skeleton-block
-                        class="skeleton"
-                        [height]="'20px'"
-                        [width]="'80px'"
-                    ></app-skeleton-block>
-                </ion-text>
-            </div>
-        </ion-item>
+                    <ion-note class="anime-info__kind">
+                        <app-skeleton-block
+                            class="skeleton"
+                            [height]="'20px'"
+                            [width]="'50px'"
+                        ></app-skeleton-block>
+                    </ion-note>
+
+                    <ion-text class="anime-info__year">
+                        <app-skeleton-block
+                            class="skeleton"
+                            [height]="'20px'"
+                            [width]="'80px'"
+                        ></app-skeleton-block>
+                    </ion-text>
+                </div>
+            </ion-item>
+        }
     </ion-list>
 </ng-template>

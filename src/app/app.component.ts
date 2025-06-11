@@ -2,16 +2,18 @@ import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import {
     ChangeDetectionStrategy,
     Component,
-    Inject,
     OnInit,
     Renderer2,
     ViewEncapsulation,
+    inject,
 } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
+import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
 import { Store } from '@ngrx/store';
-import { TranslocoService, getBrowserLang } from '@ngneat/transloco';
+import { TranslocoService, getBrowserLang } from '@jsverse/transloco';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { addHours, compareAsc } from 'date-fns';
+import { addIcons } from 'ionicons';
 import { combineLatest, firstValueFrom } from 'rxjs';
 import {
     debounceTime,
@@ -21,6 +23,8 @@ import {
     tap,
 } from 'rxjs/operators';
 
+import * as usedIcons from '@app/core/used-icons.config';
+import { HeaderComponent } from '@app/core/components/header/header.component';
 import { PersistenceService } from '@app/shared/services';
 import { cacheHealthCheckUpAction, resetCacheAction } from '@app/store/cache/actions';
 import { getCurrentUserAction } from '@app/store/shikimori/actions/get-current-user.action';
@@ -33,22 +37,28 @@ import { updateLanguageAction, visitPageAction } from '@app/store/settings/actio
     selector: 'app-root',
     templateUrl: 'app.component.html',
     styleUrls: ['app.component.scss'],
+    imports: [
+        IonRouterOutlet,
+        IonApp,
+        HeaderComponent,
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
 })
 export class AppComponent implements OnInit {
-    constructor(
-        @Inject(DOCUMENT)
-        private readonly _document: Document,
-        private readonly _store: Store,
-        private readonly _renderer: Renderer2,
-        private readonly _transloco: TranslocoService,
-        private readonly _router: Router,
-        private readonly _route: ActivatedRoute,
-        private readonly _persistenceService: PersistenceService,
-    ) {}
+    private readonly document = inject(DOCUMENT);
+    private readonly store = inject(Store);
+    private readonly renderer = inject(Renderer2);
+    private readonly transloco = inject(TranslocoService);
+    private readonly router = inject(Router);
+    private readonly route = inject(ActivatedRoute);
+    private readonly persistenceService = inject(PersistenceService);
 
-    readonly isCustomThemeHardDisable$ = this._route.queryParams.pipe(
+    constructor() {
+        addIcons(usedIcons);
+    }
+
+    readonly isCustomThemeHardDisable$ = this.route.queryParams.pipe(
         map((params) => Boolean(params?.['customTheme'])),
     );
 
@@ -61,17 +71,17 @@ export class AppComponent implements OnInit {
     }
 
     initLocale(): void {
-        this._store.select(selectLanguage).pipe(
+        this.store.select(selectLanguage).pipe(
             tap((storedLanguage) => {
-                const availableLangs = this._transloco.getAvailableLangs() as string[];
+                const availableLangs = this.transloco.getAvailableLangs() as string[];
                 const browserLang = getBrowserLang();
                 const defaultLang = availableLangs.includes(browserLang)
                     ? browserLang
                     : 'en';
                 const language = storedLanguage || defaultLang;
 
-                this._renderer.setAttribute(this._document.documentElement, 'lang', language);
-                this._store.dispatch(updateLanguageAction({ language }));
+                this.renderer.setAttribute(this.document.documentElement, 'lang', language);
+                this.store.dispatch(updateLanguageAction({ language }));
             }),
             untilDestroyed(this),
         ).subscribe();
@@ -80,33 +90,33 @@ export class AppComponent implements OnInit {
     initTheme(): void {
         const darkThemeClass = 'ion-palette-dark';
         const userCustomStyleId = 'user-custom-theme';
-        const headEl = this._document.head;
+        const headEl = this.document.head;
 
         combineLatest([
-            this._store.select(selectTheme),
+            this.store.select(selectTheme),
             this.isCustomThemeHardDisable$,
         ]).pipe(
             distinctUntilChanged(),
             tap(async ([theme, isCustomThemeDisabled]) => {
-                const customTheme = await firstValueFrom(this._store.select(selectCustomTheme));
+                const customTheme = await firstValueFrom(this.store.select(selectCustomTheme));
 
                 if (!theme || theme === 'dark' || theme === 'custom') {
-                    this._renderer.addClass(this._document.documentElement, darkThemeClass);
+                    this.renderer.addClass(this.document.documentElement, darkThemeClass);
                 } else {
-                    this._renderer.removeClass(this._document.documentElement, darkThemeClass);
+                    this.renderer.removeClass(this.document.documentElement, darkThemeClass);
                 }
 
                 if (theme === 'custom' && !isCustomThemeDisabled) {
-                    const styleEl: HTMLStyleElement = this._renderer.createElement('style');
+                    const styleEl: HTMLStyleElement = this.renderer.createElement('style');
 
-                    this._renderer.setAttribute(styleEl, 'id', userCustomStyleId);
-                    this._renderer.appendChild(headEl, styleEl);
+                    this.renderer.setAttribute(styleEl, 'id', userCustomStyleId);
+                    this.renderer.appendChild(headEl, styleEl);
                     styleEl.innerHTML = customTheme;
                 } else {
-                    const styleEl = this._document.querySelector(`#${userCustomStyleId}`);
+                    const styleEl = this.document.querySelector(`#${userCustomStyleId}`);
 
                     if (styleEl) {
-                        this._renderer.removeChild(headEl, styleEl);
+                        this.renderer.removeChild(headEl, styleEl);
                     }
                 }
             }),
@@ -114,14 +124,14 @@ export class AppComponent implements OnInit {
         ).subscribe();
 
         combineLatest([
-            this._store.select(selectCustomTheme),
+            this.store.select(selectCustomTheme),
             this.isCustomThemeHardDisable$,
         ])
             .pipe(
                 filter(([_, isDisabled]) => !isDisabled),
                 debounceTime(500),
                 tap(([customTheme, _]) => {
-                    const styleEl = this._document.querySelector(`#${userCustomStyleId}`);
+                    const styleEl = this.document.querySelector(`#${userCustomStyleId}`);
 
                     if (styleEl) {
                         styleEl.innerHTML = customTheme;
@@ -133,16 +143,16 @@ export class AppComponent implements OnInit {
     }
 
     initUser(): void {
-        this._store.dispatch(getCurrentUserAction());
+        this.store.dispatch(getCurrentUserAction());
     }
 
     initOnNavigation(): void {
-        this._router.events
+        this.router.events
             .pipe(
                 untilDestroyed(this),
                 filter((event) => event instanceof NavigationEnd),
                 filter<NavigationEnd>(({ url }) => url !== '/settings'),
-                tap<NavigationEnd>(({ url }) => this._store.dispatch(visitPageAction({ url }))),
+                tap<NavigationEnd>(({ url }) => this.store.dispatch(visitPageAction({ url }))),
             )
             .subscribe();
     }
@@ -153,21 +163,21 @@ export class AppComponent implements OnInit {
         const HOURS_PER_CHECKS = 12;
         const NOW = new Date();
 
-        const lastCheckUpTime = await firstValueFrom(this._store.select(selectCacheLastCheckUp));
-        const plannedChechUpTime = addHours(lastCheckUpTime, HOURS_PER_CHECKS);
-        const isDueTime = compareAsc(NOW, plannedChechUpTime) > 0;
+        const lastCheckUpTime = await firstValueFrom(this.store.select(selectCacheLastCheckUp));
+        const plannedCheckUpTime = addHours(lastCheckUpTime, HOURS_PER_CHECKS);
+        const isDueTime = compareAsc(NOW, plannedCheckUpTime) > 0;
 
-        const usedCacheRatio = this._persistenceService.getCacheBytes() / this._persistenceService.getMaxByxes();
+        const usedCacheRatio = this.persistenceService.getCacheBytes() / this.persistenceService.getMaxByxes();
         const isCritical = usedCacheRatio > CRITICAL_USAGE_RATIO;
 
         if (isCritical) {
             console.warn('[Cache] Critical usage');
 
-            this._store.dispatch(resetCacheAction());
+            this.store.dispatch(resetCacheAction());
         } else if (isDueTime) {
             console.info('[Cache] Performing check up');
 
-            this._store.dispatch(cacheHealthCheckUpAction());
+            this.store.dispatch(cacheHealthCheckUpAction());
         } else {
             const usagePercent = (usedCacheRatio * 100).toFixed(2);
 

@@ -1,6 +1,6 @@
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Injectable } from '@angular/core';
-import { TranslocoService } from '@ngneat/transloco';
+import { TranslocoService } from '@jsverse/transloco';
 import { tap } from 'rxjs/operators';
 
 import { updateLanguageAction } from '@app/store/settings/actions/settings.actions';

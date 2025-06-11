@@ -3,6 +3,7 @@ export interface ShikimoriCredentials {
     shikimoriRefreshToken: string;
     accessExpireTimeMs: number;
     refreshExpireTimeMs: number;
+    scopes: string[];
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface

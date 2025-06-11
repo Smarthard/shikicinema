@@ -1,5 +1,4 @@
 import {
-    MetaReducer,
     createReducer,
     on,
 } from '@ngrx/store';
@@ -8,13 +7,18 @@ import { AnimeBriefInfoInterface } from '@app/shared/types/shikimori/anime-brief
 import { PlayerStoreInterface } from '@app/modules/player/store/types';
 import {
     addVideosAction,
+    deleteCommentSuccessAction,
+    editCommentSuccessAction,
     getAnimeInfoSuccessAction,
     getCommentsSuccessAction,
+    getTopicsAction,
     getTopicsSuccessAction,
     getUserRateSuccessAction,
+    sendCommentSuccessAction,
     setIsShownAllAction,
     watchAnimeSuccessAction,
 } from '@app/modules/player/store/actions';
+import { filterComments, patchComments } from '@app/modules/player/store/utils';
 import { filterDuplicatedIds } from '@app/shared/utils/filter-duplicated-ids.function';
 
 const initialState: PlayerStoreInterface = {
@@ -23,7 +27,7 @@ const initialState: PlayerStoreInterface = {
     comments: {},
 };
 
-export const reducers = createReducer(initialState,
+export const playerReducer = createReducer(initialState,
     on(
         addVideosAction,
         (state, { animeId, videos }) => ({
@@ -55,6 +59,22 @@ export const reducers = createReducer(initialState,
                     ...state.animeInfo[animeId],
                     user_rate: userRate,
                 } as AnimeBriefInfoInterface,
+            },
+        }),
+    ),
+    on(
+        getTopicsAction,
+        (state, { animeId, episode, revalidate }) => ({
+            ...state,
+            comments: {
+                ...state.comments,
+                [animeId]: {
+                    ...state.comments?.[animeId] || {},
+                    [episode]: {
+                        ...state.comments?.[animeId]?.[episode] || {},
+                        topic: revalidate ? null : state.comments?.[animeId]?.[episode]?.topic,
+                    },
+                },
             },
         }),
     ),
@@ -96,6 +116,22 @@ export const reducers = createReducer(initialState,
         }),
     ),
     on(
+        sendCommentSuccessAction,
+        (state, { comment, animeId, episode }) => ({
+            ...state,
+            comments: {
+                ...state.comments,
+                [animeId]: {
+                    ...state.comments?.[animeId] || {},
+                    [episode]: {
+                        ...state.comments?.[animeId]?.[episode] || {},
+                        comments: [...state.comments?.[animeId]?.[episode]?.comments || [], comment],
+                    },
+                },
+            },
+        }),
+    ),
+    on(
         setIsShownAllAction,
         (state, { isShownAll, animeId, episode }) => ({
             ...state,
@@ -111,7 +147,34 @@ export const reducers = createReducer(initialState,
             },
         }),
     ),
+    on(
+        editCommentSuccessAction,
+        (state, { animeId, episode, comment }) => ({
+            ...state,
+            comments: {
+                ...state.comments,
+                [animeId]: {
+                    ...state.comments?.[animeId] || {},
+                    [episode]: {
+                        comments: patchComments(comment, state.comments?.[animeId]?.[episode]?.comments),
+                    },
+                },
+            },
+        }),
+    ),
+    on(
+        deleteCommentSuccessAction,
+        (state, { animeId, episode, commentId: deletedId }) => ({
+            ...state,
+            comments: {
+                ...state.comments,
+                [animeId]: {
+                    ...state.comments?.[animeId] || {},
+                    [episode]: {
+                        comments: filterComments(deletedId, state.comments?.[animeId]?.[episode]?.comments),
+                    },
+                },
+            },
+        }),
+    ),
 );
-
-
-export const metaReducers: MetaReducer<PlayerStoreInterface>[] = [];

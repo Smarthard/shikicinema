@@ -10,7 +10,7 @@
         "experimentalDecorators": true,
         "moduleResolution": "node",
         "importHelpers": true,
-        "target": "es2015",
+        "target": "es2022",
         "module": "es2022",
         "lib": [
             "es2020",
@@ -38,6 +38,7 @@
         "enableI18nLegacyMessageIdFormat": false,
         "strictInjectionParameters": true,
         "strictInputAccessModifiers": true,
-        "strictTemplates": true
+        "strictTemplates": true,
+        "useDefineForClassFields": false,
     }
 }

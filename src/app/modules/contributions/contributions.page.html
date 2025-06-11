@@ -10,7 +10,7 @@
             <ion-col size="4">URL</ion-col>
         </ion-row>
 
-        @for (video of (contributions$ | async); track trackById) {
+        @for (video of (contributions$ | async); track trackById($index, video)) {
             <ion-row class="contribuitons-grid__row">
                 <ion-col size="1">
                     <a [routerLink]="['/player', video.anime_id, video.episode]" [queryParams]="{ id: video.id }">
@@ -32,7 +32,7 @@
 
                 <ion-col size="1">
                     <ion-text [title]="video.language">
-                        {{ 'GLOBAL.LANGUAGES.' + (video.language | uppercase) | transloco }}
+                        {{ 'GLOBAL.LANGUAGES.' + (video.language | languageToIsoCode | uppercase) | transloco }}
                     </ion-text>
                 </ion-col>
 

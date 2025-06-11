@@ -1,28 +1,38 @@
 import { Actions, ofType } from '@ngrx/effects';
 import { ActivatedRoute, Router } from '@angular/router';
+import {
+    BehaviorSubject,
+    ReplaySubject,
+    combineLatest,
+    firstValueFrom,
+    timer,
+} from 'rxjs';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import {
     ChangeDetectionStrategy,
     Component,
+    ElementRef,
     HostBinding,
-    Inject,
     OnInit,
     ViewEncapsulation,
+    inject,
+    viewChild,
 } from '@angular/core';
-import { ModalController, Platform } from '@ionic/angular';
+import { CommonModule } from '@angular/common';
 import {
-    Observable,
-    ReplaySubject,
-    combineLatest,
-    firstValueFrom,
-} from 'rxjs';
+    IonContent,
+    IonText,
+    ToastController,
+} from '@ionic/angular/standalone';
+import { ModalController, Platform } from '@ionic/angular';
+import { NgLetDirective } from 'ng-let';
 import { Store } from '@ngrx/store';
 import { Title } from '@angular/platform-browser';
-import { ToastController } from '@ionic/angular/standalone';
-import { TranslocoService } from '@ngneat/transloco';
+import { TranslocoService } from '@jsverse/transloco';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
     debounceTime,
+    delay,
     distinctUntilChanged,
     filter,
     map,
@@ -33,13 +43,32 @@ import {
 } from 'rxjs/operators';
 
 import { AnimeBriefInfoInterface } from '@app/shared/types/shikimori/anime-brief-info.interface';
+import { Comment } from '@app/shared/types/shikimori/comment';
+import { CommentsComponent } from '@app/modules/player/components/comments/comments.component';
+import { ControlPanelComponent } from '@app/modules/player/components/control-panel/control-panel.component';
+import { FilterByKindPipe } from '@app/shared/pipes/filter-by-kind/filter-by-kind.pipe';
+import { GetActiveKindsPipe } from '@app/shared/pipes/get-active-kinds/get-active-kinds.pipe';
+import { GetEpisodesPipe } from '@app/shared/pipes/get-episodes/get-episodes.pipe';
+import { KindSelectorComponent } from '@app/modules/player/components/kind-selector/kind-selector.component';
 import { NoPreferenceSymbol } from '@app/store/settings/types';
+import { PlayerComponent } from '@app/modules/player/components/player/player.component';
+import { ResourceIdType } from '@app/shared/types/resource-id.type';
 import { SHIKIMORI_DOMAIN_TOKEN } from '@app/core/providers/shikimori-domain';
+import { ShikimoriAnimeLinkPipe } from '@app/shared/pipes/shikimori-anime-link/shikimori-anime-link.pipe';
+import { SidePanelComponent } from '@app/modules/player/components/side-panel/side-panel.component';
+import { SkeletonBlockComponent } from '@app/shared/components/skeleton-block/skeleton-block.component';
+import { SwipeDirective } from '@app/shared/directives/swipe.directive';
+import { ToUploaderPipe } from '@app/modules/player/pipes/to-uploader.pipe';
+import { UploaderComponent } from '@app/modules/player/components/uploader/uploader.component';
+import { UserCommentFormComponent } from '@app/modules/player/components/user-comment-form/user-comment-form.component';
 import { VideoInfoInterface } from '@app/modules/player/types';
 import { VideoKindEnum } from '@app/modules/player/types/video-kind.enum';
-import { filterByEpisode } from '@app/shared/utils/filter-by-episode.function';
-import { filterVideosByPreferences } from '@app/modules/player/utils/filter-videos-by-preferences.function';
+import { VideoSelectorComponent } from '@app/modules/player/components/video-selector/video-selector.component';
+import { authShikimoriAction } from '@app/store/auth/actions/auth.actions';
 import {
+    deleteCommentAction,
+    editCommentAction,
+    editCommentSuccessAction,
     findVideosAction,
     getAnimeInfoAction,
     getCommentsAction,
@@ -49,6 +78,8 @@ import {
     watchAnimeAction,
     watchAnimeSuccessAction,
 } from '@app/modules/player/store/actions';
+import { filterByEpisode } from '@app/shared/utils/filter-by-episode.function';
+import { filterVideosByPreferences } from '@app/modules/player/utils/filter-videos-by-preferences.function';
 import { getAnimeName } from '@app/shared/utils/get-anime-name.function';
 import { getDomain } from '@app/shared/utils/get-domain.function';
 import { getLastAiredEpisode, isEpisodeWatched } from '@app/modules/player/utils';
@@ -60,11 +91,13 @@ import {
     selectPlayerMode,
     selectPreferencesToggle,
 } from '@app/store/settings/selectors/settings.selectors';
+import { selectIsAuthenticated } from '@app/store/auth/selectors/auth.selectors';
 import {
     selectPlayerAnime,
     selectPlayerAnimeLoading,
     selectPlayerComments,
     selectPlayerIsCommentsLoading,
+    selectPlayerIsCommentsPartiallyLoading,
     selectPlayerIsShownAllComments,
     selectPlayerUserRate,
     selectPlayerVideos,
@@ -83,6 +116,27 @@ import { visitAnimePageAction } from '@app/modules/home/store/recent-animes/acti
     selector: 'app-player-page',
     templateUrl: './player.page.html',
     styleUrl: './player.page.scss',
+    imports: [
+        CommonModule,
+        PlayerComponent,
+        VideoSelectorComponent,
+        KindSelectorComponent,
+        SkeletonBlockComponent,
+        GetActiveKindsPipe,
+        FilterByKindPipe,
+        GetEpisodesPipe,
+        ControlPanelComponent,
+        UploaderComponent,
+        ToUploaderPipe,
+        SwipeDirective,
+        NgLetDirective,
+        CommentsComponent,
+        UserCommentFormComponent,
+        ShikimoriAnimeLinkPipe,
+        SidePanelComponent,
+        IonText,
+        IonContent,
+    ],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -90,8 +144,24 @@ export class PlayerPage implements OnInit {
     @HostBinding('class.player-page')
     private playerPageClass = true;
 
-    private isOrientationPortraitSubject$ = new ReplaySubject<boolean>(1);
+    private readonly store = inject(Store);
+    private readonly route = inject(ActivatedRoute);
+    private readonly router = inject(Router);
+    private readonly title = inject(Title);
+    private readonly platform = inject(Platform);
+    private readonly breakpointObserver = inject(BreakpointObserver);
+    private readonly actions$ = inject(Actions);
+    private readonly toast = inject(ToastController);
+    private readonly transloco = inject(TranslocoService);
+    private readonly modalController = inject(ModalController);
 
+    private isOrientationPortraitSubject$ = new ReplaySubject<boolean>(1);
+    private editCommentSubject$ = new BehaviorSubject<Comment>(null);
+    private highlightCommentSubject$ = new BehaviorSubject<ResourceIdType>(null);
+
+    private userCommentFormEl = viewChild('userCommentForm', { read: ElementRef });
+
+    readonly shikimoriDomain$ = inject(SHIKIMORI_DOMAIN_TOKEN);
     readonly isPreferencesToggleOn$ = this.store.select(selectPreferencesToggle);
     readonly playerMode$ = this.store.select(selectPlayerMode);
     readonly playerKindDisplayMode$ = this.store.select(selectPlayerKindDisplayMode);
@@ -113,6 +183,8 @@ export class PlayerPage implements OnInit {
         map(([isPortrait, isSmallScreen]) => isPortrait || isSmallScreen),
     );
 
+    readonly editComment$ = this.editCommentSubject$.asObservable();
+    readonly highlightComment$ = this.highlightCommentSubject$.asObservable();
     readonly isVideoSelectionHidden$ = this.isSmallScreen$;
 
     animeId$ = this.route.params.pipe(
@@ -124,6 +196,8 @@ export class PlayerPage implements OnInit {
         map(({ episode }) => Number(episode)),
         distinctUntilChanged(),
     );
+
+    isUserAuthorized$ = this.store.select(selectIsAuthenticated);
 
     isVideosLoading$ = this.animeId$.pipe<boolean>(
         switchMap((animeId) => this.store.select(selectPlayerVideosLoading(animeId))),
@@ -179,21 +253,9 @@ export class PlayerPage implements OnInit {
     isCommentsLoading$ = combineLatest([this.animeId$, this.episode$]).pipe(
         switchMap(([animeId, episode]) => this.store.select(selectPlayerIsCommentsLoading(animeId, episode))),
     );
-
-    constructor(
-        @Inject(SHIKIMORI_DOMAIN_TOKEN)
-        readonly shikimoriDomain$: Observable<string>,
-        private store: Store,
-        private route: ActivatedRoute,
-        private router: Router,
-        private title: Title,
-        private platform: Platform,
-        private breakpointObserver: BreakpointObserver,
-        private actions$: Actions,
-        private toast: ToastController,
-        private transloco: TranslocoService,
-        private modalController: ModalController,
-    ) {}
+    isCommentsPartiallyLoading$ = combineLatest([this.animeId$, this.episode$]).pipe(
+        switchMap(([animeId, episode]) => this.store.select(selectPlayerIsCommentsPartiallyLoading(animeId, episode))),
+    );
 
     ngOnInit(): void {
         this.animeId$.pipe(
@@ -247,11 +309,13 @@ export class PlayerPage implements OnInit {
             ) => prevAnime.id === nextAnime.id && prevEpisode === nextEpisode),
             filter(([anime]) => !!anime?.name),
             tap(([anime, episode]) => {
+                const { id: animeId } = anime;
+
                 this.changeTitle(anime, episode);
 
-                this.store.dispatch(getTopicsAction({ animeId: anime.id, episode, revalidate: false }));
-                this.store.dispatch(getCommentsAction({ animeId: anime.id, episode, page: 1, limit: 30 }));
                 this.store.dispatch(visitAnimePageAction({ anime, episode }));
+                this.store.dispatch(getTopicsAction({ animeId, episode, revalidate: false }));
+                this.store.dispatch(getCommentsAction({ animeId, episode, page: 1, limit: 30 }));
             }),
             untilDestroyed(this),
         ).subscribe();
@@ -355,17 +419,12 @@ export class PlayerPage implements OnInit {
         void this.updateUserPreferences();
     }
 
-    onShowMoreComments(): void {
+    async onShowMoreComments(): Promise<void> {
+        const animeId = await firstValueFrom(this.animeId$);
+        const episode = await firstValueFrom(this.episode$);
         const isShownAll = true;
 
-        combineLatest([
-            this.animeId$,
-            this.episode$,
-        ]).pipe(
-            take(1),
-            tap(([animeId, episode]) => this.store.dispatch(setIsShownAllAction({ animeId, episode, isShownAll }))),
-            untilDestroyed(this),
-        ).subscribe();
+        this.store.dispatch(setIsShownAllAction({ animeId, episode, isShownAll }));
     }
 
     async onCommentSend(commentText: string): Promise<void> {
@@ -383,5 +442,80 @@ export class PlayerPage implements OnInit {
 
     togglePlayerMode(): void {
         this.store.dispatch(togglePlayerModeAction());
+    }
+
+    onCommentLogin(): void {
+        this.store.dispatch(authShikimoriAction());
+    }
+
+    onCommentEdit(comment: Comment): void {
+        const userCommentFormEl: HTMLElement = this.userCommentFormEl()?.nativeElement;
+
+        this.editCommentSubject$.next(comment);
+
+        if (userCommentFormEl) {
+            /*
+                TODO: зарепортить в ionic, либо проверить воспризведение после обновы
+
+                баг Ionic'а:
+                промотка, без ожидания завершения анимации закрытия ion-popover ~100мс,
+                будет отмыватываться обратно к месту с открытием поповера
+            */
+            timer(200)
+                .pipe(
+                    take(1),
+                    tap(() => userCommentFormEl.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'center',
+                        inline: 'center',
+                    })),
+                    untilDestroyed(this),
+                )
+                .subscribe();
+        }
+    }
+
+    async onCommentSendEdited(comment: Comment): Promise<void> {
+        const animeId = await firstValueFrom(this.animeId$);
+        const episode = await firstValueFrom(this.episode$);
+
+        this.store.dispatch(editCommentAction({
+            animeId,
+            episode,
+            comment,
+        }));
+
+        this.actions$.pipe(
+            ofType(editCommentSuccessAction),
+            take(1),
+            tap(() => this.editCommentSubject$.next(null)),
+            untilDestroyed(this),
+        ).subscribe();
+    }
+
+    async onCommentDelete(comment: Comment): Promise<void> {
+        const animeId = await firstValueFrom(this.animeId$);
+        const episode = await firstValueFrom(this.episode$);
+
+        this.store.dispatch(deleteCommentAction({
+            animeId,
+            episode,
+            comment,
+        }));
+    }
+
+    onHighlightComment(commentId: ResourceIdType): void {
+        this.highlightCommentSubject$.next(commentId);
+
+        // сбрасываем, чтобы повторная подсветка работала
+        timer(1000).pipe(
+            take(1),
+            tap(() => this.highlightCommentSubject$.next(null)),
+            untilDestroyed(this),
+        ).subscribe();
+    }
+
+    onCancelCommentEdit(): void {
+        this.editCommentSubject$.next(null);
     }
 }

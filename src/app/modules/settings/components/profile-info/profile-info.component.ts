@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import { IonButton, IonIcon } from '@ionic/angular/standalone';
 import { NgIf } from '@angular/common';
-import { TranslocoPipe } from '@ngneat/transloco';
+import { TranslocoPipe } from '@jsverse/transloco';
 
 @Component({
     selector: 'app-profile-info',

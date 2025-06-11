@@ -3,11 +3,11 @@
         "APP_NAME": "Shikicinema",
         "SHIKIMORI": {
             "ANIME_KINDS": {
-                "TV" : "ТБ Серіал",
-                "OVA" : "ОВА",
-                "ONA" : "ОНА",
-                "MOVIE" : "Фільм",
-                "SPECIAL" : "Спешл",
+                "TV": "ТБ Серіал",
+                "OVA": "ОВА",
+                "ONA": "ОНА",
+                "MOVIE": "Фільм",
+                "SPECIAL": "Спешл",
                 "MUSIC": "Кліп",
                 "TV_SPECIAL": "ТБ Спецвипуск",
                 "PV": "Промовідео",
@@ -42,6 +42,7 @@
             }
         },
         "LANGUAGES": {
+            "ORIGINAL": "Оригінал",
             "RU": "Россійська",
             "UK": "Українська",
             "BE": "Білоруська",
@@ -122,11 +123,21 @@
             },
             "RELEVANT_VIDEOS_MISSING": "Схожі відео не було знайдено",
             "COMMENT_REPLY_MISSING": "Коментарій було видалено",
+            "SHOW_MORE_COMMENTS_BTN": "Переглянути інші коментарі",
             "USER_COMMENT_FORM": {
                 "LABEL": "Ваш коментар",
                 "PLACEHOLDER": "Введіть ваш коментар",
                 "SEND_SUCCESS": "Коментар відправлено",
-                "SEND_FAILURE": "Не вдалося відправити коментар"
+                "SEND_FAILURE": "Не вдалося відправити коментар",
+                "EDIT_CANCEL_BTN": "Скасувати редагування"
+            },
+            "COMMENT_ACTIONS": {
+                "EDIT": "Редагувати",
+                "DELETE": "Видалити",
+                "EDIT_SUCCESS": "Коментар змінено",
+                "EDIT_FAILURE": "Неможливо змінити коментарі",
+                "DELETE_SUCCESS": "Коментар видалено",
+                "DELETE_FAILURE": "Неможливо видалити коментар"
             },
             "PLAYER": {
                 "FAILED_PLACEHOLDER": "Це відео було видалено або ніколи не існувало"

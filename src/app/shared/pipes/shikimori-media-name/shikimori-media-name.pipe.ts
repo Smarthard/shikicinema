@@ -6,6 +6,7 @@ import { ShikimoriMediaNameType } from '@app/shared/types/shikimori/shikimori-me
 @Pipe({
     name: 'shikimoriMediaName',
     pure: true,
+    standalone: true,
 })
 export class ShikimoriMediaNamePipe implements PipeTransform {
     transform(

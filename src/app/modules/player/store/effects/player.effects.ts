@@ -1,9 +1,9 @@
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { ToastController } from '@ionic/angular/standalone';
-import { TranslocoService } from '@ngneat/transloco';
+import { TranslocoService } from '@jsverse/transloco';
 import {
     catchError,
     debounceTime,
@@ -23,6 +23,12 @@ import { UserAnimeRate } from '@app/shared/types/shikimori/user-anime-rate';
 import { UserRateStatusType } from '@app/shared/types/shikimori/user-rate-status.type';
 import {
     addVideosAction,
+    deleteCommentAction,
+    deleteCommentFailureAction,
+    deleteCommentSuccessAction,
+    editCommentAction,
+    editCommentFailureAction,
+    editCommentSuccessAction,
     findVideosAction,
     getAnimeInfoAction,
     getAnimeInfoFailureAction,
@@ -59,6 +65,14 @@ import { toVideoInfo } from '@app/shared/rxjs';
 
 @Injectable()
 export class PlayerEffects {
+    private readonly actions$ = inject(Actions);
+    private readonly store$ = inject(Store);
+    private readonly shikimori = inject(ShikimoriClient);
+    private readonly kodik = inject(KodikClient);
+    private readonly toast = inject(ToastController);
+    private readonly translate = inject(TranslocoService);
+    private readonly shikivideos = inject(ShikicinemaV1Client);
+
     findVideos$ = createEffect(() => this.actions$.pipe(
         ofType(findVideosAction),
         concatLatestFrom(({ animeId }) => this.store$.select(selectPlayerVideos(animeId))),
@@ -164,9 +178,10 @@ export class PlayerEffects {
             first((topic) => !!topic?.id),
             concatLatestFrom(() => this.store$.select(selectPlayerComments(animeId, episode))),
             filter(([topic, comments]) => comments?.length < topic?.comments_count),
-            mergeMap(([topic]) => this.shikimori.getComments(topic.id, page, limit)),
-            map((comments) => getCommentsSuccessAction({ animeId, episode, page, limit, comments })),
-            catchError((errors) => of(getCommentsFailureAction({ errors }))),
+            mergeMap(([topic]) => this.shikimori.getComments(topic.id, page, limit, '1').pipe(
+                map((comments) => getCommentsSuccessAction({ animeId, episode, page, limit, comments })),
+                catchError((errors) => of(getCommentsFailureAction({ errors }))),
+            )),
         )),
     ));
 
@@ -180,19 +195,28 @@ export class PlayerEffects {
 
     sendComment$ = createEffect(() => this.actions$.pipe(
         ofType(sendCommentAction),
-        switchMap(({ animeId, episode, commentText }) => this.store$.select(selectPlayerTopic(animeId, episode)).pipe(
-            switchMap((topic) =>
-                !topic?.id
-                    ? this.shikimori.createEpisodeTopic(animeId, episode).pipe(
-                        // eslint-disable-next-line camelcase
-                        map(({ topic_id }) => topic_id),
-                    )
-                    : of(topic.id),
-            ),
-            exhaustMap((commentableId) => this.shikimori.createComment(commentableId, commentText)),
-            map((comment) => sendCommentSuccessAction({ animeId, episode, comment })),
-            catchError((errors) => of(sendCommentFailureAction({ errors }))),
-        )),
+        concatLatestFrom(({ animeId, episode }) => this.store$.select(selectPlayerTopic(animeId, episode))),
+        switchMap(([{ animeId, episode, commentText }, topic]) => (!topic?.id
+            // если топика для комментирования эпизода нет - его надо создать
+            ? this.shikimori.createEpisodeTopic(animeId, episode).pipe(
+                switchMap(() => this.shikimori.getTopics(animeId, episode, true).pipe(
+                    map((newTopic) => {
+                        const newTopicId = newTopic?.[0]?.id;
+
+                        if (!newTopicId) {
+                            throw new Error('Topic id missing');
+                        }
+
+                        return newTopicId;
+                    }),
+                )),
+            )
+            : of(topic.id))
+            .pipe(
+                exhaustMap((commentableId) => this.shikimori.createComment(commentableId, commentText)),
+                map((comment) => sendCommentSuccessAction({ animeId, episode, comment })),
+                catchError((errors) => of(sendCommentFailureAction({ errors }))),
+            )),
     ));
 
     sendCommentSuccess$ = createEffect(() => this.actions$.pipe(
@@ -208,6 +232,11 @@ export class PlayerEffects {
             await toast.present();
         }),
     ), { dispatch: false });
+
+    updateTopicAfterCommentSent$ = createEffect(() => this.actions$.pipe(
+        ofType(sendCommentSuccessAction),
+        map(({ animeId, episode }) => getTopicsAction({ animeId, episode, revalidate: true })),
+    ));
 
     sendCommentFailure$ = createEffect(() => this.actions$.pipe(
         ofType(sendCommentFailureAction),
@@ -240,13 +269,75 @@ export class PlayerEffects {
         )),
     ));
 
-    constructor(
-        private actions$: Actions,
-        private store$: Store,
-        private shikivideos: ShikicinemaV1Client,
-        private shikimori: ShikimoriClient,
-        private kodik: KodikClient,
-        private toast: ToastController,
-        private translate: TranslocoService,
-    ) {}
+    editComment$ = createEffect(() => this.actions$.pipe(
+        ofType(editCommentAction),
+        switchMap(({ animeId, episode, comment }) => this.shikimori.editComment(comment).pipe(
+            map((edittedComment) => editCommentSuccessAction({ animeId, episode, comment: edittedComment })),
+            catchError((errors) => of(editCommentFailureAction({ errors }))),
+        )),
+    ));
+
+    editCommentSuccess$ = createEffect(() => this.actions$.pipe(
+        ofType(editCommentSuccessAction),
+        tap(async () => {
+            const toast = await this.toast.create({
+                id: 'shikimori-edit-comment-success',
+                message: this.translate.translate('PLAYER_MODULE.PLAYER_PAGE.COMMENT_ACTIONS.EDIT_SUCCESS'),
+                color: 'success',
+                duration: 1000,
+            });
+
+            await toast.present();
+        }),
+    ), { dispatch: false });
+
+    editCommentFailure$ = createEffect(() => this.actions$.pipe(
+        ofType(editCommentFailureAction),
+        tap(async () => {
+            const toast = await this.toast.create({
+                id: 'shikimori-edit-comment-failure',
+                message: this.translate.translate('PLAYER_MODULE.PLAYER_PAGE.COMMENT_ACTIONS.EDIT_FAILURE'),
+                color: 'danger',
+                duration: 1000,
+            });
+
+            await toast.present();
+        }),
+    ), { dispatch: false });
+
+    deleteComment$ = createEffect(() => this.actions$.pipe(
+        ofType(deleteCommentAction),
+        switchMap(({ animeId, episode, comment }) => this.shikimori.deleteComment(comment.id).pipe(
+            map(() => deleteCommentSuccessAction({ animeId, episode, commentId: comment.id })),
+            catchError((errors) => of(deleteCommentFailureAction({ errors }))),
+        )),
+    ));
+
+    deleteCommentSuccess$ = createEffect(() => this.actions$.pipe(
+        ofType(deleteCommentSuccessAction),
+        tap(async () => {
+            const toast = await this.toast.create({
+                id: 'shikimori-delete-comment-success',
+                message: this.translate.translate('PLAYER_MODULE.PLAYER_PAGE.COMMENT_ACTIONS.DELETE_SUCCESS'),
+                color: 'success',
+                duration: 1000,
+            });
+
+            await toast.present();
+        }),
+    ), { dispatch: false });
+
+    deleteCommentFailure$ = createEffect(() => this.actions$.pipe(
+        ofType(deleteCommentFailureAction),
+        tap(async () => {
+            const toast = await this.toast.create({
+                id: 'shikimori-delete-comment-failure',
+                message: this.translate.translate('PLAYER_MODULE.PLAYER_PAGE.COMMENT_ACTIONS.DELETE_FAILURE'),
+                color: 'danger',
+                duration: 1000,
+            });
+
+            await toast.present();
+        }),
+    ), { dispatch: false });
 }

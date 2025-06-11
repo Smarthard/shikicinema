@@ -11,6 +11,7 @@ import {
     HostBinding,
     OnInit,
     ViewEncapsulation,
+    inject,
 } from '@angular/core';
 import {
     FormControl,
@@ -31,7 +32,7 @@ import {
 } from '@ionic/angular/standalone';
 import { Store } from '@ngrx/store';
 import { Title } from '@angular/platform-browser';
-import { TranslocoPipe, TranslocoService } from '@ngneat/transloco';
+import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 
 import { GetShikimoriPagePipe } from '@app/shared/pipes/get-shikimori-page/get-shikimori-page.pipe';
 import { PersistenceService } from '@app/shared/services/persistence.service';
@@ -86,13 +87,11 @@ export class SettingsPage implements OnInit {
     @HostBinding('class.settings-page')
     private settingsPageClass = true;
 
-    constructor(
-        private readonly transloco: TranslocoService,
-        private readonly title: Title,
-        private readonly store: Store,
-        private readonly persistenceService: PersistenceService,
-        private readonly router: Router,
-    ) {}
+    private readonly transloco = inject(TranslocoService);
+    private readonly title = inject(Title);
+    private readonly store = inject(Store);
+    private readonly persistenceService = inject(PersistenceService);
+    private readonly router = inject(Router);
 
     readonly settings$ = this.store.select(selectSettings);
     readonly lastVisitedPage$ = this.store.select(selectLastVisitedPage);
@@ -163,7 +162,6 @@ export class SettingsPage implements OnInit {
     async goToLastPage(): Promise<void> {
         const lastPage = await firstValueFrom(this.lastVisitedPage$);
 
-        console.log('???', lastPage);
         await this.router.navigateByUrl(lastPage);
     }
 }

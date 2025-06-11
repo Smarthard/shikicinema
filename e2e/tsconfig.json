@@ -1,12 +1,11 @@
 {
-    "extends": "../tsconfig.json",
-    "compilerOptions": {
-        "outDir": "../out-tsc/e2e",
-        "module": "commonjs",
-        "target": "es2018",
-        "types": [
-            "jasmine",
-            "node"
-        ]
-    }
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "rootDir": "tests/",
+    "outDir": "build/",
+    "types": ["jest"]
+  },
+  "include": ["tests/**/*.ts"]
 }
