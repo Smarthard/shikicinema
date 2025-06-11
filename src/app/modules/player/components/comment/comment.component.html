@@ -28,26 +28,26 @@
                 >
                     <ion-icon slot="icon-only" name="ellipsis-vertical-outline"></ion-icon>
                 </ion-button>
-            }
 
-            <ion-popover
-                #commentActionsPopover
-                class="menu-popover"
-                [trigger]="`comment-${comment().id}-actions-trigger`"
-                triggerAction="click"
-                side="bottom"
-                alignment="end"
-                (click)="commentActionsPopover.dismiss()"
-            >
-                <ng-template>
-                    <app-modify-actions-popover
-                        [editLabel]="'PLAYER_MODULE.PLAYER_PAGE.COMMENT_ACTIONS.EDIT' | transloco"
-                        [deleteLabel]="'PLAYER_MODULE.PLAYER_PAGE.COMMENT_ACTIONS.DELETE' | transloco"
-                        (edit)="edit.emit()"
-                        (delete)="delete.emit()"
-                    />
-                </ng-template>
-            </ion-popover>
+                <ion-popover
+                    #commentActionsPopover
+                    class="menu-popover"
+                    [trigger]="`comment-${comment().id}-actions-trigger`"
+                    triggerAction="click"
+                    side="bottom"
+                    alignment="end"
+                    (click)="commentActionsPopover.dismiss()"
+                >
+                    <ng-template>
+                        <app-modify-actions-popover
+                            [editLabel]="'PLAYER_MODULE.PLAYER_PAGE.COMMENT_ACTIONS.EDIT' | transloco"
+                            [deleteLabel]="'PLAYER_MODULE.PLAYER_PAGE.COMMENT_ACTIONS.DELETE' | transloco"
+                            (edit)="edit.emit()"
+                            (delete)="delete.emit()"
+                        />
+                    </ng-template>
+                </ion-popover>
+            }
         </div>
     </div>
 
