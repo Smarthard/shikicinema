@@ -13,6 +13,7 @@ const initialShikimoriCredentialsState: ShikimoriCredentials = {
     shikimoriRefreshToken: '',
     accessExpireTimeMs: 0,
     refreshExpireTimeMs: 0,
+    scopes: [],
 };
 
 const initialState: AuthStoreInterface = {

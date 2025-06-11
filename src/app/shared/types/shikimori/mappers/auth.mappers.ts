@@ -8,6 +8,7 @@ export function toShikimoriCredentials(origin: Credentials): ShikimoriCredential
         shikimoriRefreshToken: origin.refresh_token,
         shikimoriBearerToken: origin.access_token,
         accessExpireTimeMs: (Number(origin.created_at) + Number(origin.expires_in)) * 1000,
-        refreshExpireTimeMs: (Number(origin.created_at) + dayInSeconds) * 1000,
+        refreshExpireTimeMs: (Number(origin.created_at) + dayInSeconds * 14) * 1000,
+        scopes: origin.scope?.split(' ') || [],
     };
 }

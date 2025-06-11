@@ -15,12 +15,8 @@ export const selectShikimoriRefreshToken = createSelector(
     (state) => state.shikimoriRefreshToken,
 );
 
+/** мы можем авторизоваться, пока у пользователя есть валидный рефреш токен */
 export const selectIsAuthenticated = createSelector(
-    selectFeatureAuth,
-    (state) => Boolean(state.shikimoriBearerToken && state.accessExpireTimeMs > Date.now()),
-);
-
-export const selectIsRefreshable = createSelector(
     selectFeatureAuth,
     (state) => Boolean(state.shikimoriRefreshToken && state.refreshExpireTimeMs > Date.now()),
 );
