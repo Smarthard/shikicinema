@@ -30,11 +30,6 @@
                                 "output": "assets"
                             },
                             {
-                                "glob": "**/*.svg",
-                                "input": "node_modules/ionicons/dist/ionicons/svg",
-                                "output": "./svg"
-                            },
-                            {
                                 "glob": "**/*",
                                 "input": "node_modules/ngx-scrollbar/assets/",
                                 "output": "assets"
