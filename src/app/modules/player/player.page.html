@@ -50,25 +50,25 @@
             (selection)="onVideoChange($event)"
         />
 
-        <ng-container *ngLet="isWatched$ | async as isWatched">
-            <app-control-panel
-                class="player-page__control-panel"
-                [anime]="anime$ | async"
-                [episodes]="videos$ | async | getEpisodes"
-                [selected]="episode$ | async"
-                [userRate]="userRate$ | async"
-                [isLoading]="isAnimeLoading$ | async"
-                [isWatched]="isWatched"
-                [showSidePanel]="isSmallScreen$ | async"
-                [isRewatching]="isRewatching$ | async"
-                [isMinified]="isPanelsMinified$ | async"
-                [playerMode]="playerMode$ | async"
-                (selection)="onEpisodeChange($event)"
-                (watch)="onWatch($event, isWatched)"
-                (openVideoModal)="onOpenVideoSelectorModal()"
-                (togglePlayerMode)="togglePlayerMode()"
-            />
-        </ng-container>
+        @let isWatched = isWatched$ | async;
+
+        <app-control-panel
+            class="player-page__control-panel"
+            [anime]="anime$ | async"
+            [episodes]="videos$ | async | getEpisodes"
+            [selected]="episode$ | async"
+            [userRate]="userRate$ | async"
+            [isLoading]="isAnimeLoading$ | async"
+            [isWatched]="isWatched"
+            [showSidePanel]="isSmallScreen$ | async"
+            [isRewatching]="isRewatching$ | async"
+            [isMinified]="isPanelsMinified$ | async"
+            [playerMode]="playerMode$ | async"
+            (selection)="onEpisodeChange($event)"
+            (watch)="onWatch($event, isWatched)"
+            (openVideoModal)="onOpenVideoSelectorModal()"
+            (togglePlayerMode)="togglePlayerMode()"
+        />
 
         @if ((isSmallScreen$ | async) === false) {
             <app-side-panel

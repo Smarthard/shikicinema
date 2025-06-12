@@ -25,7 +25,6 @@ import {
     ToastController,
 } from '@ionic/angular/standalone';
 import { ModalController, Platform } from '@ionic/angular';
-import { NgLetDirective } from 'ng-let';
 import { Store } from '@ngrx/store';
 import { Title } from '@angular/platform-browser';
 import { TranslocoService } from '@jsverse/transloco';
@@ -128,7 +127,6 @@ import { visitAnimePageAction } from '@app/modules/home/store/recent-animes/acti
         UploaderComponent,
         ToUploaderPipe,
         SwipeDirective,
-        NgLetDirective,
         CommentsComponent,
         UserCommentFormComponent,
         ShikimoriAnimeLinkPipe,
