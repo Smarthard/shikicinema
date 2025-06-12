@@ -2,6 +2,7 @@ import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import {
     ChangeDetectionStrategy,
     Component,
+    DestroyRef,
     OnInit,
     Renderer2,
     ViewEncapsulation,
@@ -11,7 +12,6 @@ import { DOCUMENT } from '@angular/common';
 import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
 import { Store } from '@ngrx/store';
 import { TranslocoService, getBrowserLang } from '@jsverse/transloco';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { addHours, compareAsc } from 'date-fns';
 import { addIcons } from 'ionicons';
 import { combineLatest, firstValueFrom } from 'rxjs';
@@ -22,6 +22,7 @@ import {
     map,
     tap,
 } from 'rxjs/operators';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import * as usedIcons from '@app/core/used-icons.config';
 import { HeaderComponent } from '@app/core/components/header/header.component';
@@ -32,7 +33,7 @@ import { selectCacheLastCheckUp } from '@app/store/cache/selectors/cache.selecto
 import { selectCustomTheme, selectLanguage, selectTheme } from '@app/store/settings/selectors/settings.selectors';
 import { updateLanguageAction, visitPageAction } from '@app/store/settings/actions/settings.actions';
 
-@UntilDestroy()
+
 @Component({
     selector: 'app-root',
     templateUrl: 'app.component.html',
@@ -53,6 +54,7 @@ export class AppComponent implements OnInit {
     private readonly router = inject(Router);
     private readonly route = inject(ActivatedRoute);
     private readonly persistenceService = inject(PersistenceService);
+    private readonly destroyRef = inject(DestroyRef);
 
     constructor() {
         addIcons(usedIcons);
@@ -83,7 +85,7 @@ export class AppComponent implements OnInit {
                 this.renderer.setAttribute(this.document.documentElement, 'lang', language);
                 this.store.dispatch(updateLanguageAction({ language }));
             }),
-            untilDestroyed(this),
+            takeUntilDestroyed(this.destroyRef),
         ).subscribe();
     }
 
@@ -120,7 +122,7 @@ export class AppComponent implements OnInit {
                     }
                 }
             }),
-            untilDestroyed(this),
+            takeUntilDestroyed(this.destroyRef),
         ).subscribe();
 
         combineLatest([
@@ -137,7 +139,7 @@ export class AppComponent implements OnInit {
                         styleEl.innerHTML = customTheme;
                     }
                 }),
-                untilDestroyed(this),
+                takeUntilDestroyed(this.destroyRef),
             )
             .subscribe();
     }
@@ -149,7 +151,7 @@ export class AppComponent implements OnInit {
     initOnNavigation(): void {
         this.router.events
             .pipe(
-                untilDestroyed(this),
+                takeUntilDestroyed(this.destroyRef),
                 filter((event) => event instanceof NavigationEnd),
                 filter<NavigationEnd>(({ url }) => url !== '/settings'),
                 tap<NavigationEnd>(({ url }) => this.store.dispatch(visitPageAction({ url }))),

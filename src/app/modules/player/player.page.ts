@@ -11,6 +11,7 @@ import { BreakpointObserver } from '@angular/cdk/layout';
 import {
     ChangeDetectionStrategy,
     Component,
+    DestroyRef,
     ElementRef,
     HostBinding,
     OnInit,
@@ -28,7 +29,6 @@ import { ModalController, Platform } from '@ionic/angular';
 import { Store } from '@ngrx/store';
 import { Title } from '@angular/platform-browser';
 import { TranslocoService } from '@jsverse/transloco';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
     debounceTime,
     distinctUntilChanged,
@@ -39,6 +39,7 @@ import {
     tap,
     withLatestFrom,
 } from 'rxjs/operators';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { AnimeBriefInfoInterface } from '@app/shared/types/shikimori/anime-brief-info.interface';
 import { Comment } from '@app/shared/types/shikimori/comment';
@@ -109,7 +110,6 @@ import { uploadVideoAction } from '@app/store/shikicinema/actions/upload-video.a
 import { visitAnimePageAction } from '@app/modules/home/store/recent-animes/actions';
 
 
-@UntilDestroy()
 @Component({
     selector: 'app-player-page',
     templateUrl: './player.page.html',
@@ -151,6 +151,7 @@ export class PlayerPage implements OnInit {
     private readonly toast = inject(ToastController);
     private readonly transloco = inject(TranslocoService);
     private readonly modalController = inject(ModalController);
+    private readonly destroyRef = inject(DestroyRef);
 
     private isOrientationPortraitSubject$ = new ReplaySubject<boolean>(1);
     private editCommentSubject$ = new BehaviorSubject<Comment>(null);
@@ -260,7 +261,7 @@ export class PlayerPage implements OnInit {
                 this.store.dispatch(findVideosAction({ animeId }));
                 this.store.dispatch(getAnimeInfoAction({ animeId }));
             }),
-            untilDestroyed(this),
+            takeUntilDestroyed(this.destroyRef),
         ).subscribe();
 
         this.episodeVideos$.pipe(
@@ -293,7 +294,7 @@ export class PlayerPage implements OnInit {
             }),
             map((relevantVideos) => relevantVideos?.[0]),
             tap((video) => this.onVideoChange(video, false)),
-            untilDestroyed(this),
+            takeUntilDestroyed(this.destroyRef),
         ).subscribe();
 
         combineLatest([
@@ -314,20 +315,20 @@ export class PlayerPage implements OnInit {
                 this.store.dispatch(getTopicsAction({ animeId, episode, revalidate: false }));
                 this.store.dispatch(getCommentsAction({ animeId, episode, page: 1, limit: 30 }));
             }),
-            untilDestroyed(this),
+            takeUntilDestroyed(this.destroyRef),
         ).subscribe();
 
         this.actions$.pipe(
             ofType(watchAnimeSuccessAction),
             tap(({ userRate }) => this.onEpisodeChange(userRate.episodes + 1)),
-            untilDestroyed(this),
+            takeUntilDestroyed(this.destroyRef),
         ).subscribe();
 
         this.platform.resize
             .pipe(
                 debounceTime(100),
                 tap(() => this.onResize()),
-                untilDestroyed(this),
+                takeUntilDestroyed(this.destroyRef),
             )
             .subscribe();
 
@@ -378,7 +379,7 @@ export class PlayerPage implements OnInit {
             withLatestFrom(this.lastAiredEpisode$),
             filter(([_, lastAiredEpisode]) => episode <= lastAiredEpisode && episode > 0),
             tap(([animeId]) => this.router.navigate(['/player', animeId, episode])),
-            untilDestroyed(this),
+            takeUntilDestroyed(this.destroyRef),
         ).subscribe();
     }
 
@@ -466,7 +467,7 @@ export class PlayerPage implements OnInit {
                         block: 'center',
                         inline: 'center',
                     })),
-                    untilDestroyed(this),
+                    takeUntilDestroyed(this.destroyRef),
                 )
                 .subscribe();
         }
@@ -486,7 +487,7 @@ export class PlayerPage implements OnInit {
             ofType(editCommentSuccessAction),
             take(1),
             tap(() => this.editCommentSubject$.next(null)),
-            untilDestroyed(this),
+            takeUntilDestroyed(this.destroyRef),
         ).subscribe();
     }
 
@@ -508,7 +509,7 @@ export class PlayerPage implements OnInit {
         timer(1000).pipe(
             take(1),
             tap(() => this.highlightCommentSubject$.next(null)),
-            untilDestroyed(this),
+            takeUntilDestroyed(this.destroyRef),
         ).subscribe();
     }
 

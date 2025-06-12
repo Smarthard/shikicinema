@@ -1,6 +1,7 @@
 import {
     ChangeDetectionStrategy,
     Component,
+    DestroyRef,
     OnInit,
     ViewEncapsulation,
     inject,
@@ -24,7 +25,6 @@ import { RouterModule } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Title } from '@angular/platform-browser';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
     map,
     shareReplay,
@@ -33,6 +33,7 @@ import {
     tap,
     withLatestFrom,
 } from 'rxjs/operators';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { AnimeGridInterface } from '@app/modules/home/types/anime-grid.interface';
 import { CardGridComponent } from '@app/modules/home/components/card-grid/card-grid.component';
@@ -53,7 +54,6 @@ import { selectRecentAnimes } from '@app/modules/home/store/recent-animes';
 import { selectShikimoriCurrentUser } from '@app/store/shikimori/selectors/shikimori.selectors';
 
 
-@UntilDestroy()
 @Component({
     selector: 'app-home',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -79,6 +79,7 @@ export class HomePage implements OnInit {
     private readonly store = inject(Store);
     private readonly title = inject(Title);
     private readonly transloco = inject(TranslocoService);
+    private readonly destroyRef = inject(DestroyRef);
 
     currentUser$: Observable<UserBriefInfoInterface>;
 
@@ -113,7 +114,7 @@ export class HomePage implements OnInit {
     initSubscriptions(): void {
         this.currentUser$
             .pipe(
-                untilDestroyed(this),
+                takeUntilDestroyed(this.destroyRef),
                 skipWhile((currentUser) => !currentUser?.id),
                 take(1),
                 tap(({ id, nickname }) => {
@@ -127,7 +128,7 @@ export class HomePage implements OnInit {
 
         this.sectionVisibilitySubject$
             .pipe(
-                untilDestroyed(this),
+                takeUntilDestroyed(this.destroyRef),
                 withLatestFrom(this.currentUser$),
                 tap(([event, currentUser]) => {
                     if (currentUser?.id && event.isVisible) {

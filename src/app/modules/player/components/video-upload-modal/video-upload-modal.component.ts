@@ -1,14 +1,13 @@
 import { AsyncPipe } from '@angular/common';
 import {
     ChangeDetectionStrategy,
-    ChangeDetectorRef,
     Component,
-    ElementRef,
+    DestroyRef,
     HostBinding,
     Input,
-    NgZone,
     OnInit,
     ViewEncapsulation,
+    inject,
 } from '@angular/core';
 import {
     FormControl,
@@ -27,8 +26,8 @@ import {
     ModalController,
 } from '@ionic/angular/standalone';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { distinctUntilChanged, tap } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { AnimeBriefInfoInterface } from '@app/shared/types/shikimori/anime-brief-info.interface';
 import { PlayerComponent } from '@app/modules/player/components/player/player.component';
@@ -44,7 +43,6 @@ import { getAnimeName } from '@app/shared/utils/get-anime-name.function';
 import { getLastAiredEpisode } from '@app/modules/player/utils';
 
 
-@UntilDestroy()
 @Component({
     selector: 'app-video-upload-modal',
     standalone: true,
@@ -68,6 +66,10 @@ import { getLastAiredEpisode } from '@app/modules/player/utils';
 export class VideoUploadModalComponent extends IonModal implements OnInit {
     @HostBinding('class.video-upload-modal')
     private videoUploadModalClass = true;
+
+    private readonly destroyRef = inject(DestroyRef);
+    private readonly transloco = inject(TranslocoService);
+    private readonly _modalController = inject(ModalController);
 
     private _episode: number;
 
@@ -96,17 +98,6 @@ export class VideoUploadModalComponent extends IonModal implements OnInit {
     readonly VideoLanguageEnum = VideoLanguageEnum;
     readonly lang$ = this.transloco.langChanges$;
 
-    // TODO: инжект ModalController - костыль, нужно убрать вместе со всем конструктором (см. нижнее todo)
-    constructor(
-        readonly transloco: TranslocoService,
-        private readonly _modalController: ModalController,
-        private readonly _changeDetectorRef: ChangeDetectorRef,
-        private readonly _elementRef: ElementRef,
-        private readonly _zone: NgZone,
-    ) {
-        super(_changeDetectorRef, _elementRef, _zone);
-    }
-
     ngOnInit(): void {
         this.uploadForm = new FormGroup({
             url: new FormControl('', [Validators.required, Validators.pattern(/^https?:\/\//)]),
@@ -124,7 +115,7 @@ export class VideoUploadModalComponent extends IonModal implements OnInit {
             .pipe(
                 distinctUntilChanged(),
                 tap(() => this.onUrlLoadReset()),
-                untilDestroyed(this),
+                takeUntilDestroyed(this.destroyRef),
             )
             .subscribe();
     }

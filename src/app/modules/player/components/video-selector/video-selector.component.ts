@@ -3,12 +3,14 @@ import { BehaviorSubject, Observable, ReplaySubject } from 'rxjs';
 import {
     ChangeDetectionStrategy,
     Component,
+    DestroyRef,
     EventEmitter,
     HostBinding,
     Input,
     OnInit,
     Output,
     ViewEncapsulation,
+    inject,
 } from '@angular/core';
 import {
     IonAccordion,
@@ -18,7 +20,6 @@ import {
     IonLabel,
 } from '@ionic/angular/standalone';
 import { TranslocoService } from '@jsverse/transloco';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
     combineLatestWith,
     filter,
@@ -26,6 +27,7 @@ import {
     tap,
     withLatestFrom,
 } from 'rxjs/operators';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { FilterByAuthorPipe } from '@app/shared/pipes/filter-by-author/filter-by-author.pipe';
 import { GetColorForSelectablePipe } from '@app/shared/pipes/get-color-for-selectable/get-color-for-selectable.pipe';
@@ -38,7 +40,7 @@ import { SortByDomainPipe } from '@app/shared/pipes/sort-by-domain/sort-by-domai
 import { VideoInfoInterface, VideoQualityEnum } from '@app/modules/player/types';
 import { cleanAuthorName } from '@app/shared/utils/clean-author-name.function';
 
-@UntilDestroy()
+
 @Component({
     selector: 'app-video-selector',
     standalone: true,
@@ -67,6 +69,9 @@ export class VideoSelectorComponent implements OnInit {
     @HostBinding('class.video-selector')
     private videoSelectorClass = true;
 
+    private readonly destroyRef = inject(DestroyRef);
+    private readonly transloco = inject(TranslocoService);
+
     readonly VideoQualityEnum = VideoQualityEnum;
 
     authors$: Observable<Set<string>>;
@@ -90,8 +95,6 @@ export class VideoSelectorComponent implements OnInit {
     @Output()
     selection = new EventEmitter<VideoInfoInterface>;
 
-    constructor(private readonly transloco: TranslocoService) {}
-
     ngOnInit(): void {
         this.selected$.pipe(
             filter((selected) => !!selected),
@@ -102,7 +105,7 @@ export class VideoSelectorComponent implements OnInit {
                 ...previouslySelected,
                 cleanedAuthorName,
             ])),
-            untilDestroyed(this),
+            takeUntilDestroyed(this.destroyRef),
         ).subscribe();
 
         this.authors$ = this.videos$.pipe(

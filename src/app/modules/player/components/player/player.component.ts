@@ -12,20 +12,22 @@ import {
 import {
     ChangeDetectionStrategy,
     Component,
+    DestroyRef,
     EventEmitter,
     HostBinding,
     Input,
     OnInit,
     Output,
     ViewEncapsulation,
+    inject,
 } from '@angular/core';
 import { TranslocoPipe } from '@jsverse/transloco';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { shareReplay, take } from 'rxjs/operators';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { UrlSanitizerPipe } from '@app/shared/pipes/url-sanitizer/url-sanitizer.pipe';
 
-@UntilDestroy()
+
 @Component({
     selector: 'app-player',
     standalone: true,
@@ -42,6 +44,8 @@ import { UrlSanitizerPipe } from '@app/shared/pipes/url-sanitizer/url-sanitizer.
 export class PlayerComponent implements OnInit {
     @HostBinding('class.player')
     private playerClass = true;
+
+    private readonly destroyRef = inject(DestroyRef);
 
     private _source: string;
     private _sourceLoading$ = new BehaviorSubject(true);
@@ -70,7 +74,7 @@ export class PlayerComponent implements OnInit {
         ).pipe(
             tap((isTimedOut) => isTimedOut && this.onTimeout()),
             shareReplay(1),
-            untilDestroyed(this),
+            takeUntilDestroyed(this.destroyRef),
         );
     }
 
@@ -78,7 +82,7 @@ export class PlayerComponent implements OnInit {
         this._sourceLoading$.pipe(
             filter(Boolean),
             tap(() => this.timeout$ = this._getTimeout(10_000)),
-            untilDestroyed(this),
+            takeUntilDestroyed(this.destroyRef),
         ).subscribe();
     }
 
