@@ -32,7 +32,6 @@ import { TranslocoService } from '@jsverse/transloco';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
     debounceTime,
-    delay,
     distinctUntilChanged,
     filter,
     map,
