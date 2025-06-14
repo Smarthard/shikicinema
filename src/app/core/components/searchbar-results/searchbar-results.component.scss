@@ -6,6 +6,7 @@
         max-height: 7rem;
         margin: 5px;
         border-left: 5px solid transparent;
+        cursor: pointer;
 
         &:hover {
             border-left-color: var(--ion-color-primary);
@@ -30,6 +31,10 @@
             margin-left: 12px;
         }
     }
+
+    .anime-info__title {
+        color: var(--ion-color-primary);
+    }
 }
 
 .anime-info {
@@ -38,6 +43,8 @@
         grid-template-columns: 1fr;
         grid-template-rows: repeat(2, 1fr);
         font-size: small;
+        line-height: 1rem;
+        max-height: 3.75rem;
 
         @include media-breakpoint-up('sm') {
             display: flex;

@@ -3,7 +3,6 @@ import {
     DatePipe,
     IMAGE_CONFIG,
     IMAGE_LOADER,
-    NgIf,
     NgTemplateOutlet,
     UpperCasePipe,
 } from '@angular/common';
@@ -17,6 +16,8 @@ import {
     output,
 } from '@angular/core';
 import {
+    IonButton,
+    IonIcon,
     IonItem,
     IonLabel,
     IonList,
@@ -46,7 +47,8 @@ import { trackById } from '@app/shared/utils/common-ngfor-tracking';
         IonLabel,
         IonNote,
         IonText,
-        NgIf,
+        IonButton,
+        IonIcon,
         AsyncPipe,
         DatePipe,
         RouterLink,
