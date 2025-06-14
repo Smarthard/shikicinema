@@ -4,6 +4,7 @@ import {
     ChangeDetectionStrategy,
     Component,
     DestroyRef,
+    HostBinding,
     OnInit,
     ViewEncapsulation,
     inject,
@@ -61,6 +62,9 @@ import { trackById } from '@app/shared/utils/common-ngfor-tracking';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ContributionsPage implements OnInit {
+    @HostBinding('class.contributions-page')
+    private contributionsPageClass = true;
+
     private readonly route = inject(ActivatedRoute);
     private readonly store = inject(Store);
     private readonly title = inject(Title);
