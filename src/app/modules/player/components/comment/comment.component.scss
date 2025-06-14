@@ -8,14 +8,12 @@
         flex: 1;
     }
 
-    &__avatar {
-        .image-card__img {
-            border-radius: 100%;
-        }
-    }
-
     &__avatar-wrap {
         --shc-comment-avatar-size: 7vh;
+
+        position: relative;
+        overflow: hidden;
+        border-radius: 100%;
 
         width: var(--shc-comment-avatar-size);
         height: var(--shc-comment-avatar-size);

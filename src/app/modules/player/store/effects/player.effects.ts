@@ -8,6 +8,7 @@ import {
     catchError,
     debounceTime,
     delay,
+    distinctUntilChanged,
     exhaustMap,
     filter,
     first,
@@ -61,6 +62,7 @@ import {
 import { selectShikimoriCurrentUser } from '@app/store/shikimori/selectors/shikimori.selectors';
 import { shikicinemaVideoMapper } from '@app/shared/types/shikicinema/v1';
 import { toVideoInfo } from '@app/shared/rxjs';
+import { visitAnimePageAction } from '@app/modules/home/store/recent-animes';
 
 
 @Injectable()
@@ -340,4 +342,15 @@ export class PlayerEffects {
             await toast.present();
         }),
     ), { dispatch: false });
+
+    loadTopicOnVisitAnime$ = createEffect(() => this.actions$.pipe(
+        ofType(visitAnimePageAction),
+        distinctUntilChanged((a, b) => a.anime === b.anime && a.episode === b.episode),
+        map(({ anime, episode }) => getTopicsAction({ animeId: anime.id, episode, revalidate: false })),
+    ));
+
+    loadCommentsOnTopicExists$ = createEffect(() => this.actions$.pipe(
+        ofType(getTopicsSuccessAction),
+        map(({ animeId, episode }) => getCommentsAction({ animeId, episode, page: 1, limit: 30 })),
+    ));
 }

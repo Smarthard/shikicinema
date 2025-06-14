@@ -4,6 +4,12 @@
     --shc-watched-episode-color-rgb: 41, 196, 103;
     --shc-watched-episode-color: rgb(var(--shc-watched-episode-color-rgb));
 
+    font-size: .825rem;
+
+    @include media-breakpoint-up('lg') {
+        font-size: 1rem;
+    }
+
     $player-min-height: 30vh;
     $player-max-height: 60vh;
     $player-min-width: calc($player-min-height * 16/9);

@@ -2,6 +2,7 @@ import {
     AfterViewInit,
     ChangeDetectionStrategy,
     Component,
+    DestroyRef,
     ElementRef,
     EventEmitter,
     HostBinding,
@@ -11,15 +12,15 @@ import {
     ViewChild,
     ViewChildren,
     ViewEncapsulation,
+    inject,
 } from '@angular/core';
 import { BehaviorSubject, combineLatest } from 'rxjs';
 import { IonRippleEffect } from '@ionic/angular/standalone';
 import { NgScrollbar, NgScrollbarModule } from 'ngx-scrollbar';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { tap } from 'rxjs/operators';
 
 
-@UntilDestroy()
 @Component({
     selector: 'app-episode-selector',
     standalone: true,
@@ -35,6 +36,8 @@ import { tap } from 'rxjs/operators';
 export class EpisodeSelectorComponent implements AfterViewInit {
     @HostBinding('class.episode-selector')
     private episodeSelectorClass = true;
+
+    private readonly destroyRef = inject(DestroyRef);
 
     private selectedSubject$ = new BehaviorSubject<number>(1);
 
@@ -75,7 +78,7 @@ export class EpisodeSelectorComponent implements AfterViewInit {
         combineLatest([this.episodesEl.changes, this.selectedSubject$])
             .pipe(
                 tap(([, episode]) => this.scrollToEpisode(episode)),
-                untilDestroyed(this),
+                takeUntilDestroyed(this.destroyRef),
             ).subscribe();
     }
 

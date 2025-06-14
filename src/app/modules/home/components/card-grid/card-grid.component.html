@@ -5,7 +5,7 @@
             height="100%"
             width="auto"
             [link]="rate.anime | getPlayerLink"
-            [imageUrl]="rate?.anime?.image?.original | getShikimoriPage | async"
+            [imageUrl]="rate?.anime?.image?.original"
             [name]="getAnimeName(rate.anime, currentLang$ | async)"
             [kind]="rate.anime.kind"
             [releaseDate]="rate.anime.released_on || rate.anime.aired_on"

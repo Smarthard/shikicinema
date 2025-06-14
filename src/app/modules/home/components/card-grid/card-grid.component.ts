@@ -11,10 +11,10 @@ import { TranslocoService } from '@jsverse/transloco';
 
 import { CardGridItemComponent } from '@app/modules/home/components/card-grid-item/card-grid-item.component';
 import { GetPlayerLinkPipe } from '@app/shared/pipes/get-player-link/get-player-link.pipe';
-import { GetShikimoriPagePipe } from '@app/shared/pipes/get-shikimori-page/get-shikimori-page.pipe';
 import { SkeletonBlockComponent } from '@app/shared/components/skeleton-block/skeleton-block.component';
 import { UserAnimeRate } from '@app/shared/types/shikimori/user-anime-rate';
 import { getAnimeName } from '@app/shared/utils/get-anime-name.function';
+import { provideShikimoriImageLoader } from '@app/shared/providers/shikimori-image-loader.provider';
 
 @Component({
     selector: 'app-card-grid',
@@ -26,7 +26,9 @@ import { getAnimeName } from '@app/shared/utils/get-anime-name.function';
         SkeletonBlockComponent,
         CardGridItemComponent,
         GetPlayerLinkPipe,
-        GetShikimoriPagePipe,
+    ],
+    providers: [
+        provideShikimoriImageLoader(96),
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,

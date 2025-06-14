@@ -8,12 +8,17 @@ import { provideScrollbarPolyfill } from 'ngx-scrollbar';
 import { AppComponent } from '@app/app.component';
 import { CachedAnimeInterceptor } from '@app/shared/interceptors/cached-animes.interceptor';
 import {
+    DEFAULT_SHIKIMORI_DOMAIN,
+    DEFAULT_SHIKIMORI_DOMAIN_TOKEN,
+    SHIKIMORI_DOMAIN_TOKEN,
+    shikimoriDomainFactory,
+} from '@app/core/providers/shikimori-domain';
+import {
     ElectronIpcProxyService,
     PLATFORM_API_TOKEN,
     ShikimoriClient,
     platformApiFactory,
 } from '@app/shared/services';
-import { SHIKIMORI_DOMAIN_TOKEN, shikimoriDomainFactory } from '@app/core/providers/shikimori-domain';
 import { ShikicinemaApiInterceptor } from '@app/shared/interceptors/shikicinema-api.interceptor';
 import { ShikimoriApiInterceptor } from '@app/shared/interceptors/shikimori-api.interceptor';
 import { ShikimoriDomainsService } from '@app/core/services/shikimori-domain.service';
@@ -40,7 +45,12 @@ bootstrapApplication(AppComponent, {
         provideIonicStorage(),
         ShikimoriClient,
         { provide: PLATFORM_API_TOKEN, useFactory: platformApiFactory, deps: [ElectronIpcProxyService] },
-        { provide: SHIKIMORI_DOMAIN_TOKEN, useFactory: shikimoriDomainFactory, deps: [ShikimoriDomainsService] },
+        { provide: DEFAULT_SHIKIMORI_DOMAIN_TOKEN, useValue: DEFAULT_SHIKIMORI_DOMAIN },
+        {
+            provide: SHIKIMORI_DOMAIN_TOKEN,
+            useFactory: shikimoriDomainFactory,
+            deps: [ShikimoriDomainsService, DEFAULT_SHIKIMORI_DOMAIN_TOKEN],
+        },
         { provide: HTTP_INTERCEPTORS, useClass: ShikimoriApiInterceptor, multi: true },
         { provide: HTTP_INTERCEPTORS, useClass: ShikicinemaApiInterceptor, multi: true },
         { provide: HTTP_INTERCEPTORS, useClass: CachedAnimeInterceptor, multi: true },

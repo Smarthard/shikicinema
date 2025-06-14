@@ -8,6 +8,7 @@ import {
 import {
     ChangeDetectionStrategy,
     Component,
+    DestroyRef,
     HostBinding,
     OnInit,
     ViewEncapsulation,
@@ -33,6 +34,7 @@ import {
 import { Store } from '@ngrx/store';
 import { Title } from '@angular/platform-browser';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { GetShikimoriPagePipe } from '@app/shared/pipes/get-shikimori-page/get-shikimori-page.pipe';
 import { PersistenceService } from '@app/shared/services/persistence.service';
@@ -43,7 +45,6 @@ import { Router } from '@angular/router';
 import { SettingsGroupComponent } from '@app/modules/settings/components/settings-group/settings-group.component';
 import { ThemeSettingsType } from '@app/store/settings/types/theme-settings.type';
 import { ToHumanReadableBytesPipe } from '@app/shared/pipes/to-human-readable-bytes/to-human-readable-bytes.pipe';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { authShikimoriAction, logoutShikimoriAction } from '@app/store/auth/actions/auth.actions';
 import { resetCacheAction } from '@app/store/cache/actions';
 import { selectLastVisitedPage, selectSettings } from '@app/store/settings/selectors/settings.selectors';
@@ -55,7 +56,6 @@ import {
 import { updateSettingsAction } from '@app/store/settings/actions/settings.actions';
 
 
-@UntilDestroy()
 @Component({
     selector: 'app-settings',
     standalone: true,
@@ -92,6 +92,7 @@ export class SettingsPage implements OnInit {
     private readonly store = inject(Store);
     private readonly persistenceService = inject(PersistenceService);
     private readonly router = inject(Router);
+    private readonly destroyRef = inject(DestroyRef);
 
     readonly settings$ = this.store.select(selectSettings);
     readonly lastVisitedPage$ = this.store.select(selectLastVisitedPage);
@@ -135,7 +136,7 @@ export class SettingsPage implements OnInit {
     async initSubscriptions(): Promise<void> {
         this.settingsForm.valueChanges
             .pipe(
-                untilDestroyed(this),
+                takeUntilDestroyed(this.destroyRef),
                 tap((form) => this.store.dispatch(updateSettingsAction({ config: form }))),
             )
             .subscribe();
