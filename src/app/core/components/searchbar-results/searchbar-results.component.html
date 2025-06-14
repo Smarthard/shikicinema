@@ -1,89 +1,84 @@
-<ion-list
-    *ngIf="results !== null; else searchSomething"
-    class="anime-search-list"
->
-    @if (isLoading) {
-        <ng-template [ngTemplateOutlet]="loadingSkeleton"></ng-template>
-    }
-
-    @if (!isLoading && results.length === 0) {
-        <ng-template [ngTemplateOutlet]="nothingFound"></ng-template>
-    }
-
-    @if (!isLoading && results.length > 0) {
-        @for (result of results; track trackById($index, result)) {
-            <ion-item
-                class="anime-search-list-item"
-                [routerLink]="'#'"
-                (click)="onResultClick($event, result, 'internal')"
-            >
-                <app-image-card
-                    class="anime-search-list-item__image"
-                    [imageUrl]="(shikimoriDomain$ | async) + result.image.original"
-                    [name]="result.name"
-                    [backgroundSize]="'cover'"
-                    [height]="'85px'"
-                    [width]="'50px'"
-                ></app-image-card>
-
-                <div class="anime-search-list-item__info anime-info">
-                    <ion-label class="anime-info__title">
-                        <a
-                            role="button"
-                            tabindex="0"
-                            (click)="onResultClick($event,  result, 'external')"
-                            (keydown.enter)="onResultClick($event,  result, 'external')"
-                            [title]="result | shikimoriMediaName: firstMediaName"
-                        >
-                            {{ result | shikimoriMediaName: firstMediaName }}
-                        </a>
-                        <a
-                            role="button"
-                            tabindex="0"
-                            (click)="onResultClick($event,  result, 'external')"
-                            (keydown.enter)="onResultClick($event,  result, 'external')"
-                            [title]="result | shikimoriMediaName: secondMediaName"
-                        >
-                            {{ result | shikimoriMediaName: secondMediaName }}
-                        </a>
-                    </ion-label>
-
-                    <ion-note
-                        *ngIf="result.kind"
-                        class="anime-info__kind"
-                    >
-                        {{ 'GLOBAL.SHIKIMORI.ANIME_KINDS.' + (result.kind | uppercase) | transloco }}
-                    </ion-note>
-                    <ion-text
-                        *ngIf="result.aired_on"
-                        class="anime-info__year"
-                    >
-                        {{ 'GLOBAL.COMMON.DATES.YEAR' | transloco: { year: (result.aired_on | date: 'YYYY') } }}
-                    </ion-text>
-                    <ion-text
-                        class="anime-info__status anime-info__status--{{result.status}}"
-                    >
-                        {{ 'GLOBAL.SHIKIMORI.ANIME_STATUSES.' + (result.status | uppercase) | transloco }}
-                    </ion-text>
-                </div>
-            </ion-item>
+@if (results() !== null) {
+    <ion-list class="anime-search-list">
+        @if (isLoading()) {
+            <ng-template [ngTemplateOutlet]="loadingSkeleton"></ng-template>
         }
-    }
-</ion-list>
+
+        @if (isNothingFound()) {
+            <ng-template [ngTemplateOutlet]="nothingFound"></ng-template>
+        }
+
+        @if (hasSearchResults()) {
+            @for (result of results(); track trackById($index, result)) {
+                <ion-item
+                    class="anime-search-list-item"
+                    [routerLink]="'#'"
+                    (click)="onResultClick($event, result, 'internal')"
+                >
+                    <app-image-card
+                        class="anime-search-list-item__image"
+                        [imageUrl]="result.image.original | getShikimoriPage | async"
+                        [name]="result.name"
+                    />
+
+                    <div class="anime-search-list-item__info anime-info">
+                        <ion-label class="anime-info__title">
+                            <a
+                                role="button"
+                                tabindex="0"
+                                (click)="onResultClick($event,  result, 'external')"
+                                (keydown.enter)="onResultClick($event,  result, 'external')"
+                                [title]="result | shikimoriMediaName: firstMediaName"
+                            >
+                                {{ result | shikimoriMediaName: firstMediaName }}
+                            </a>
+                            <a
+                                role="button"
+                                tabindex="0"
+                                (click)="onResultClick($event,  result, 'external')"
+                                (keydown.enter)="onResultClick($event,  result, 'external')"
+                                [title]="result | shikimoriMediaName: secondMediaName"
+                            >
+                                {{ result | shikimoriMediaName: secondMediaName }}
+                            </a>
+                        </ion-label>
+
+                        <ion-note
+                            *ngIf="result.kind"
+                            class="anime-info__kind"
+                        >
+                            {{ 'GLOBAL.SHIKIMORI.ANIME_KINDS.' + (result.kind | uppercase) | transloco }}
+                        </ion-note>
+                        <ion-text
+                            *ngIf="result.aired_on"
+                            class="anime-info__year"
+                        >
+                            {{ 'GLOBAL.COMMON.DATES.YEAR' | transloco: { year: (result.aired_on | date: 'YYYY') } }}
+                        </ion-text>
+                        <ion-text
+                            class="anime-info__status anime-info__status--{{result.status}}"
+                        >
+                            {{ 'GLOBAL.SHIKIMORI.ANIME_STATUSES.' + (result.status | uppercase) | transloco }}
+                        </ion-text>
+                    </div>
+                </ion-item>
+            }
+        }
+    </ion-list>
+} @else {
+    <ng-template [ngTemplateOutlet]="searchSomething"></ng-template>
+}
 
 <ng-template #searchSomething>
-    <ng-container *ngIf="isLoading">
+    @if (isLoading()) {
         <ng-template [ngTemplateOutlet]="loadingSkeleton"></ng-template>
-    </ng-container>
-
-    <ion-list
-        *ngIf="!isLoading"
-        class="anime-search-list"
-    >
-        <ion-item class="anime-search-list-item anime-search-list-item--info">
-            {{ 'GLOBAL.HEADER.SEARCHBAR.SEARCH_SOMETHING' | transloco }}
-        </ion-item>
-    </ion-list>
+    } @else {
+        <ion-list class="anime-search-list">
+            <ion-item class="anime-search-list-item anime-search-list-item--info">
+                {{ 'GLOBAL.HEADER.SEARCHBAR.SEARCH_SOMETHING' | transloco }}
+            </ion-item>
+        </ion-list>
+    }
 </ng-template>
 
 <ng-template #nothingFound>
@@ -101,7 +96,7 @@
                 <app-skeleton-block
                     [height]="'85px'"
                     [width]="'50px'"
-                ></app-skeleton-block>
+                />
 
                 <div class="anime-search-list-item__info anime-info">
                     <ion-label class="anime-info__title">
@@ -109,7 +104,7 @@
                             class="skeleton"
                             [height]="'27px'"
                             [width]="'100vw'"
-                        ></app-skeleton-block>
+                        />
                     </ion-label>
 
                     <ion-note class="anime-info__kind">
@@ -117,7 +112,7 @@
                             class="skeleton"
                             [height]="'20px'"
                             [width]="'50px'"
-                        ></app-skeleton-block>
+                        />
                     </ion-note>
 
                     <ion-text class="anime-info__year">
@@ -125,7 +120,7 @@
                             class="skeleton"
                             [height]="'20px'"
                             [width]="'80px'"
-                        ></app-skeleton-block>
+                        />
                     </ion-text>
                 </div>
             </ion-item>

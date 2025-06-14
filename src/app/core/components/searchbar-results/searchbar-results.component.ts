@@ -1,12 +1,20 @@
-import { AsyncPipe, DatePipe, NgIf, UpperCasePipe } from '@angular/common';
+import {
+    AsyncPipe,
+    DatePipe,
+    IMAGE_CONFIG,
+    IMAGE_LOADER,
+    NgIf,
+    NgTemplateOutlet,
+    UpperCasePipe,
+} from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
-    EventEmitter,
-    Inject,
-    Input,
-    Output,
     ViewEncapsulation,
+    computed,
+    effect,
+    input,
+    output,
 } from '@angular/core';
 import {
     IonItem,
@@ -18,13 +26,14 @@ import {
 import { RouterLink } from '@angular/router';
 import { TranslocoPipe } from '@jsverse/transloco';
 
+import { DEFAULT_SHIKIMORI_DOMAIN_TOKEN, SHIKIMORI_DOMAIN_TOKEN } from '@app/core/providers/shikimori-domain';
+import { GetShikimoriPagePipe } from '@app/shared/pipes/get-shikimori-page/get-shikimori-page.pipe';
 import { ImageCardComponent } from '@app/shared/components/image-card/image-card.component';
-import { Observable } from 'rxjs';
 import { ResultOpenTarget, SearchbarResult } from '@app/shared/types/searchbar.types';
-import { SHIKIMORI_DOMAIN_TOKEN } from '@app/core/providers/shikimori-domain';
 import { ShikimoriMediaNamePipe } from '@app/shared/pipes/shikimori-media-name/shikimori-media-name.pipe';
 import { ShikimoriMediaNameType } from '@app/shared/types/shikimori/shikimori-media-name.type';
 import { SkeletonBlockComponent } from '@app/shared/components/skeleton-block/skeleton-block.component';
+import { shikimoriImageLoader } from '@app/shared/utils/shikimori-image-loader.function';
 import { trackById } from '@app/shared/utils/common-ngfor-tracking';
 
 @Component({
@@ -46,41 +55,51 @@ import { trackById } from '@app/shared/utils/common-ngfor-tracking';
         ImageCardComponent,
         SkeletonBlockComponent,
         ShikimoriMediaNamePipe,
+        GetShikimoriPagePipe,
+        NgTemplateOutlet,
+    ],
+    providers: [
+        {
+            provide: IMAGE_CONFIG,
+            useValue: {
+                placeholderResolution: 32,
+            },
+        },
+        {
+            provide: IMAGE_LOADER,
+            useFactory: shikimoriImageLoader,
+            deps: [SHIKIMORI_DOMAIN_TOKEN, DEFAULT_SHIKIMORI_DOMAIN_TOKEN],
+        },
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
 })
 export class SearchbarResultsComponent {
-    @Input()
-    results: SearchbarResult[] | null;
+    readonly trackById = trackById;
+    readonly fakeResults = new Array<number>(5).fill(0);
 
-    @Input()
-    isLoading: boolean;
+    results = input<SearchbarResult[]>();
 
-    @Output()
-    openResult = new EventEmitter<[SearchbarResult, ResultOpenTarget]>();
+    isLoading = input<boolean>();
+
+    originalNameFirst = input<boolean>();
+
+    openResult = output<[SearchbarResult, ResultOpenTarget]>();
 
     firstMediaName: ShikimoriMediaNameType;
     secondMediaName: ShikimoriMediaNameType;
 
-    fakeResults = new Array<number>(15).fill(0);
+    protected readonly isNothingFound = computed(() => !this.isLoading() && this.results().length === 0);
+    protected readonly hasSearchResults = computed(() => !this.isLoading() && this.results().length > 0);
 
-    trackById = trackById;
-
-    constructor(
-        @Inject(SHIKIMORI_DOMAIN_TOKEN)
-        readonly shikimoriDomain$: Observable<string>,
-    ) {}
-
-    @Input()
-    set originalNameFirst(isOriginFirst: boolean) {
-        this.firstMediaName = isOriginFirst ? 'original' : 'russian';
-        this.secondMediaName = !isOriginFirst ? 'original' : 'russian';
-    }
+    whichNameFirstEffect = effect(() => {
+        this.firstMediaName = this.originalNameFirst() ? 'original' : 'russian';
+        this.secondMediaName = !this.originalNameFirst() ? 'original' : 'russian';
+    });
 
     onResultClick($event: Event, result: SearchbarResult, target: ResultOpenTarget): void {
         $event.stopPropagation();
         $event.preventDefault();
-        this.openResult.next([result, target]);
+        this.openResult.emit([result, target]);
     }
 }

@@ -1,4 +1,9 @@
-import { AsyncPipe, NgTemplateOutlet } from '@angular/common';
+import {
+    AsyncPipe,
+    IMAGE_CONFIG,
+    IMAGE_LOADER,
+    NgTemplateOutlet,
+} from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -10,11 +15,12 @@ import {
 import { TranslocoService } from '@jsverse/transloco';
 
 import { CardGridItemComponent } from '@app/modules/home/components/card-grid-item/card-grid-item.component';
+import { DEFAULT_SHIKIMORI_DOMAIN_TOKEN, SHIKIMORI_DOMAIN_TOKEN } from '@app/core/providers/shikimori-domain';
 import { GetPlayerLinkPipe } from '@app/shared/pipes/get-player-link/get-player-link.pipe';
-import { GetShikimoriPagePipe } from '@app/shared/pipes/get-shikimori-page/get-shikimori-page.pipe';
 import { SkeletonBlockComponent } from '@app/shared/components/skeleton-block/skeleton-block.component';
 import { UserAnimeRate } from '@app/shared/types/shikimori/user-anime-rate';
 import { getAnimeName } from '@app/shared/utils/get-anime-name.function';
+import { shikimoriImageLoader } from '@app/shared/utils/shikimori-image-loader.function';
 
 @Component({
     selector: 'app-card-grid',
@@ -26,7 +32,19 @@ import { getAnimeName } from '@app/shared/utils/get-anime-name.function';
         SkeletonBlockComponent,
         CardGridItemComponent,
         GetPlayerLinkPipe,
-        GetShikimoriPagePipe,
+    ],
+    providers: [
+        {
+            provide: IMAGE_CONFIG,
+            useValue: {
+                placeholderResolution: 96,
+            },
+        },
+        {
+            provide: IMAGE_LOADER,
+            useFactory: shikimoriImageLoader,
+            deps: [SHIKIMORI_DOMAIN_TOKEN, DEFAULT_SHIKIMORI_DOMAIN_TOKEN],
+        },
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,

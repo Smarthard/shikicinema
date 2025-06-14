@@ -20,7 +20,9 @@
         }
 
         &__image {
-            max-height: 6rem;
+            position: relative;
+            width: 4.125rem;
+            height: 6rem;
         }
 
         &__info {
