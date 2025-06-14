@@ -95,32 +95,30 @@
         @for (_ of fakeResults; track $index) {
             <ion-item class="anime-search-list-item">
                 <app-skeleton-block
-                    [height]="'85px'"
-                    [width]="'50px'"
+                    class="anime-search-list-item__image"
+                    width="4.125rem"
+                    height="6rem"
                 />
 
                 <div class="anime-search-list-item__info anime-info">
                     <ion-label class="anime-info__title">
                         <app-skeleton-block
-                            class="skeleton"
-                            [height]="'27px'"
-                            [width]="'100vw'"
+                            height="1rem"
+                            width="100vw"
                         />
                     </ion-label>
 
                     <ion-note class="anime-info__kind">
                         <app-skeleton-block
-                            class="skeleton"
-                            [height]="'20px'"
-                            [width]="'50px'"
+                            height="0.825rem"
+                            width="4rem"
                         />
                     </ion-note>
 
                     <ion-text class="anime-info__year">
                         <app-skeleton-block
-                            class="skeleton"
-                            [height]="'20px'"
-                            [width]="'80px'"
+                            height="0.825rem"
+                            width="3rem"
                         />
                     </ion-text>
                 </div>
