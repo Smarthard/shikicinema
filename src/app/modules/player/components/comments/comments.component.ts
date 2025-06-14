@@ -13,27 +13,22 @@ import {
     viewChildren,
 } from '@angular/core';
 import {
-    IMAGE_CONFIG,
-    IMAGE_LOADER,
-    NgTemplateOutlet,
-} from '@angular/common';
-import {
     IonButton,
     IonLabel,
     IonSpinner,
     ModalController,
     ToastController,
 } from '@ionic/angular/standalone';
+import { NgTemplateOutlet } from '@angular/common';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 
 import { Comment } from '@app/shared/types/shikimori/comment';
 import { CommentComponent } from '@app/modules/player/components/comment/comment.component';
-import { DEFAULT_SHIKIMORI_DOMAIN_TOKEN, SHIKIMORI_DOMAIN_TOKEN } from '@app/core/providers/shikimori-domain';
 import { MakeEmptyArrayPipe } from '@app/shared/pipes/make-empty-array/make-empty-array.pipe';
 import { ResourceIdType } from '@app/shared/types/resource-id.type';
 import { SortByCreatedAtPipe } from '@app/shared/pipes/sort-by-created-at/sort-by-created-at.pipe';
 import { isShowLastItemsPipe } from '@app/modules/player/pipes/is-show-last-items.pipe';
-import { shikimoriImageLoader } from '@app/shared/utils/shikimori-image-loader.function';
+import { provideShikimoriImageLoader } from '@app/shared/providers/shikimori-image-loader.provider';
 import { trackById } from '@app/shared/utils/common-ngfor-tracking';
 
 @Component({
@@ -52,17 +47,7 @@ import { trackById } from '@app/shared/utils/common-ngfor-tracking';
     ],
     providers: [
         ModalController,
-        {
-            provide: IMAGE_CONFIG,
-            useValue: {
-                placeholderResolution: 32,
-            },
-        },
-        {
-            provide: IMAGE_LOADER,
-            useFactory: shikimoriImageLoader,
-            deps: [SHIKIMORI_DOMAIN_TOKEN, DEFAULT_SHIKIMORI_DOMAIN_TOKEN],
-        },
+        provideShikimoriImageLoader(32),
     ],
     templateUrl: './comments.component.html',
     styleUrl: './comments.component.scss',

@@ -1,8 +1,6 @@
 import {
     AsyncPipe,
     DatePipe,
-    IMAGE_CONFIG,
-    IMAGE_LOADER,
     NgTemplateOutlet,
     UpperCasePipe,
 } from '@angular/common';
@@ -27,14 +25,13 @@ import {
 import { RouterLink } from '@angular/router';
 import { TranslocoPipe } from '@jsverse/transloco';
 
-import { DEFAULT_SHIKIMORI_DOMAIN_TOKEN, SHIKIMORI_DOMAIN_TOKEN } from '@app/core/providers/shikimori-domain';
 import { GetShikimoriPagePipe } from '@app/shared/pipes/get-shikimori-page/get-shikimori-page.pipe';
 import { ImageCardComponent } from '@app/shared/components/image-card/image-card.component';
 import { ResultOpenTarget, SearchbarResult } from '@app/shared/types/searchbar.types';
 import { ShikimoriMediaNamePipe } from '@app/shared/pipes/shikimori-media-name/shikimori-media-name.pipe';
 import { ShikimoriMediaNameType } from '@app/shared/types/shikimori/shikimori-media-name.type';
 import { SkeletonBlockComponent } from '@app/shared/components/skeleton-block/skeleton-block.component';
-import { shikimoriImageLoader } from '@app/shared/utils/shikimori-image-loader.function';
+import { provideShikimoriImageLoader } from '@app/shared/providers/shikimori-image-loader.provider';
 import { trackById } from '@app/shared/utils/common-ngfor-tracking';
 
 @Component({
@@ -61,17 +58,7 @@ import { trackById } from '@app/shared/utils/common-ngfor-tracking';
         NgTemplateOutlet,
     ],
     providers: [
-        {
-            provide: IMAGE_CONFIG,
-            useValue: {
-                placeholderResolution: 32,
-            },
-        },
-        {
-            provide: IMAGE_LOADER,
-            useFactory: shikimoriImageLoader,
-            deps: [SHIKIMORI_DOMAIN_TOKEN, DEFAULT_SHIKIMORI_DOMAIN_TOKEN],
-        },
+        provideShikimoriImageLoader(96),
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
