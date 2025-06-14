@@ -45,15 +45,16 @@ export const shikimoriImageLoader = (): ImageLoader => {
     const domainSignal = toSignal(domain$);
 
     return (config: ImageLoaderConfig): string => {
+        const path = getPath(config.src);
+        const domain = domainSignal() || defaultShikimoriDomain;
         const isMissingImg = config?.src?.includes('globals/missing_original');
 
         if (isMissingImg) {
-            return config?.src;
+            return `${domain}${path}`;
         }
 
-        const [, system, resource, resolution, resourceId] = getPath(config.src).split('/');
+        const [, system, resource, resolution, resourceId] = path.split('/');
         const width = getImageWidth(resource, config?.width, resolution);
-        const domain = domainSignal() || defaultShikimoriDomain;
 
         return `${domain}/${system}/${resource}/${width}/${resourceId}`;
     };
