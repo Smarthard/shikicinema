@@ -2,21 +2,21 @@
     appSwipe
     (appSwipeRight)="onOpenVideoSelectorModal()">
     <div class="player-page__wrapper"
-        [class.player-page__wrapper--mobile]="isSmallScreen$ | async"
-        [class.player-page__wrapper--compact]="(playerMode$ | async) === 'compact'">
+        [class.player-page__wrapper--mobile]="isSmallScreen()"
+        [class.player-page__wrapper--compact]="playerMode() === 'compact'">
         <div class="player-page__anime-info common-info">
             <div class="common-info__title">
-                @if (isAnimeLoading$ | async) {
+                @if (isAnimeLoading()) {
                     <app-skeleton-block
                         height="2rem"
-                        [width]="(isSmallScreen$ | async) ? '10rem' : '30rem'"
+                        [width]="isSmallScreen() ? '10rem' : '30rem'"
                     />
                 } @else {
                     <ion-text>
                         <h1 class="player-page__title text-ellipsis"
-                            [title]="(animeName$ | async)">
-                            <a [href]="shikimoriDomain$ | async | shikimoriAnimeLink: (animeId$ | async)">
-                                {{ animeName$ | async }}
+                            [title]="animeName()">
+                            <a [href]="animeId() | shikimoriAnimeLink | getShikimoriPage | async">
+                                {{ animeName() }}
                             </a>
                         </h1>
                     </ion-text>
@@ -24,70 +24,68 @@
             </div>
 
             <div class="common-info__video">
-                <app-uploader [uploader]="(currentVideo$ | async)?.uploader | toUploader | async" />
+                <app-uploader [uploader]="currentVideo()?.uploader | toUploader | async" />
             </div>
         </div>
 
         <app-kind-selector
             class="player-page__kind"
-            [class.ion-hide]="isVideoSelectionHidden$ | async"
-            [kinds]="episodeVideos$ | async | getActiveKinds"
-            [selected]="currentKind$ | async"
+            [class.ion-hide]="isSmallScreen()"
+            [kinds]="episodeVideos() | getActiveKinds"
+            [selected]="currentKind()"
             (selection)="onKindChange($event)"
         />
 
         <app-player class="player-page__player"
-            [loading]="isVideosLoading$ | async"
-            [source]="(currentVideo$ | async)?.url"
+            [loading]="isVideosLoading()"
+            [source]="currentVideo()?.url"
         />
 
         <app-video-selector
             class="player-page__video-selector"
-            [class.ion-hide]="isVideoSelectionHidden$ | async"
-            [videos]="episodeVideos$ | async | filterByKind: (currentKind$ | async)"
-            [selected]="currentVideo$ | async"
-            [kindDisplayMode]="playerKindDisplayMode$ | async"
+            [class.ion-hide]="isSmallScreen()"
+            [videos]="episodeVideos() | filterByKind: currentKind()"
+            [selected]="currentVideo()"
+            [kindDisplayMode]="playerKindDisplayMode()"
             (selection)="onVideoChange($event)"
         />
 
-        @let isWatched = isWatched$ | async;
-
         <app-control-panel
             class="player-page__control-panel"
-            [anime]="anime$ | async"
-            [episodes]="videos$ | async | getEpisodes"
-            [selected]="episode$ | async"
-            [userRate]="userRate$ | async"
-            [isLoading]="isAnimeLoading$ | async"
-            [isWatched]="isWatched"
-            [showSidePanel]="isSmallScreen$ | async"
-            [isRewatching]="isRewatching$ | async"
-            [isMinified]="isPanelsMinified$ | async"
-            [playerMode]="playerMode$ | async"
+            [anime]="anime()"
+            [episodes]="videos() | getEpisodes"
+            [selected]="episodeQ()"
+            [userRate]="userRate()"
+            [isLoading]="isAnimeLoading()"
+            [isWatched]="isWatched()"
+            [showSidePanel]="isSmallScreen()"
+            [isRewatching]="isRewatching()"
+            [isMinified]="isPanelsMinified()"
+            [playerMode]="playerMode()"
             (selection)="onEpisodeChange($event)"
-            (watch)="onWatch($event, isWatched)"
+            (watch)="onWatch($event, isWatched())"
             (openVideoModal)="onOpenVideoSelectorModal()"
             (togglePlayerMode)="togglePlayerMode()"
         />
 
-        @if ((isSmallScreen$ | async) === false) {
+        @if (isSmallScreen() === false) {
             <app-side-panel
                 class="player-page__side-panel"
-                [anime]="anime$ | async"
-                [episode]="episode$ | async"
-                [isLoading]="isAnimeLoading$ | async"
-                [isMinified]="isPanelsMinified$ | async"
+                [anime]="anime()"
+                [episode]="episodeQ()"
+                [isLoading]="isAnimeLoading()"
+                [isMinified]="isPanelsMinified()"
                 (uploaded)="onVideoUpload($event)"
             />
         }
 
         <app-comments
             class="player-page__comments"
-            [comments]="comments$ | async"
-            [isLoading]="isCommentsLoading$ | async"
-            [isPartialyLoading]="isCommentsPartiallyLoading$ | async"
-            [showMoreButton]="(isShownAllComments$ | async) === false"
-            [highlightComment]="highlightComment$ | async"
+            [comments]="comments()"
+            [isLoading]="isCommentsLoading()"
+            [isPartialyLoading]="isCommentsPartiallyLoading()"
+            [showMoreButton]="isShownAllComments() === false"
+            [highlightComment]="highlightComment()"
             (showMoreComments)="onShowMoreComments()"
             (editComment)="onCommentEdit($event)"
             (deleteComment)="onCommentDelete($event)"
@@ -96,8 +94,8 @@
         <app-user-comment-form
             #userCommentForm
             class="player-page__comment-form"
-            [isAuthorized]="isUserAuthorized$ | async"
-            [editComment]="editComment$ | async"
+            [isAuthorized]="isUserAuthorized()"
+            [editComment]="editComment()"
             (send)="onCommentSend($event)"
             (sendEdited)="onCommentSendEdited($event)"
             (login)="onCommentLogin()"
