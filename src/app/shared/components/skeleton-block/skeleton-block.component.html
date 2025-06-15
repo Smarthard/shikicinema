@@ -1,6 +1,5 @@
 <div class="skeleton"
-     [ngStyle]="{
-            height: height,
-            width: width
-        }"
+    [style.height]="height()"
+    [style.width]="width()"
+    [style.borderRadius]="borderRadius()"
 ></div>
