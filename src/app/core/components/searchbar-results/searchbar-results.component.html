@@ -12,7 +12,10 @@
             @for (result of results(); track trackById($index, result)) {
                 <ion-item
                     class="anime-search-list-item"
+                    tabindex="0"
                     (click)="onResultClick($event, result, 'internal')"
+                    (keydown.enter)="onResultClick($event, result, 'internal')"
+                    (keydown.space)="onResultClick($event, result, 'internal')"
                 >
                     <app-image-card
                         class="anime-search-list-item__image"
@@ -58,6 +61,8 @@
                         fill="solid"
                         size="small"
                         (click)="onResultClick($event, result, 'external')"
+                        (keydown.enter)="onResultClick($event, result, 'external')"
+                        (keydown.space)="onResultClick($event, result, 'external')"
                     >
                         <ion-icon icon="open-outline" />
                     </ion-button>
