@@ -12,7 +12,6 @@
             @for (result of results(); track trackById($index, result)) {
                 <ion-item
                     class="anime-search-list-item"
-                    [routerLink]="'#'"
                     (click)="onResultClick($event, result, 'internal')"
                 >
                     <app-image-card
@@ -23,8 +22,8 @@
 
                     <div class="anime-search-list-item__info anime-info">
                         <ion-label class="anime-info__title text-ellipsis">
-                            @let firstName = result | shikimoriMediaName: firstMediaName;
-                            @let secondName = result | shikimoriMediaName: secondMediaName;
+                            @let firstName = result | shikimoriMediaName: firstMediaName();
+                            @let secondName = result | shikimoriMediaName: secondMediaName();
 
                             <span [title]="firstName">
                                 {{ firstName }}

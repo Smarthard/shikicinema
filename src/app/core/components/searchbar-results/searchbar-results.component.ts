@@ -22,7 +22,6 @@ import {
     IonNote,
     IonText,
 } from '@ionic/angular/standalone';
-import { RouterLink } from '@angular/router';
 import { TranslocoPipe } from '@jsverse/transloco';
 
 import { GetShikimoriPagePipe } from '@app/shared/pipes/get-shikimori-page/get-shikimori-page.pipe';
@@ -48,7 +47,6 @@ import { trackById } from '@app/shared/utils/common-ngfor-tracking';
         IonIcon,
         AsyncPipe,
         DatePipe,
-        RouterLink,
         UpperCasePipe,
         TranslocoPipe,
         ImageCardComponent,
@@ -75,16 +73,10 @@ export class SearchbarResultsComponent {
 
     openResult = output<[SearchbarResult, ResultOpenTarget]>();
 
-    firstMediaName: ShikimoriMediaNameType;
-    secondMediaName: ShikimoriMediaNameType;
-
+    protected readonly firstMediaName = computed(() => this.originalNameFirst() ? 'original' : 'russian');
+    protected readonly secondMediaName = computed(() => !this.originalNameFirst() ? 'original' : 'russian');
     protected readonly isNothingFound = computed(() => !this.isLoading() && this.results().length === 0);
     protected readonly hasSearchResults = computed(() => !this.isLoading() && this.results().length > 0);
-
-    whichNameFirstEffect = effect(() => {
-        this.firstMediaName = this.originalNameFirst() ? 'original' : 'russian';
-        this.secondMediaName = !this.originalNameFirst() ? 'original' : 'russian';
-    });
 
     onResultClick($event: Event, result: SearchbarResult, target: ResultOpenTarget): void {
         $event.stopPropagation();
