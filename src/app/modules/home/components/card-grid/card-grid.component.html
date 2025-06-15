@@ -26,13 +26,33 @@
                 class="skeleton-item__img responsive-9by13"
                 height="100%"
                 width="auto"
+                borderRadius="0.25rem"
             />
 
-            <app-skeleton-block
-                class="skeleton-item__text"
-                [height]="'33px'"
-                width="100%"
-            />
+            <div class="skeleton-item__info">
+                <app-skeleton-block
+                    class="skeleton-item__text"
+                    height="1.08rem"
+                    width="100%"
+                    borderRadius="0.25rem"
+                />
+
+                <div class="skeleton-item__footer">
+                    <app-skeleton-block
+                        class="skeleton-item__text"
+                        height="0.8625rem"
+                        width="3rem"
+                    borderRadius="0.25rem"
+                    />
+
+                    <app-skeleton-block
+                        class="skeleton-item__text"
+                        height="0.8625rem"
+                        width="2.5rem"
+                    borderRadius="0.25rem"
+                    />
+                </div>
+            </div>
         </div>
     }
 </ng-template>

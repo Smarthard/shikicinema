@@ -41,6 +41,17 @@
         // 2 cards
         grid-template-rows:  8fr 1fr;
 
+        &__info {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        &__footer {
+            display: flex;
+            justify-content: space-between;
+        }
+
         @include media-breakpoint-up('sm') {
             // 3 cards
             grid-template-rows: 10fr 1fr;
