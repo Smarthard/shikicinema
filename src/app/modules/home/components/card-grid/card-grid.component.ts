@@ -1,19 +1,20 @@
-import { AsyncPipe, NgTemplateOutlet } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
     HostBinding,
-    Input,
     ViewEncapsulation,
     inject,
+    input,
 } from '@angular/core';
+import { NgTemplateOutlet } from '@angular/common';
 import { TranslocoService } from '@jsverse/transloco';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 import { CardGridItemComponent } from '@app/modules/home/components/card-grid-item/card-grid-item.component';
+import { GetAnimeNamePipe } from '@app/shared/pipes/get-anime-name/get-anime-name.pipe';
 import { GetPlayerLinkPipe } from '@app/shared/pipes/get-player-link/get-player-link.pipe';
 import { SkeletonBlockComponent } from '@app/shared/components/skeleton-block/skeleton-block.component';
 import { UserAnimeRate } from '@app/shared/types/shikimori/user-anime-rate';
-import { getAnimeName } from '@app/shared/utils/get-anime-name.function';
 import { provideShikimoriImageLoader } from '@app/shared/providers/shikimori-image-loader.provider';
 
 @Component({
@@ -22,10 +23,10 @@ import { provideShikimoriImageLoader } from '@app/shared/providers/shikimori-ima
     styleUrls: ['./card-grid.component.scss'],
     imports: [
         NgTemplateOutlet,
-        AsyncPipe,
         SkeletonBlockComponent,
         CardGridItemComponent,
         GetPlayerLinkPipe,
+        GetAnimeNamePipe,
     ],
     providers: [
         provideShikimoriImageLoader(96),
@@ -34,19 +35,15 @@ import { provideShikimoriImageLoader } from '@app/shared/providers/shikimori-ima
     encapsulation: ViewEncapsulation.None,
 })
 export class CardGridComponent {
+    @HostBinding('class.anime-grid')
+    private animeGridClass = true;
+
     private readonly _transloco = inject(TranslocoService);
 
-    readonly getAnimeName = getAnimeName;
-    readonly currentLang$ = this._transloco.langChanges$;
+    readonly currentLang = toSignal(this._transloco.langChanges$);
+    readonly userAnimeRatesSkeleton = new Array<number>(30).fill(0);
 
-    @HostBinding('class.anime-grid')
-    animeGridClass = true;
+    userAnimeRates = input<UserAnimeRate[]>();
 
-    @Input()
-    userAnimeRates: UserAnimeRate[];
-
-    @Input()
-    isLoading: boolean;
-
-    userAnimeRatesFake = new Array<number>(30).fill(0);
+    isLoading = input<boolean>();
 }

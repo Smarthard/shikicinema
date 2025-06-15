@@ -1,18 +1,18 @@
-@if (userAnimeRates?.length) {
-    @for (rate of userAnimeRates; track $index) {
+@if (userAnimeRates()?.length) {
+    @for (rate of userAnimeRates(); track $index) {
         <app-card-grid-item
             class="anime-grid__item"
             height="100%"
             width="auto"
             [link]="rate.anime | getPlayerLink"
-            [imageUrl]="rate?.anime?.image?.original"
-            [name]="getAnimeName(rate.anime, currentLang$ | async)"
+            [imageUrl]="rate.anime?.image?.original"
+            [name]="rate.anime | getAnimeName: currentLang()"
             [kind]="rate.anime.kind"
             [releaseDate]="rate.anime.released_on || rate.anime.aired_on"
         />
     }
 
-    @if (isLoading) {
+    @if (isLoading()) {
         <ng-container [ngTemplateOutlet]="skeletonTemplate" />
     }
 } @else {
@@ -20,7 +20,7 @@
 }
 
 <ng-template #skeletonTemplate>
-    @for (_ of userAnimeRatesFake; track $index) {
+    @for (_ of userAnimeRatesSkeleton; track $index) {
         <div class="anime-grid__item skeleton-item">
             <app-skeleton-block
                 class="skeleton-item__img responsive-9by13"
