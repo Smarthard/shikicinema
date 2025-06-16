@@ -257,8 +257,8 @@ export class PlayerEffects {
     getUserRate$ = createEffect(() => this.actions$.pipe(
         ofType(getUserRateAction),
         debounceTime(50),
-        switchMap(({ id, animeId }) => this.shikimori.getUserRateById(id).pipe(
-            map((userRate) => getUserRateSuccessAction({ animeId, userRate })),
+        switchMap(({ userId, animeId }) => this.shikimori.getUserRate(userId, animeId, 'Anime').pipe(
+            map((userRates) => getUserRateSuccessAction({ animeId, userRate: userRates?.[0] || null })),
             catchError((error) => {
                 // возможно удален пользователем на самом сайте Шикимори
                 const isUserRateNotFound = error instanceof HttpErrorResponse &&

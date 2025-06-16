@@ -56,7 +56,7 @@ export const watchAnimeSuccessAction = createAction(
 
 export const getUserRateAction = createAction(
     '[Player] get user rate by id',
-    props<{ id: ResourceIdType, animeId: ResourceIdType }>(),
+    props<{ animeId: ResourceIdType, userId: ResourceIdType }>(),
 );
 
 export const getUserRateSuccessAction = createAction(

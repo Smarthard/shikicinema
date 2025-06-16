@@ -175,10 +175,19 @@ export class ShikimoriClient {
         );
     }
 
-    getUserRateById(id: ResourceIdType): Observable<UserAnimeRate> {
+    getUserRate(
+        userId: ResourceIdType,
+        targetId: ResourceIdType,
+        targetType: 'Anime' | 'Manga',
+    ): Observable<UserAnimeRate[]> {
+        const params = new HttpParams()
+            .set('user_id', userId)
+            .set('target_type', targetType)
+            .set('target_id', targetId);
+
         return this.shikimoriDomain$.pipe(
             take(1),
-            switchMap((domain) => this.http.get<UserAnimeRate>(`${domain}/api/v2/user_rates/${id}`)),
+            switchMap((domain) => this.http.get<UserAnimeRate[]>(`${domain}/api/v2/user_rates`, { params })),
         );
     }
 

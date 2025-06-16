@@ -7,6 +7,8 @@ import {
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import {
+    first,
+    firstValueFrom,
     iif,
     mergeMap,
     of,
@@ -16,6 +18,7 @@ import {
 
 import { getUserRateAction } from '@app/modules/player/store/actions';
 import { selectCachedAnimeById } from '@app/store/cache';
+import { selectShikimoriCurrentUser } from '@app/store/shikimori/selectors/shikimori.selectors';
 
 @Injectable()
 export class CachedAnimeInterceptor implements HttpInterceptor {
@@ -29,17 +32,17 @@ export class CachedAnimeInterceptor implements HttpInterceptor {
 
             return this.store.select(selectCachedAnimeById(animeId)).pipe(
                 take(1),
-                tap((cached) => {
-                    if (cached) {
-                        const { user_rate: userRate = null } = cached;
+                tap(async (cached) => {
+                    const currentUser = await firstValueFrom(this.store.select(selectShikimoriCurrentUser)
+                        .pipe(first((user) => !!user?.id)),
+                    );
 
+                    if (cached) {
                         console.groupCollapsed(`[Cache] Hit for anime id ${animeId}`);
                         console.log('Result:', cached);
                         console.groupEnd();
 
-                        if (userRate?.id) {
-                            this.store.dispatch(getUserRateAction({ id: userRate.id, animeId }));
-                        }
+                        this.store.dispatch(getUserRateAction({ userId: currentUser.id, animeId }));
                     }
                 }),
                 mergeMap((anime) => iif(
