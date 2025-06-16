@@ -1,7 +1,6 @@
 import {
     ChangeDetectionStrategy,
     Component,
-    ElementRef,
     HostBinding,
     ViewEncapsulation,
     computed,
@@ -11,7 +10,6 @@ import {
     output,
     signal,
     untracked,
-    viewChildren,
 } from '@angular/core';
 import {
     IonAccordion,
@@ -66,7 +64,6 @@ export class VideoSelectorComponent {
     private readonly transloco = inject(TranslocoService);
 
     readonly VideoQualityEnum = VideoQualityEnum;
-    readonly authorAccordionsEl = viewChildren('authorAccordion', { read: ElementRef });
     readonly defaultAuthorName = toSignal<string>(this.transloco.selectTranslate('GLOBAL.VIDEO.AUTHORS.DEFAULT_NAME'));
 
     selected = input<VideoInfoInterface>();
@@ -89,6 +86,8 @@ export class VideoSelectorComponent {
 
     readonly selectedChangeEffect = effect(() => {
         const selected = this.selected();
+        /* нужно обновить сигнал, если поменялись видео */
+        this.videos();
 
         untracked(() => {
             if (selected) {
