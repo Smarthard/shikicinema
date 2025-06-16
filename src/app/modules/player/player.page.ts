@@ -1,4 +1,5 @@
 import { Actions, ofType } from '@ngrx/effects';
+import { AsyncPipe } from '@angular/common';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import {
     ChangeDetectionStrategy,
@@ -16,7 +17,6 @@ import {
     untracked,
     viewChild,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import {
     IonContent,
     IonText,
@@ -111,7 +111,7 @@ import { visitAnimePageAction } from '@app/modules/home/store/recent-animes/acti
     templateUrl: './player.page.html',
     styleUrl: './player.page.scss',
     imports: [
-        CommonModule,
+        AsyncPipe,
         PlayerComponent,
         VideoSelectorComponent,
         KindSelectorComponent,
