@@ -33,5 +33,6 @@
 @include meta.load-css("scss/content");
 @include meta.load-css("scss/responsive");
 @include meta.load-css("scss/shikimori");
+@include meta.load-css("scss/variables");
 @import 'tippy.js/dist/tippy.css';
 @import 'tippy.js/dist/svg-arrow.css';
