@@ -8,19 +8,20 @@
             rates: recent$ | async | sortRatesByDateVisited | slice: 0: 6,
             isLoaded: true,
         }"
-    ></ng-template>
+    />
 
     <!-- user's rates from shikimori -->
-    <ng-template
-        *ngFor="let grid of animeGrids"
-        [ngTemplateOutlet]="animeRatesGrid"
-        [ngTemplateOutletContext]="{
-            label: 'HOME_MODULE.HOME_PAGE.GRIDS.' + (grid.status | uppercase),
-            status: grid.status,
-            rates: grid.rates | async,
-            isLoaded: grid.isLoaded | async
-        }"
-    ></ng-template>
+    @for (grid of animeGrids; track $index) {
+        <ng-template
+            [ngTemplateOutlet]="animeRatesGrid"
+            [ngTemplateOutletContext]="{
+                label: 'HOME_MODULE.HOME_PAGE.GRIDS.' + (grid.status | uppercase),
+                status: grid.status,
+                rates: grid.rates | async,
+                isLoaded: grid.isLoaded | async
+            }"
+        />
+    }
 </ion-content>
 
 <ng-template
@@ -31,20 +32,18 @@
     let-isLoaded="isLoaded"
 >
     <section
+        class="anime-rates"
         [id]="status"
         [class.ion-hide]="isSectionHidden(isLoaded, rates)"
         (ngxVisibility)="onSectionVisibilityChange(status, $event)"
-        class="anime-rates"
     >
         <div class="anime-rates__label">
             <ion-text class="anime-rates__text">
                 {{ label | transloco | uppercase }}
-                <span
-                    *ngIf="isLoaded"
-                    class="anime-rates__counter"
-                >
-                    ({{ rates?.length || 0 }})
-                </span>
+
+                @if (isLoaded) {
+                    <span class="anime-rates__counter">({{ rates?.length || 0 }})</span>
+                }
             </ion-text>
 
             <ion-button
@@ -57,7 +56,7 @@
                     class="anime-rates__icon"
                     slot="icon-only"
                     [name]="getHiddenGridStatus(status) ? 'chevron-down' : 'chevron-up'"
-                ></ion-icon>
+                />
             </ion-button>
         </div>
 
@@ -66,6 +65,6 @@
             [class.ion-hide]="getHiddenGridStatus(status)"
             [userAnimeRates]="rates"
             [isLoading]="!isLoaded"
-        ></app-card-grid>
+        />
     </section>
 </ng-template>

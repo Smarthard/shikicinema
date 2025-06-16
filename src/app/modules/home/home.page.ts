@@ -1,4 +1,10 @@
 import {
+    AsyncPipe,
+    NgTemplateOutlet,
+    SlicePipe,
+    UpperCasePipe,
+} from '@angular/common';
+import {
     ChangeDetectionStrategy,
     Component,
     DestroyRef,
@@ -6,25 +12,21 @@ import {
     ViewEncapsulation,
     inject,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import {
     IonButton,
     IonContent,
     IonIcon,
     IonText,
 } from '@ionic/angular/standalone';
-import { LayoutModule } from '@angular/cdk/layout';
-import { NgxVisibilityModule } from 'ngx-visibility';
+import { NgxVisibilityDirective } from 'ngx-visibility';
 import {
     Observable,
     Subject,
     combineLatest,
 } from 'rxjs';
-import { RouterModule } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Title } from '@angular/platform-browser';
-import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
+import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import {
     map,
     shareReplay,
@@ -59,12 +61,12 @@ import { selectShikimoriCurrentUser } from '@app/store/shikimori/selectors/shiki
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     imports: [
-        CommonModule,
-        RouterModule,
-        FormsModule,
-        TranslocoModule,
-        LayoutModule,
-        NgxVisibilityModule,
+        NgxVisibilityDirective,
+        AsyncPipe,
+        UpperCasePipe,
+        SlicePipe,
+        NgTemplateOutlet,
+        TranslocoPipe,
         CardGridComponent,
         SortRatesByDateVisitedPipe,
         IonIcon,
