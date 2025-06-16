@@ -5,6 +5,11 @@
     background-color: var(--ion-color-light);
     border-radius: .25rem;
 
+    .scrollbar {
+        --scrollbar-thumb-color: var(--shc-scrollbar-color);
+        --scrollbar-track-color: var(--shc-scrollbar-background-color);
+    }
+
 
     .author-accordion {
         overflow: hidden;

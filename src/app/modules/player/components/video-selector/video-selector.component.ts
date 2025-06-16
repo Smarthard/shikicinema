@@ -18,6 +18,7 @@ import {
     IonItem,
     IonLabel,
 } from '@ionic/angular/standalone';
+import { NgScrollbar } from 'ngx-scrollbar';
 import { TranslocoService } from '@jsverse/transloco';
 import { UpperCasePipe } from '@angular/common';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -51,6 +52,7 @@ import { cleanAuthorName } from '@app/shared/utils/clean-author-name.function';
         SortByDomainPipe,
         HasQualitiesPipe,
         UpperCasePipe,
+        NgScrollbar,
     ],
     templateUrl: './video-selector.component.html',
     styleUrl: './video-selector.component.scss',
