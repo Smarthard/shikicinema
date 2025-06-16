@@ -1,16 +1,17 @@
-import { AsyncPipe, UpperCasePipe } from '@angular/common';
-import { BehaviorSubject, Observable, ReplaySubject } from 'rxjs';
 import {
     ChangeDetectionStrategy,
     Component,
-    DestroyRef,
-    EventEmitter,
+    ElementRef,
     HostBinding,
-    Input,
-    OnInit,
-    Output,
     ViewEncapsulation,
+    computed,
+    effect,
     inject,
+    input,
+    output,
+    signal,
+    untracked,
+    viewChildren,
 } from '@angular/core';
 import {
     IonAccordion,
@@ -20,14 +21,8 @@ import {
     IonLabel,
 } from '@ionic/angular/standalone';
 import { TranslocoService } from '@jsverse/transloco';
-import {
-    combineLatestWith,
-    filter,
-    map,
-    tap,
-    withLatestFrom,
-} from 'rxjs/operators';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { UpperCasePipe } from '@angular/common';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 import { FilterByAuthorPipe } from '@app/shared/pipes/filter-by-author/filter-by-author.pipe';
 import { GetColorForSelectablePipe } from '@app/shared/pipes/get-color-for-selectable/get-color-for-selectable.pipe';
@@ -45,7 +40,6 @@ import { cleanAuthorName } from '@app/shared/utils/clean-author-name.function';
     selector: 'app-video-selector',
     standalone: true,
     imports: [
-        AsyncPipe,
         IonAccordionGroup,
         IonAccordion,
         IonItem,
@@ -65,70 +59,57 @@ import { cleanAuthorName } from '@app/shared/utils/clean-author-name.function';
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class VideoSelectorComponent implements OnInit {
+export class VideoSelectorComponent {
     @HostBinding('class.video-selector')
     private videoSelectorClass = true;
 
-    private readonly destroyRef = inject(DestroyRef);
     private readonly transloco = inject(TranslocoService);
 
     readonly VideoQualityEnum = VideoQualityEnum;
+    readonly authorAccordionsEl = viewChildren('authorAccordion', { read: ElementRef });
+    readonly defaultAuthorName = toSignal<string>(this.transloco.selectTranslate('GLOBAL.VIDEO.AUTHORS.DEFAULT_NAME'));
 
-    authors$: Observable<Set<string>>;
-    selected$ = new ReplaySubject<VideoInfoInterface>(1);
-    videos$ = new ReplaySubject<VideoInfoInterface[]>(1);
-    openedByDefaultAuthors$ = new BehaviorSubject<string[]>([]);
+    selected = input<VideoInfoInterface>();
+    videos = input<VideoInfoInterface[]>();
+    kindDisplayMode = input<PlayerKindDisplayMode>();
 
-    @Input()
-    set selected(selected: VideoInfoInterface) {
-        this.selected$.next(selected);
-    }
+    selection = output<VideoInfoInterface>();
 
-    @Input()
-    set videos(videos: VideoInfoInterface[]) {
-        this.videos$.next(videos);
-    }
+    readonly openedByDefaultAuthors = signal<string[]>([]);
 
-    @Input()
-    kindDisplayMode: PlayerKindDisplayMode;
+    readonly authors = computed(() => {
+        const defaultAuthorName = this.defaultAuthorName();
+        const authors = this.videos()
+            ?.map(({ author }) => author)
+            ?.map((author) => cleanAuthorName(author, defaultAuthorName))
+            ?.sort();
 
-    @Output()
-    selection = new EventEmitter<VideoInfoInterface>;
+        return new Set(authors);
+    });
 
-    ngOnInit(): void {
-        this.selected$.pipe(
-            filter((selected) => !!selected),
-            combineLatestWith(this.transloco.selectTranslate('GLOBAL.VIDEO.AUTHORS.DEFAULT_NAME')),
-            map(([selected, defaultAuthor]) => cleanAuthorName(selected.author, defaultAuthor)),
-            withLatestFrom(this.openedByDefaultAuthors$),
-            tap(([cleanedAuthorName, previouslySelected]) => this.openedByDefaultAuthors$.next([
-                ...previouslySelected,
-                cleanedAuthorName,
-            ])),
-            takeUntilDestroyed(this.destroyRef),
-        ).subscribe();
+    readonly selectedChangeEffect = effect(() => {
+        const selected = this.selected();
 
-        this.authors$ = this.videos$.pipe(
-            combineLatestWith(this.transloco.selectTranslate('GLOBAL.VIDEO.AUTHORS.DEFAULT_NAME')),
-            map(([videos, defaultAuthor]) => new Set(
-                videos
-                    ?.map(({ author }) => author)
-                    ?.map((author) => cleanAuthorName(author, defaultAuthor))
-                    ?.sort(),
-            )),
-        );
-    }
+        untracked(() => {
+            if (selected) {
+                const defaultAuthorName = this.defaultAuthorName();
+                const cleaned = cleanAuthorName(selected.author, defaultAuthorName);
+
+                this.openedByDefaultAuthors.update((prevAuthors) => [...prevAuthors, cleaned]);
+            }
+        });
+    });
 
     onSelectionChange(selectedVideo: VideoInfoInterface): void {
         this.selection.emit(selectedVideo);
     }
 
     onAuthorSectionToggle(author: string): void {
-        const previouslySelected = this.openedByDefaultAuthors$.value;
+        const previouslySelected = this.openedByDefaultAuthors();
         const isClosingClick = previouslySelected.includes(author);
         const filteredAuthor = previouslySelected.filter((previous) => previous !== author);
         const withAuthor = [...previouslySelected, author];
 
-        this.openedByDefaultAuthors$.next(isClosingClick ? filteredAuthor : withAuthor);
+        this.openedByDefaultAuthors.set(isClosingClick ? filteredAuthor : withAuthor);
     }
 }
