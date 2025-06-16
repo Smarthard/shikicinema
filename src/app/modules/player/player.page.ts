@@ -178,7 +178,7 @@ export class PlayerPage implements OnInit {
     videos = computed(() => this.store.selectSignal(selectPlayerVideos(this.animeIdQ()))());
     isAnimeLoading = computed(() => this.store.selectSignal(selectPlayerAnimeLoading(this.animeIdQ()))());
     anime = computed(() => this.store.selectSignal(selectPlayerAnime(this.animeIdQ()))(), { equal: isEqId });
-    userRate = computed(() => this.store.selectSignal(selectPlayerUserRate(this.animeIdQ()))(), { equal: isEqId });
+    userRate = computed(() => this.store.selectSignal(selectPlayerUserRate(this.animeIdQ()))());
     authorPreferences = computed(() => this.store.selectSignal(selectAuthorPreferencesByAnime(this.animeIdQ()))());
     kindPreferences = computed(() => this.store.selectSignal(selectKindPreferencesByAnime(this.animeIdQ()))());
     domainPreferences = computed(() => this.store.selectSignal(selectDomainPreferencesByAnime(this.animeIdQ()))());
@@ -352,7 +352,10 @@ export class PlayerPage implements OnInit {
         const anime = this.anime();
         const userRate = this.userRate();
         const isRewarch = this.isRewatching() || userRate?.status === 'completed';
-        const watchedEpisode = isUnwatch ? episode - 1 : episode;
+        const isLastEpisodeWatched = userRate?.episodes >= this.lastAiredEpisode();
+        const watchedEpisode = isLastEpisodeWatched
+            ? episode
+            : isUnwatch ? episode - 1 : episode;
 
         this.store.dispatch(watchAnimeAction({ animeId: anime.id, episode: watchedEpisode, isRewarch }));
 

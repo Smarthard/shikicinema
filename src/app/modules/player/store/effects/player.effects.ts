@@ -114,6 +114,9 @@ export class PlayerEffects {
             const status: UserRateStatusType = isLastEpisodeWatched
                 ? 'completed'
                 : isRewarch ? 'rewatching' : 'watching';
+            const rewatches = isLastEpisodeWatched && isRewarch
+                ? rate?.rewatches + 1
+                : rate?.rewatches || 0;
 
             // убираем лишние поля, если у пользователя есть user_rate
             // если нет, создаем сразу с нужными значениями
@@ -124,6 +127,7 @@ export class PlayerEffects {
                 target_type: 'Anime',
                 episodes,
                 status,
+                rewatches,
             });
         }),
         switchMap((userRate) => (userRate?.id
