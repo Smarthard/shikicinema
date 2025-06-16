@@ -16,7 +16,7 @@ import {
 } from '@angular/core';
 import { BehaviorSubject, combineLatest } from 'rxjs';
 import { IonRippleEffect } from '@ionic/angular/standalone';
-import { NgScrollbar, NgScrollbarModule } from 'ngx-scrollbar';
+import { NgScrollbar } from 'ngx-scrollbar';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { tap } from 'rxjs/operators';
 
@@ -26,7 +26,7 @@ import { tap } from 'rxjs/operators';
     standalone: true,
     imports: [
         IonRippleEffect,
-        NgScrollbarModule,
+        NgScrollbar,
     ],
     templateUrl: './episode-selector.component.html',
     styleUrl: './episode-selector.component.scss',
