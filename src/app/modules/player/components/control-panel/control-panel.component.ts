@@ -8,8 +8,8 @@ import {
     ViewChild,
     ViewEncapsulation,
 } from '@angular/core';
-import { InputCustomEvent } from '@ionic/angular';
 import {
+    InputCustomEvent,
     IonButton,
     IonIcon,
     IonInput,

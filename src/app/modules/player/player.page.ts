@@ -20,9 +20,10 @@ import { CommonModule } from '@angular/common';
 import {
     IonContent,
     IonText,
+    ModalController,
+    Platform,
     ToastController,
 } from '@ionic/angular/standalone';
-import { ModalController, Platform } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Title } from '@angular/platform-browser';
