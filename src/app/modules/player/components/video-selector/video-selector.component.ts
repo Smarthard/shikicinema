@@ -88,7 +88,10 @@ export class VideoSelectorComponent {
 
     readonly selectedChangeEffect = effect(() => {
         const selected = this.selected();
-        /* нужно обновить сигнал, если поменялись видео */
+        /*
+            нужно обновить сигнал, если поменялись видео
+            иначе сломается открывашка групп
+         */
         this.videos();
 
         untracked(() => {
