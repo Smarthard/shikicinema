@@ -20,6 +20,7 @@ import {
     distinctUntilChanged,
     filter,
     map,
+    take,
     tap,
 } from 'rxjs/operators';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -28,9 +29,11 @@ import * as usedIcons from '@app/core/used-icons.config';
 import { HeaderComponent } from '@app/core/components/header/header.component';
 import { PersistenceService } from '@app/shared/services';
 import { cacheHealthCheckUpAction, resetCacheAction } from '@app/store/cache/actions';
+import { detectShikimoriDomainAction } from '@app/store/shikimori/actions';
 import { getCurrentUserAction } from '@app/store/shikimori/actions/get-current-user.action';
 import { selectCacheLastCheckUp } from '@app/store/cache/selectors/cache.selectors';
 import { selectCustomTheme, selectLanguage, selectTheme } from '@app/store/settings/selectors/settings.selectors';
+import { selectShikimoriDomain } from '@app/store/shikimori/selectors';
 import { updateLanguageAction, visitPageAction } from '@app/store/settings/actions/settings.actions';
 
 
@@ -70,6 +73,7 @@ export class AppComponent implements OnInit {
         this.initUser();
         this.initOnNavigation();
         this.initCacheHealthCheckUp();
+        this.initShikimoriDomainAvailability();
     }
 
     initLocale(): void {
@@ -185,5 +189,19 @@ export class AppComponent implements OnInit {
 
             console.info(`[Cache] Healthy, usage ratio ${usagePercent}%`);
         }
+    }
+
+    initShikimoriDomainAvailability(): void {
+        this.store.select(selectShikimoriDomain)
+            .pipe(
+                take(1),
+                tap((domain) => {
+                    if (!domain) {
+                        this.store.dispatch(detectShikimoriDomainAction());
+                    }
+                }),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe();
     }
 }

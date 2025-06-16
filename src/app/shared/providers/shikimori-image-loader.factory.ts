@@ -1,9 +1,10 @@
 import { ImageLoader, ImageLoaderConfig } from '@angular/common';
+import { Store } from '@ngrx/store';
 import { inject } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
 
-import { DEFAULT_SHIKIMORI_DOMAIN_TOKEN, SHIKIMORI_DOMAIN_TOKEN } from '@app/core/providers/shikimori-domain';
+import { DEFAULT_SHIKIMORI_DOMAIN_TOKEN } from '@app/core/providers/shikimori-domain';
 import { getPath } from '@app/shared/utils/get-path.function';
+import { selectShikimoriDomain } from '@app/store/shikimori/selectors';
 
 function getImageWidth(resource: string, loaderWidth: number | string, requestedWidth: string): string {
     const widthStr = `${loaderWidth}`;
@@ -40,9 +41,9 @@ function getImageWidth(resource: string, loaderWidth: number | string, requested
 
 // TODO: реализовать выбор меньших разрешений для ограниченного интернет соединения
 export const shikimoriImageLoader = (): ImageLoader => {
-    const domain$ = inject(SHIKIMORI_DOMAIN_TOKEN);
+    const store = inject(Store);
+    const domainSignal = store.selectSignal(selectShikimoriDomain);
     const defaultShikimoriDomain = inject(DEFAULT_SHIKIMORI_DOMAIN_TOKEN);
-    const domainSignal = toSignal(domain$);
 
     return (config: ImageLoaderConfig): string => {
         const path = getPath(config.src);

@@ -3,9 +3,11 @@ import {
     HttpHeaders,
     HttpParams,
 } from '@angular/common/http';
-import { Inject, Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
+import { Store } from '@ngrx/store';
 import {
+    filter,
     map,
     switchMap,
     take,
@@ -20,7 +22,6 @@ import { EpisodeNotification } from '@app/shared//types/shikimori/episode-notifi
 import { EpisodeNotificationResponse } from '@app/shared/types/shikimori/episode-notification-response.interface';
 import { FindAnimeQuery } from '@app/shared/types/shikimori/queries/find-anime-query';
 import { ResourceIdType } from '@app/shared/types/resource-id.type';
-import { SHIKIMORI_DOMAIN_TOKEN } from '@app/core/providers/shikimori-domain';
 import { ShikimoriCredentials } from '@app/store/auth/types/auth-store.interface';
 import { Topic } from '@app/shared/types/shikimori/topic';
 import { UserAnimeRate } from '@app/shared/types/shikimori/user-anime-rate';
@@ -29,6 +30,7 @@ import { UserBriefInfoInterface } from '@app/shared/types/shikimori/user-brief-i
 import { UserBriefRateInterface } from '@app/shared/types/shikimori/user-brief-rate.interface';
 import { UserInterface } from '@app/shared/types/shikimori/user.interface';
 import { environment } from '@app-env/environment';
+import { selectShikimoriDomain } from '@app/store/shikimori/selectors';
 import { setPaginationToParams } from '@app/shared/types/shikimori/helpers/pagination-helper';
 import { toShikimoriCredentials } from '@app/shared/types/shikimori/mappers/auth.mappers';
 
@@ -41,11 +43,9 @@ export class ShikimoriClient {
     readonly shikimoriClientId = environment.shikimori.authClientId;
     readonly shikimoriClientSecret = environment.shikimori.authClientSecret;
 
-    constructor(
-        @Inject(SHIKIMORI_DOMAIN_TOKEN)
-        private shikimoriDomain$: Observable<string>,
-        private http: HttpClient,
-    ) {}
+    private readonly http = inject(HttpClient);
+    private readonly store = inject(Store);
+    private readonly shikimoriDomain$ = this.store.select(selectShikimoriDomain).pipe(filter(Boolean));
 
     getNewToken(authCode: string): Observable<ShikimoriCredentials> {
         const params = new HttpParams()

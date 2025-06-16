@@ -1,5 +1,5 @@
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { TranslocoService } from '@jsverse/transloco';
 import { tap } from 'rxjs/operators';
 
@@ -7,6 +7,9 @@ import { updateLanguageAction } from '@app/store/settings/actions/settings.actio
 
 @Injectable()
 export class SettingsEffects {
+    private readonly actions$ = inject(Actions);
+    private readonly translate = inject(TranslocoService);
+
     updateSettingsEffect$ = createEffect(() => this.actions$.pipe(
         ofType(updateLanguageAction),
         tap(({ language }) => {
@@ -15,9 +18,4 @@ export class SettingsEffects {
             }
         }),
     ), { dispatch: false });
-
-    constructor(
-        private actions$: Actions,
-        private translate: TranslocoService,
-    ) {}
 }

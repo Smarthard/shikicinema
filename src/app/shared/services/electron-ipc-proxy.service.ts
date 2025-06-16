@@ -1,18 +1,19 @@
-import { Inject, Injectable } from '@angular/core';
-import { Observable, firstValueFrom } from 'rxjs';
+import { Injectable, inject } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { firstValueFrom } from 'rxjs';
 
 import { IpcApiInterface } from '@app-electron/types/ipc-api.interface';
-import { SHIKIMORI_DOMAIN_TOKEN } from '@app/core/providers/shikimori-domain';
 import { environment } from '@app-env/environment';
+import { selectShikimoriDomain } from '@app/store/shikimori/selectors';
 
 @Injectable()
 export class ElectronIpcProxyService implements IpcApiInterface {
     #electronApi: IpcApiInterface;
 
-    constructor(
-        @Inject(SHIKIMORI_DOMAIN_TOKEN)
-        private shikimoriDomain$: Observable<string>,
-    ) {
+    private readonly store = inject(Store);
+    private readonly shikimoriDomain$ = this.store.select(selectShikimoriDomain);
+
+    constructor() {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         this.#electronApi = (window as any).electron;
     }
