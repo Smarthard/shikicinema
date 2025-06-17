@@ -8,7 +8,7 @@ import {
 } from 'rxjs/operators';
 import { of } from 'rxjs';
 
-import { DEFAULT_SHIKIMORI_DOMAIN_TOKEN } from '@app/core/providers/shikimori-domain';
+import { DEFAULT_SHIKIMORI_DOMAIN_TOKEN, SHIKIMORI_DOMAINS } from '@app/core/providers/shikimori-domain';
 import { ShikimoriClient } from '@app/shared/services/shikimori-client.service';
 import { ShikimoriDomainsService } from '@app/core/services/shikimori-domain.service';
 import {
@@ -49,11 +49,7 @@ export class ShikimoriEffects {
 
     detectShikimoriDomainEffect$ = createEffect(() => this.actions$.pipe(
         ofType(detectShikimoriDomainAction),
-        switchMap(() => this.shikimoriDomainsService.detect(
-            'https://shikimori.one',
-            'https://shikimori.me',
-            'https://shikimori.org',
-        ).pipe(
+        switchMap(() => this.shikimoriDomainsService.detect(...SHIKIMORI_DOMAINS).pipe(
             timeout({ first: 10_000 }),
             map((domain) => detectShikimoriDomainSuccessAction({ domain })),
             catchError(() => of(detectShikimoriDomainFailureAction())),

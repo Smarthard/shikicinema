@@ -209,6 +209,10 @@
                     "CUSTOM_THEME": {
                         "LABEL": "Тема користувача",
                         "HELP": "Введіть свій CSS для зміни зовнішнього вигляду Shikicinema"
+                    },
+                    "SHIKIMORI_DOMAIN": {
+                        "LABEL": "Домен Шикиморі",
+                        "HELP": "Рекомендується перезавантажити Shikicinema після оновлення цього поля"
                     }
                 },
                 "PLAYER_PAGE": {
