@@ -5,36 +5,36 @@
         class="profile-info__service-icon"
     />
 
-    <div class="profile-info__service-text-wrap">
-        <strong class="profile-info__service-name">{{ serviceName }}</strong>
+  <div class="profile-info__service-text-wrap">
+    <strong class="profile-info__service-name">{{ serviceName }}</strong>
 
-        <span class="profile-info__service-helper ion-hide-md-down">
-            {{ 'SETTINGS_MODULE.SETTINGS_PAGE.SETTING_GROUPS.PROFILE_SETTINGS.CONNECTION_INFO.SYNC_TEXT' | transloco }}
-        </span>
-    </div>
+    <span class="profile-info__service-helper ion-hide-md-down">
+      {{ 'SETTINGS_MODULE.SETTINGS_PAGE.SETTING_GROUPS.PROFILE_SETTINGS.CONNECTION_INFO.SYNC_TEXT' | transloco }}
+    </span>
+  </div>
 </div>
 
 @if (isAuthorized) {
-    <div class="profile-info__account">
-        <img *ngIf="isAuthorized; else hasNoAvatar"
+  <div class="profile-info__account">
+    @if (isAuthorized) {
+        <img
             [src]="avatar"
             [alt]="nickname"
             class="profile-info__avatar"
         />
+    } @else {
+        <ion-icon
+            class="profile-info__avatar"
+            name="person-circle"
+        ></ion-icon>
+    }
 
-        <ng-template #hasNoAvatar>
-                <ion-icon
-                    class="profile-info__avatar"
-                    name="person-circle"
-                ></ion-icon>
-        </ng-template>
+    <span class="profile-info__nickname">{{ nickname }}</span>
 
-        <span class="profile-info__nickname">{{ nickname }}</span>
-
-        <ion-button color="danger" (click)="logout.emit()">
-            <ion-icon slot="icon-only" name="log-out-outline" />
-        </ion-button>
-    </div>
+    <ion-button color="danger" (click)="logout.emit()">
+        <ion-icon slot="icon-only" name="log-out-outline" />
+    </ion-button>
+  </div>
 } @else {
     <ion-button (click)="login.emit()">
         <ion-icon slot="icon-only" name="log-in-outline" />

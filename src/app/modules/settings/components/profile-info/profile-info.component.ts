@@ -8,14 +8,13 @@ import {
     ViewEncapsulation,
 } from '@angular/core';
 import { IonButton, IonIcon } from '@ionic/angular/standalone';
-import { NgIf } from '@angular/common';
+
 import { TranslocoPipe } from '@jsverse/transloco';
 
 @Component({
     selector: 'app-profile-info',
     standalone: true,
     imports: [
-        NgIf,
         TranslocoPipe,
         IonIcon,
         IonButton,
