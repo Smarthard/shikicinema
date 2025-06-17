@@ -1,4 +1,9 @@
-import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import {
+    HTTP_INTERCEPTORS,
+    provideHttpClient,
+    withFetch,
+    withInterceptorsFromDi,
+} from '@angular/common/http';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { enableProdMode, provideExperimentalZonelessChangeDetection } from '@angular/core';
 import { provideAnimations } from '@angular/platform-browser/animations';
@@ -34,7 +39,10 @@ bootstrapApplication(AppComponent, {
         provideAppState(),
         provideTranslocoRoot(),
         provideScrollbarPolyfill('assets/scroll-timeline-polyfill.js'),
-        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClient(
+            withFetch(),
+            withInterceptorsFromDi(),
+        ),
         provideAnimations(),
         provideIonicStorage(),
         ShikimoriClient,
