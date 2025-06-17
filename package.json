@@ -24,7 +24,7 @@
     "scripts": {
         "ng": "ng",
         "cap": "cap",
-        "esrun": "esrun",
+        "tsx": "tsx",
         "npx": "npx",
         "ionic": "ionic",
         "webpack-bundle-analyzer": "webpack-bundle-analyzer",
@@ -35,7 +35,7 @@
         "test": "ng test",
         "lint": "ng lint",
         "e2e": "ng e2e",
-        "set-env": "esrun setup-env.ts",
+        "set-env": "tsx setup-env.ts",
         "watch": "ionic build --watch --configuration development",
         "analyze-bundle": "ng build -c production --stats-json"
     },
@@ -90,7 +90,6 @@
         "@angular/compiler-cli": "^19.0.0",
         "@angular/language-service": "^19.0.0",
         "@capacitor/cli": "^5.6.0",
-        "@digitak/esrun": "^3.2.26",
         "@ionic/angular-toolkit": "^12.2.0",
         "@ionic/cli": "^7.2.1",
         "@ngrx/eslint-plugin": "^19.0.0",
@@ -128,6 +127,7 @@
         "puppeteer": "24.9.0",
         "terser-webpack-plugin": "^5.3.10",
         "ts-node": "^10.9.2",
+        "tsx": "^4.20.3",
         "typescript": "~5.8.3",
         "webpack": "^5.89.0"
     }
