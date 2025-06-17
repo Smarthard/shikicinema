@@ -37,7 +37,7 @@
         "e2e": "ng e2e",
         "set-env": "esrun setup-env.ts",
         "watch": "ionic build --watch --configuration development",
-        "analyze-bundle": "npm-run-all -s 'ng build --stats-json' 'webpack-bundle-analyzer dist/stats.json'"
+        "analyze-bundle": "ng build -c production --stats-json"
     },
     "workspaces": [
         "electron"
@@ -129,7 +129,6 @@
         "terser-webpack-plugin": "^5.3.10",
         "ts-node": "^10.9.2",
         "typescript": "~5.8.3",
-        "webpack": "^5.89.0",
-        "webpack-bundle-analyzer": "^4.10.1"
+        "webpack": "^5.89.0"
     }
 }
