@@ -10,7 +10,6 @@ import { createEffect, ofType } from '@ngrx/effects';
 import { from, of } from 'rxjs';
 
 import { AuthEffects } from '@app/store/auth/effects/auth.effects';
-import { SHIKIMORI_DOMAIN_TOKEN } from '@app/core/providers/shikimori-domain';
 import {
     authShikimoriAction,
     authShikimoriFailureAction,
@@ -18,12 +17,14 @@ import {
 } from '@app/store/auth/actions/auth.actions';
 import { environment } from '@app-env/environment';
 import { getAuthorizationCode } from '@app/shared/utils/shikimori-api.web-extension.utils';
+import { selectShikimoriDomain } from '@app/store/shikimori/selectors';
+
 
 @Injectable()
 export class AuthWebExtensionEffects extends AuthEffects {
     readonly shikimoriClientId = environment.shikimori.authClientId;
 
-    readonly shikimoriDomain$ = inject(SHIKIMORI_DOMAIN_TOKEN);
+    readonly shikimoriDomain$ = this.store.select(selectShikimoriDomain);
 
     override oauthShikimori$ = createEffect(() => this.actions$.pipe(
         ofType(authShikimoriAction),

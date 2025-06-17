@@ -1,46 +1,41 @@
 import { Actions, ofType } from '@ngrx/effects';
-import { ActivatedRoute, Router } from '@angular/router';
-import {
-    BehaviorSubject,
-    ReplaySubject,
-    combineLatest,
-    firstValueFrom,
-    timer,
-} from 'rxjs';
+import { AsyncPipe } from '@angular/common';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import {
     ChangeDetectionStrategy,
     Component,
+    DestroyRef,
     ElementRef,
     HostBinding,
     OnInit,
     ViewEncapsulation,
+    computed,
+    effect,
     inject,
+    input,
+    signal,
+    untracked,
     viewChild,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import {
     IonContent,
     IonText,
+    ModalController,
+    Platform,
     ToastController,
 } from '@ionic/angular/standalone';
-import { ModalController, Platform } from '@ionic/angular';
-import { NgLetDirective } from 'ng-let';
+import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Title } from '@angular/platform-browser';
 import { TranslocoService } from '@jsverse/transloco';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
     debounceTime,
-    delay,
-    distinctUntilChanged,
-    filter,
     map,
-    switchMap,
     take,
     tap,
-    withLatestFrom,
 } from 'rxjs/operators';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { timer } from 'rxjs';
 
 import { AnimeBriefInfoInterface } from '@app/shared/types/shikimori/anime-brief-info.interface';
 import { Comment } from '@app/shared/types/shikimori/comment';
@@ -49,11 +44,11 @@ import { ControlPanelComponent } from '@app/modules/player/components/control-pa
 import { FilterByKindPipe } from '@app/shared/pipes/filter-by-kind/filter-by-kind.pipe';
 import { GetActiveKindsPipe } from '@app/shared/pipes/get-active-kinds/get-active-kinds.pipe';
 import { GetEpisodesPipe } from '@app/shared/pipes/get-episodes/get-episodes.pipe';
+import { GetShikimoriPagePipe } from '@app/shared/pipes/get-shikimori-page/get-shikimori-page.pipe';
 import { KindSelectorComponent } from '@app/modules/player/components/kind-selector/kind-selector.component';
 import { NoPreferenceSymbol } from '@app/store/settings/types';
 import { PlayerComponent } from '@app/modules/player/components/player/player.component';
 import { ResourceIdType } from '@app/shared/types/resource-id.type';
-import { SHIKIMORI_DOMAIN_TOKEN } from '@app/core/providers/shikimori-domain';
 import { ShikimoriAnimeLinkPipe } from '@app/shared/pipes/shikimori-anime-link/shikimori-anime-link.pipe';
 import { SidePanelComponent } from '@app/modules/player/components/side-panel/side-panel.component';
 import { SkeletonBlockComponent } from '@app/shared/components/skeleton-block/skeleton-block.component';
@@ -71,8 +66,6 @@ import {
     editCommentSuccessAction,
     findVideosAction,
     getAnimeInfoAction,
-    getCommentsAction,
-    getTopicsAction,
     sendCommentAction,
     setIsShownAllAction,
     watchAnimeAction,
@@ -83,6 +76,8 @@ import { filterVideosByPreferences } from '@app/modules/player/utils/filter-vide
 import { getAnimeName } from '@app/shared/utils/get-anime-name.function';
 import { getDomain } from '@app/shared/utils/get-domain.function';
 import { getLastAiredEpisode, isEpisodeWatched } from '@app/modules/player/utils';
+import { isEq } from '@app/shared/utils/is-eq.function';
+import { isEqId } from '@app/shared/utils/is-eq-id.function';
 import {
     selectAuthorPreferencesByAnime,
     selectDomainPreferencesByAnime,
@@ -111,13 +106,12 @@ import { uploadVideoAction } from '@app/store/shikicinema/actions/upload-video.a
 import { visitAnimePageAction } from '@app/modules/home/store/recent-animes/actions';
 
 
-@UntilDestroy()
 @Component({
     selector: 'app-player-page',
     templateUrl: './player.page.html',
     styleUrl: './player.page.scss',
     imports: [
-        CommonModule,
+        AsyncPipe,
         PlayerComponent,
         VideoSelectorComponent,
         KindSelectorComponent,
@@ -129,10 +123,10 @@ import { visitAnimePageAction } from '@app/modules/home/store/recent-animes/acti
         UploaderComponent,
         ToUploaderPipe,
         SwipeDirective,
-        NgLetDirective,
         CommentsComponent,
         UserCommentFormComponent,
         ShikimoriAnimeLinkPipe,
+        GetShikimoriPagePipe,
         SidePanelComponent,
         IonText,
         IonContent,
@@ -145,7 +139,6 @@ export class PlayerPage implements OnInit {
     private playerPageClass = true;
 
     private readonly store = inject(Store);
-    private readonly route = inject(ActivatedRoute);
     private readonly router = inject(Router);
     private readonly title = inject(Title);
     private readonly platform = inject(Platform);
@@ -154,127 +147,82 @@ export class PlayerPage implements OnInit {
     private readonly toast = inject(ToastController);
     private readonly transloco = inject(TranslocoService);
     private readonly modalController = inject(ModalController);
+    private readonly destroyRef = inject(DestroyRef);
 
-    private isOrientationPortraitSubject$ = new ReplaySubject<boolean>(1);
-    private editCommentSubject$ = new BehaviorSubject<Comment>(null);
-    private highlightCommentSubject$ = new BehaviorSubject<ResourceIdType>(null);
+    readonly animeId = input<string>(null);
+    readonly episode = input<string>();
 
-    private userCommentFormEl = viewChild('userCommentForm', { read: ElementRef });
+    private readonly userCommentFormEl = viewChild('userCommentForm', { read: ElementRef });
 
-    readonly shikimoriDomain$ = inject(SHIKIMORI_DOMAIN_TOKEN);
-    readonly isPreferencesToggleOn$ = this.store.select(selectPreferencesToggle);
-    readonly playerMode$ = this.store.select(selectPlayerMode);
-    readonly playerKindDisplayMode$ = this.store.select(selectPlayerKindDisplayMode);
+    readonly isPreferencesToggleOn = this.store.selectSignal(selectPreferencesToggle);
+    readonly playerMode = this.store.selectSignal(selectPlayerMode);
+    readonly playerKindDisplayMode = this.store.selectSignal(selectPlayerKindDisplayMode);
+    readonly isUserAuthorized = this.store.selectSignal(selectIsAuthenticated);
 
-    readonly isSmallScreen$ = combineLatest([
-        this.playerMode$,
-        this.breakpointObserver.observe([
-            '(max-width: 1599px) and (max-resolution: 1dppx)',
-            '(max-width: 1399px) and (min-resolution: 2dppx)',
-        ]).pipe(map(({ matches }) => matches)),
-    ]).pipe(
-        map(([playerMode, isMediaMatch]) => playerMode !== 'compact' && isMediaMatch || playerMode === 'full'),
-    );
+    readonly isMediaMatch = toSignal(this.breakpointObserver.observe([
+        '(max-width: 1599px) and (max-resolution: 1dppx)',
+        '(max-width: 1399px) and (min-resolution: 2dppx)',
+    ]).pipe(map(({ matches }) => matches)));
 
-    readonly isPanelsMinified$ = combineLatest([
-        this.isOrientationPortraitSubject$,
-        this.isSmallScreen$,
-    ]).pipe(
-        map(([isPortrait, isSmallScreen]) => isPortrait || isSmallScreen),
+    readonly isSmallScreen = computed(
+        () => this.playerMode() !== 'compact' && this.isMediaMatch() || this.playerMode() === 'full',
+        { equal: isEq },
     );
 
-    readonly editComment$ = this.editCommentSubject$.asObservable();
-    readonly highlightComment$ = this.highlightCommentSubject$.asObservable();
-    readonly isVideoSelectionHidden$ = this.isSmallScreen$;
+    readonly isPanelsMinified = computed(() => this.isOrientationPortrait() || this.isSmallScreen());
+    readonly userSelectedLanguage = toSignal(this.transloco.langChanges$);
 
-    animeId$ = this.route.params.pipe(
-        map(({ animeId }) => animeId as string),
-        distinctUntilChanged(),
-    );
+    animeIdQ = computed(() => this.animeId(), { equal: isEq });
+    episodeQ = computed(() => Number(this.episode()), { equal: isEq });
 
-    episode$ = this.route.params.pipe(
-        map(({ episode }) => Number(episode)),
-        distinctUntilChanged(),
-    );
+    isVideosLoading = computed(() => this.store.selectSignal(selectPlayerVideosLoading(this.animeIdQ()))());
+    videos = computed(() => this.store.selectSignal(selectPlayerVideos(this.animeIdQ()))());
+    isAnimeLoading = computed(() => this.store.selectSignal(selectPlayerAnimeLoading(this.animeIdQ()))());
+    anime = computed(() => this.store.selectSignal(selectPlayerAnime(this.animeIdQ()))(), { equal: isEqId });
+    userRate = computed(() => this.store.selectSignal(selectPlayerUserRate(this.animeIdQ()))());
+    authorPreferences = computed(() => this.store.selectSignal(selectAuthorPreferencesByAnime(this.animeIdQ()))());
+    kindPreferences = computed(() => this.store.selectSignal(selectKindPreferencesByAnime(this.animeIdQ()))());
+    domainPreferences = computed(() => this.store.selectSignal(selectDomainPreferencesByAnime(this.animeIdQ()))());
+    comments = computed(() => this.store.selectSignal(selectPlayerComments(this.animeIdQ(), this.episodeQ()))());
+    isShownAllComments = computed(() => this.store.selectSignal(
+        selectPlayerIsShownAllComments(this.animeIdQ(), this.episodeQ()),
+    )());
+    isCommentsLoading = computed(() => this.store.selectSignal(
+        selectPlayerIsCommentsLoading(this.animeIdQ(), this.episodeQ()),
+    )());
+    isCommentsPartiallyLoading = computed(() => this.store.selectSignal(
+        selectPlayerIsCommentsPartiallyLoading(this.animeIdQ(), this.episodeQ()),
+    )());
 
-    isUserAuthorized$ = this.store.select(selectIsAuthenticated);
+    lastAiredEpisode = computed(() => getLastAiredEpisode(this.anime()));
+    animeName = computed(() => getAnimeName(this.anime(), this.userSelectedLanguage()));
+    isWatched = computed(() => isEpisodeWatched(this.episodeQ(), this.userRate()));
+    isRewatching = computed(() => this.userRate()?.status === 'rewatching');
+    episodeVideos = computed(() => filterByEpisode(this.videos(), this.episodeQ()));
 
-    isVideosLoading$ = this.animeId$.pipe<boolean>(
-        switchMap((animeId) => this.store.select(selectPlayerVideosLoading(animeId))),
-    );
-    videos$ = this.animeId$.pipe<VideoInfoInterface[]>(
-        switchMap((animeId) => this.store.select(selectPlayerVideos(animeId))),
-    );
+    currentVideo = signal<VideoInfoInterface>(null);
+    currentKind = signal<VideoKindEnum>(null);
+    isOrientationPortrait = signal<boolean>(false);
+    editComment = signal<Comment>(null);
+    highlightComment = signal<ResourceIdType>(null);
 
-    isAnimeLoading$ = this.animeId$.pipe(
-        switchMap((animeId) => this.store.select(selectPlayerAnimeLoading(animeId))),
-    );
-    anime$ = this.animeId$.pipe(
-        switchMap((animeId) => this.store.select(selectPlayerAnime(animeId))),
-    );
-    animeName$ = combineLatest([this.anime$, this.transloco.langChanges$]).pipe(
-        map(([anime, lang]) => getAnimeName(anime, lang)),
-    );
-    lastAiredEpisode$ = this.anime$.pipe(map(getLastAiredEpisode));
+    readonly animeChangeEffect = effect(() => {
+        const animeId = this.animeIdQ();
 
-    userRate$ = this.animeId$.pipe(
-        switchMap((animeId) => this.store.select(selectPlayerUserRate(animeId))),
-    );
-    isWatched$ = combineLatest([this.episode$, this.userRate$]).pipe(
-        map(([episode, userRate]) => isEpisodeWatched(episode, userRate)),
-    );
-    isRewatching$ = this.userRate$.pipe(
-        map((userRate) => userRate?.status === 'rewatching'),
-    );
+        this.store.dispatch(findVideosAction({ animeId }));
+        this.store.dispatch(getAnimeInfoAction({ animeId }));
+    });
 
-    authorPreferences$ = this.animeId$.pipe(
-        switchMap((animeId) => this.store.select(selectAuthorPreferencesByAnime(animeId))),
-    );
-    kindPreferences$ = this.animeId$.pipe(
-        switchMap((animeId) => this.store.select(selectKindPreferencesByAnime(animeId))),
-    );
-    domainPreferences$ = this.animeId$.pipe(
-        switchMap((animeId) => this.store.select(selectDomainPreferencesByAnime(animeId))),
-    );
+    readonly episodeVideosChangeEffect = effect(() => {
+        const videos = this.episodeVideos();
 
-    currentVideo$ = new ReplaySubject<VideoInfoInterface>(1);
-    currentKind$ = new ReplaySubject<VideoKindEnum>(1);
+        untracked(() => {
+            const author = this.authorPreferences();
+            const domain = this.domainPreferences();
+            const kind = this.kindPreferences();
+            const isPreferencesToggleOn = this.isPreferencesToggleOn();
 
-    episodeVideos$ = combineLatest([this.videos$, this.episode$]).pipe(
-        map(([videos, episode]) => filterByEpisode(videos, episode)),
-    );
-
-    comments$ = combineLatest([this.animeId$, this.episode$]).pipe(
-        switchMap(([animeId, episode]) => this.store.select(selectPlayerComments(animeId, episode))),
-    );
-    isShownAllComments$ = combineLatest([this.animeId$, this.episode$]).pipe(
-        switchMap(([animeId, episode]) => this.store.select(selectPlayerIsShownAllComments(animeId, episode))),
-    );
-    isCommentsLoading$ = combineLatest([this.animeId$, this.episode$]).pipe(
-        switchMap(([animeId, episode]) => this.store.select(selectPlayerIsCommentsLoading(animeId, episode))),
-    );
-    isCommentsPartiallyLoading$ = combineLatest([this.animeId$, this.episode$]).pipe(
-        switchMap(([animeId, episode]) => this.store.select(selectPlayerIsCommentsPartiallyLoading(animeId, episode))),
-    );
-
-    ngOnInit(): void {
-        this.animeId$.pipe(
-            tap((animeId) => {
-                this.store.dispatch(findVideosAction({ animeId }));
-                this.store.dispatch(getAnimeInfoAction({ animeId }));
-            }),
-            untilDestroyed(this),
-        ).subscribe();
-
-        this.episodeVideos$.pipe(
-            filter(({ length = 0 }) => length > 0),
-            withLatestFrom(
-                this.authorPreferences$,
-                this.domainPreferences$,
-                this.kindPreferences$,
-                this.isPreferencesToggleOn$,
-            ),
-            map(([videos, author, domain, kind, isPreferencesToggleOn]) => {
+            if (videos?.length > 0) {
                 const relevantVideos = isPreferencesToggleOn
                     ? filterVideosByPreferences(videos, author, domain, kind)
                     : videos;
@@ -292,45 +240,36 @@ export class PlayerPage implements OnInit {
                     }).then((toast) => toast.present());
                 }
 
-                return relevantVideos || videos;
-            }),
-            map((relevantVideos) => relevantVideos?.[0]),
-            tap((video) => this.onVideoChange(video, false)),
-            untilDestroyed(this),
-        ).subscribe();
+                const chosenVideo = (relevantVideos || videos)?.[0];
 
-        combineLatest([
-            this.anime$,
-            this.episode$,
-        ]).pipe(
-            distinctUntilChanged((
-                [prevAnime, prevEpisode],
-                [nextAnime, nextEpisode],
-            ) => prevAnime.id === nextAnime.id && prevEpisode === nextEpisode),
-            filter(([anime]) => !!anime?.name),
-            tap(([anime, episode]) => {
-                const { id: animeId } = anime;
+                this.onVideoChange(chosenVideo, false);
+            }
+        });
+    });
 
-                this.changeTitle(anime, episode);
+    readonly animeOrEpisodeChangeEffect = effect(() => {
+        const anime = this.anime();
+        const episode = this.episodeQ();
 
-                this.store.dispatch(visitAnimePageAction({ anime, episode }));
-                this.store.dispatch(getTopicsAction({ animeId, episode, revalidate: false }));
-                this.store.dispatch(getCommentsAction({ animeId, episode, page: 1, limit: 30 }));
-            }),
-            untilDestroyed(this),
-        ).subscribe();
+        if (anime?.name) {
+            this.changeTitle(anime, episode);
 
+            this.store.dispatch(visitAnimePageAction({ anime, episode }));
+        }
+    });
+
+    ngOnInit(): void {
         this.actions$.pipe(
             ofType(watchAnimeSuccessAction),
             tap(({ userRate }) => this.onEpisodeChange(userRate.episodes + 1)),
-            untilDestroyed(this),
+            takeUntilDestroyed(this.destroyRef),
         ).subscribe();
 
         this.platform.resize
             .pipe(
                 debounceTime(100),
                 tap(() => this.onResize()),
-                untilDestroyed(this),
+                takeUntilDestroyed(this.destroyRef),
             )
             .subscribe();
 
@@ -338,21 +277,24 @@ export class PlayerPage implements OnInit {
     }
 
     private onResize(): void {
-        this.isOrientationPortraitSubject$.next(this.platform.isPortrait());
+        this.isOrientationPortrait.set(this.platform.isPortrait());
     }
 
-    private async updateUserPreferences(): Promise<void> {
-        const anime = await firstValueFrom(this.anime$);
-        const currentVideo = await firstValueFrom(this.currentVideo$);
-        const { author, kind, url } = currentVideo;
-        const domain = getDomain(url);
+    private updateUserPreferences(): void {
+        const currentVideo = this.currentVideo();
 
-        this.store.dispatch(updatePlayerPreferencesAction({ animeId: anime.id, author, kind, domain }));
+        if (currentVideo) {
+            const anime = this.anime();
+            const { author, kind, url } = currentVideo;
+            const domain = getDomain(url);
+
+            this.store.dispatch(updatePlayerPreferencesAction({ animeId: anime.id, author, kind, domain }));
+        }
     }
 
-    async changeTitle(anime: AnimeBriefInfoInterface, episode: number): Promise<void> {
+    changeTitle(anime: AnimeBriefInfoInterface, episode: number): void {
         // TODO: добавить селектор из настроек предпочтений названия аниме, а не просто по языку пользователя
-        const animeName = await firstValueFrom(this.animeName$);
+        const animeName = this.animeName();
         const isSeries = getLastAiredEpisode(anime) > 1;
         const translationKey = isSeries
             ? 'PLAYER_MODULE.PLAYER_PAGE.PAGE_TITLE.SERIES'
@@ -363,8 +305,8 @@ export class PlayerPage implements OnInit {
     }
 
     onVideoChange(video: VideoInfoInterface, isShouldUpdatePref = true): void {
-        this.currentVideo$.next(video);
-        this.currentKind$.next(video.kind);
+        this.currentVideo.set(video);
+        this.currentKind.set(video.kind);
 
         if (isShouldUpdatePref) {
             void this.updateUserPreferences();
@@ -372,25 +314,24 @@ export class PlayerPage implements OnInit {
     }
 
     onKindChange(kind: VideoKindEnum): void {
-        this.currentKind$.next(kind);
+        this.currentKind.set(kind);
     }
 
     onEpisodeChange(episode: number): void {
-        this.animeId$.pipe(
-            take(1),
-            withLatestFrom(this.lastAiredEpisode$),
-            filter(([_, lastAiredEpisode]) => episode <= lastAiredEpisode && episode > 0),
-            tap(([animeId]) => this.router.navigate(['/player', animeId, episode])),
-            untilDestroyed(this),
-        ).subscribe();
+        const animeId = this.animeIdQ();
+        const lastAiredEpisode = this.lastAiredEpisode();
+
+        if (episode <= lastAiredEpisode && episode > 0) {
+            void this.router.navigate(['/player', animeId, episode]);
+        }
     }
 
     // TODO: для модалок нужно придумать какой-то сервис - слишком много бойлерплейта
     async onOpenVideoSelectorModal(): Promise<void> {
         const componentProps = {
-            videos: await firstValueFrom(this.episodeVideos$),
-            selectedKind: await firstValueFrom(this.currentKind$),
-            selectedVideo: await firstValueFrom(this.currentVideo$),
+            videos: this.episodeVideos(),
+            selectedKind: this.currentKind(),
+            selectedVideo: this.currentVideo(),
         };
         const { VideoSelectorModalComponent } = await import('@app/modules/player/components/video-selector-modal');
 
@@ -408,34 +349,37 @@ export class PlayerPage implements OnInit {
         }
     }
 
-    async onWatch(episode: number, isUnwatch = false): Promise<void> {
-        const anime = await firstValueFrom(this.anime$);
-        const userRate = await firstValueFrom(this.userRate$);
-        const isRewarch = await firstValueFrom(this.isRewatching$) || userRate?.status === 'completed';
-        const watchedEpisode = isUnwatch ? episode - 1 : episode;
+    onWatch(episode: number, isUnwatch = false): void {
+        const anime = this.anime();
+        const userRate = this.userRate();
+        const isRewarch = this.isRewatching() || userRate?.status === 'completed';
+        const isLastEpisodeWatched = userRate?.episodes >= this.lastAiredEpisode();
+        const watchedEpisode = isLastEpisodeWatched
+            ? episode
+            : isUnwatch ? episode - 1 : episode;
 
         this.store.dispatch(watchAnimeAction({ animeId: anime.id, episode: watchedEpisode, isRewarch }));
 
         void this.updateUserPreferences();
     }
 
-    async onShowMoreComments(): Promise<void> {
-        const animeId = await firstValueFrom(this.animeId$);
-        const episode = await firstValueFrom(this.episode$);
+    onShowMoreComments(): void {
+        const animeId = this.animeIdQ();
+        const episode = this.episodeQ();
         const isShownAll = true;
 
         this.store.dispatch(setIsShownAllAction({ animeId, episode, isShownAll }));
     }
 
-    async onCommentSend(commentText: string): Promise<void> {
-        const animeId = await firstValueFrom(this.animeId$);
-        const episode = await firstValueFrom(this.episode$);
+    onCommentSend(commentText: string): void {
+        const animeId = this.animeIdQ();
+        const episode = this.episodeQ();
 
         this.store.dispatch(sendCommentAction({ animeId, episode, commentText }));
     }
 
-    async onVideoUpload(video: VideoInfoInterface): Promise<void> {
-        const animeId = await firstValueFrom(this.animeId$);
+    onVideoUpload(video: VideoInfoInterface): void {
+        const animeId = this.animeIdQ();
 
         this.store.dispatch(uploadVideoAction({ animeId, video }));
     }
@@ -451,7 +395,7 @@ export class PlayerPage implements OnInit {
     onCommentEdit(comment: Comment): void {
         const userCommentFormEl: HTMLElement = this.userCommentFormEl()?.nativeElement;
 
-        this.editCommentSubject$.next(comment);
+        this.editComment.set(comment);
 
         if (userCommentFormEl) {
             /*
@@ -469,15 +413,15 @@ export class PlayerPage implements OnInit {
                         block: 'center',
                         inline: 'center',
                     })),
-                    untilDestroyed(this),
+                    takeUntilDestroyed(this.destroyRef),
                 )
                 .subscribe();
         }
     }
 
-    async onCommentSendEdited(comment: Comment): Promise<void> {
-        const animeId = await firstValueFrom(this.animeId$);
-        const episode = await firstValueFrom(this.episode$);
+    onCommentSendEdited(comment: Comment): void {
+        const animeId = this.animeIdQ();
+        const episode = this.episodeQ();
 
         this.store.dispatch(editCommentAction({
             animeId,
@@ -488,14 +432,14 @@ export class PlayerPage implements OnInit {
         this.actions$.pipe(
             ofType(editCommentSuccessAction),
             take(1),
-            tap(() => this.editCommentSubject$.next(null)),
-            untilDestroyed(this),
+            tap(() => this.editComment.set(null)),
+            takeUntilDestroyed(this.destroyRef),
         ).subscribe();
     }
 
-    async onCommentDelete(comment: Comment): Promise<void> {
-        const animeId = await firstValueFrom(this.animeId$);
-        const episode = await firstValueFrom(this.episode$);
+    onCommentDelete(comment: Comment): void {
+        const animeId = this.animeIdQ();
+        const episode = this.episodeQ();
 
         this.store.dispatch(deleteCommentAction({
             animeId,
@@ -505,17 +449,17 @@ export class PlayerPage implements OnInit {
     }
 
     onHighlightComment(commentId: ResourceIdType): void {
-        this.highlightCommentSubject$.next(commentId);
+        this.highlightComment.set(commentId);
 
         // сбрасываем, чтобы повторная подсветка работала
         timer(1000).pipe(
             take(1),
-            tap(() => this.highlightCommentSubject$.next(null)),
-            untilDestroyed(this),
+            tap(() => this.highlightComment.set(null)),
+            takeUntilDestroyed(this.destroyRef),
         ).subscribe();
     }
 
     onCancelCommentEdit(): void {
-        this.editCommentSubject$.next(null);
+        this.editComment.set(null);
     }
 }

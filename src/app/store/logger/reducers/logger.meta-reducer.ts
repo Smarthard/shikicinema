@@ -9,14 +9,17 @@ export function loggerMetaReducer(reducer: ActionReducer<AppStoreInterface>): Ac
     return (state: AppStoreInterface, action: Action): AppStoreInterface => {
         const result = reducer(state, action);
         const stateDiff = diff(state, result);
+        const isNgrxAction = /\@ngrx/i.test(action.type);
 
-        console.groupCollapsed(action.type);
-        console.log('action', action);
-        console.log('fired at', new Date().toISOString());
-        console.log('prev state', state);
-        console.log('next state', result);
-        console.log('diff', isEmptyObject(stateDiff) ? 'EMPTY' : stateDiff);
-        console.groupEnd();
+        if (!isNgrxAction) {
+            console.groupCollapsed(action.type);
+            console.log('action', action);
+            console.log('fired at', new Date().toISOString());
+            console.log('prev state', state);
+            console.log('next state', result);
+            console.log('diff', isEmptyObject(stateDiff) ? 'EMPTY' : stateDiff);
+            console.groupEnd();
+        }
 
         return result;
     };

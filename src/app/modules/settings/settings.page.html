@@ -51,6 +51,21 @@
                     [helperText]="'SETTINGS_MODULE.SETTINGS_PAGE.SETTING_GROUPS.GENERAL.CUSTOM_THEME.HELP' | transloco"
                 />
             }
+
+            <ion-select
+                formControlName="shikimoriDomain"
+                interface="popover"
+                fill="outline"
+                labelPlacement="floating"
+                [label]="'SETTINGS_MODULE.SETTINGS_PAGE.SETTING_GROUPS.GENERAL.SHIKIMORI_DOMAIN.LABEL' | transloco"
+                [helperText]="'SETTINGS_MODULE.SETTINGS_PAGE.SETTING_GROUPS.GENERAL.SHIKIMORI_DOMAIN.HELP' | transloco"
+            >
+                @for (domain of shikimoriDomains; track $index) {
+                    <ion-select-option [value]="domain">
+                        {{ domain }}
+                    </ion-select-option>
+                }
+            </ion-select>
         </app-settings-group>
 
         <!-- Плеер -->
@@ -118,9 +133,9 @@
             <app-profile-info
                 serviceName="Shikimori"
                 [serviceIcon]="'/favicon.ico' | getShikimoriPage | async"
-                [isAuthorized]="!!(shikimoriUser$ | async)"
-                [avatar]="shikimoriAvatarImg$ | async"
-                [nickname]="shikimoriNickname$ | async"
+                [isAuthorized]="!!isShikimoriAuthenticated()"
+                [avatar]="shikimoriAvatarImg()"
+                [nickname]="shikimoriNickname()"
                 (login)="shikimoriLogin()"
                 (logout)="shikimoriLogout()"
             />
@@ -157,7 +172,7 @@
         </app-settings-group>
     </form>
 
-    @if (hasLastVisitedPage$ | async) {
+    @if (hasLastVisitedPage()) {
         <ion-button
             class="settings-page__back-btn"
             expand="full"

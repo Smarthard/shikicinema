@@ -1,31 +1,34 @@
 import {
+    AsyncPipe,
+    NgTemplateOutlet,
+    SlicePipe,
+    UpperCasePipe,
+} from '@angular/common';
+import {
     ChangeDetectionStrategy,
     Component,
+    DestroyRef,
     OnInit,
     ViewEncapsulation,
     inject,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import {
     IonButton,
     IonContent,
     IonIcon,
     IonText,
 } from '@ionic/angular/standalone';
-import { LayoutModule } from '@angular/cdk/layout';
-import { NgxVisibilityModule } from 'ngx-visibility';
+import { NgxVisibilityDirective } from 'ngx-visibility';
 import {
     Observable,
     Subject,
     combineLatest,
 } from 'rxjs';
-import { RouterModule } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Title } from '@angular/platform-browser';
-import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import {
+    filter,
     map,
     shareReplay,
     skipWhile,
@@ -33,6 +36,7 @@ import {
     tap,
     withLatestFrom,
 } from 'rxjs/operators';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { AnimeGridInterface } from '@app/modules/home/types/anime-grid.interface';
 import { CardGridComponent } from '@app/modules/home/components/card-grid/card-grid.component';
@@ -53,18 +57,17 @@ import { selectRecentAnimes } from '@app/modules/home/store/recent-animes';
 import { selectShikimoriCurrentUser } from '@app/store/shikimori/selectors/shikimori.selectors';
 
 
-@UntilDestroy()
 @Component({
     selector: 'app-home',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     imports: [
-        CommonModule,
-        RouterModule,
-        FormsModule,
-        TranslocoModule,
-        LayoutModule,
-        NgxVisibilityModule,
+        NgxVisibilityDirective,
+        AsyncPipe,
+        UpperCasePipe,
+        SlicePipe,
+        NgTemplateOutlet,
+        TranslocoPipe,
         CardGridComponent,
         SortRatesByDateVisitedPipe,
         IonIcon,
@@ -79,6 +82,11 @@ export class HomePage implements OnInit {
     private readonly store = inject(Store);
     private readonly title = inject(Title);
     private readonly transloco = inject(TranslocoService);
+    private readonly destroyRef = inject(DestroyRef);
+
+    readonly isTranslationsLoaded$ = this.transloco.events$.pipe(
+        filter((e) => e.type === 'translationLoadSuccess'),
+    );
 
     currentUser$: Observable<UserBriefInfoInterface>;
 
@@ -111,23 +119,24 @@ export class HomePage implements OnInit {
     }
 
     initSubscriptions(): void {
-        this.currentUser$
-            .pipe(
-                untilDestroyed(this),
-                skipWhile((currentUser) => !currentUser?.id),
-                take(1),
-                tap(({ id, nickname }) => {
-                    const title = this.transloco.translate('HOME_MODULE.HOME_PAGE.PAGE_TITLE', { nickname });
+        combineLatest([
+            this.currentUser$,
+            this.isTranslationsLoaded$,
+        ]).pipe(
+            skipWhile(([currentUser, hasTranslation]) => !currentUser?.id && !hasTranslation),
+            take(1),
+            tap(([{ id, nickname }]) => {
+                const title = this.transloco.translate('HOME_MODULE.HOME_PAGE.PAGE_TITLE', { nickname });
 
-                    this.getUserAnimeRatesByStatus(id, 'planned');
-                    this.title.setTitle(title);
-                }),
-            )
-            .subscribe();
+                this.getUserAnimeRatesByStatus(id, 'planned');
+                this.title.setTitle(title);
+            }),
+            takeUntilDestroyed(this.destroyRef),
+        ).subscribe();
 
         this.sectionVisibilitySubject$
             .pipe(
-                untilDestroyed(this),
+                takeUntilDestroyed(this.destroyRef),
                 withLatestFrom(this.currentUser$),
                 tap(([event, currentUser]) => {
                     if (currentUser?.id && event.isVisible) {

@@ -8,5 +8,7 @@ export interface ShikimoriStoreInterface {
     isAnimeSearchLoading: boolean;
     foundAnimes: AnimeBriefInfoInterface[] | null;
 
+    shikimoriDomain: string;
+
     errors: unknown;
 }

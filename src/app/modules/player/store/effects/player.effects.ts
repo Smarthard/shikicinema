@@ -8,6 +8,7 @@ import {
     catchError,
     debounceTime,
     delay,
+    distinctUntilChanged,
     exhaustMap,
     filter,
     first,
@@ -61,6 +62,7 @@ import {
 import { selectShikimoriCurrentUser } from '@app/store/shikimori/selectors/shikimori.selectors';
 import { shikicinemaVideoMapper } from '@app/shared/types/shikicinema/v1';
 import { toVideoInfo } from '@app/shared/rxjs';
+import { visitAnimePageAction } from '@app/modules/home/store/recent-animes';
 
 
 @Injectable()
@@ -112,6 +114,9 @@ export class PlayerEffects {
             const status: UserRateStatusType = isLastEpisodeWatched
                 ? 'completed'
                 : isRewarch ? 'rewatching' : 'watching';
+            const rewatches = isLastEpisodeWatched && isRewarch
+                ? rate?.rewatches + 1
+                : rate?.rewatches || 0;
 
             // убираем лишние поля, если у пользователя есть user_rate
             // если нет, создаем сразу с нужными значениями
@@ -122,6 +127,7 @@ export class PlayerEffects {
                 target_type: 'Anime',
                 episodes,
                 status,
+                rewatches,
             });
         }),
         switchMap((userRate) => (userRate?.id
@@ -255,8 +261,8 @@ export class PlayerEffects {
     getUserRate$ = createEffect(() => this.actions$.pipe(
         ofType(getUserRateAction),
         debounceTime(50),
-        switchMap(({ id, animeId }) => this.shikimori.getUserRateById(id).pipe(
-            map((userRate) => getUserRateSuccessAction({ animeId, userRate })),
+        switchMap(({ userId, animeId }) => this.shikimori.getUserRate(userId, animeId, 'Anime').pipe(
+            map((userRates) => getUserRateSuccessAction({ animeId, userRate: userRates?.[0] || null })),
             catchError((error) => {
                 // возможно удален пользователем на самом сайте Шикимори
                 const isUserRateNotFound = error instanceof HttpErrorResponse &&
@@ -340,4 +346,15 @@ export class PlayerEffects {
             await toast.present();
         }),
     ), { dispatch: false });
+
+    loadTopicOnVisitAnime$ = createEffect(() => this.actions$.pipe(
+        ofType(visitAnimePageAction),
+        distinctUntilChanged((a, b) => a.anime === b.anime && a.episode === b.episode),
+        map(({ anime, episode }) => getTopicsAction({ animeId: anime.id, episode, revalidate: false })),
+    ));
+
+    loadCommentsOnTopicExists$ = createEffect(() => this.actions$.pipe(
+        ofType(getTopicsSuccessAction),
+        map(({ animeId, episode }) => getCommentsAction({ animeId, episode, page: 1, limit: 30 })),
+    ));
 }

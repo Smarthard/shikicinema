@@ -1,16 +1,16 @@
 import {
     EMPTY,
     Observable,
-    merge,
     of,
+    race,
 } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {
     catchError,
     first,
-    shareReplay,
     switchMap,
+    take,
     timeout,
 } from 'rxjs/operators';
 
@@ -32,10 +32,10 @@ export class ShikimoriDomainsService {
                 ),
             );
 
-        return merge(...domainsRequests)
+        return race(...domainsRequests)
             .pipe(
                 first((domain) => Boolean(domain)),
-                shareReplay(1),
+                take(1),
             );
     }
 }

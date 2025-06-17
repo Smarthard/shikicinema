@@ -5,17 +5,17 @@ import {
 } from '@ngrx/effects';
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
+import { ToastController } from '@ionic/angular/standalone';
+import { TranslocoService } from '@jsverse/transloco';
 import {
     catchError,
     map,
+    of,
     switchMap,
     tap,
-} from 'rxjs/operators';
-import { of } from 'rxjs';
+} from 'rxjs';
 
 import { ShikicinemaV1Client } from '@app/shared/services';
-import { ToastController } from '@ionic/angular';
-import { TranslocoService } from '@jsverse/transloco';
 import {
     getUploadTokenAction,
     getUploadTokenFailureAction,

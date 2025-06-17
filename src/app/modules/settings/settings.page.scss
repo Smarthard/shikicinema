@@ -1,5 +1,11 @@
+@use 'src/scss/mixins' as *;
+
 .settings-page {
-    font-size: 1rem;
+    font-size: .825rem;
+
+    @include media-breakpoint-up('lg') {
+        font-size: 1rem;
+    }
 
     .page-content {
         --padding-top: .5rem;

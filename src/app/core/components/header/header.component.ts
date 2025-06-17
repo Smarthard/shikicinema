@@ -10,9 +10,9 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import {
     ChangeDetectionStrategy,
     Component,
-    Inject,
     OnInit,
     ViewEncapsulation,
+    inject,
 } from '@angular/core';
 import {
     IonButton,
@@ -28,6 +28,7 @@ import {
     IonToggle,
     IonToolbar,
 } from '@ionic/angular/standalone';
+import { NavigationExtras, Router, RouterLink } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import {
@@ -39,26 +40,23 @@ import {
     tap,
 } from 'rxjs/operators';
 
-import { AnimeBriefInfoInterface } from '@app/shared/types/shikimori/anime-brief-info.interface';
 import { B64encodePipe } from '@app/shared/pipes/base64/b64encode.pipe';
-import { NavigationExtras, Router, RouterLink } from '@angular/router';
 import { ResultOpenTarget, SearchbarResult } from '@app/shared/types/searchbar.types';
-import { SHIKIMORI_DOMAIN_TOKEN } from '@app/core/providers/shikimori-domain';
 import { SearchbarResultsComponent } from '@app/core/components/searchbar-results/searchbar-results.component';
-import { UserBriefInfoInterface } from '@app/shared/types/shikimori/user-brief-info.interface';
 import { authShikimoriAction, logoutShikimoriAction } from '@app/store/auth/actions/auth.actions';
 import {
     findAnimeAction,
     resetFoundAnimeAction,
-} from '@app/store/shikimori/actions/find-anime.action';
+} from '@app/store/shikimori/actions';
 import {
     selectShikimoriAnimeSearchLoading,
     selectShikimoriCurrentUser,
     selectShikimoriCurrentUserAvatar,
     selectShikimoriCurrentUserNickname,
     selectShikimoriCurrentUserProfileLink,
+    selectShikimoriDomain,
     selectShikimoriFoundAnimes,
-} from '@app/store/shikimori/selectors/shikimori.selectors';
+} from '@app/store/shikimori/selectors';
 import { selectTheme } from '@app/store/settings/selectors/settings.selectors';
 import { toBase64 } from '@app/shared/utils/base64-utils';
 import { updateLanguageAction, updateThemeAction } from '@app-root/app/store/settings/actions/settings.actions';
@@ -92,29 +90,28 @@ import { updateLanguageAction, updateThemeAction } from '@app-root/app/store/set
     encapsulation: ViewEncapsulation.None,
 })
 export class HeaderComponent implements OnInit {
+    private readonly store = inject(Store);
+    private readonly router = inject(Router);
+    private readonly transloco = inject(TranslocoService);
+    private readonly breakpointObserver = inject(BreakpointObserver);
+
+    private readonly shikimoriDomain = this.store.selectSignal(selectShikimoriDomain);
+
+    readonly currentUser$ = this.store.select(selectShikimoriCurrentUser);
+    readonly theme$ = this.store.select(selectTheme);
+    readonly foundAnimes$ = this.store.select(selectShikimoriFoundAnimes);
+    readonly isSearchResultsLoading$ = this.store.select(selectShikimoriAnimeSearchLoading);
+    readonly avatarImg$ = this.store.select(selectShikimoriCurrentUserAvatar);
+    readonly nickname$ = this.store.select(selectShikimoriCurrentUserNickname);
+    readonly profileLink$ = this.store.select(selectShikimoriCurrentUserProfileLink);
+
     readonly availableLangs = this.transloco.getAvailableLangs() as string[];
 
-    currentUser$: Observable<UserBriefInfoInterface>;
-    theme$: Observable<string>;
-    avatarImg$: Observable<string>;
-    nickname$: Observable<string>;
-    profileLink$: Observable<string>;
-    foundAnimes$: Observable<AnimeBriefInfoInterface[]>;
-    isSearchResultsLoading$: Observable<boolean>;
     isAnimeListPopoverOpen: boolean;
     isSearchbarFocusedOnMobile$: Observable<boolean>;
     isSearchingInCyrillic: boolean;
 
     private searchbarFocusedSubject$: Subject<boolean>;
-
-    constructor(
-        @Inject(SHIKIMORI_DOMAIN_TOKEN)
-        private shikimoriDomain$: Observable<string>,
-        private store: Store,
-        private router: Router,
-        private breakpointObserver: BreakpointObserver,
-        private transloco: TranslocoService,
-    ) {}
 
     ngOnInit() {
         this.initializeValues();
@@ -122,14 +119,8 @@ export class HeaderComponent implements OnInit {
 
     initializeValues(): void {
         this.searchbarFocusedSubject$ = new BehaviorSubject<boolean>(false);
-        this.currentUser$ = this.store.select(selectShikimoriCurrentUser);
-        this.theme$ = this.store.select(selectTheme);
-        this.foundAnimes$ = this.store.select(selectShikimoriFoundAnimes);
-        this.isSearchResultsLoading$ = this.store.select(selectShikimoriAnimeSearchLoading);
-        this.avatarImg$ = this.store.select(selectShikimoriCurrentUserAvatar);
-        this.nickname$ = this.store.select(selectShikimoriCurrentUserNickname);
-        this.profileLink$ = this.store.select(selectShikimoriCurrentUserProfileLink);
         this.isAnimeListPopoverOpen = false;
+
         this.isSearchbarFocusedOnMobile$ = combineLatest([
             this.searchbarFocusedSubject$,
             this.breakpointObserver.observe([
@@ -174,7 +165,7 @@ export class HeaderComponent implements OnInit {
     }
 
     async openResult([result, target]: [SearchbarResult, ResultOpenTarget]): Promise<void> {
-        const shikimoriDomain = await firstValueFrom(this.shikimoriDomain$);
+        const shikimoriDomain = this.shikimoriDomain();
         this.isAnimeListPopoverOpen = false;
 
         if (target === 'internal') {

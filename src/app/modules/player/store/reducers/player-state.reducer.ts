@@ -57,7 +57,7 @@ export const playerReducer = createReducer(initialState,
                 ...state.animeInfo,
                 [animeId]: {
                     ...state.animeInfo[animeId],
-                    user_rate: userRate,
+                    user_rate: { ...userRate },
                 } as AnimeBriefInfoInterface,
             },
         }),

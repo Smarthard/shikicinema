@@ -6,7 +6,7 @@ import {
 } from '@ngrx/effects';
 import { Injectable, inject } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { ToastController } from '@ionic/angular';
+import { ToastController } from '@ionic/angular/standalone';
 import { TranslocoService } from '@jsverse/transloco';
 import {
     catchError,

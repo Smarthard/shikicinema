@@ -1,0 +1,9 @@
+@use 'src/scss/mixins' as *;
+
+.contributions-page {
+    font-size: .825rem;
+
+    @include media-breakpoint-up('lg') {
+        font-size: 1rem;
+    }
+}

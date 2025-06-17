@@ -1,4 +1,4 @@
-import { AsyncPipe, NgStyle } from '@angular/common';
+import { AsyncPipe, NgOptimizedImage } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -10,6 +10,7 @@ import { outputToObservable } from '@angular/core/rxjs-interop';
 
 import { AbstractImageCardComponent } from '@app/shared/components/abstract-image-card/abstract-image-card.component';
 import { IsImageWidthLargerPipe } from '@app/shared/pipes/is-image-width-larger/is-image-width-larger.pipe';
+import { RectangleFitPipe } from '@app/modules/home/pipes/rectangle-fit.pipe';
 import { SkeletonBlockComponent } from '@app/shared/components/skeleton-block/skeleton-block.component';
 
 @Component({
@@ -18,10 +19,11 @@ import { SkeletonBlockComponent } from '@app/shared/components/skeleton-block/sk
     styleUrls: ['./image-card.component.scss'],
     standalone: true,
     imports: [
-        NgStyle,
         AsyncPipe,
+        RectangleFitPipe,
         IsImageWidthLargerPipe,
         SkeletonBlockComponent,
+        NgOptimizedImage,
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
@@ -39,8 +41,4 @@ export class ImageCardComponent extends AbstractImageCardComponent {
     override isLoading = true;
 
     readonly loadedImg$ = outputToObservable(this.imageLoad);
-
-    protected getBgSize(isWidthLarger: boolean): 'cover' | 'contain' {
-        return isWidthLarger ? 'contain' : 'cover';
-    }
 }

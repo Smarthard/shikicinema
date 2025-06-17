@@ -24,7 +24,7 @@ const initialState: SettingsStoreInterface = {
     authorPreferences: {},
     kindPreferences: {},
     domainPreferences: {},
-    lastPage: undefined,
+    lastPage: '/home',
 };
 
 const reducer = createReducer(

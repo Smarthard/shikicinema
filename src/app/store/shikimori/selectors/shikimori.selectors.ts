@@ -43,3 +43,8 @@ export const selectShikimoriCurrentUserProfileLink = createSelector(
     selectShikimori,
     (state) => state.currentUser?.url,
 );
+
+export const selectShikimoriDomain = createSelector(
+    selectShikimori,
+    (state) => state.shikimoriDomain,
+);

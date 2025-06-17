@@ -6,8 +6,8 @@
     border-radius: .25rem;
 
     .scrollbar {
-        --scrollbar-thumb-color: rgba(var(--ion-color-primary-rgb), 1);
-        --scrollbar-track-color: rgba(var(--ion-color-primary-rgb), 0.5);
+        --scrollbar-thumb-color: var(--shc-scrollbar-color);
+        --scrollbar-track-color: var(--shc-scrollbar-background-color);
     }
 
     &__wrapper {

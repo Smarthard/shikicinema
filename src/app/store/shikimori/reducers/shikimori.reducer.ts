@@ -11,12 +11,14 @@ import {
     getCurrentUserFailureAction,
     getCurrentUserSuccessAction,
 } from '@app/store/shikimori/actions/get-current-user.action';
+import { updateShikimoriDomainAction } from '@app/store/shikimori/actions';
 
 const initialState: ShikimoriStoreInterface = {
     isCurrentUserLoading: false,
     currentUser: null,
     isAnimeSearchLoading: false,
     foundAnimes: null,
+    shikimoriDomain: null,
     errors: null,
 };
 
@@ -86,6 +88,13 @@ const reducer = createReducer(
         (state) => ({
             ...state,
             isAnimeSearchLoading: false,
+        }),
+    ),
+    on(
+        updateShikimoriDomainAction,
+        (state, { domain }) => ({
+            ...state,
+            shikimoriDomain: domain,
         }),
     ),
 );

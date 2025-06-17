@@ -28,6 +28,7 @@ import { MakeEmptyArrayPipe } from '@app/shared/pipes/make-empty-array/make-empt
 import { ResourceIdType } from '@app/shared/types/resource-id.type';
 import { SortByCreatedAtPipe } from '@app/shared/pipes/sort-by-created-at/sort-by-created-at.pipe';
 import { isShowLastItemsPipe } from '@app/modules/player/pipes/is-show-last-items.pipe';
+import { provideShikimoriImageLoader } from '@app/shared/providers/shikimori-image-loader.provider';
 import { trackById } from '@app/shared/utils/common-ngfor-tracking';
 
 @Component({
@@ -44,7 +45,10 @@ import { trackById } from '@app/shared/utils/common-ngfor-tracking';
         NgTemplateOutlet,
         TranslocoPipe,
     ],
-    providers: [ModalController],
+    providers: [
+        ModalController,
+        provideShikimoriImageLoader(32),
+    ],
     templateUrl: './comments.component.html',
     styleUrl: './comments.component.scss',
     encapsulation: ViewEncapsulation.None,

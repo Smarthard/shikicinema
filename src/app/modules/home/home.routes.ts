@@ -1,3 +1,4 @@
+import { NgxVisibilityService } from 'ngx-visibility';
 import { Routes } from '@angular/router';
 import { provideEffects } from '@ngrx/effects';
 import { provideState } from '@ngrx/store';
@@ -11,6 +12,7 @@ export const HOME_ROUTES: Routes = [
         path: '',
         component: HomePage,
         providers: [
+            NgxVisibilityService,
             provideState({ name: 'animeRates', reducer: animeRatesReducer }),
             provideState({ name: 'recentAnimes', reducer: recentAnimesReducer }),
             provideEffects(

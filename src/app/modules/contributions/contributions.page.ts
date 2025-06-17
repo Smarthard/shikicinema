@@ -3,6 +3,8 @@ import { AsyncPipe, TitleCasePipe, UpperCasePipe } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
+    DestroyRef,
+    HostBinding,
     OnInit,
     ViewEncapsulation,
     inject,
@@ -24,7 +26,7 @@ import {
 import { Store } from '@ngrx/store';
 import { Title } from '@angular/platform-browser';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { LanguageToIsoCodePipe } from '@app/shared/pipes/language-to-iso-code/language-to-iso-code.pipe';
 import { ResourceIdType } from '@app/shared/types/resource-id.type';
@@ -38,7 +40,6 @@ import {
 import { trackById } from '@app/shared/utils/common-ngfor-tracking';
 
 
-@UntilDestroy()
 @Component({
     selector: 'app-contributions',
     standalone: true,
@@ -61,10 +62,14 @@ import { trackById } from '@app/shared/utils/common-ngfor-tracking';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ContributionsPage implements OnInit {
+    @HostBinding('class.contributions-page')
+    private contributionsPageClass = true;
+
     private readonly route = inject(ActivatedRoute);
     private readonly store = inject(Store);
     private readonly title = inject(Title);
     private readonly transloco = inject(TranslocoService);
+    private readonly destroyRef = inject(DestroyRef);
 
     readonly trackById = trackById;
 
@@ -82,7 +87,7 @@ export class ContributionsPage implements OnInit {
 
         this.uploaderName$
             .pipe(
-                untilDestroyed(this),
+                takeUntilDestroyed(this.destroyRef),
                 debounceTime(500),
                 tap((uploader) => this.title.setTitle(
                     this.transloco.translate('CONTRIBUTIONS_MODULE.CONTRIBUTIONS_PAGE.PAGE_TITLE', { uploader }),
@@ -93,7 +98,7 @@ export class ContributionsPage implements OnInit {
 
         this.uploaderId$
             .pipe(
-                untilDestroyed(this),
+                takeUntilDestroyed(this.destroyRef),
                 filter(Boolean),
                 tap((uploaderId) => this.store.dispatch(getContributionsAction({ uploaderId }))),
             )

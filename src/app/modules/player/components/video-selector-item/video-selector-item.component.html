@@ -1,0 +1,86 @@
+<ion-accordion class="author-accordion w-100"
+            [value]="author()"
+            (click)="toggleOpen.emit(author())">
+        <ion-item slot="header"
+                class="author-accordion__item">
+            <ion-label class="author-accordion__header"
+                    [color]="selected()?.author | isSameAuthor: author() | getColorForSelectable">
+                {{ author() }}
+            </ion-label>
+
+            <div class="author-accordion__qualities">
+                @if (kindDisplayMode() !== 'off' && (videos() | hasQualities: VideoQualityEnum.DVD)) {
+                    <div class="author-accordion__icon-wrap">
+                        <img class="author-accordion__icon author-accordion__icon--dvd" src="/assets/dvd.svg" alt="includes DVD" />
+                    </div>
+                }
+
+                @if (kindDisplayMode() !== 'off' && (videos() | hasQualities: VideoQualityEnum.BD)) {
+                    <div class="author-accordion__icon-wrap">
+                        <img class="author-accordion__icon author-accordion__icon--bd" src="/assets/bd.svg" alt="includes BD" />
+                    </div>
+                }
+
+                @if (kindDisplayMode() !== 'off' && (videos() | hasQualities: VideoQualityEnum.VHS)) {
+                    <div class="author-accordion__icon-wrap">
+                        <img class="author-accordion__icon author-accordion__icon--vhs" src="/assets/vhs.svg" alt="includes VHS" />
+                    </div>
+                }
+
+                @if (kindDisplayMode() === 'all' && (videos() | hasQualities: VideoQualityEnum.TV)) {
+                    <span class="author-accordion__text">TV</span>
+                }
+
+                @if (kindDisplayMode() === 'all' && (videos() | hasQualities: VideoQualityEnum.WEB)) {
+                    <span class="author-accordion__text">WEB</span>
+                }
+            </div>
+        </ion-item>
+
+        <div class="ion-padding author-accordion__content" slot="content">
+            @for (video of (videos() | sortByDomain); track video?.url; let first = $first) {
+                <ion-button
+                    fill="clear"
+                    expand="block"
+                    [color]="selected() | isSameVideo: video | getColorForSelectable"
+                    [title]="video?.url"
+                    (click)="$event.stopPropagation(); selectVideo.emit(video)">
+
+                    {{ video?.url | getUrlDomain }}
+
+                    <img
+                        [class.ion-hide]="kindDisplayMode() === 'off' || video.quality !== VideoQualityEnum.DVD"
+                        class="author-accordion__icon author-accordion__icon--inline author-accordion__icon--dvd"
+                        src="/assets/dvd.svg"
+                        alt="DVD"
+                        slot="end"
+                    />
+
+                    <img
+                        [class.ion-hide]="kindDisplayMode() === 'off' || video.quality !== VideoQualityEnum.BD"
+                        class="author-accordion__icon author-accordion__icon--inline author-accordion__icon--bd"
+                        src="/assets/bd.svg"
+                        alt="BD"
+                        slot="end"
+                    />
+
+                    <img
+                        [class.ion-hide]="kindDisplayMode() === 'off' || video.quality !== VideoQualityEnum.VHS"
+                        class="author-accordion__icon author-accordion__icon--inline author-accordion__icon--vhs"
+                        src="/assets/vhs.svg"
+                        alt="VHS"
+                        slot="end"
+                    />
+
+                    @if (
+                        kindDisplayMode() === 'all'
+                        && (video.quality === VideoQualityEnum.TV || video.quality === VideoQualityEnum.WEB)
+                    ) {
+                        <span class="author-accordion__text">
+                            {{ video.quality | uppercase }}
+                        </span>
+                    }
+                </ion-button>
+            }
+        </div>
+</ion-accordion>
