@@ -28,6 +28,7 @@ import { Store } from '@ngrx/store';
 import { Title } from '@angular/platform-browser';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import {
+    filter,
     map,
     shareReplay,
     skipWhile,
@@ -83,6 +84,10 @@ export class HomePage implements OnInit {
     private readonly transloco = inject(TranslocoService);
     private readonly destroyRef = inject(DestroyRef);
 
+    readonly isTranslationsLoaded$ = this.transloco.events$.pipe(
+        filter((e) => e.type === 'translationLoadSuccess'),
+    );
+
     currentUser$: Observable<UserBriefInfoInterface>;
 
     recent$: Observable<UserAnimeRate[]>;
@@ -114,19 +119,20 @@ export class HomePage implements OnInit {
     }
 
     initSubscriptions(): void {
-        this.currentUser$
-            .pipe(
-                takeUntilDestroyed(this.destroyRef),
-                skipWhile((currentUser) => !currentUser?.id),
-                take(1),
-                tap(({ id, nickname }) => {
-                    const title = this.transloco.translate('HOME_MODULE.HOME_PAGE.PAGE_TITLE', { nickname });
+        combineLatest([
+            this.currentUser$,
+            this.isTranslationsLoaded$,
+        ]).pipe(
+            skipWhile(([currentUser, hasTranslation]) => !currentUser?.id && !hasTranslation),
+            take(1),
+            tap(([{ id, nickname }]) => {
+                const title = this.transloco.translate('HOME_MODULE.HOME_PAGE.PAGE_TITLE', { nickname });
 
-                    this.getUserAnimeRatesByStatus(id, 'planned');
-                    this.title.setTitle(title);
-                }),
-            )
-            .subscribe();
+                this.getUserAnimeRatesByStatus(id, 'planned');
+                this.title.setTitle(title);
+            }),
+            takeUntilDestroyed(this.destroyRef),
+        ).subscribe();
 
         this.sectionVisibilitySubject$
             .pipe(
