@@ -9,7 +9,6 @@ import {
     Component,
     ViewEncapsulation,
     computed,
-    effect,
     input,
     output,
 } from '@angular/core';
@@ -28,7 +27,6 @@ import { GetShikimoriPagePipe } from '@app/shared/pipes/get-shikimori-page/get-s
 import { ImageCardComponent } from '@app/shared/components/image-card/image-card.component';
 import { ResultOpenTarget, SearchbarResult } from '@app/shared/types/searchbar.types';
 import { ShikimoriMediaNamePipe } from '@app/shared/pipes/shikimori-media-name/shikimori-media-name.pipe';
-import { ShikimoriMediaNameType } from '@app/shared/types/shikimori/shikimori-media-name.type';
 import { SkeletonBlockComponent } from '@app/shared/components/skeleton-block/skeleton-block.component';
 import { provideShikimoriImageLoader } from '@app/shared/providers/shikimori-image-loader.provider';
 import { trackById } from '@app/shared/utils/common-ngfor-tracking';
