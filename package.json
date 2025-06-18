@@ -34,6 +34,7 @@
         "build:prod": "ionic build --c=production",
         "test": "ng test",
         "lint": "ng lint",
+        "commit-lint": "ng lint --max-warnings 0",
         "e2e": "ng e2e",
         "set-env": "tsx setup-env.ts",
         "watch": "ionic build --watch --configuration development",
@@ -43,7 +44,7 @@
         "electron"
     ],
     "pre-commit": [
-        "lint"
+        "commit-lint"
     ],
     "dependencies": {
         "@angular/animations": "^19.0.0",
