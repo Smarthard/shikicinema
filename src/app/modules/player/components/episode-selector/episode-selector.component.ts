@@ -39,6 +39,7 @@ export class EpisodeSelectorComponent {
     selected = input.required<number>();
     maxEpisode = input.required<number>();
     maxWatchedEpisode = input<number>();
+    isLoading = input(true);
 
     selection = output<number>();
 

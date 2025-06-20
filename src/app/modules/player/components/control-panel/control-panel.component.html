@@ -58,6 +58,7 @@
 @if (!isMinified()) {
     <app-episode-selector class="control-panel__episode-selector"
                         [selected]="selected()"
+                        [isLoading]="isLoading()"
                         [maxEpisode]="maxEpisode()"
                         [maxWatchedEpisode]="maxWatchedEpisode()"
                         (selection)="onEpisodeChange($event)"

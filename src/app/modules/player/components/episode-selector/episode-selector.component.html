@@ -20,8 +20,17 @@
                 <ion-ripple-effect type="unbounded" />
             </span>
         } @empty {
-            @for (_ of episodesSkeleton; track $index) {
-                <span class="skeleton episode-selector__item episode-selector__item--skeleton"></span>
+            @if (isLoading()) {
+                @for (_ of episodesSkeleton; track $index) {
+                    <span class="skeleton episode-selector__item episode-selector__item--skeleton"></span>
+                }
+            } @else {
+                <span class="episode-selector__item episode-selector__item--selected"
+                    tabindex="0"
+                    #episodeEl
+                    id="episode-1">
+                    1
+                </span>
             }
         }
     </div>
