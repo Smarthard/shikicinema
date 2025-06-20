@@ -4,6 +4,7 @@ import {
     ElementRef,
     HostBinding,
     ViewEncapsulation,
+    computed,
     effect,
     input,
     output,
@@ -35,12 +36,13 @@ export class EpisodeSelectorComponent {
 
     readonly episodesSkeleton = new Array<number>(50);
 
-    episodes = input.required<number[]>();
     selected = input.required<number>();
     maxEpisode = input.required<number>();
     maxWatchedEpisode = input<number>();
 
     selection = output<number>();
+
+    episodes = computed(() => new Array(this.maxEpisode()).fill(0).map((_, index) => index + 1));
 
     private scrollToEpisode(episode: number) {
         this.episodesScrollbar()?.scrollToElement(`#episode-${episode}`, { duration: 800 });

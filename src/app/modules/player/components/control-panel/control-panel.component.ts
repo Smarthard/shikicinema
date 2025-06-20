@@ -1,12 +1,12 @@
 import {
     ChangeDetectionStrategy,
     Component,
-    EventEmitter,
     HostBinding,
-    Input,
-    Output,
-    ViewChild,
     ViewEncapsulation,
+    computed,
+    input,
+    output,
+    viewChild,
 } from '@angular/core';
 import {
     InputCustomEvent,
@@ -23,6 +23,7 @@ import { SidePanelComponent } from '@app/modules/player/components/side-panel/si
 import { UserAnimeRate } from '@app/shared/types/shikimori/user-anime-rate';
 import { VideoInfoInterface } from '@app/modules/player/types';
 import { adjustEpisode } from '@app/shared/utils/adjust-episode.function';
+import { getLastAiredEpisode } from '@app/modules/player/utils';
 
 @Component({
     selector: 'app-control-panel',
@@ -44,74 +45,30 @@ export class ControlPanelComponent {
     @HostBinding('class.control-panel')
     private controlPanelClass = true;
 
-    @ViewChild('episodeInputEl', { static: true })
-    private _episodeInputEl: IonInput;
+    private readonly _episodeInputEl = viewChild<IonInput>('episodeInputEl');
 
-    private _episodes: number[];
-    private _maxEpisode: number;
+    selected = input.required<number>();
 
-    @Input({ required: true })
-    set episodes(episodes: number[]) {
-        this._episodes = episodes;
-        this._maxEpisode = episodes[episodes.length - 1];
-    }
+    userRate = input<UserAnimeRate>();
+    anime = input<AnimeBriefInfoInterface>();
+    isLoading = input(true);
+    isWatched = input(false);
+    showSidePanel = input(false);
+    isRewatching = input(false);
+    isMinified = input(false);
+    playerMode = input<PlayerModeType>('auto');
 
-    get episodes(): number[] {
-        return this._episodes;
-    }
+    selection = output<number>();
+    watch = output<number>();
+    openVideoModal = output<void>();
+    uploaded = output<VideoInfoInterface>();
+    togglePlayerMode = output<void>();
 
-    @Input()
-    selected: number;
-
-    @Input()
-    userRate: UserAnimeRate;
-
-    @Input()
-    anime: AnimeBriefInfoInterface;
-
-    @Input()
-    isLoading: boolean = true;
-
-    @Input()
-    isWatched = false;
-
-    @Input()
-    showSidePanel = false;
-
-    @Input()
-    isRewatching = false;
-
-    @Input()
-    isMinified = false;
-
-    @Input()
-    playerMode: PlayerModeType;
-
-    @Output()
-    selection = new EventEmitter<number>();
-
-    @Output()
-    watch = new EventEmitter<number>();
-
-    @Output()
-    openVideoModal = new EventEmitter<void>();
-
-    @Output()
-    uploaded = new EventEmitter<VideoInfoInterface>();
-
-    @Output()
-    togglePlayerMode = new EventEmitter<void>();
-
-    get maxEpisode(): number {
-        return this._maxEpisode;
-    }
-
-    get maxWatchedEpisode(): number {
-        return this.userRate?.episodes || 0;
-    }
+    maxEpisode = computed(() => getLastAiredEpisode(this.anime()));
+    maxWatchedEpisode = computed(() => this.userRate()?.episodes || 0);
 
     private adjustEpisode(episode): number {
-        return adjustEpisode(episode, this.selected, this.maxEpisode);
+        return adjustEpisode(episode, this.selected(), this.maxEpisode());
     }
 
     onEpisodeControlsClick(selectedEpisode: number, type: 'forward' | 'backward'): void {
@@ -124,12 +81,12 @@ export class ControlPanelComponent {
         const { value } = event?.target;
         const episode = this.adjustEpisode(value);
 
-        this._episodeInputEl.value = episode;
+        this._episodeInputEl().value = episode;
         this.onEpisodeChange(episode);
     }
 
     onEpisodeChange(episode: number): void {
-        if (episode !== this.selected) {
+        if (episode !== this.selected()) {
             this.selection.emit(episode);
         }
     }

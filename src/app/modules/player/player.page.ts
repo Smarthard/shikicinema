@@ -43,7 +43,6 @@ import { CommentsComponent } from '@app/modules/player/components/comments/comme
 import { ControlPanelComponent } from '@app/modules/player/components/control-panel/control-panel.component';
 import { FilterByKindPipe } from '@app/shared/pipes/filter-by-kind/filter-by-kind.pipe';
 import { GetActiveKindsPipe } from '@app/shared/pipes/get-active-kinds/get-active-kinds.pipe';
-import { GetEpisodesPipe } from '@app/shared/pipes/get-episodes/get-episodes.pipe';
 import { GetShikimoriPagePipe } from '@app/shared/pipes/get-shikimori-page/get-shikimori-page.pipe';
 import { KindSelectorComponent } from '@app/modules/player/components/kind-selector/kind-selector.component';
 import { NoPreferenceSymbol } from '@app/store/settings/types';
@@ -118,7 +117,6 @@ import { visitAnimePageAction } from '@app/modules/home/store/recent-animes/acti
         SkeletonBlockComponent,
         GetActiveKindsPipe,
         FilterByKindPipe,
-        GetEpisodesPipe,
         ControlPanelComponent,
         UploaderComponent,
         ToUploaderPipe,
