@@ -56,12 +56,12 @@ const reducer = createReducer(
         (state, { userRate, animeId }) => ({
             ...state,
             animes: {
-                ...state.animes,
+                ...state?.animes,
                 [animeId]: {
-                    ...state.animes[animeId],
+                    ...state?.animes?.[animeId],
                     anime: {
-                        ...state.animes[animeId].anime,
-                        user_rate: userRate,
+                        ...state?.animes?.[animeId]?.anime,
+                        user_rate: userRate ? { ...userRate } : null,
                     },
                 },
             },
