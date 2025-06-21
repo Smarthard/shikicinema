@@ -50,7 +50,7 @@ import {
     watchAnimeFailureAction,
     watchAnimeSuccessAction,
 } from '@app/modules/player/store/actions';
-import { getLastAiredEpisode, toUserRatesUpdate } from '@app/modules/player/utils';
+import { getMaxEpisode, toUserRatesUpdate } from '@app/modules/player/utils';
 import { kodikVideoMapper } from '@app/shared/types/kodik/mappers';
 import {
     selectPlayerAnime,
@@ -109,8 +109,8 @@ export class PlayerEffects {
             this.store$.select(selectPlayerAnime(animeId)),
         ]),
         map(([{ animeId, episode: episodes, isRewarch }, user, rate, anime]) => {
-            const lastAiredEpisode = getLastAiredEpisode(anime);
-            const isLastEpisodeWatched = episodes >= lastAiredEpisode;
+            const maxEpisode = getMaxEpisode(anime);
+            const isLastEpisodeWatched = episodes >= maxEpisode;
             const status: UserRateStatusType = isLastEpisodeWatched
                 ? 'completed'
                 : isRewarch ? 'rewatching' : 'watching';

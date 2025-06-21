@@ -140,6 +140,7 @@
                 "DELETE_FAILURE": "Failed to delete comment"
             },
             "PLAYER": {
+                "NEXT_EPISODE_PLACEHOLDER": "Next episode {{ date }}",
                 "FAILED_PLACEHOLDER": "This video has been removed or never existed"
             },
             "UPLOAD_VIDEO": {

@@ -23,7 +23,7 @@ import { SidePanelComponent } from '@app/modules/player/components/side-panel/si
 import { UserAnimeRate } from '@app/shared/types/shikimori/user-anime-rate';
 import { VideoInfoInterface } from '@app/modules/player/types';
 import { adjustEpisode } from '@app/shared/utils/adjust-episode.function';
-import { getLastAiredEpisode } from '@app/modules/player/utils';
+import { getMaxEpisode } from '@app/modules/player/utils';
 
 @Component({
     selector: 'app-control-panel',
@@ -64,7 +64,7 @@ export class ControlPanelComponent {
     uploaded = output<VideoInfoInterface>();
     togglePlayerMode = output<void>();
 
-    maxEpisode = computed(() => getLastAiredEpisode(this.anime()));
+    maxEpisode = computed(() => getMaxEpisode(this.anime()));
     maxWatchedEpisode = computed(() => this.userRate()?.episodes || 0);
 
     private adjustEpisode(episode): number {

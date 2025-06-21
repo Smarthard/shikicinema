@@ -74,7 +74,7 @@ import { filterByEpisode } from '@app/shared/utils/filter-by-episode.function';
 import { filterVideosByPreferences } from '@app/modules/player/utils/filter-videos-by-preferences.function';
 import { getAnimeName } from '@app/shared/utils/get-anime-name.function';
 import { getDomain } from '@app/shared/utils/get-domain.function';
-import { getLastAiredEpisode, isEpisodeWatched } from '@app/modules/player/utils';
+import { getLastAiredEpisode, getMaxEpisode, isEpisodeWatched } from '@app/modules/player/utils';
 import { isEq } from '@app/shared/utils/is-eq.function';
 import { isEqId } from '@app/shared/utils/is-eq-id.function';
 import {
@@ -193,10 +193,17 @@ export class PlayerPage implements OnInit {
     )());
 
     lastAiredEpisode = computed(() => getLastAiredEpisode(this.anime()));
+    maxEpisode = computed(() => getMaxEpisode(this.anime()));
     animeName = computed(() => getAnimeName(this.anime(), this.userSelectedLanguage()));
     isWatched = computed(() => isEpisodeWatched(this.episodeQ(), this.userRate()));
     isRewatching = computed(() => this.userRate()?.status === 'rewatching');
     episodeVideos = computed(() => filterByEpisode(this.videos(), this.episodeQ()));
+    nextEpisodeAt = computed(() => {
+        const nextEpisodeAt = this.anime()?.next_episode_at;
+        const isCurrentEpisodeNotAired = this.episodeQ() > this.lastAiredEpisode();
+
+        return isCurrentEpisodeNotAired ? nextEpisodeAt : null;
+    });
 
     currentVideo = signal<VideoInfoInterface>(null);
     currentKind = signal<VideoKindEnum>(null);
@@ -317,9 +324,9 @@ export class PlayerPage implements OnInit {
 
     onEpisodeChange(episode: number): void {
         const animeId = this.animeIdQ();
-        const lastAiredEpisode = this.lastAiredEpisode();
+        const maxEpisodes = this.maxEpisode();
 
-        if (episode <= lastAiredEpisode && episode > 0) {
+        if (episode <= maxEpisodes && episode > 0) {
             void this.router.navigate(['/player', animeId, episode]);
         }
     }
@@ -351,7 +358,7 @@ export class PlayerPage implements OnInit {
         const anime = this.anime();
         const userRate = this.userRate();
         const isRewarch = this.isRewatching() || userRate?.status === 'completed';
-        const isLastEpisodeWatched = userRate?.episodes >= this.lastAiredEpisode();
+        const isLastEpisodeWatched = userRate?.episodes >= this.maxEpisode();
         const watchedEpisode = isLastEpisodeWatched
             ? episode
             : isUnwatch ? episode - 1 : episode;

@@ -39,6 +39,7 @@
         <app-player class="player-page__player"
             [loading]="isVideosLoading()"
             [source]="currentVideo()?.url"
+            [nextEpisodeAt]="nextEpisodeAt()"
         />
 
         <app-video-selector

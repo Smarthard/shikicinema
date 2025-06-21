@@ -40,7 +40,7 @@ import {
     VideoQualityEnum,
 } from '@app/modules/player/types';
 import { getAnimeName } from '@app/shared/utils/get-anime-name.function';
-import { getLastAiredEpisode } from '@app/modules/player/utils';
+import { getMaxEpisode } from '@app/modules/player/utils';
 
 
 @Component({
@@ -92,7 +92,7 @@ export class VideoUploadModalComponent extends IonModal implements OnInit {
     }
 
     readonly getAnimeName = getAnimeName;
-    readonly getLastAiredEpisode = getLastAiredEpisode;
+    readonly getMaxEpisode = getMaxEpisode;
     readonly VideoKindEnum = VideoKindEnum;
     readonly VideoQualityEnum = VideoQualityEnum;
     readonly VideoLanguageEnum = VideoLanguageEnum;

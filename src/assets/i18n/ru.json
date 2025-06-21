@@ -145,6 +145,7 @@
                 "DELETE_FAILURE": "Не удалось удалить комментарий"
             },
             "PLAYER": {
+                "NEXT_EPISODE_PLACEHOLDER": "Следующий эпизод выйдет {{ date }}",
                 "FAILED_PLACEHOLDER": "Это видео было удалено или никогда не существовало"
             },
             "UPLOAD_VIDEO": {

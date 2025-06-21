@@ -140,6 +140,7 @@
                 "DELETE_FAILURE": "Неможливо видалити коментар"
             },
             "PLAYER": {
+                "NEXT_EPISODE_PLACEHOLDER": "Наступний епізод вийде {{ date }}",
                 "FAILED_PLACEHOLDER": "Це відео було видалено або ніколи не існувало"
             },
             "UPLOAD_VIDEO": {
