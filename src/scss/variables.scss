@@ -1,4 +1,9 @@
 body {
+    --shc-watched-episode-color-rgb: 41, 196, 103;
+    --shc-watched-episode-color: rgb(var(--shc-watched-episode-color-rgb));
+    --shc-episode-not-aired-color: var(--ion-color-light);
+    --shc-episode-not-aired-background-color: var(--ion-color-medium-tint);
+
     --shc-scrollbar-color: rgba(var(--ion-color-primary-rgb), 1);
     --shc-scrollbar-background-color: rgba(var(--ion-color-primary-rgb), 0.5);
 }

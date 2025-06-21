@@ -52,6 +52,11 @@
             min-width: 3.2rem;
         }
 
+        &--not-aired {
+            background-color: var(--shc-episode-not-aired-background-color);
+            color: var(--shc-episode-not-aired-color);
+        }
+
         &--skeleton {
             border-color: var(--ion-color-step-450);
         }

@@ -1,9 +1,6 @@
 @use 'src/scss/mixins' as *;
 
 .player-page {
-    --shc-watched-episode-color-rgb: 41, 196, 103;
-    --shc-watched-episode-color: rgb(var(--shc-watched-episode-color-rgb));
-
     font-size: .825rem;
 
     @include media-breakpoint-up('lg') {

@@ -13,6 +13,7 @@
                 [class.episode-selector__item--watched]="episode <= maxWatchedEpisode()"
                 [class.episode-selector__item--selected]="episode === selected()"
                 [class.episode-selector__item--long]="episode > 99"
+                [class.episode-selector__item--not-aired]="episode > maxAiredEpisode()"
                 (click)="onEpisodeSelect(episode)"
                 (keydown.enter)="onEpisodeSelect(episode)"
                 (keydown.space)="onEpisodeSelect(episode)">
