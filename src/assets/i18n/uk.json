@@ -142,6 +142,7 @@
             "PLAYER": {
                 "NEXT_EPISODE_PLACEHOLDER": "Наступний епізод вийде {{ date }}",
                 "EPISODE_IS_NOT_AIRED": "Цей епізод ще не вийшов",
+                "AUTHOR_AVAILABILITY_ISSUE": "Автор доступний не для всіх епізодів",
                 "FAILED_PLACEHOLDER": "Це відео було видалено або ніколи не існувало"
             },
             "UPLOAD_VIDEO": {

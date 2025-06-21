@@ -48,6 +48,7 @@
             [videos]="episodeVideos() | filterByKind: currentKind()"
             [selected]="currentVideo()"
             [kindDisplayMode]="playerKindDisplayMode()"
+            [warnAvailability]="videos() | authorAvailabilityWarning: lastAiredEpisode()"
             (selection)="onVideoChange($event)"
         />
 

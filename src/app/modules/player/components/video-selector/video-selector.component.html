@@ -12,6 +12,7 @@
                 [kindDisplayMode]="kindDisplayMode()"
                 [selected]="selected()"
                 [videos]="videos() | filterByAuthor: author: defaultAuthorName()"
+                [isAvailableForAllEpisodes]="!warnAvailability()?.includes(author)"
                 (toggleOpen)="onAuthorSectionToggle($event)"
                 (selectVideo)="onSelectionChange($event)"
             />

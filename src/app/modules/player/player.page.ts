@@ -38,6 +38,10 @@ import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { timer } from 'rxjs';
 
 import { AnimeBriefInfoInterface } from '@app/shared/types/shikimori/anime-brief-info.interface';
+import {
+    AuthorAvailabilityWarningPipe,
+    ToUploaderPipe,
+} from '@app/modules/player/pipes';
 import { Comment } from '@app/shared/types/shikimori/comment';
 import { CommentsComponent } from '@app/modules/player/components/comments/comments.component';
 import { ControlPanelComponent } from '@app/modules/player/components/control-panel/control-panel.component';
@@ -52,7 +56,6 @@ import { ShikimoriAnimeLinkPipe } from '@app/shared/pipes/shikimori-anime-link/s
 import { SidePanelComponent } from '@app/modules/player/components/side-panel/side-panel.component';
 import { SkeletonBlockComponent } from '@app/shared/components/skeleton-block/skeleton-block.component';
 import { SwipeDirective } from '@app/shared/directives/swipe.directive';
-import { ToUploaderPipe } from '@app/modules/player/pipes/to-uploader.pipe';
 import { UploaderComponent } from '@app/modules/player/components/uploader/uploader.component';
 import { UserCommentFormComponent } from '@app/modules/player/components/user-comment-form/user-comment-form.component';
 import { VideoInfoInterface } from '@app/modules/player/types';
@@ -125,6 +128,7 @@ import { visitAnimePageAction } from '@app/modules/home/store/recent-animes/acti
         UserCommentFormComponent,
         ShikimoriAnimeLinkPipe,
         GetShikimoriPagePipe,
+        AuthorAvailabilityWarningPipe,
         SidePanelComponent,
         IonText,
         IonContent,
