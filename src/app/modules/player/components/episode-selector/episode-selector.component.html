@@ -6,32 +6,31 @@
     visibility="hover">
     <div class="episode-selector__wrapper">
         @for (episode of episodes(); track episode) {
-            <span class="episode-selector__item ion-activatable"
-                tabindex="0"
+            @let isNotAired = episode > maxAiredEpisode();
+
+            <app-episode-selector-item
                 #episodeEl
-                [id]="'episode-' + episode"
-                [class.episode-selector__item--watched]="episode <= maxWatchedEpisode()"
-                [class.episode-selector__item--selected]="episode === selected()"
-                [class.episode-selector__item--long]="episode > 99"
-                [class.episode-selector__item--not-aired]="episode > maxAiredEpisode()"
+                [episode]="episode"
+                [isWatched]="episode <= maxWatchedEpisode()"
+                [isSelected]="episode === selected()"
+                [isNotAired]="isNotAired"
+                [ngxTippy]="isNotAired ? notAiredText() : null"
+                [tippyProps]="{ placement: 'top' }"
                 (click)="onEpisodeSelect(episode)"
                 (keydown.enter)="onEpisodeSelect(episode)"
-                (keydown.space)="onEpisodeSelect(episode)">
-                {{ episode }}
-                <ion-ripple-effect type="unbounded" />
-            </span>
+                (keydown.space)="onEpisodeSelect(episode)"
+            />
         } @empty {
             @if (isLoading()) {
-                @for (_ of episodesSkeleton; track $index) {
-                    <span class="skeleton episode-selector__item episode-selector__item--skeleton"></span>
+                @for (episode of episodesSkeleton; track $index) {
+                    <app-episode-selector-item class="skeleton" [episode]="episode" />
                 }
             } @else {
-                <span class="episode-selector__item episode-selector__item--selected"
-                    tabindex="0"
+                <app-episode-selector-item
                     #episodeEl
-                    id="episode-1">
-                    1
-                </span>
+                    [episode]="1"
+                    [isSelected]="true"
+                />
             }
         }
     </div>
