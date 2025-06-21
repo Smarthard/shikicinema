@@ -1,29 +1,29 @@
-import { AsyncPipe } from '@angular/common';
+import { AsyncPipe, DatePipe } from '@angular/common';
 import {
-    BehaviorSubject,
+    ChangeDetectionStrategy,
+    Component,
+    DestroyRef,
+    HostBinding,
+    ViewEncapsulation,
+    computed,
+    effect,
+    inject,
+    input,
+    output,
+    signal,
+    untracked,
+} from '@angular/core';
+import {
     Observable,
-    combineLatest,
     filter,
     map,
     race,
     tap,
     timer,
 } from 'rxjs';
-import {
-    ChangeDetectionStrategy,
-    Component,
-    DestroyRef,
-    EventEmitter,
-    HostBinding,
-    Input,
-    OnInit,
-    Output,
-    ViewEncapsulation,
-    inject,
-} from '@angular/core';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { shareReplay, take } from 'rxjs/operators';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 
 import { UrlSanitizerPipe } from '@app/shared/pipes/url-sanitizer/url-sanitizer.pipe';
 
@@ -35,27 +35,31 @@ import { UrlSanitizerPipe } from '@app/shared/pipes/url-sanitizer/url-sanitizer.
         UrlSanitizerPipe,
         AsyncPipe,
         TranslocoPipe,
+        DatePipe,
     ],
     templateUrl: './player.component.html',
     styleUrl: './player.component.scss',
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PlayerComponent implements OnInit {
+export class PlayerComponent {
     @HostBinding('class.player')
     private playerClass = true;
 
     private readonly destroyRef = inject(DestroyRef);
 
-    private _source: string;
-    private _sourceLoading$ = new BehaviorSubject(true);
-    private _outerLoading$ = new BehaviorSubject(true);
+    private _sourceLoading = signal(true);
+    private _sourceLoading$ = toObservable(this._sourceLoading);
+
+    loading = input(true);
+    source = input<string>();
+    nextEpisodeAt = input<Date | string | number>();
+
+    loaded = output<boolean>();
+    timedOut = output<boolean>();
 
     @HostBinding('class.skeleton')
-    readonly isLoading$ = combineLatest([
-        this._sourceLoading$,
-        this._outerLoading$,
-    ]).pipe(map(([isSource, isOuter]) => isSource || isOuter));
+    readonly isLoading = computed(() => this._sourceLoading() || this.loading());
 
     timeout$: Observable<boolean>;
 
@@ -78,39 +82,20 @@ export class PlayerComponent implements OnInit {
         );
     }
 
-    ngOnInit(): void {
-        this._sourceLoading$.pipe(
-            filter(Boolean),
-            tap(() => this.timeout$ = this._getTimeout(10_000)),
-            takeUntilDestroyed(this.destroyRef),
-        ).subscribe();
-    }
+    sourceChangedEffect = effect(() => {
+        this.source();
 
-    @Input()
-    set loading(loading: boolean) {
-        this._outerLoading$.next(loading);
-    }
+        untracked(() => {
+            this.loaded.emit(false);
+            this._sourceLoading.set(true);
 
-    @Input()
-    set source(source: string) {
-        this._source = source;
-        this.loaded.emit(false);
-        this._sourceLoading$.next(true);
-    }
-
-    get source(): string {
-        return this._source;
-    }
-
-    @Output()
-    loaded = new EventEmitter<boolean>();
-
-    @Output()
-    timedOut = new EventEmitter<boolean>();
+            this.timeout$ = this._getTimeout(10_000);
+        });
+    });
 
     onLoad(): void {
         this.loaded.emit(true);
-        this._sourceLoading$.next(false);
+        this._sourceLoading.set(false);
     }
 
     onTimeout(): void {

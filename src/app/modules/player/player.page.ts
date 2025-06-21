@@ -38,12 +38,15 @@ import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { timer } from 'rxjs';
 
 import { AnimeBriefInfoInterface } from '@app/shared/types/shikimori/anime-brief-info.interface';
+import {
+    AuthorAvailabilityWarningPipe,
+    ToUploaderPipe,
+} from '@app/modules/player/pipes';
 import { Comment } from '@app/shared/types/shikimori/comment';
 import { CommentsComponent } from '@app/modules/player/components/comments/comments.component';
 import { ControlPanelComponent } from '@app/modules/player/components/control-panel/control-panel.component';
 import { FilterByKindPipe } from '@app/shared/pipes/filter-by-kind/filter-by-kind.pipe';
 import { GetActiveKindsPipe } from '@app/shared/pipes/get-active-kinds/get-active-kinds.pipe';
-import { GetEpisodesPipe } from '@app/shared/pipes/get-episodes/get-episodes.pipe';
 import { GetShikimoriPagePipe } from '@app/shared/pipes/get-shikimori-page/get-shikimori-page.pipe';
 import { KindSelectorComponent } from '@app/modules/player/components/kind-selector/kind-selector.component';
 import { NoPreferenceSymbol } from '@app/store/settings/types';
@@ -53,7 +56,6 @@ import { ShikimoriAnimeLinkPipe } from '@app/shared/pipes/shikimori-anime-link/s
 import { SidePanelComponent } from '@app/modules/player/components/side-panel/side-panel.component';
 import { SkeletonBlockComponent } from '@app/shared/components/skeleton-block/skeleton-block.component';
 import { SwipeDirective } from '@app/shared/directives/swipe.directive';
-import { ToUploaderPipe } from '@app/modules/player/pipes/to-uploader.pipe';
 import { UploaderComponent } from '@app/modules/player/components/uploader/uploader.component';
 import { UserCommentFormComponent } from '@app/modules/player/components/user-comment-form/user-comment-form.component';
 import { VideoInfoInterface } from '@app/modules/player/types';
@@ -75,7 +77,7 @@ import { filterByEpisode } from '@app/shared/utils/filter-by-episode.function';
 import { filterVideosByPreferences } from '@app/modules/player/utils/filter-videos-by-preferences.function';
 import { getAnimeName } from '@app/shared/utils/get-anime-name.function';
 import { getDomain } from '@app/shared/utils/get-domain.function';
-import { getLastAiredEpisode, isEpisodeWatched } from '@app/modules/player/utils';
+import { getLastAiredEpisode, getMaxEpisode, isEpisodeWatched } from '@app/modules/player/utils';
 import { isEq } from '@app/shared/utils/is-eq.function';
 import { isEqId } from '@app/shared/utils/is-eq-id.function';
 import {
@@ -118,7 +120,6 @@ import { visitAnimePageAction } from '@app/modules/home/store/recent-animes/acti
         SkeletonBlockComponent,
         GetActiveKindsPipe,
         FilterByKindPipe,
-        GetEpisodesPipe,
         ControlPanelComponent,
         UploaderComponent,
         ToUploaderPipe,
@@ -127,6 +128,7 @@ import { visitAnimePageAction } from '@app/modules/home/store/recent-animes/acti
         UserCommentFormComponent,
         ShikimoriAnimeLinkPipe,
         GetShikimoriPagePipe,
+        AuthorAvailabilityWarningPipe,
         SidePanelComponent,
         IonText,
         IonContent,
@@ -195,10 +197,17 @@ export class PlayerPage implements OnInit {
     )());
 
     lastAiredEpisode = computed(() => getLastAiredEpisode(this.anime()));
+    maxEpisode = computed(() => getMaxEpisode(this.anime()));
     animeName = computed(() => getAnimeName(this.anime(), this.userSelectedLanguage()));
     isWatched = computed(() => isEpisodeWatched(this.episodeQ(), this.userRate()));
     isRewatching = computed(() => this.userRate()?.status === 'rewatching');
     episodeVideos = computed(() => filterByEpisode(this.videos(), this.episodeQ()));
+    nextEpisodeAt = computed(() => {
+        const nextEpisodeAt = this.anime()?.next_episode_at;
+        const isCurrentEpisodeNotAired = this.episodeQ() > this.lastAiredEpisode();
+
+        return isCurrentEpisodeNotAired ? nextEpisodeAt : null;
+    });
 
     currentVideo = signal<VideoInfoInterface>(null);
     currentKind = signal<VideoKindEnum>(null);
@@ -319,9 +328,9 @@ export class PlayerPage implements OnInit {
 
     onEpisodeChange(episode: number): void {
         const animeId = this.animeIdQ();
-        const lastAiredEpisode = this.lastAiredEpisode();
+        const maxEpisodes = this.maxEpisode();
 
-        if (episode <= lastAiredEpisode && episode > 0) {
+        if (episode <= maxEpisodes && episode > 0) {
             void this.router.navigate(['/player', animeId, episode]);
         }
     }
@@ -353,7 +362,7 @@ export class PlayerPage implements OnInit {
         const anime = this.anime();
         const userRate = this.userRate();
         const isRewarch = this.isRewatching() || userRate?.status === 'completed';
-        const isLastEpisodeWatched = userRate?.episodes >= this.lastAiredEpisode();
+        const isLastEpisodeWatched = userRate?.episodes >= this.maxEpisode();
         const watchedEpisode = isLastEpisodeWatched
             ? episode
             : isUnwatch ? episode - 1 : episode;

@@ -9,19 +9,26 @@
         background-color: var(--box-shadow);
         border: 0;
 
-        &--dummy {
+        &--has-banner {
             display: flex;
             align-items: flex-end;
             justify-content: center;
 
             background-color: var(--ion-color-light);
-            background-image: url('https://media1.tenor.com/m/ga1mWmzDJMAAAAAd/legend-of-the-galactic-heroes-yang-wenli.gif');
             background-repeat: no-repeat;
             background-size: cover;
         }
+
+        &--airing-soon-banner {
+            background-image: url('https://media1.tenor.com/m/NfkeGSj2pgIAAAAd/gintama-watching-tv.gif');
+        }
+
+        &--not-loading-banner {
+            background-image: url('https://media1.tenor.com/m/ga1mWmzDJMAAAAAd/legend-of-the-galactic-heroes-yang-wenli.gif');
+        }
     }
 
-    &__fail-placeholder {
+    &__placeholder {
         margin-bottom: 0.125rem;
         text-align: center;
         color: yellow;

@@ -39,6 +39,7 @@
         <app-player class="player-page__player"
             [loading]="isVideosLoading()"
             [source]="currentVideo()?.url"
+            [nextEpisodeAt]="nextEpisodeAt()"
         />
 
         <app-video-selector
@@ -47,13 +48,13 @@
             [videos]="episodeVideos() | filterByKind: currentKind()"
             [selected]="currentVideo()"
             [kindDisplayMode]="playerKindDisplayMode()"
+            [warnAvailability]="videos() | authorAvailabilityWarning: lastAiredEpisode()"
             (selection)="onVideoChange($event)"
         />
 
         <app-control-panel
             class="player-page__control-panel"
             [anime]="anime()"
-            [episodes]="videos() | getEpisodes"
             [selected]="episodeQ()"
             [userRate]="userRate()"
             [isLoading]="isAnimeLoading()"

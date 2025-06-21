@@ -6,6 +6,16 @@
             <ion-label class="author-accordion__header"
                     [color]="selected()?.author | isSameAuthor: author() | getColorForSelectable">
                 {{ author() }}
+
+                @if (!isAvailableForAllEpisodes()) {
+                    <ion-icon
+                        class="author-availability-warning"
+                        color="warning"
+                        name="warning-outline"
+                        [ngxTippy]="availabilityIssueTip()"
+                        [tippyProps]="{ placement: 'bottom' }"
+                    />
+                }
             </ion-label>
 
             <div class="author-accordion__qualities">

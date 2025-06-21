@@ -1,25 +1,36 @@
-<ng-scrollbar #episodesScrollbar
+<ng-scrollbar
+    #episodesScrollbar
     class="scrollbar"
     orientation="horizontal"
     appearance="compact"
     visibility="hover">
     <div class="episode-selector__wrapper">
-        @for (episode of episodes; track episode) {
-            <span class="episode-selector__item ion-activatable"
-                tabindex="0"
+        @for (episode of episodes(); track episode) {
+            @let isNotAired = episode > maxAiredEpisode();
+
+            <app-episode-selector-item
                 #episodeEl
-                [id]="'episode-' + episode"
-                [class.episode-selector__item--watched]="episode <= maxWatchedEpisode"
-                [class.episode-selector__item--selected]="episode === selected"
-                [class.episode-selector__item--long]="episode > 99"
+                [episode]="episode"
+                [isWatched]="episode <= maxWatchedEpisode()"
+                [isSelected]="episode === selected()"
+                [isNotAired]="isNotAired"
+                [ngxTippy]="isNotAired ? notAiredText() : null"
+                [tippyProps]="{ placement: 'top' }"
                 (click)="onEpisodeSelect(episode)"
-                (keydown.enter)="onEpisodeSelect(episode)">
-                {{ episode }}
-                <ion-ripple-effect type="unbounded"></ion-ripple-effect>
-            </span>
+                (keydown.enter)="onEpisodeSelect(episode)"
+                (keydown.space)="onEpisodeSelect(episode)"
+            />
         } @empty {
-            @for (_ of episodesSkeleton; track $index) {
-                <span class="skeleton episode-selector__item episode-selector__item--skeleton"></span>
+            @if (isLoading()) {
+                @for (episode of episodesSkeleton; track $index) {
+                    <app-episode-selector-item class="skeleton" [episode]="episode" />
+                }
+            } @else {
+                <app-episode-selector-item
+                    #episodeEl
+                    [episode]="1"
+                    [isSelected]="true"
+                />
             }
         }
     </div>

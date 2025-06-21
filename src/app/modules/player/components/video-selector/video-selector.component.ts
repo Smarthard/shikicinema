@@ -48,6 +48,7 @@ export class VideoSelectorComponent {
     selected = input<VideoInfoInterface>();
     videos = input<VideoInfoInterface[]>();
     kindDisplayMode = input<PlayerKindDisplayMode>();
+    warnAvailability = input<string[]>();
 
     selection = output<VideoInfoInterface>();
 

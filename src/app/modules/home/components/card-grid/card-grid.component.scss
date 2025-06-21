@@ -79,12 +79,12 @@
 
         @include media-breakpoint-up('xxxl') {
             // 6 cards
-            grid-template-rows: 16fr 1fr;
+            grid-template-rows: 16fr 1.5fr;
         }
 
         @include media-breakpoint-up('x4k') {
             // 6 cards
-            grid-template-rows: 30fr 1fr;
+            grid-template-rows: 30fr 1.5fr;
         }
     }
 }

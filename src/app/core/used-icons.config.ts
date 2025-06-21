@@ -24,4 +24,5 @@ export {
     pencilOutline,
     ellipsisVerticalOutline,
     checkmarkDoneOutline,
+    warningOutline,
 } from 'ionicons/icons';

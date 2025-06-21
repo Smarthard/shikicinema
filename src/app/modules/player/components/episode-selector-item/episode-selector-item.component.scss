@@ -1,0 +1,45 @@
+.episode-selector-item {
+    // <-- for ionic ripple effect
+    position: relative;
+    overflow: hidden;
+    // for ionic ripple effect -->
+
+    user-select: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 100vmax;
+    border: 1px solid var(--ion-color-medium-tint);
+    min-width: 2rem;
+    min-height: 2rem;
+    padding: .25rem;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+
+    &--watched {
+        background-color: rgba(var(--shc-watched-episode-color-rgb), 0.85) !important;
+        color: var(--ion-color-light) !important;
+        border-color: transparent;
+    }
+
+    &--selected {
+        $selectedColor: var(--ion-color-primary);
+
+        color: $selectedColor;
+        border-color: $selectedColor;
+    }
+
+    &--long {
+        min-width: 3.2rem;
+    }
+
+    &--not-aired {
+        background-color: var(--shc-episode-not-aired-background-color);
+        color: var(--shc-episode-not-aired-color);
+    }
+
+    &--skeleton {
+        border-color: transparent;
+    }
+}

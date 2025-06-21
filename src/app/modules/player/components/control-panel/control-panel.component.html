@@ -1,7 +1,7 @@
 <div class="control-panel__controls"
-    [class.control-panel__controls--minified]="isMinified">
+    [class.control-panel__controls--minified]="isMinified()">
     <ion-button class="control-panel__btn" fill="clear"
-        (click)="onEpisodeControlsClick(selected, 'backward')">
+        (click)="onEpisodeControlsClick(selected(), 'backward')">
         <ion-icon slot="icon-only" name="play-back-outline" />
     </ion-button>
 
@@ -9,58 +9,59 @@
         <ion-input class="control-panel__episode"
                 aria-label="episode"
                 #episodeInputEl
-                [value]="selected"
+                [value]="selected()"
                 (ionInput)="onEpisodeInput($event)"
         />
     </ion-item>
 
     <ion-button class="control-panel__btn" fill="clear"
-        (click)="onEpisodeControlsClick(selected, 'forward')">
+        (click)="onEpisodeControlsClick(selected(), 'forward')">
         <ion-icon slot="icon-only" name="play-forward-outline" />
     </ion-button>
 
     <ion-button class="control-panel__btn watch-btn" fill="clear"
-        [class.watch-btn--watched]="isWatched"
-        (click)="onWatch(selected)">
-        @if (isRewatching) {
+        [class.watch-btn--watched]="isWatched()"
+        (click)="onWatch(selected())">
+        @if (isRewatching()) {
             <ion-icon slot="icon-only" name="checkmark-done-outline" />
         } @else {
             <ion-icon slot="icon-only" name="checkmark-outline" />
         }
     </ion-button>
 
-    @if (isMinified) {
+    @if (isMinified()) {
         <ion-button class="control-panel__btn" fill="clear"
             (click)="openVideoModal.emit()">
             <ion-icon slot="icon-only" name="list-outline" />
         </ion-button>
     }
 
-    @if (playerMode !== 'auto') {
+    @if (playerMode() !== 'auto') {
         <ion-button class="control-panel__btn" fill="clear"
             (click)="togglePlayerMode.emit()">
             <ion-icon slot="icon-only" name="resize-outline" />
         </ion-button>
     }
 
-    @if (showSidePanel) {
+    @if (showSidePanel()) {
         <app-side-panel
             class="player-page__side-panel"
-            [anime]="anime"
-            [episode]="selected"
-            [isLoading]="isLoading"
+            [anime]="anime()"
+            [episode]="selected()"
+            [isLoading]="isLoading()"
             [isMinified]="true"
             (uploaded)="uploaded.emit($event)"
         />
     }
 </div>
 
-@if (!isMinified) {
+@if (!isMinified()) {
     <app-episode-selector class="control-panel__episode-selector"
-                        [episodes]="episodes"
-                        [selected]="selected"
-                        [maxEpisode]="maxEpisode"
-                        [maxWatchedEpisode]="maxWatchedEpisode"
+                        [selected]="selected()"
+                        [isLoading]="isLoading()"
+                        [maxEpisode]="maxEpisode()"
+                        [maxAiredEpisode]="maxAiredEpisode()"
+                        [maxWatchedEpisode]="maxWatchedEpisode()"
                         (selection)="onEpisodeChange($event)"
     />
 }

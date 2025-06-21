@@ -1,86 +1,75 @@
 import {
-    AfterViewInit,
     ChangeDetectionStrategy,
     Component,
-    DestroyRef,
     ElementRef,
-    EventEmitter,
     HostBinding,
-    Input,
-    Output,
-    QueryList,
-    ViewChild,
-    ViewChildren,
     ViewEncapsulation,
+    computed,
+    effect,
     inject,
+    input,
+    output,
+    viewChild,
+    viewChildren,
 } from '@angular/core';
-import { BehaviorSubject, combineLatest } from 'rxjs';
-import { IonRippleEffect } from '@ionic/angular/standalone';
 import { NgScrollbar } from 'ngx-scrollbar';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { tap } from 'rxjs/operators';
+import { NgxTippyModule } from 'ngx-tippy-wrapper';
+import { TranslocoService } from '@jsverse/transloco';
+import { toSignal } from '@angular/core/rxjs-interop';
 
+import { EpisodeSelectorItemComponent } from '@app/modules/player/components/episode-selector-item';
 
 @Component({
     selector: 'app-episode-selector',
     standalone: true,
     imports: [
-        IonRippleEffect,
         NgScrollbar,
+        NgxTippyModule,
+        EpisodeSelectorItemComponent,
     ],
     templateUrl: './episode-selector.component.html',
     styleUrl: './episode-selector.component.scss',
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class EpisodeSelectorComponent implements AfterViewInit {
+export class EpisodeSelectorComponent {
     @HostBinding('class.episode-selector')
     private episodeSelectorClass = true;
 
-    private readonly destroyRef = inject(DestroyRef);
+    private readonly transloco = inject(TranslocoService);
 
-    private selectedSubject$ = new BehaviorSubject<number>(1);
-
-    @ViewChild('episodesScrollbar', { static: true })
-    episodesScrollbar: NgScrollbar;
-
-    @ViewChildren('episodeEl')
-    episodesEl: QueryList<ElementRef<HTMLSpanElement>>;
+    readonly episodesScrollbar = viewChild<NgScrollbar>('episodesScrollbar');
+    readonly episodesEl = viewChildren<ElementRef>('episodeEl');
 
     readonly episodesSkeleton = new Array<number>(50);
 
-    @Input({ required: true })
-    episodes: number[];
+    readonly notAiredText = toSignal(
+        this.transloco.selectTranslate('PLAYER_MODULE.PLAYER_PAGE.PLAYER.EPISODE_IS_NOT_AIRED'),
+    );
 
-    @Input({ required: true })
-    set selected(episode: number) {
-        this.selectedSubject$.next(episode);
-    }
+    selected = input.required<number>();
+    maxEpisode = input.required<number>();
+    maxAiredEpisode = input<number>();
+    maxWatchedEpisode = input<number>();
+    isLoading = input(true);
 
-    @Input({ required: true })
-    maxEpisode: number;
+    selection = output<number>();
 
-    @Input()
-    maxWatchedEpisode: number;
-
-    get selected(): number {
-        return this.selectedSubject$.value;
-    }
-
-    @Output()
-    selection = new EventEmitter<number>();
+    episodes = computed(() => new Array(this.maxEpisode()).fill(0).map((_, index) => index + 1));
 
     private scrollToEpisode(episode: number) {
-        this.episodesScrollbar.scrollToElement(`#episode-${episode}`, { duration: 800 });
+        this.episodesScrollbar()?.scrollToElement(`#episode-${episode}`, { duration: 800 });
     }
 
-    ngAfterViewInit(): void {
-        combineLatest([this.episodesEl.changes, this.selectedSubject$])
-            .pipe(
-                tap(([, episode]) => this.scrollToEpisode(episode)),
-                takeUntilDestroyed(this.destroyRef),
-            ).subscribe();
-    }
+    onEpisodeSelectionChangeEffect = effect(() => {
+        const selectedEpisode = this.selected();
+        const episodesEl = this.episodesEl();
+        const scrollbarEl = this.episodesScrollbar();
+
+        if (scrollbarEl && episodesEl?.length) {
+            this.scrollToEpisode(selectedEpisode);
+        }
+    });
 
     onEpisodeSelect(episode: number): void {
         this.selection.emit(episode);

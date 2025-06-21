@@ -34,4 +34,5 @@ export interface AnimeBriefInfoInterface {
     aired_on: string;
     released_on: string;
     user_rate: UserAnimeRate;
+    next_episode_at: string;
 }

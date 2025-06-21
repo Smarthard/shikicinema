@@ -140,6 +140,9 @@
                 "DELETE_FAILURE": "Failed to delete comment"
             },
             "PLAYER": {
+                "NEXT_EPISODE_PLACEHOLDER": "Next episode {{ date }}",
+                "EPISODE_IS_NOT_AIRED": "This episode has not been released yet",
+                "AUTHOR_AVAILABILITY_ISSUE": "This author is not available for all episodes",
                 "FAILED_PLACEHOLDER": "This video has been removed or never existed"
             },
             "UPLOAD_VIDEO": {
