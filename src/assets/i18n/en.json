@@ -189,6 +189,12 @@
                     }
                 }
             }
+        },
+        "VIDEO_SELECT_MODAL": {
+            "TITLE": "Select video"
+        },
+        "EPISODE_SELECT_MODAL": {
+            "TITLE": "Select episode"
         }
     },
     "SETTINGS_MODULE": {

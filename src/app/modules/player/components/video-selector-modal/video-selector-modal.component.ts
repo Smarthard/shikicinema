@@ -15,6 +15,7 @@ import {
     IonToolbar,
     ModalController,
 } from '@ionic/angular/standalone';
+import { TranslocoPipe } from '@jsverse/transloco';
 
 import { AuthorAvailabilityWarningPipe } from '@app/modules/player/pipes';
 import { FilterByKindPipe } from '@app/shared/pipes/filter-by-kind/filter-by-kind.pipe';
@@ -36,6 +37,7 @@ import { VideoSelectorComponent } from '@app/modules/player/components/video-sel
         AuthorAvailabilityWarningPipe,
         FilterByKindPipe,
         GetActiveKindsPipe,
+        TranslocoPipe,
         VideoSelectorComponent,
         KindSelectorComponent,
     ],

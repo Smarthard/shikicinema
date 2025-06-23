@@ -189,6 +189,12 @@
                     }
                 }
             }
+        },
+        "VIDEO_SELECT_MODAL": {
+            "TITLE": "Виберіть відео"
+        },
+        "EPISODE_SELECT_MODAL": {
+            "TITLE": "Виберіть епізод"
         }
     },
     "SETTINGS_MODULE": {

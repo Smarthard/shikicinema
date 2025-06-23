@@ -194,6 +194,12 @@
                     }
                 }
             }
+        },
+        "VIDEO_SELECT_MODAL": {
+            "TITLE": "Выберите видео"
+        },
+        "EPISODE_SELECT_MODAL": {
+            "TITLE": "Выберите эпизод"
         }
     },
     "SETTINGS_MODULE": {
