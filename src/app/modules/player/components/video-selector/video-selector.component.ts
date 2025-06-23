@@ -17,6 +17,7 @@ import { TranslocoService } from '@jsverse/transloco';
 import { toSignal } from '@angular/core/rxjs-interop';
 
 import { FilterByAuthorPipe } from '@app/shared/pipes/filter-by-author/filter-by-author.pipe';
+import { IncludesPipe } from '@app/shared/pipes/includes/includes.pipe';
 import { PlayerKindDisplayMode } from '@app/store/settings/types/player-kind-display-mode.type';
 import { VideoInfoInterface } from '@app/modules/player/types';
 import { VideoSelectorItemComponent } from '@app/modules/player/components/video-selector-item';
@@ -29,6 +30,7 @@ import { cleanAuthorName } from '@app/shared/utils/clean-author-name.function';
     imports: [
         IonAccordionGroup,
         FilterByAuthorPipe,
+        IncludesPipe,
         NgScrollbar,
         VideoSelectorItemComponent,
     ],
@@ -48,7 +50,7 @@ export class VideoSelectorComponent {
     selected = input<VideoInfoInterface>();
     videos = input<VideoInfoInterface[]>();
     kindDisplayMode = input<PlayerKindDisplayMode>();
-    warnAvailability = input<string[]>();
+    warnAvailability = input<string[]>([]);
 
     selection = output<VideoInfoInterface>();
 
