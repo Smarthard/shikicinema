@@ -96,7 +96,7 @@
 
 <ng-template #loadingSkeleton>
     <ion-list class="anime-search-list">
-        @for (_ of fakeResults; track $index) {
+        @for (_ of 5 | repeat; track $index) {
             <ion-item class="anime-search-list-item">
                 <app-skeleton-block
                     class="anime-search-list-item__image"

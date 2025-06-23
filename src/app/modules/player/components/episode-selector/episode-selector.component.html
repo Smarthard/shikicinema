@@ -5,7 +5,8 @@
     appearance="compact"
     visibility="hover">
     <div class="episode-selector__wrapper">
-        @for (episode of episodes(); track episode) {
+        @for (i of maxEpisode() | repeat; track $index) {
+            @let episode = i + 1;
             @let isNotAired = episode > maxAiredEpisode();
 
             <app-episode-selector-item
@@ -22,7 +23,7 @@
             />
         } @empty {
             @if (isLoading()) {
-                @for (episode of episodesSkeleton; track $index) {
+                @for (episode of 50 | repeat; track $index) {
                     <app-episode-selector-item class="skeleton" [episode]="episode" />
                 }
             } @else {

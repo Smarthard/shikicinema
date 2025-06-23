@@ -4,7 +4,6 @@ import {
     ElementRef,
     HostBinding,
     ViewEncapsulation,
-    computed,
     effect,
     inject,
     input,
@@ -14,6 +13,7 @@ import {
 } from '@angular/core';
 import { NgScrollbar } from 'ngx-scrollbar';
 import { NgxTippyModule } from 'ngx-tippy-wrapper';
+import { RepeatPipe } from 'ngxtension/repeat-pipe';
 import { TranslocoService } from '@jsverse/transloco';
 import { toSignal } from '@angular/core/rxjs-interop';
 
@@ -26,6 +26,7 @@ import { EpisodeSelectorItemComponent } from '@app/modules/player/components/epi
         NgScrollbar,
         NgxTippyModule,
         EpisodeSelectorItemComponent,
+        RepeatPipe,
     ],
     templateUrl: './episode-selector.component.html',
     styleUrl: './episode-selector.component.scss',
@@ -41,8 +42,6 @@ export class EpisodeSelectorComponent {
     readonly episodesScrollbar = viewChild<NgScrollbar>('episodesScrollbar');
     readonly episodesEl = viewChildren<ElementRef>('episodeEl');
 
-    readonly episodesSkeleton = new Array<number>(50);
-
     readonly notAiredText = toSignal(
         this.transloco.selectTranslate('PLAYER_MODULE.PLAYER_PAGE.PLAYER.EPISODE_IS_NOT_AIRED'),
     );
@@ -54,8 +53,6 @@ export class EpisodeSelectorComponent {
     isLoading = input(true);
 
     selection = output<number>();
-
-    episodes = computed(() => new Array(this.maxEpisode()).fill(0).map((_, index) => index + 1));
 
     private scrollToEpisode(episode: number) {
         this.episodesScrollbar()?.scrollToElement(`#episode-${episode}`, { duration: 800 });
