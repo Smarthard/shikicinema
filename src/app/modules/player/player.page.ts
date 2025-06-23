@@ -341,6 +341,7 @@ export class PlayerPage implements OnInit {
             videos: this.episodeVideos(),
             selectedKind: this.currentKind(),
             selectedVideo: this.currentVideo(),
+            lastAiredEpisode: this.lastAiredEpisode(),
         };
         const { VideoSelectorModalComponent } = await import('@app/modules/player/components/video-selector-modal');
 

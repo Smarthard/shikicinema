@@ -1,12 +1,10 @@
 import {
     ChangeDetectionStrategy,
-    ChangeDetectorRef,
     Component,
-    ElementRef,
     HostBinding,
     Input,
-    NgZone,
     ViewEncapsulation,
+    inject,
 } from '@angular/core';
 import {
     IonButton,
@@ -18,13 +16,14 @@ import {
     ModalController,
 } from '@ionic/angular/standalone';
 
+import { AuthorAvailabilityWarningPipe } from '@app/modules/player/pipes';
 import { FilterByKindPipe } from '@app/shared/pipes/filter-by-kind/filter-by-kind.pipe';
 import { GetActiveKindsPipe } from '@app/shared/pipes/get-active-kinds/get-active-kinds.pipe';
 import { KindSelectorComponent } from '@app/modules/player/components/kind-selector/kind-selector.component';
 import { VideoInfoInterface, VideoKindEnum } from '@app/modules/player/types';
 import { VideoSelectorComponent } from '@app/modules/player/components/video-selector/video-selector.component';
 
-
+// TODO: модалка не хочет переводиться на сигналы - перепроверить позже
 @Component({
     selector: 'app-video-selector-modal',
     standalone: true,
@@ -34,6 +33,7 @@ import { VideoSelectorComponent } from '@app/modules/player/components/video-sel
         IonButtons,
         IonButton,
         IonIcon,
+        AuthorAvailabilityWarningPipe,
         FilterByKindPipe,
         GetActiveKindsPipe,
         VideoSelectorComponent,
@@ -48,11 +48,16 @@ export class VideoSelectorModalComponent extends IonModal {
     @HostBinding('class.video-selector-modal')
     private videoSelectorModalClass = true;
 
+    private readonly _modalController = inject(ModalController);
+
     private _selectedKind: VideoKindEnum;
     private _selectedVideo: VideoInfoInterface;
 
     @Input()
     videos: VideoInfoInterface[];
+
+    @Input()
+    lastAiredEpisode: number;
 
     @Input()
     set selectedKind(kind: VideoKindEnum) {
@@ -70,16 +75,6 @@ export class VideoSelectorModalComponent extends IonModal {
 
     get selectedVideo(): VideoInfoInterface {
         return this._selectedVideo;
-    }
-
-    // TODO: инжект ModalController - костыль, нужно убрать вместе со всем конструктором (см. нижнее todo)
-    constructor(
-        private readonly _modalController: ModalController,
-        private readonly _changeDetectorRef: ChangeDetectorRef,
-        private readonly _elementRef: ElementRef,
-        private readonly _zone: NgZone,
-    ) {
-        super(_changeDetectorRef, _elementRef, _zone);
     }
 
     onKindChange(kind: VideoKindEnum): void {

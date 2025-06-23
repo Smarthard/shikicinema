@@ -26,6 +26,7 @@
         class="video-selector-modal__video-selector"
         [videos]="videos | filterByKind: selectedKind"
         [selected]="selectedVideo"
+        [warnAvailability]="videos | authorAvailabilityWarning: lastAiredEpisode"
         (selection)="onVideoChange($event)"
     />
 </div>
