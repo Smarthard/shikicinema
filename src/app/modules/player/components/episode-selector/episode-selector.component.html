@@ -1,5 +1,4 @@
 <ng-scrollbar
-    #episodesScrollbar
     class="scrollbar"
     orientation="horizontal"
     appearance="compact"
@@ -10,7 +9,6 @@
             @let isNotAired = episode > maxAiredEpisode();
 
             <app-episode-selector-item
-                #episodeEl
                 [episode]="episode"
                 [isWatched]="episode <= maxWatchedEpisode()"
                 [isSelected]="episode === selected()"
@@ -28,7 +26,6 @@
                 }
             } @else {
                 <app-episode-selector-item
-                    #episodeEl
                     [episode]="1"
                     [isSelected]="true"
                 />
