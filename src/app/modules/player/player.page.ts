@@ -151,8 +151,8 @@ export class PlayerPage implements OnInit {
     private readonly modalController = inject(ModalController);
     private readonly destroyRef = inject(DestroyRef);
 
-    readonly animeId = input<string>(null);
-    readonly episode = input<string>();
+    readonly animeId = input.required<string>();
+    readonly episode = input.required<string>();
 
     private readonly userCommentFormEl = viewChild('userCommentForm', { read: ElementRef });
 
