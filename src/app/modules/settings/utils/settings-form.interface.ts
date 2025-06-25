@@ -8,4 +8,6 @@ export interface SettingsFormInterface {
     playerMode: PlayerModeType;
     playerKindDisplayMode: PlayerKindDisplayMode;
     shikimoriDomain: string;
+    isUserAnimeStatusReorder: boolean;
+    userAnimeStatusOrder: string[];
 }

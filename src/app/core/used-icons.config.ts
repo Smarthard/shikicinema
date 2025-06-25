@@ -14,6 +14,7 @@ export {
     serverOutline,
     settingsOutline,
     trashOutline,
+    playOutline,
     playBackOutline,
     playForwardOutline,
     send,

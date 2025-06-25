@@ -257,6 +257,13 @@
                         }
                     }
                 },
+                "USER_ANIMES_PAGE": {
+                    "TITLE": "Список Аніме",
+                    "USE_CUSTOM_ANIME_STATUS_ORDER": {
+                        "LABEL": "Користувальницьке сортування списку аніме",
+                        "HELP": "Перетягуйте елементи, щоб відсортувати на свій смак"
+                    }
+                },
                 "PROFILE_SETTINGS": {
                     "TITLE": "Профіль",
                     "CONNECTION_INFO": {

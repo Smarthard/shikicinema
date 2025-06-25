@@ -257,6 +257,13 @@
                         }
                     }
                 },
+                "USER_ANIMES_PAGE": {
+                    "TITLE": "Anime List",
+                    "USE_CUSTOM_ANIME_STATUS_ORDER": {
+                        "LABEL": "Custom anime list order",
+                        "HELP": "Drag and drop items to sort them as you like"
+                    }
+                },
                 "PROFILE_SETTINGS": {
                     "TITLE": "Profile",
                     "CONNECTION_INFO": {

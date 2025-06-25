@@ -71,7 +71,7 @@
         <!-- Плеер -->
         <app-settings-group
             class="settings-page__section"
-            icon="film-outline"
+            icon="play-outline"
             [title]="'SETTINGS_MODULE.SETTINGS_PAGE.SETTING_GROUPS.PLAYER_PAGE.TITLE' | transloco"
         >
             <ion-toggle formControlName="preferencesToggle"
@@ -122,6 +122,35 @@
                     {{ 'SETTINGS_MODULE.SETTINGS_PAGE.SETTING_GROUPS.PLAYER_PAGE.PLAYER_KIND_DISPLAY_MODE.OPTIONS.ALL' | transloco }}
                 </ion-select-option>
             </ion-select>
+        </app-settings-group>
+
+        <!-- Список Аниме -->
+        <app-settings-group
+            class="settings-page__section"
+            icon="film-outline"
+            [title]="'SETTINGS_MODULE.SETTINGS_PAGE.SETTING_GROUPS.USER_ANIMES_PAGE.TITLE' | transloco"
+        >
+            @let useCustomOrder = useCustomAnimeStatusOrder?.value;
+            @let helperText = 'SETTINGS_MODULE.SETTINGS_PAGE.SETTING_GROUPS.USER_ANIMES_PAGE.USE_CUSTOM_ANIME_STATUS_ORDER.HELP'| transloco;
+
+            <ion-toggle formControlName="useCustomAnimeStatusOrder"
+                labelPlacement="end"
+                enableOnOffLabels
+                [helperText]="useCustomOrder ? helperText : null"
+            >
+                {{ 'SETTINGS_MODULE.SETTINGS_PAGE.SETTING_GROUPS.USER_ANIMES_PAGE.USE_CUSTOM_ANIME_STATUS_ORDER.LABEL' | transloco }}
+            </ion-toggle>
+
+            @if (useCustomOrder) {
+                <ion-reorder-group (ionItemReorder)="reorderAnimeStatusSections($event)" [disabled]="false">
+                    @for (status of userAnimeStatusOrderCtrl?.value; track status) {
+                        <ion-item>
+                            <ion-label>{{ 'HOME_MODULE.HOME_PAGE.GRIDS.' + (status | uppercase) | transloco }}</ion-label>
+                            <ion-reorder slot="end"></ion-reorder>
+                        </ion-item>
+                    }
+                </ion-reorder-group>
+            }
         </app-settings-group>
 
         <!-- Профиль -->
