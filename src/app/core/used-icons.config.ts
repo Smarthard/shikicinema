@@ -26,4 +26,5 @@ export {
     ellipsisVerticalOutline,
     checkmarkDoneOutline,
     warningOutline,
+    addOutline,
 } from 'ionicons/icons';

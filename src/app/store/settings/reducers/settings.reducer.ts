@@ -28,6 +28,7 @@ const initialState: SettingsStoreInterface = {
     lastPage: '/home',
     useCustomAnimeStatusOrder: false,
     userAnimeStatusOrder: DEFAULT_ANIME_STATUS_ORDER,
+    filterPlayerDomains: [],
 };
 
 const reducer = createReducer(

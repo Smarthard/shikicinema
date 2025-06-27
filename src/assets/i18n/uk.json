@@ -255,6 +255,17 @@
                             "SPECIAL-ONLY": "Відображати тільки на відео з типом Blu-Ray, DVD та VHS якості",
                             "ALL": "Відображати для всіх типів відео"
                         }
+                    },
+                    "FILTER_PLAYER_DOMAINS": {
+                        "LABEL": "Фільтр доменів",
+                        "ADD_NEW_DOMAIN": {
+                            "LABEL": "Додавання домену",
+                            "PLACEHOLDER": "Скопіюйте посилання на програвач і вставте сюди",
+                            "DELETE_BTN": "Видалити",
+                            "VALIDATION_ERRORS": {
+                                "IS_NOT_URL": "Некоректне посилання"
+                            }
+                        }
                     }
                 },
                 "USER_ANIMES_PAGE": {

@@ -255,6 +255,17 @@
                             "SPECIAL-ONLY": "Display only on videos of Blu-Ray, DVD or VHS quality",
                             "ALL": "Display for all video types"
                         }
+                    },
+                    "FILTER_PLAYER_DOMAINS": {
+                        "LABEL": "Domain Filter",
+                        "ADD_NEW_DOMAIN": {
+                            "LABEL": "Add domain",
+                            "PLACEHOLDER": "Copy the link to the player and paste it here",
+                            "DELETE_BTN": "Delete",
+                            "VALIDATION_ERRORS": {
+                                "IS_NOT_URL": "Incorrect link"
+                            }
+                        }
                     }
                 },
                 "USER_ANIMES_PAGE": {

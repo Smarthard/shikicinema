@@ -21,8 +21,11 @@ import {
     IonButton,
     IonContent,
     IonIcon,
+    IonInput,
     IonItem,
+    IonItemGroup,
     IonLabel,
+    IonList,
     IonProgressBar,
     IonReorder,
     IonReorderGroup,
@@ -49,6 +52,7 @@ import { SettingsGroupComponent } from '@app/modules/settings/components/setting
 import { ThemeSettingsType } from '@app/store/settings/types/theme-settings.type';
 import { ToHumanReadableBytesPipe } from '@app/shared/pipes/to-human-readable-bytes/to-human-readable-bytes.pipe';
 import { authShikimoriAction, logoutShikimoriAction } from '@app/store/auth/actions/auth.actions';
+import { getDomain } from '@app/shared/utils/get-domain.function';
 import { mapAnimeStatusOrderToFormArray, mapSettinsFormToState } from '@app/modules/settings/utils';
 import { resetCacheAction } from '@app/store/cache/actions';
 import { selectIsAuthenticated } from '@app/store/auth/selectors/auth.selectors';
@@ -60,6 +64,7 @@ import {
 } from '@app/store/shikimori/selectors/shikimori.selectors';
 import { updateSettingsAction } from '@app/store/settings/actions/settings.actions';
 import { updateShikimoriDomainAction } from '@app/store/shikimori/actions';
+import { urlValidator } from '@app/shared/validators';
 
 
 @Component({
@@ -83,7 +88,10 @@ import { updateShikimoriDomainAction } from '@app/store/shikimori/actions';
         IonReorderGroup,
         IonReorder,
         IonItem,
+        IonItemGroup,
+        IonInput,
         IonLabel,
+        IonList,
         SettingsGroupComponent,
         ProfileInfoComponent,
         ToHumanReadableBytesPipe,
@@ -131,6 +139,7 @@ export class SettingsPage implements OnInit {
         shikimoriDomain: new FormControl<string>(this.defaultShikimoriDomain),
         useCustomAnimeStatusOrder: new FormControl<boolean>(false),
         userAnimeStatusOrder: mapAnimeStatusOrderToFormArray(DEFAULT_ANIME_STATUS_ORDER),
+        filterPlayerDomains: new FormControl([]),
     });
 
     readonly themeCtrl = this.settingsForm?.get('theme');
@@ -139,6 +148,8 @@ export class SettingsPage implements OnInit {
     readonly shikimoriDomainCtrl = this.settingsForm?.get('shikimoriDomain');
     readonly useCustomAnimeStatusOrder = this.settingsForm?.get('useCustomAnimeStatusOrder');
     readonly userAnimeStatusOrderCtrl = this.settingsForm?.get('userAnimeStatusOrder');
+    readonly filterPlayerDomainsCtrl = this.settingsForm?.get('filterPlayerDomains');
+    readonly addFilterDomainCtrl = new FormControl('', [urlValidator()]);
 
     readonly localStorageLimit = this.persistenceService.getMaxByxes();
     readonly localStorageUsage$ = new BehaviorSubject(this.persistenceService.getUsedBytes());
@@ -214,5 +225,24 @@ export class SettingsPage implements OnInit {
         this.userAnimeStatusOrderCtrl.patchValue(newAnimeStatusOrder);
 
         event.detail.complete(true);
+    }
+
+    addNewDomainFilter(): void {
+        if (this.addFilterDomainCtrl.valid) {
+            const { value: rawDomain } = this.addFilterDomainCtrl;
+            const newDomain = getDomain(rawDomain);
+            const { value: oldDomains } = this.filterPlayerDomainsCtrl;
+            const newFilters = [...new Set([...oldDomains, newDomain])];
+
+            this.filterPlayerDomainsCtrl.setValue(newFilters);
+            this.addFilterDomainCtrl.reset();
+        }
+    }
+
+    deleteDomainFilter(domain: string): void {
+        const { value: domains } = this.filterPlayerDomainsCtrl;
+        const newDomains = (domains || [])?.filter((d) => d !== domain);
+
+        this.filterPlayerDomainsCtrl.setValue(newDomains);
     }
 }

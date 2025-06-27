@@ -18,4 +18,5 @@ export interface SettingsStoreInterface {
     lastPage: string;
     useCustomAnimeStatusOrder: boolean;
     userAnimeStatusOrder: string[];
+    filterPlayerDomains: string[]
 }
