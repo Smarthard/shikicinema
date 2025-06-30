@@ -188,6 +188,12 @@
                         "500": "Retry later"
                     }
                 }
+            },
+            "VIDEO_SELECTOR": {
+                "HAS_UNFILTERED": {
+                    "REMINDER_TEXT": "There are videos here, but you need to",
+                    "DISABLE_FILTERS_BTN": "turn off filters"
+                }
             }
         },
         "VIDEO_SELECT_MODAL": {

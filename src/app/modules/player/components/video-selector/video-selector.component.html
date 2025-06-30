@@ -16,6 +16,19 @@
                 (toggleOpen)="onAuthorSectionToggle($event)"
                 (selectVideo)="onSelectionChange($event)"
             />
+        } @empty {
+            <div class="video-selector__empty">
+                @if (hasUnfilteredVideos()) {
+                    <ion-text>
+                        {{ 'PLAYER_MODULE.PLAYER_PAGE.VIDEO_SELECTOR.HAS_UNFILTERED.REMINDER_TEXT' | transloco }}
+                    </ion-text>
+
+                    <ion-button fill="outline" (click)="disableFilters.emit()">
+                        <ion-icon slot="start" name="funnel-outline" />
+                        {{ 'PLAYER_MODULE.PLAYER_PAGE.VIDEO_SELECTOR.HAS_UNFILTERED.DISABLE_FILTERS_BTN' | transloco }}
+                    </ion-button>
+                }
+            </div>
         }
     </ng-scrollbar>
 </ion-accordion-group>

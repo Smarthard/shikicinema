@@ -188,6 +188,12 @@
                         "500": "Спробуйте пізніше"
                     }
                 }
+            },
+            "VIDEO_SELECTOR": {
+                "HAS_UNFILTERED": {
+                    "REMINDER_TEXT": "Тут є відео, але потрібно",
+                    "DISABLE_FILTERS_BTN": "Вимкнути Фільтри"
+                }
             }
         },
         "VIDEO_SELECT_MODAL": {

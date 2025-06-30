@@ -193,6 +193,12 @@
                         "500": "Попробуйте позднее"
                     }
                 }
+            },
+            "VIDEO_SELECTOR": {
+                "HAS_UNFILTERED": {
+                    "REMINDER_TEXT": "Тут есть видео, но нужно",
+                    "DISABLE_FILTERS_BTN": "Отключить Фильтры"
+                }
             }
         },
         "VIDEO_SELECT_MODAL": {

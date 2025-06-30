@@ -88,3 +88,8 @@ export const selectLastVisitedPage = createSelector(
     selectSettings,
     (state) => state.lastPage,
 );
+
+export const selectDomainFilters = createSelector(
+    selectSettings,
+    (state) => state.filterPlayerDomains,
+);

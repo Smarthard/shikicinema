@@ -1,3 +1,4 @@
+export { filterVideosByDomains } from './filter-videos-by-domains.function';
 export { isEpisodeWatched } from './is-episode-watched.function';
 export { getLastAiredEpisode } from './get-last-aired-episode.function';
 export { getLastUnwatchedEpisode } from './get-last-unwatched-episode.function';

@@ -74,14 +74,20 @@ import {
     watchAnimeSuccessAction,
 } from '@app/modules/player/store/actions';
 import { filterByEpisode } from '@app/shared/utils/filter-by-episode.function';
+import {
+    filterVideosByDomains,
+    getLastAiredEpisode,
+    getMaxEpisode,
+    isEpisodeWatched,
+} from '@app/modules/player/utils';
 import { filterVideosByPreferences } from '@app/modules/player/utils/filter-videos-by-preferences.function';
 import { getAnimeName } from '@app/shared/utils/get-anime-name.function';
 import { getDomain } from '@app/shared/utils/get-domain.function';
-import { getLastAiredEpisode, getMaxEpisode, isEpisodeWatched } from '@app/modules/player/utils';
 import { isEq } from '@app/shared/utils/is-eq.function';
 import { isEqId } from '@app/shared/utils/is-eq-id.function';
 import {
     selectAuthorPreferencesByAnime,
+    selectDomainFilters,
     selectDomainPreferencesByAnime,
     selectKindPreferencesByAnime,
     selectPlayerKindDisplayMode,
@@ -160,6 +166,7 @@ export class PlayerPage implements OnInit {
     readonly playerMode = this.store.selectSignal(selectPlayerMode);
     readonly playerKindDisplayMode = this.store.selectSignal(selectPlayerKindDisplayMode);
     readonly isUserAuthorized = this.store.selectSignal(selectIsAuthenticated);
+    readonly domainFilters = this.store.selectSignal(selectDomainFilters);
 
     readonly isMediaMatch = toSignal(this.breakpointObserver.observe([
         '(max-width: 1599px) and (max-resolution: 1dppx)',
@@ -201,7 +208,16 @@ export class PlayerPage implements OnInit {
     animeName = computed(() => getAnimeName(this.anime(), this.userSelectedLanguage()));
     isWatched = computed(() => isEpisodeWatched(this.episodeQ(), this.userRate()));
     isRewatching = computed(() => this.userRate()?.status === 'rewatching');
-    episodeVideos = computed(() => filterByEpisode(this.videos(), this.episodeQ()));
+
+    isDomainFilterOn = signal(true);
+    episodeVideosUnfiltered = computed(() => filterByEpisode(this.videos(), this.episodeQ()));
+    episodeVideosFiltered = computed(() => filterVideosByDomains(this.episodeVideosUnfiltered(), this.domainFilters()));
+    episodeVideos = computed(() => this.isDomainFilterOn()
+        ? this.episodeVideosFiltered()
+        : this.episodeVideosUnfiltered(),
+    );
+    hasUnfilteredVideos = computed(() => this.episodeVideosUnfiltered()?.length > 0 && this.isDomainFilterOn());
+
     nextEpisodeAt = computed(() => {
         const nextEpisodeAt = this.anime()?.next_episode_at;
         const isCurrentEpisodeNotAired = this.episodeQ() > this.lastAiredEpisode();
@@ -471,5 +487,9 @@ export class PlayerPage implements OnInit {
 
     onCancelCommentEdit(): void {
         this.editComment.set(null);
+    }
+
+    onDisableDomainFilters(): void {
+        this.isDomainFilterOn.set(false);
     }
 }

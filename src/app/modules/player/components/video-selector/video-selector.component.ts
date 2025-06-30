@@ -11,9 +11,14 @@ import {
     signal,
     untracked,
 } from '@angular/core';
-import { IonAccordionGroup } from '@ionic/angular/standalone';
+import {
+    IonAccordionGroup,
+    IonButton,
+    IonIcon,
+    IonText,
+} from '@ionic/angular/standalone';
 import { NgScrollbar } from 'ngx-scrollbar';
-import { TranslocoService } from '@jsverse/transloco';
+import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { toSignal } from '@angular/core/rxjs-interop';
 
 import { FilterByAuthorPipe } from '@app/shared/pipes/filter-by-author/filter-by-author.pipe';
@@ -29,9 +34,13 @@ import { cleanAuthorName } from '@app/shared/utils/clean-author-name.function';
     standalone: true,
     imports: [
         IonAccordionGroup,
+        IonButton,
+        IonIcon,
+        IonText,
         FilterByAuthorPipe,
         IncludesPipe,
         NgScrollbar,
+        TranslocoPipe,
         VideoSelectorItemComponent,
     ],
     templateUrl: './video-selector.component.html',
@@ -51,8 +60,10 @@ export class VideoSelectorComponent {
     videos = input<VideoInfoInterface[]>();
     kindDisplayMode = input<PlayerKindDisplayMode>();
     warnAvailability = input<string[]>([]);
+    hasUnfilteredVideos = input<boolean>(false);
 
     selection = output<VideoInfoInterface>();
+    disableFilters = output<void>();
 
     readonly openedByDefaultAuthors = signal<string[]>([]);
 
