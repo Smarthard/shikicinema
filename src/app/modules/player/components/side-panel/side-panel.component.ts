@@ -1,11 +1,10 @@
 import {
     ChangeDetectionStrategy,
     Component,
-    EventEmitter,
-    HostBinding,
-    Input,
-    Output,
     ViewEncapsulation,
+    inject,
+    input,
+    output,
 } from '@angular/core';
 import { IonButton, IonIcon, ModalController } from '@ionic/angular/standalone';
 import { RouterLink } from '@angular/router';
@@ -27,36 +26,27 @@ import { VideoInfoInterface } from '@app/modules/player/types';
     styleUrl: './side-panel.component.scss',
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'class': 'side-panel',
+        '[class.side-panel--minified]': 'isMinified()',
+    },
 })
 export class SidePanelComponent {
-    @HostBinding('class.side-panel')
-    private sidePanelClass = true;
+    private readonly modalController = inject(ModalController);
 
-    @Input()
-    anime: AnimeBriefInfoInterface;
+    anime = input.required<AnimeBriefInfoInterface>();
+    episode = input.required<number>();
 
-    @Input()
-    episode: number;
+    isLoading = input(true);
+    isMinified = input(false);
 
-    @Input()
-    isLoading: boolean = true;
-
-    @Input()
-    @HostBinding('class.side-panel--minified')
-    isMinified: boolean = false;
-
-    @Output()
-    uploaded = new EventEmitter<VideoInfoInterface>();
-
-    constructor(
-        private readonly modalController: ModalController,
-    ) {}
+    uploaded = output<VideoInfoInterface>();
 
     async onOpenUploadModal(): Promise<void> {
         const cssClass = 'side-panel__upload-modal';
         const componentProps = {
-            anime: this.anime,
-            episode: this.episode,
+            anime: this.anime(),
+            episode: this.episode(),
         };
         const { VideoUploadModalComponent } = await import('@app/modules/player/components/video-upload-modal');
 
