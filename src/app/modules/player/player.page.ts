@@ -489,7 +489,7 @@ export class PlayerPage implements OnInit {
         this.editComment.set(null);
     }
 
-    onDisableDomainFilters(): void {
-        this.isDomainFilterOn.set(false);
+    setDomainFilters(isEnabled: boolean): void {
+        this.isDomainFilterOn.set(isEnabled);
     }
 }

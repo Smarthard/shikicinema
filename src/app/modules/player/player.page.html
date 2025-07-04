@@ -51,7 +51,7 @@
             [warnAvailability]="videos() | authorAvailabilityWarning: lastAiredEpisode()"
             [hasUnfilteredVideos]="hasUnfilteredVideos()"
             (selection)="onVideoChange($event)"
-            (disableFilters)="onDisableDomainFilters()"
+            (disableFilters)="setDomainFilters(false)"
         />
 
         <app-control-panel
@@ -79,6 +79,7 @@
                 [isLoading]="isAnimeLoading()"
                 [isMinified]="isPanelsMinified()"
                 (uploaded)="onVideoUpload($event)"
+                (filtersToggle)="setDomainFilters(!isDomainFilterOn())"
             />
         }
 

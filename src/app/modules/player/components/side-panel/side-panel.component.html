@@ -16,7 +16,13 @@
         {{ 'PLAYER_MODULE.PLAYER_PAGE.UPLOAD_VIDEO.FORM_ACTIONS.UPLOAD' | transloco }}
     </ion-button>
 
-    <ion-button class="side-panel__settings-btn" fill="clear" routerLink="/settings">
-        <ion-icon slot="icon-only" name="settings-outline" />
-    </ion-button>
+    <div class="side-panel__pull-right-wrap">
+        <ion-button class="side-panel__settings-btn" fill="clear" (click)="filtersToggle.emit()">
+            <ion-icon slot="icon-only" name="funnel-outline" />
+        </ion-button>
+
+        <ion-button class="side-panel__settings-btn" fill="clear" routerLink="/settings">
+            <ion-icon slot="icon-only" name="settings-outline" />
+        </ion-button>
+    </div>
 }

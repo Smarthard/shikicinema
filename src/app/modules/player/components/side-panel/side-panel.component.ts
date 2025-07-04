@@ -41,6 +41,7 @@ export class SidePanelComponent {
     isMinified = input(false);
 
     uploaded = output<VideoInfoInterface>();
+    filtersToggle = output<void>();
 
     async onOpenUploadModal(): Promise<void> {
         const cssClass = 'side-panel__upload-modal';
