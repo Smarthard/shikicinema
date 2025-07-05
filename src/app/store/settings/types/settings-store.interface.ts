@@ -16,4 +16,7 @@ export interface SettingsStoreInterface {
     kindPreferences: PreferencesInterface<string>;
     domainPreferences: PreferencesInterface<string>;
     lastPage: string;
+    useCustomAnimeStatusOrder: boolean;
+    userAnimeStatusOrder: string[];
+    filterPlayerDomains: string[]
 }

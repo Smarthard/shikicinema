@@ -1,7 +1,6 @@
 import {
     AsyncPipe,
     NgTemplateOutlet,
-    SlicePipe,
     UpperCasePipe,
 } from '@angular/common';
 import {
@@ -10,6 +9,7 @@ import {
     DestroyRef,
     OnInit,
     ViewEncapsulation,
+    computed,
     inject,
 } from '@angular/core';
 import {
@@ -19,12 +19,12 @@ import {
     IonText,
 } from '@ionic/angular/standalone';
 import { NgxVisibilityDirective } from 'ngx-visibility';
+import { Store } from '@ngrx/store';
 import {
-    Observable,
     Subject,
     combineLatest,
+    of,
 } from 'rxjs';
-import { Store } from '@ngrx/store';
 import { Title } from '@angular/platform-browser';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import {
@@ -40,10 +40,9 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { AnimeGridInterface } from '@app/modules/home/types/anime-grid.interface';
 import { CardGridComponent } from '@app/modules/home/components/card-grid/card-grid.component';
+import { DEFAULT_ANIME_STATUS_ORDER } from '@app/shared/config/default-anime-status-order.config';
 import { ResourceIdType } from '@app/shared/types/resource-id.type';
-import { SortRatesByDateVisitedPipe } from '@app/modules/home/pipes/sort-rates-by-date-visited.pipe';
 import { UserAnimeRate } from '@app/shared/types/shikimori/user-anime-rate';
-import { UserBriefInfoInterface } from '@app/shared/types/shikimori/user-brief-info.interface';
 import { UserRateStatusType } from '@app/shared/types/shikimori/user-rate-status.type';
 import { VisibilityChangeInterface } from '@app/modules/home/types/visibility-change.interface';
 import {
@@ -54,7 +53,9 @@ import {
 import { recentAnimesToRates } from '@app/modules/home/store/recent-animes/utils/recent-animes-to-rates.function';
 import { selectCachedAnimes } from '@app/store/cache/selectors/cache.selectors';
 import { selectRecentAnimes } from '@app/modules/home/store/recent-animes';
+import { selectSettings } from '@app/store/settings/selectors/settings.selectors';
 import { selectShikimoriCurrentUser } from '@app/store/shikimori/selectors/shikimori.selectors';
+import { sortRatesByDateVisited } from '@app/modules/home/utils';
 
 
 @Component({
@@ -65,11 +66,9 @@ import { selectShikimoriCurrentUser } from '@app/store/shikimori/selectors/shiki
         NgxVisibilityDirective,
         AsyncPipe,
         UpperCasePipe,
-        SlicePipe,
         NgTemplateOutlet,
         TranslocoPipe,
         CardGridComponent,
-        SortRatesByDateVisitedPipe,
         IonIcon,
         IonButton,
         IonText,
@@ -84,34 +83,48 @@ export class HomePage implements OnInit {
     private readonly transloco = inject(TranslocoService);
     private readonly destroyRef = inject(DestroyRef);
 
+    readonly settings = this.store.selectSignal(selectSettings);
+
+    readonly useCustomAnimeStatusOrder = computed(() => this.settings()?.useCustomAnimeStatusOrder);
+    readonly animeStatusOrder = computed(() => this.useCustomAnimeStatusOrder()
+        ? this.settings()?.userAnimeStatusOrder
+        : DEFAULT_ANIME_STATUS_ORDER,
+    );
+
     readonly isTranslationsLoaded$ = this.transloco.events$.pipe(
         filter((e) => e.type === 'translationLoadSuccess'),
     );
 
-    currentUser$: Observable<UserBriefInfoInterface>;
+    readonly currentUser$ = this.store.select(selectShikimoriCurrentUser);
 
-    recent$: Observable<UserAnimeRate[]>;
+    readonly recent$ = combineLatest([
+        this.store.select(selectRecentAnimes),
+        this.store.select(selectCachedAnimes),
+    ]).pipe(
+        map(([recentAnimes, cachedAnimes]) => recentAnimesToRates(recentAnimes, cachedAnimes)),
+        map((recentRates) => sortRatesByDateVisited(recentRates?.slice(0, 6))),
+        shareReplay(1),
+    );
 
-    planned$: Observable<UserAnimeRate[]>;
-    watching$: Observable<UserAnimeRate[]>;
-    rewatching$: Observable<UserAnimeRate[]>;
-    completed$: Observable<UserAnimeRate[]>;
-    onHold$: Observable<UserAnimeRate[]>;
-    dropped$: Observable<UserAnimeRate[]>;
+    readonly planned$ = this.store.select(selectRatesByStatus('planned'));
+    readonly watching$ = this.store.select(selectRatesByStatus('watching'));
+    readonly rewatching$ = this.store.select(selectRatesByStatus('rewatching'));
+    readonly completed$ = this.store.select(selectRatesByStatus('completed'));
+    readonly onHold$ = this.store.select(selectRatesByStatus('on_hold'));
+    readonly dropped$ = this.store.select(selectRatesByStatus('dropped'));
 
-    isRecentLoaded$: Observable<boolean>;
-    isPlannedLoaded$: Observable<boolean>;
-    isWatchingLoaded$: Observable<boolean>;
-    isRewatchingLoaded$: Observable<boolean>;
-    isCompletedLoaded$: Observable<boolean>;
-    isOnHoldLoaded$: Observable<boolean>;
-    isDroppedLoaded$: Observable<boolean>;
+    readonly isPlannedLoaded$ = this.store.select(selectIsRatesLoadedByStatus('planned'));
+    readonly isWatchingLoaded$ = this.store.select(selectIsRatesLoadedByStatus('watching'));
+    readonly isRewatchingLoaded$ = this.store.select(selectIsRatesLoadedByStatus('rewatching'));
+    readonly isCompletedLoaded$ = this.store.select(selectIsRatesLoadedByStatus('completed'));
+    readonly isOnHoldLoaded$ = this.store.select(selectIsRatesLoadedByStatus('on_hold'));
+    readonly isDroppedLoaded$ = this.store.select(selectIsRatesLoadedByStatus('dropped'));
 
-    animeGrids: AnimeGridInterface[];
+    animeGridMap: Map<string, AnimeGridInterface>;
 
     hiddenGridMap: Map<UserRateStatusType, boolean>;
 
-    sectionVisibilitySubject$: Subject<VisibilityChangeInterface>;
+    sectionVisibilitySubject$ = new Subject<VisibilityChangeInterface>();
 
     ngOnInit() {
         this.initValues();
@@ -149,64 +162,57 @@ export class HomePage implements OnInit {
 
     initValues(): void {
         this.hiddenGridMap = new Map<UserRateStatusType, boolean>();
-        this.sectionVisibilitySubject$ = new Subject<VisibilityChangeInterface>();
-
-        this.currentUser$ = this.store.select(selectShikimoriCurrentUser);
-
-        this.recent$ = combineLatest([
-            this.store.select(selectRecentAnimes),
-            this.store.select(selectCachedAnimes),
-        ]).pipe(
-            map(([recentAnimes, cachedAnimes]) => recentAnimesToRates(recentAnimes, cachedAnimes)),
-            shareReplay(1),
-        );
-
-        this.planned$ = this.store.select(selectRatesByStatus('planned'));
-        this.watching$ = this.store.select(selectRatesByStatus('watching'));
-        this.rewatching$ = this.store.select(selectRatesByStatus('rewatching'));
-        this.completed$ = this.store.select(selectRatesByStatus('completed'));
-        this.onHold$ = this.store.select(selectRatesByStatus('on_hold'));
-        this.dropped$ = this.store.select(selectRatesByStatus('dropped'));
-
-        this.isPlannedLoaded$ = this.store.select(selectIsRatesLoadedByStatus('planned'));
-        this.isWatchingLoaded$ = this.store.select(selectIsRatesLoadedByStatus('watching'));
-        this.isRewatchingLoaded$ = this.store.select(selectIsRatesLoadedByStatus('rewatching'));
-        this.isCompletedLoaded$ = this.store.select(selectIsRatesLoadedByStatus('completed'));
-        this.isOnHoldLoaded$ = this.store.select(selectIsRatesLoadedByStatus('on_hold'));
-        this.isDroppedLoaded$ = this.store.select(selectIsRatesLoadedByStatus('dropped'));
-
-        this.animeGrids = [
-            {
-                status: 'planned',
-                rates: this.planned$,
-                isLoaded: this.isPlannedLoaded$,
-            },
-            {
-                status: 'watching',
-                rates: this.watching$,
-                isLoaded: this.isWatchingLoaded$,
-            },
-            {
-                status: 'rewatching',
-                rates: this.rewatching$,
-                isLoaded: this.isRewatchingLoaded$,
-            },
-            {
-                status: 'completed',
-                rates: this.completed$,
-                isLoaded: this.isCompletedLoaded$,
-            },
-            {
-                status: 'on_hold',
-                rates: this.onHold$,
-                isLoaded: this.isOnHoldLoaded$,
-            },
-            {
-                status: 'dropped',
-                rates: this.dropped$,
-                isLoaded: this.isDroppedLoaded$,
-            },
-        ];
+        this.animeGridMap = new Map([
+            [
+                'recent',
+                {
+                    rates: this.recent$.pipe(),
+                    isLoaded: of(true),
+                },
+            ],
+            [
+                'planned',
+                {
+                    rates: this.planned$,
+                    isLoaded: this.isPlannedLoaded$,
+                },
+            ],
+            [
+                'watching',
+                {
+                    rates: this.watching$,
+                    isLoaded: this.isWatchingLoaded$,
+                },
+            ],
+            [
+                'rewatching',
+                {
+                    rates: this.rewatching$,
+                    isLoaded: this.isRewatchingLoaded$,
+                },
+            ],
+            [
+                'completed',
+                {
+                    rates: this.completed$,
+                    isLoaded: this.isCompletedLoaded$,
+                },
+            ],
+            [
+                'on_hold',
+                {
+                    rates: this.onHold$,
+                    isLoaded: this.isOnHoldLoaded$,
+                },
+            ],
+            [
+                'dropped',
+                {
+                    rates: this.dropped$,
+                    isLoaded: this.isDroppedLoaded$,
+                },
+            ],
+        ]);
     }
 
     toggleHiddenGridStatus(rateStatus: UserRateStatusType): void {

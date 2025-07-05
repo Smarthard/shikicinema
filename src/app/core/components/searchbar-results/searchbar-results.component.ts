@@ -21,6 +21,7 @@ import {
     IonNote,
     IonText,
 } from '@ionic/angular/standalone';
+import { RepeatPipe } from 'ngxtension/repeat-pipe';
 import { TranslocoPipe } from '@jsverse/transloco';
 
 import { GetShikimoriPagePipe } from '@app/shared/pipes/get-shikimori-page/get-shikimori-page.pipe';
@@ -52,6 +53,7 @@ import { trackById } from '@app/shared/utils/common-ngfor-tracking';
         ShikimoriMediaNamePipe,
         GetShikimoriPagePipe,
         NgTemplateOutlet,
+        RepeatPipe,
     ],
     providers: [
         provideShikimoriImageLoader(96),
@@ -61,7 +63,6 @@ import { trackById } from '@app/shared/utils/common-ngfor-tracking';
 })
 export class SearchbarResultsComponent {
     readonly trackById = trackById;
-    readonly fakeResults = new Array<number>(5).fill(0);
 
     results = input<SearchbarResult[]>();
 

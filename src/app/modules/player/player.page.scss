@@ -39,21 +39,6 @@
 
     &__player {
         grid-area: player;
-
-        &.skeleton {
-            @media (orientation: portrait) {
-                min-height: 20vh;
-            }
-
-            @media (orientation: landscape) {
-                min-height: 100vh;
-
-            }
-
-            @include media-breakpoint-up('lg') {
-                min-height: 50vh;
-            }
-        }
     }
 
     &__comment-form {

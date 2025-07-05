@@ -1,22 +1,12 @@
 <ion-content [fullscreen]="true" class="page-content">
-    <!-- recent visited (in player) animes -->
-    <ng-template
-        [ngTemplateOutlet]="animeRatesGrid"
-        [ngTemplateOutletContext]="{
-            label: 'HOME_MODULE.HOME_PAGE.GRIDS.RECENT',
-            status: 'recent',
-            rates: recent$ | async | sortRatesByDateVisited | slice: 0: 6,
-            isLoaded: true,
-        }"
-    />
+    @for (status of animeStatusOrder(); track status) {
+        @let grid = animeGridMap.get(status);
 
-    <!-- user's rates from shikimori -->
-    @for (grid of animeGrids; track $index) {
         <ng-template
             [ngTemplateOutlet]="animeRatesGrid"
             [ngTemplateOutletContext]="{
-                label: 'HOME_MODULE.HOME_PAGE.GRIDS.' + (grid.status | uppercase),
-                status: grid.status,
+                label: 'HOME_MODULE.HOME_PAGE.GRIDS.' + (status | uppercase),
+                status,
                 rates: grid.rates | async,
                 isLoaded: grid.isLoaded | async
             }"

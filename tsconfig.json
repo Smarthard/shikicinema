@@ -16,6 +16,7 @@
         "es2020",
         "dom"
       ],
+      "skipLibCheck": true,
       "paths": {
         "@app-env/*": [
           "<rootDir>/../src/environments/*"

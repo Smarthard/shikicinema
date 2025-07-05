@@ -14,8 +14,13 @@
     }
 
     &__header {
-        overflow: hidden;
-        text-overflow: ellipsis;
+        display: inline-flex !important;
+        align-items: center;
+        gap: .5rem;
+
+        .author {
+            max-width: 90%;
+        }
     }
 
     &__qualities {

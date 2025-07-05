@@ -188,7 +188,19 @@
                         "500": "Retry later"
                     }
                 }
+            },
+            "VIDEO_SELECTOR": {
+                "HAS_UNFILTERED": {
+                    "REMINDER_TEXT": "There are videos here, but you need to",
+                    "DISABLE_FILTERS_BTN": "turn off filters"
+                }
             }
+        },
+        "VIDEO_SELECT_MODAL": {
+            "TITLE": "Select video"
+        },
+        "EPISODE_SELECT_MODAL": {
+            "TITLE": "Select episode"
         }
     },
     "SETTINGS_MODULE": {
@@ -249,6 +261,24 @@
                             "SPECIAL-ONLY": "Display only on videos of Blu-Ray, DVD or VHS quality",
                             "ALL": "Display for all video types"
                         }
+                    },
+                    "FILTER_PLAYER_DOMAINS": {
+                        "LABEL": "Domain Filter",
+                        "ADD_NEW_DOMAIN": {
+                            "LABEL": "Add domain",
+                            "PLACEHOLDER": "Copy the link to the player and paste it here",
+                            "DELETE_BTN": "Delete",
+                            "VALIDATION_ERRORS": {
+                                "IS_NOT_URL": "Incorrect link"
+                            }
+                        }
+                    }
+                },
+                "USER_ANIMES_PAGE": {
+                    "TITLE": "Anime List",
+                    "USE_CUSTOM_ANIME_STATUS_ORDER": {
+                        "LABEL": "Custom anime list order",
+                        "HELP": "Drag and drop items to sort them as you like"
                     }
                 },
                 "PROFILE_SETTINGS": {

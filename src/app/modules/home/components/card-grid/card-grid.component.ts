@@ -7,6 +7,7 @@ import {
     input,
 } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
+import { RepeatPipe } from 'ngxtension/repeat-pipe';
 import { TranslocoService } from '@jsverse/transloco';
 import { toSignal } from '@angular/core/rxjs-interop';
 
@@ -27,6 +28,7 @@ import { provideShikimoriImageLoader } from '@app/shared/providers/shikimori-ima
         CardGridItemComponent,
         GetPlayerLinkPipe,
         GetAnimeNamePipe,
+        RepeatPipe,
     ],
     providers: [
         provideShikimoriImageLoader(96),
@@ -41,7 +43,6 @@ export class CardGridComponent {
     private readonly _transloco = inject(TranslocoService);
 
     readonly currentLang = toSignal(this._transloco.langChanges$);
-    readonly userAnimeRatesSkeleton = new Array<number>(30).fill(0);
 
     userAnimeRates = input<UserAnimeRate[]>();
 
