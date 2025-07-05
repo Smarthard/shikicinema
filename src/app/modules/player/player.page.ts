@@ -38,10 +38,6 @@ import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { timer } from 'rxjs';
 
 import { AnimeBriefInfoInterface } from '@app/shared/types/shikimori/anime-brief-info.interface';
-import {
-    AuthorAvailabilityWarningPipe,
-    ToUploaderPipe,
-} from '@app/modules/player/pipes';
 import { Comment } from '@app/shared/types/shikimori/comment';
 import { CommentsComponent } from '@app/modules/player/components/comments/comments.component';
 import { ControlPanelComponent } from '@app/modules/player/components/control-panel/control-panel.component';
@@ -56,12 +52,20 @@ import { ShikimoriAnimeLinkPipe } from '@app/shared/pipes/shikimori-anime-link/s
 import { SidePanelComponent } from '@app/modules/player/components/side-panel/side-panel.component';
 import { SkeletonBlockComponent } from '@app/shared/components/skeleton-block/skeleton-block.component';
 import { SwipeDirective } from '@app/shared/directives/swipe.directive';
+import { ToUploaderPipe } from '@app/modules/player/pipes';
 import { UploaderComponent } from '@app/modules/player/components/uploader/uploader.component';
 import { UserCommentFormComponent } from '@app/modules/player/components/user-comment-form/user-comment-form.component';
 import { VideoInfoInterface } from '@app/modules/player/types';
 import { VideoKindEnum } from '@app/modules/player/types/video-kind.enum';
 import { VideoSelectorComponent } from '@app/modules/player/components/video-selector/video-selector.component';
 import { authShikimoriAction } from '@app/store/auth/actions/auth.actions';
+import {
+    authorAvailability,
+    filterVideosByDomains,
+    getLastAiredEpisode,
+    getMaxEpisode,
+    isEpisodeWatched,
+} from '@app/modules/player/utils';
 import {
     deleteCommentAction,
     editCommentAction,
@@ -74,12 +78,6 @@ import {
     watchAnimeSuccessAction,
 } from '@app/modules/player/store/actions';
 import { filterByEpisode } from '@app/shared/utils/filter-by-episode.function';
-import {
-    filterVideosByDomains,
-    getLastAiredEpisode,
-    getMaxEpisode,
-    isEpisodeWatched,
-} from '@app/modules/player/utils';
 import { filterVideosByPreferences } from '@app/modules/player/utils/filter-videos-by-preferences.function';
 import { getAnimeName } from '@app/shared/utils/get-anime-name.function';
 import { getDomain } from '@app/shared/utils/get-domain.function';
@@ -134,7 +132,6 @@ import { visitAnimePageAction } from '@app/modules/home/store/recent-animes/acti
         UserCommentFormComponent,
         ShikimoriAnimeLinkPipe,
         GetShikimoriPagePipe,
-        AuthorAvailabilityWarningPipe,
         SidePanelComponent,
         IonText,
         IonContent,
@@ -224,6 +221,8 @@ export class PlayerPage implements OnInit {
 
         return isCurrentEpisodeNotAired ? nextEpisodeAt : null;
     });
+
+    authorAvailability = computed(() => authorAvailability(this.videos(), this.lastAiredEpisode()));
 
     currentVideo = signal<VideoInfoInterface>(null);
     currentKind = signal<VideoKindEnum>(null);
@@ -353,11 +352,17 @@ export class PlayerPage implements OnInit {
 
     // TODO: для модалок нужно придумать какой-то сервис - слишком много бойлерплейта
     async onOpenVideoSelectorModal(): Promise<void> {
+        const prevVideo = this.currentVideo();
+
         const componentProps = {
-            videos: this.episodeVideos(),
-            selectedKind: this.currentKind(),
-            selectedVideo: this.currentVideo(),
-            lastAiredEpisode: this.lastAiredEpisode(),
+            videos: this.videos,
+            episodeVideos: this.episodeVideos,
+            kindDisplayMode: this.playerKindDisplayMode,
+            isDomainFilterOn: this.isDomainFilterOn,
+            hasUnfilteredVideos: this.hasUnfilteredVideos,
+            selectedKind: this.currentKind,
+            selectedVideo: this.currentVideo,
+            lastAiredEpisode: this.lastAiredEpisode,
         };
         const { VideoSelectorModalComponent } = await import('@app/modules/player/components/video-selector-modal');
 
@@ -368,10 +373,10 @@ export class PlayerPage implements OnInit {
 
         modal.present();
 
-        const { data: newSelected, role } = await modal.onDidDismiss<VideoInfoInterface>();
+        const { role } = await modal.onDidDismiss<VideoInfoInterface>();
 
-        if (role === 'submit') {
-            this.onVideoChange(newSelected);
+        if (role === 'cancel') {
+            this.onVideoChange(prevVideo);
         }
     }
 
