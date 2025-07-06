@@ -1,0 +1,33 @@
+<div
+    class="anime-rate-section__label"
+    (ngxVisibility)="onSectionVisible($event)"
+>
+    <ion-text class="anime-rate-section__text">
+        {{ label() | transloco | uppercase }}
+
+        @if (isLoaded()) {
+            <span class="anime-rate-section__counter">({{ ratesCount() }})</span>
+        }
+    </ion-text>
+
+    <ion-button
+        fill="clear"
+        size="small"
+        color="medium"
+        (click)="onToggleHidden()"
+    >
+        <ion-icon
+            class="anime-rate-section__icon"
+            slot="icon-only"
+            [name]="isHidden() ? 'chevron-down' : 'chevron-up'"
+        />
+    </ion-button>
+</div>
+
+<app-card-grid
+    class="anime-rate-section__grid"
+    [class.ion-hide]="isHidden()"
+    [userAnimeRates]="rates()"
+    [isLoading]="!isLoaded()"
+    (ngxVisibility)="onSectionVisible($event)"
+/>

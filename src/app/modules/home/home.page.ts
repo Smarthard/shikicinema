@@ -1,6 +1,5 @@
 import {
     AsyncPipe,
-    NgTemplateOutlet,
     UpperCasePipe,
 } from '@angular/common';
 import {
@@ -10,41 +9,26 @@ import {
     OnInit,
     ViewEncapsulation,
     computed,
+    effect,
     inject,
 } from '@angular/core';
-import {
-    IonButton,
-    IonContent,
-    IonIcon,
-    IonText,
-} from '@ionic/angular/standalone';
-import { NgxVisibilityDirective } from 'ngx-visibility';
+import { IonContent } from '@ionic/angular/standalone';
 import { Store } from '@ngrx/store';
-import {
-    Subject,
-    combineLatest,
-    of,
-} from 'rxjs';
 import { Title } from '@angular/platform-browser';
-import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
+import { TranslocoService } from '@jsverse/transloco';
+import { combineLatest, of } from 'rxjs';
 import {
     filter,
     map,
     shareReplay,
-    skipWhile,
-    take,
-    tap,
-    withLatestFrom,
 } from 'rxjs/operators';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 import { AnimeGridInterface } from '@app/modules/home/types/anime-grid.interface';
-import { CardGridComponent } from '@app/modules/home/components/card-grid/card-grid.component';
+import { AnimeRateSectionComponent } from '@app/modules/home/components/anime-rate-section';
 import { DEFAULT_ANIME_STATUS_ORDER } from '@app/shared/config/default-anime-status-order.config';
 import { ResourceIdType } from '@app/shared/types/resource-id.type';
-import { UserAnimeRate } from '@app/shared/types/shikimori/user-anime-rate';
 import { UserRateStatusType } from '@app/shared/types/shikimori/user-rate-status.type';
-import { VisibilityChangeInterface } from '@app/modules/home/types/visibility-change.interface';
 import {
     loadAnimeRateByStatusAction,
     selectIsRatesLoadedByStatus,
@@ -63,19 +47,16 @@ import { sortRatesByDateVisited } from '@app/modules/home/utils';
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     imports: [
-        NgxVisibilityDirective,
         AsyncPipe,
         UpperCasePipe,
-        NgTemplateOutlet,
-        TranslocoPipe,
-        CardGridComponent,
-        IonIcon,
-        IonButton,
-        IonText,
         IonContent,
+        AnimeRateSectionComponent,
     ],
     templateUrl: 'home.page.html',
     styleUrls: ['home.page.scss'],
+    host: {
+        class: 'home-page',
+    },
 })
 export class HomePage implements OnInit {
     private readonly store = inject(Store);
@@ -91,11 +72,11 @@ export class HomePage implements OnInit {
         : DEFAULT_ANIME_STATUS_ORDER,
     );
 
-    readonly isTranslationsLoaded$ = this.transloco.events$.pipe(
-        filter((e) => e.type === 'translationLoadSuccess'),
+    readonly isTranslationsLoaded = toSignal(
+        this.transloco.events$.pipe(filter((e) => e.type === 'translationLoadSuccess')),
     );
 
-    readonly currentUser$ = this.store.select(selectShikimoriCurrentUser);
+    readonly currentUser = this.store.selectSignal(selectShikimoriCurrentUser);
 
     readonly recent$ = combineLatest([
         this.store.select(selectRecentAnimes),
@@ -121,44 +102,24 @@ export class HomePage implements OnInit {
     readonly isDroppedLoaded$ = this.store.select(selectIsRatesLoadedByStatus('dropped'));
 
     animeGridMap: Map<string, AnimeGridInterface>;
-
     hiddenGridMap: Map<UserRateStatusType, boolean>;
-
-    sectionVisibilitySubject$ = new Subject<VisibilityChangeInterface>();
 
     ngOnInit() {
         this.initValues();
-        this.initSubscriptions();
     }
 
-    initSubscriptions(): void {
-        combineLatest([
-            this.currentUser$,
-            this.isTranslationsLoaded$,
-        ]).pipe(
-            skipWhile(([currentUser, hasTranslation]) => !currentUser?.id && !hasTranslation),
-            take(1),
-            tap(([{ id, nickname }]) => {
-                const title = this.transloco.translate('HOME_MODULE.HOME_PAGE.PAGE_TITLE', { nickname });
+    currentUserChangeEffect = effect(() => {
+        const currentUser = this.currentUser();
+        const hasTranslation = this.isTranslationsLoaded();
 
-                this.getUserAnimeRatesByStatus(id, 'planned');
-                this.title.setTitle(title);
-            }),
-            takeUntilDestroyed(this.destroyRef),
-        ).subscribe();
+        if (currentUser?.id && hasTranslation) {
+            const { id, nickname } = currentUser;
+            const title = this.transloco.translate('HOME_MODULE.HOME_PAGE.PAGE_TITLE', { nickname });
 
-        this.sectionVisibilitySubject$
-            .pipe(
-                takeUntilDestroyed(this.destroyRef),
-                withLatestFrom(this.currentUser$),
-                tap(([event, currentUser]) => {
-                    if (currentUser?.id && event.isVisible) {
-                        this.getUserAnimeRatesByStatus(currentUser.id, event.section);
-                    }
-                }),
-            )
-            .subscribe();
-    }
+            this.getUserAnimeRatesByStatus(id, 'planned');
+            this.title.setTitle(title);
+        }
+    });
 
     initValues(): void {
         this.hiddenGridMap = new Map<UserRateStatusType, boolean>();
@@ -215,27 +176,27 @@ export class HomePage implements OnInit {
         ]);
     }
 
-    toggleHiddenGridStatus(rateStatus: UserRateStatusType): void {
-        const status = this.hiddenGridMap.get(rateStatus) || false;
+    toggleHiddenGridStatus(rateStatus: string): void {
+        const status = this.hiddenGridMap.get(rateStatus as UserRateStatusType) || false;
 
-        this.hiddenGridMap.set(rateStatus, !status);
+        this.hiddenGridMap.set(rateStatus as UserRateStatusType, !status);
     }
 
-    getHiddenGridStatus(rateStatus: UserRateStatusType): boolean {
-        return this.hiddenGridMap.get(rateStatus) || false;
+    getHiddenGridStatus(rateStatus: string): boolean {
+        return this.hiddenGridMap.get(rateStatus as UserRateStatusType) || false;
     }
 
-    onSectionVisibilityChange(section: UserRateStatusType, isVisible: boolean): void {
-        this.sectionVisibilitySubject$.next({ section, isVisible });
+    onSectionVisibilityChange(section: string): void {
+        const currentUser = this.currentUser();
+
+        if (currentUser?.id && section !== 'recent') {
+            this.getUserAnimeRatesByStatus(currentUser.id, section as UserRateStatusType);
+        }
     }
 
     getUserAnimeRatesByStatus(userId: ResourceIdType, status: UserRateStatusType): void {
         if (status !== 'recent' as UserRateStatusType) {
             this.store.dispatch(loadAnimeRateByStatusAction({ userId, status }));
         }
-    }
-
-    isSectionHidden(isLoaded: boolean, rates: UserAnimeRate[]): boolean {
-        return isLoaded && !rates?.length;
     }
 }
