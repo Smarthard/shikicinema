@@ -1,11 +1,8 @@
-<div
-    class="anime-rate-section__label"
-    (ngxVisibility)="onSectionVisible($event)"
->
+<div class="anime-rate-section__label">
     <ion-text class="anime-rate-section__text">
         {{ label() | transloco | uppercase }}
 
-        @if (isLoaded()) {
+        @if (!isLoading()) {
             <span class="anime-rate-section__counter">({{ ratesCount() }})</span>
         }
     </ion-text>
@@ -28,6 +25,6 @@
     class="anime-rate-section__grid"
     [class.ion-hide]="isHidden()"
     [userAnimeRates]="rates()"
-    [isLoading]="!isLoaded()"
-    (ngxVisibility)="onSectionVisible($event)"
+    [isLoading]="isLoading()"
+    [hasPriority]="hasPriority()"
 />

@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
-import { AnimeRate } from '@app/shared/types/shikimori/user-anime-rate';
+import { ResourceIdType } from '@app/shared/types';
 
 @Pipe({
     name: 'getPlayerLink',
@@ -8,9 +8,7 @@ import { AnimeRate } from '@app/shared/types/shikimori/user-anime-rate';
     standalone: true,
 })
 export class GetPlayerLinkPipe implements PipeTransform {
-    transform(anime: AnimeRate): string {
-        const { id: animeId } = anime;
-
+    transform(animeId: ResourceIdType): string {
         return `/player/${animeId}`;
     }
 }

@@ -3,6 +3,8 @@
 .card-grid-item {
     display: flex;
     flex-direction: column;
+    // скрываем alt текст для картинок на фоне (т.к. он всё равно заблюрен)
+    font-size: 0;
 
     :focus {
         outline: 0.25rem solid var(--ion-color-primary);
@@ -11,7 +13,7 @@
     }
 
     &__name {
-        margin: 5px 0 0;
+        margin: .25rem 0 0;
         font-size: .9rem;
         white-space: nowrap;
         overflow: hidden;
@@ -24,9 +26,14 @@
         display: flex;
         flex-direction: row;
         justify-content: space-between;
+
+        &--skeleton {
+            margin-top: 1px;
+        }
     }
 
     .wrapper {
         display: contents;
+        position: relative;
     }
 }

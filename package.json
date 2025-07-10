@@ -71,11 +71,11 @@
         "@ngrx/store": "^19.0.0",
         "date-fns": "^4.1.0",
         "deep-object-diff": "^1.1.9",
+        "fflate": "^0.8.2",
         "ionicons": "^8.0.8",
         "ngrx-store-localstorage": "19.0.0",
         "ngx-scrollbar": "^18.0.0",
         "ngx-tippy-wrapper": "^6.3.0",
-        "ngx-visibility": "2.0.0",
         "ngxtension": "^5.1.0",
         "rxjs": "~7.8.1",
         "tslib": "^2.6.2"

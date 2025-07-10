@@ -48,9 +48,15 @@ export const shikimoriImageLoader = (): ImageLoader => {
     return (config: ImageLoaderConfig): string => {
         const path = getPath(config.src);
         const domain = domainSignal() || defaultShikimoriDomain;
+        const isShikimori = config?.src?.includes('shikimori');
         const isMissingImg = config?.src?.includes('globals/missing_original');
+        const isGQLPoster = config?.src?.includes('/poster/');
 
-        if (isMissingImg) {
+        if (!isShikimori) {
+            return config?.src;
+        }
+
+        if (isMissingImg || isGQLPoster) {
             return `${domain}${path}`;
         }
 

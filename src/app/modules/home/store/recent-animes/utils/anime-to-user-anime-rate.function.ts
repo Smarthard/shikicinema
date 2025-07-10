@@ -1,30 +1,28 @@
-import { AnimeBriefInfoInterface } from '@app/shared/types/shikimori/anime-brief-info.interface';
-import { UserAnimeRate } from '@app/shared/types/shikimori/user-anime-rate';
-import { UserRateStatusType } from '@app/shared/types/shikimori/user-rate-status.type';
+import {
+    AnimeBriefInfoInterface,
+    UserBriefRateInterface,
+    UserRateStatusType,
+    UserRateTargetEnum,
+} from '@app/shared/types/shikimori';
 
 export function animeToUserAnimeRate(
     anime: AnimeBriefInfoInterface,
     watchedEpisode = 0,
     visited: string = null,
-): UserAnimeRate {
+): UserBriefRateInterface {
     return {
         id: -1,
         status: 'recent' as UserRateStatusType,
-        anime: {
-            ...anime,
-            english: anime.english as never,
-            japanese: anime.japanese as never,
-        },
         episodes: watchedEpisode,
         score: 0,
         chapters: 0,
         rewatches: 0,
         volumes: 0,
         target_id: anime.id,
-        target_type: 'Anime',
+        target_type: UserRateTargetEnum.ANIME,
         text: '',
         text_html: '',
-        created_at: new Date().toISOString(),
+        created_at: visited,
         updated_at: visited,
         user_id: null,
     };

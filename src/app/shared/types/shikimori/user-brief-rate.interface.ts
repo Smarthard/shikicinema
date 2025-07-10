@@ -1,12 +1,11 @@
 import { UserRateStatusType } from '@app/shared/types/shikimori/user-rate-status.type';
-
-type RateTargetType = 'Anime' | 'Manga';
+import { UserRateTargetEnum } from '@app/shared/types/shikimori/user-rate-target.enum';
 
 export interface UserBriefRateInterface {
     id: number;
     user_id: number;
     target_id: number;
-    target_type: RateTargetType;
+    target_type: UserRateTargetEnum;
     score: number;
     status: UserRateStatusType;
     rewatches: number;

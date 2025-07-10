@@ -1,15 +1,19 @@
 <ion-content [fullscreen]="true" class="page-content ion-padding">
-    @for (status of animeStatusOrder(); track status) {
-        @let grid = animeGridMap.get(status);
+    @for (status of animeStatusOrder(); track status; let index = $index) {
+        @let hasPriority = index <= 1;
+        @let userRatesForStatus = userAnimeRatesWithRecent() | filterRatesByStatus: status;
+        @let sortedUserRates = status === 'recent'
+            ? (userRatesForStatus | slice: 0: 6 | sortRatesByDateVisited)
+            : (userRatesForStatus | sortRatesByUserScore: 'original': false | async);
 
         <app-anime-rate-section
             class="home-page__anime-rates"
             [label]="'HOME_MODULE.HOME_PAGE.GRIDS.' + (status | uppercase)"
             [status]="status"
-            [rates]="grid.rates | async"
-            [isLoaded]="grid.isLoaded | async"
+            [rates]="sortedUserRates"
+            [isLoading]="isMetadataLoading()"
             [isHidden]="getHiddenGridStatus(status)"
-            (visible)="onSectionVisibilityChange(status)"
+            [hasPriority]="hasPriority"
             (toggleHidden)="toggleHiddenGridStatus(status)"
         />
     }

@@ -1,4 +1,4 @@
-@if (isLoading) {
+@if (isLoading()) {
     <app-skeleton-block
         class="image-card__skeleton"
         [height]="height()"
@@ -15,5 +15,6 @@
     [height]="height()"
     [width]="width()"
     [alt]="name()"
+    [priority]="hasPriority()"
     (load)="onImageLoad($event?.target)"
 />

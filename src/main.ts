@@ -25,6 +25,7 @@ import { environment } from '@app-root/environments/environment';
 import { provideAppRouting } from '@app/app-routing.provider';
 import { provideAppState } from '@app/store/app-state.providers';
 import { provideIonicStorage } from '@app/core/providers/ionic-storage/ionic-storage.provider';
+import { provideIsSupportsAvif } from '@app/core/providers/avif';
 import { provideTranslocoRoot } from '@app/core/providers/transloco/transloco.provider';
 
 if (environment.isProduction) {
@@ -49,6 +50,7 @@ bootstrapApplication(AppComponent, {
         ),
         provideAnimations(),
         provideIonicStorage(),
+        provideIsSupportsAvif(),
         { provide: PLATFORM_API_TOKEN, useFactory: platformApiFactory, deps: [ElectronIpcProxyService] },
         { provide: DEFAULT_SHIKIMORI_DOMAIN_TOKEN, useValue: DEFAULT_SHIKIMORI_DOMAIN },
     ],

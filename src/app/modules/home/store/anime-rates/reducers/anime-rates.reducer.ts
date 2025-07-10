@@ -1,59 +1,46 @@
 import { createReducer, on } from '@ngrx/store';
 
-import { AnimeRatesStoreInterface } from '@app/modules/home/store/anime-rates/types/anime-rates-store.interface';
+import { AnimeRatesStoreInterface } from '@app/modules/home/store/anime-rates/types';
+import { entityArrayToMap } from '@app/shared/utils/entities.utils';
 import {
-    allPagesLoadedForStatusAction,
-    incrementPageForStatusAction,
-} from '@app/modules/home/store/anime-rates/actions/anime-rate-paging.actions';
-import {
-    getRateLoadedKey,
-    getRatePageKey,
-    getRateStoreKey,
-} from '@app/modules/home/store/anime-rates/utils/anime-rates-store-key.helpers';
-import { loadAnimeRateByStatusSuccessAction } from '@app/modules/home/store/anime-rates/actions/load-anime-rate.action';
+    getAnimeRatesMetadataAction,
+    getAnimeRatesMetadataSuccessAction,
+    loadAllUserAnimeRatesSuccessAction,
+} from '@app/modules/home/store/anime-rates/actions';
 
 const initialState: AnimeRatesStoreInterface = {
-    planned: [],
-    watching: [],
-    rewatching: [],
-    completed: [],
-    onHold: [],
-    dropped: [],
-    plannedPage: 1,
-    watchingPage: 1,
-    completedPage: 1,
-    rewatchingPage: 1,
-    onHoldPage: 1,
-    droppedPage: 1,
-    isCompletedLoaded: false,
-    isDroppedLoaded: false,
-    isOnHoldLoaded: false,
-    isPlannedLoaded: false,
-    isRewatchingLoaded: false,
-    isWatchingLoaded: false,
+    rates: {},
+    isRatesLoading: true,
+    metadata: {},
+    metaSize: 0,
 };
 
 const reducer = createReducer(
     initialState,
     on(
-        allPagesLoadedForStatusAction,
-        (state, { status }) => ({
+        loadAllUserAnimeRatesSuccessAction,
+        (state, { rates }) => ({
             ...state,
-            [getRateLoadedKey(status)]: true,
+            isRatesLoading: false,
+            rates: entityArrayToMap(rates),
         }),
     ),
     on(
-        loadAnimeRateByStatusSuccessAction,
-        (state, { status, rates }) => ({
+        getAnimeRatesMetadataAction,
+        (state, { animeIds }) => ({
             ...state,
-            [getRateStoreKey(status)]: rates,
+            metaSize: (state.metaSize || 0) + (animeIds?.length || 0),
         }),
     ),
     on(
-        incrementPageForStatusAction,
-        (state, { status }) => ({
+        getAnimeRatesMetadataSuccessAction,
+        (state, { metadata }) => ({
             ...state,
-            [getRatePageKey(status)]: state[getRatePageKey(status)] + 1,
+            metadata: {
+                ...state?.metadata,
+                ...entityArrayToMap(metadata),
+            },
+            metaSize: (state.metaSize || 0) - (metadata?.length || 0),
         }),
     ),
 );

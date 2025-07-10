@@ -38,7 +38,7 @@ export class ImageCardComponent extends AbstractImageCardComponent {
 
     override backgroundSize = input('cover');
 
-    override isLoading = true;
+    hasPriority = input(false);
 
     readonly loadedImg$ = outputToObservable(this.imageLoad);
 }
