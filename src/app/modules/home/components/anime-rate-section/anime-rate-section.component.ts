@@ -7,17 +7,16 @@ import {
     output,
 } from '@angular/core';
 import { IonButton, IonIcon, IonText } from '@ionic/angular/standalone';
-import { NgxVisibilityDirective } from 'ngx-visibility';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { UpperCasePipe } from '@angular/common';
 
+import { AnimeRatesMetadata } from '@app/modules/home/store/anime-rates';
 import { CardGridComponent } from '@app/modules/home/components/card-grid';
-import { UserAnimeRate } from '@app/shared/types/shikimori/user-anime-rate';
+import { UserBriefRateInterface } from '@app/shared/types/shikimori';
 
 @Component({
     selector: 'app-anime-rate-section',
     imports: [
-        NgxVisibilityDirective,
         TranslocoPipe,
         IonIcon,
         IonButton,
@@ -32,29 +31,26 @@ import { UserAnimeRate } from '@app/shared/types/shikimori/user-anime-rate';
     host: {
         'class': 'anime-rate-section',
         '[id]': 'status()',
-        '[class.ion-hide]': 'isSectionHidden(isLoaded(), rates())',
+        '[class.ion-hide]': 'isSectionHidden(!isRatesLoading(), rates())',
     },
 })
 export class AnimeRateSectionComponent {
     label = input.required<string>();
     status = input.required<string>();
-    rates = input.required<UserAnimeRate[]>();
+    rates = input.required<UserBriefRateInterface[]>();
+    ratesMetadata = input.required<AnimeRatesMetadata>();
+
     isHidden = input(false);
-    isLoaded = input(false);
+    isRatesLoading = input(true);
+    isMetaLoading = input(true);
 
     visible = output();
     toggleHidden = output();
 
     ratesCount = computed(() => this.rates()?.length || 0);
 
-    isSectionHidden(isLoaded: boolean, rates: UserAnimeRate[]): boolean {
+    isSectionHidden(isLoaded: boolean, rates: UserBriefRateInterface[]): boolean {
         return isLoaded && !rates?.length;
-    }
-
-    onSectionVisible(isVisible: boolean): void {
-        if (isVisible) {
-            this.visible.emit();
-        }
     }
 
     onToggleHidden(): void {

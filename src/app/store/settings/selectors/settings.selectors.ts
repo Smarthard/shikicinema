@@ -18,11 +18,6 @@ export const selectAvailableLanguages = createSelector(
     (state) => state.availableLangs,
 );
 
-export const selectAnimePaginationSize = createSelector(
-    selectSettings,
-    (state) => state.animePaginationSize,
-);
-
 export const selectAuthorPreferences = createSelector(
     selectSettings,
     (state) => state.authorPreferences,

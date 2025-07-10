@@ -1,38 +1,26 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 
-import { AnimeRatesStoreInterface } from '@app/modules/home/store/anime-rates/types/anime-rates-store.interface';
-import { UserRateStatusType } from '@app/shared/types/shikimori/user-rate-status.type';
-import {
-    getRateLoadedKey,
-    getRatePageKey,
-    getRateStoreKey,
-} from '@app/modules/home/store/anime-rates/utils/anime-rates-store-key.helpers';
+import { AnimeRatesStoreInterface } from '@app/modules/home/store/anime-rates/types';
+import { entityMapToArray } from '@app/shared/utils/entities.utils';
 
 export const selectAnimeRates = createFeatureSelector<AnimeRatesStoreInterface>('animeRates');
 
-export const selectRatesByStatus = (status: UserRateStatusType) => createSelector(
+export const selectRates = createSelector(
     selectAnimeRates,
-    (state) => {
-        const key = getRateStoreKey(status);
-
-        return state?.[key] || [];
-    },
+    ({ rates }) => entityMapToArray(rates),
 );
 
-export const selectRatesPageByStatus = (status: UserRateStatusType) => createSelector(
+export const selectIsRatesLoading = createSelector(
     selectAnimeRates,
-    (state) => {
-        const key = getRatePageKey(status);
-
-        return state?.[key];
-    },
+    ({ isRatesLoading }) => isRatesLoading,
 );
 
-export const selectIsRatesLoadedByStatus = (status: UserRateStatusType) => createSelector(
+export const selectRatesMetadata = createSelector(
     selectAnimeRates,
-    (state) => {
-        const key = getRateLoadedKey(status);
+    ({ metadata }) => metadata,
+);
 
-        return state?.[key];
-    },
+export const selectIsMetadataLoading = createSelector(
+    selectAnimeRates,
+    ({ metaSize }) => metaSize > 0,
 );

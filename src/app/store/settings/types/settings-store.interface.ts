@@ -11,7 +11,6 @@ export interface SettingsStoreInterface {
     playerMode: PlayerModeType;
     playerKindDisplayMode: PlayerKindDisplayMode;
     availableLangs: string[];
-    animePaginationSize: number;
     authorPreferences: PreferencesInterface<string>;
     kindPreferences: PreferencesInterface<string>;
     domainPreferences: PreferencesInterface<string>;

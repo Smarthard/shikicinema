@@ -21,7 +21,6 @@ const initialState: SettingsStoreInterface = {
     playerMode: 'auto',
     playerKindDisplayMode: 'special-only',
     availableLangs: defaultAvailableLangs,
-    animePaginationSize: 100,
     authorPreferences: {},
     kindPreferences: {},
     domainPreferences: {},

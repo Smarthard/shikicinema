@@ -46,5 +46,7 @@ export class CardGridItemComponent extends AbstractImageCardComponent {
 
     link = input('#');
 
+    isMetaLoading = input(true);
+
     mouseOver = false;
 }
