@@ -71,19 +71,11 @@ export class VideoUploadModalComponent extends IonModal implements OnInit {
     private readonly transloco = inject(TranslocoService);
     private readonly _modalController = inject(ModalController);
 
-    private _episode: number;
-
     @Input()
     anime: AnimeBriefInfoInterface;
 
     @Input()
-    set episode(episode: number) {
-        this._episode = episode;
-    }
-
-    get episode(): number {
-        return this._episode;
-    }
+    episode: number;
 
     uploadForm: FormGroup;
 

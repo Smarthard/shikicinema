@@ -1,5 +1,5 @@
 <ion-toolbar>
-    <ion-title>Выберите видео</ion-title>
+    <ion-title>{{ 'PLAYER_MODULE.VIDEO_SELECT_MODAL.TITLE' | transloco }}</ion-title>
 
     <ion-buttons slot="start">
         <ion-button (click)="cancel()">
@@ -17,15 +17,19 @@
 <div class="video-selector-modal__selector-wrap">
     <app-kind-selector
         class="video-selector-modal__kind-selector"
-        [kinds]="videos | getActiveKinds"
-        [selected]="selectedKind"
+        [kinds]="episodeVideos() | getActiveKinds"
+        [selected]="selectedKind()"
         (selection)="onKindChange($event)"
     />
 
     <app-video-selector
         class="video-selector-modal__video-selector"
-        [videos]="videos | filterByKind: selectedKind"
-        [selected]="selectedVideo"
+        [videos]="episodeVideos() | filterByKind: selectedKind()"
+        [selected]="selectedVideo()"
+        [kindDisplayMode]="kindDisplayMode()"
+        [warnAvailability]="videos() | authorAvailabilityWarning: lastAiredEpisode()"
+        [hasUnfilteredVideos]="hasUnfilteredVideos()"
         (selection)="onVideoChange($event)"
+        (disableFilters)="onToggleDomainFilters()"
     />
 </div>

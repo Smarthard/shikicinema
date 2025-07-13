@@ -1,19 +1,17 @@
 import {
     ChangeDetectionStrategy,
     Component,
-    ElementRef,
     HostBinding,
     ViewEncapsulation,
-    computed,
-    effect,
+    afterRender,
     inject,
     input,
     output,
     viewChild,
-    viewChildren,
 } from '@angular/core';
 import { NgScrollbar } from 'ngx-scrollbar';
 import { NgxTippyModule } from 'ngx-tippy-wrapper';
+import { RepeatPipe } from 'ngxtension/repeat-pipe';
 import { TranslocoService } from '@jsverse/transloco';
 import { toSignal } from '@angular/core/rxjs-interop';
 
@@ -26,6 +24,7 @@ import { EpisodeSelectorItemComponent } from '@app/modules/player/components/epi
         NgScrollbar,
         NgxTippyModule,
         EpisodeSelectorItemComponent,
+        RepeatPipe,
     ],
     templateUrl: './episode-selector.component.html',
     styleUrl: './episode-selector.component.scss',
@@ -38,10 +37,7 @@ export class EpisodeSelectorComponent {
 
     private readonly transloco = inject(TranslocoService);
 
-    readonly episodesScrollbar = viewChild<NgScrollbar>('episodesScrollbar');
-    readonly episodesEl = viewChildren<ElementRef>('episodeEl');
-
-    readonly episodesSkeleton = new Array<number>(50);
+    private readonly scrollbar = viewChild(NgScrollbar);
 
     readonly notAiredText = toSignal(
         this.transloco.selectTranslate('PLAYER_MODULE.PLAYER_PAGE.PLAYER.EPISODE_IS_NOT_AIRED'),
@@ -55,21 +51,19 @@ export class EpisodeSelectorComponent {
 
     selection = output<number>();
 
-    episodes = computed(() => new Array(this.maxEpisode()).fill(0).map((_, index) => index + 1));
-
-    private scrollToEpisode(episode: number) {
-        this.episodesScrollbar()?.scrollToElement(`#episode-${episode}`, { duration: 800 });
+    constructor() {
+        afterRender({
+            read: () => {
+                if (!this.isLoading()) {
+                    this.scrollToEpisode(this.selected());
+                }
+            },
+        });
     }
 
-    onEpisodeSelectionChangeEffect = effect(() => {
-        const selectedEpisode = this.selected();
-        const episodesEl = this.episodesEl();
-        const scrollbarEl = this.episodesScrollbar();
-
-        if (scrollbarEl && episodesEl?.length) {
-            this.scrollToEpisode(selectedEpisode);
-        }
-    });
+    private scrollToEpisode(episode: number): void {
+        this.scrollbar()?.scrollToElement(`#episode-${episode}`, { duration: 800 });
+    }
 
     onEpisodeSelect(episode: number): void {
         this.selection.emit(episode);

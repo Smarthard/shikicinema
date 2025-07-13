@@ -1,5 +1,6 @@
 import { createReducer, on } from '@ngrx/store';
 
+import { DEFAULT_ANIME_STATUS_ORDER } from '@app/shared/config/default-anime-status-order.config';
 import { SettingsStoreInterface } from '@app/store/settings/types/settings-store.interface';
 import { defaultAvailableLangs } from '@app/core/providers/transloco/transloco.provider';
 import {
@@ -20,11 +21,13 @@ const initialState: SettingsStoreInterface = {
     playerMode: 'auto',
     playerKindDisplayMode: 'special-only',
     availableLangs: defaultAvailableLangs,
-    animePaginationSize: 100,
     authorPreferences: {},
     kindPreferences: {},
     domainPreferences: {},
     lastPage: '/home',
+    useCustomAnimeStatusOrder: false,
+    userAnimeStatusOrder: DEFAULT_ANIME_STATUS_ORDER,
+    filterPlayerDomains: [],
 };
 
 const reducer = createReducer(

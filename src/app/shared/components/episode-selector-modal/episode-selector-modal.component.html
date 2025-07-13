@@ -1,5 +1,7 @@
 <ion-toolbar>
-    <ion-title class="episode-selector-modal__title">Выберите эпизод</ion-title>
+    <ion-title class="episode-selector-modal__title">
+        {{ 'PLAYER_MODULE.VIDEO_SELECT_MODAL.TITLE' | transloco }}
+    </ion-title>
 
     <ion-buttons slot="start">
         <ion-button (click)="cancel()">

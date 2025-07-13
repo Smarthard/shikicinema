@@ -71,7 +71,7 @@
         <!-- Плеер -->
         <app-settings-group
             class="settings-page__section"
-            icon="film-outline"
+            icon="play-outline"
             [title]="'SETTINGS_MODULE.SETTINGS_PAGE.SETTING_GROUPS.PLAYER_PAGE.TITLE' | transloco"
         >
             <ion-toggle formControlName="preferencesToggle"
@@ -122,6 +122,74 @@
                     {{ 'SETTINGS_MODULE.SETTINGS_PAGE.SETTING_GROUPS.PLAYER_PAGE.PLAYER_KIND_DISPLAY_MODE.OPTIONS.ALL' | transloco }}
                 </ion-select-option>
             </ion-select>
+
+            <ion-item-group class="filter-player-domains">
+                <ion-label class="filter-player-domains__label">
+                    {{ 'SETTINGS_MODULE.SETTINGS_PAGE.SETTING_GROUPS.PLAYER_PAGE.FILTER_PLAYER_DOMAINS.LABEL' | transloco }}
+                </ion-label>
+
+                <ion-list class="filter-player-domains__list">
+                    @for (domain of filterPlayerDomainsCtrl?.value; track domain) {
+                        <ion-item>
+                            <ion-label>{{ domain }}</ion-label>
+
+                            <ion-button
+                                color="danger"
+                                (click)="deleteDomainFilter(domain)">
+                                <ion-icon slot="start" name="trash-outline"></ion-icon>
+                                {{ 'SETTINGS_MODULE.SETTINGS_PAGE.SETTING_GROUPS.PLAYER_PAGE.FILTER_PLAYER_DOMAINS.ADD_NEW_DOMAIN.DELETE_BTN' | transloco }}
+                            </ion-button>
+                        </ion-item>
+                    }
+                </ion-list>
+
+                <div class="filter-player-domains__input">
+                    <ion-input
+                        fill="outline"
+                        labelPlacement="stacked"
+                        [label]="'SETTINGS_MODULE.SETTINGS_PAGE.SETTING_GROUPS.PLAYER_PAGE.FILTER_PLAYER_DOMAINS.ADD_NEW_DOMAIN.LABEL' | transloco"
+                        [placeholder]="'SETTINGS_MODULE.SETTINGS_PAGE.SETTING_GROUPS.PLAYER_PAGE.FILTER_PLAYER_DOMAINS.ADD_NEW_DOMAIN.PLACEHOLDER' | transloco"
+                        [errorText]="'SETTINGS_MODULE.SETTINGS_PAGE.SETTING_GROUPS.PLAYER_PAGE.FILTER_PLAYER_DOMAINS.ADD_NEW_DOMAIN.VALIDATION_ERRORS.IS_NOT_URL' | transloco"
+                        [formControl]="addFilterDomainCtrl"
+                    >
+                        <ion-button
+                            slot="end"
+                            [disabled]="addFilterDomainCtrl.invalid"
+                            (click)="addNewDomainFilter()">
+                            <ion-icon slot="icon-only" name="add-outline" />
+                        </ion-button>
+                    </ion-input>
+                </div>
+            </ion-item-group>
+        </app-settings-group>
+
+        <!-- Список Аниме -->
+        <app-settings-group
+            class="settings-page__section"
+            icon="film-outline"
+            [title]="'SETTINGS_MODULE.SETTINGS_PAGE.SETTING_GROUPS.USER_ANIMES_PAGE.TITLE' | transloco"
+        >
+            @let useCustomOrder = useCustomAnimeStatusOrder?.value;
+            @let helperText = 'SETTINGS_MODULE.SETTINGS_PAGE.SETTING_GROUPS.USER_ANIMES_PAGE.USE_CUSTOM_ANIME_STATUS_ORDER.HELP'| transloco;
+
+            <ion-toggle formControlName="useCustomAnimeStatusOrder"
+                labelPlacement="end"
+                enableOnOffLabels
+                [helperText]="useCustomOrder ? helperText : null"
+            >
+                {{ 'SETTINGS_MODULE.SETTINGS_PAGE.SETTING_GROUPS.USER_ANIMES_PAGE.USE_CUSTOM_ANIME_STATUS_ORDER.LABEL' | transloco }}
+            </ion-toggle>
+
+            @if (useCustomOrder) {
+                <ion-reorder-group (ionItemReorder)="reorderAnimeStatusSections($event)" [disabled]="false">
+                    @for (status of userAnimeStatusOrderCtrl?.value; track status) {
+                        <ion-item>
+                            <ion-label>{{ 'HOME_MODULE.HOME_PAGE.GRIDS.' + (status | uppercase) | transloco }}</ion-label>
+                            <ion-reorder slot="end"></ion-reorder>
+                        </ion-item>
+                    }
+                </ion-reorder-group>
+            }
         </app-settings-group>
 
         <!-- Профиль -->

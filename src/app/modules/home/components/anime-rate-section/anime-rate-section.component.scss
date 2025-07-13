@@ -1,0 +1,22 @@
+.anime-rate-section {
+    &__label {
+        margin: 0 0 1rem;
+        padding: 5px 1rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        color: var(--ion-color-dark-tint);
+        background-color: var(--ion-color-light-tint);
+    }
+
+    &__text {
+        font-weight: bold;
+        font-size: 15px;
+    }
+
+    &__icon {
+        font-size: 25px;
+        cursor: pointer;
+    }
+}

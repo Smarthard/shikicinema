@@ -193,7 +193,19 @@
                         "500": "Попробуйте позднее"
                     }
                 }
+            },
+            "VIDEO_SELECTOR": {
+                "HAS_UNFILTERED": {
+                    "REMINDER_TEXT": "Тут есть видео, но нужно",
+                    "DISABLE_FILTERS_BTN": "Отключить Фильтры"
+                }
             }
+        },
+        "VIDEO_SELECT_MODAL": {
+            "TITLE": "Выберите видео"
+        },
+        "EPISODE_SELECT_MODAL": {
+            "TITLE": "Выберите эпизод"
         }
     },
     "SETTINGS_MODULE": {
@@ -254,6 +266,24 @@
                             "SPECIAL-ONLY": "Отображать только на видео с типом Blue-Ray, DVD и VHS качества",
                             "ALL": "Отображать для всех типов видео"
                         }
+                    },
+                    "FILTER_PLAYER_DOMAINS": {
+                        "LABEL": "Фильтр доменов",
+                        "ADD_NEW_DOMAIN": {
+                            "LABEL": "Добавление домена",
+                            "PLACEHOLDER": "Скопируйте ссылку на плеер и вставьте сюда",
+                            "DELETE_BTN": "Удалить",
+                            "VALIDATION_ERRORS": {
+                                "IS_NOT_URL": "Некорректная ссылка"
+                            }
+                        }
+                    }
+                },
+                "USER_ANIMES_PAGE": {
+                    "TITLE": "Список Аниме",
+                    "USE_CUSTOM_ANIME_STATUS_ORDER": {
+                        "LABEL": "Пользовательская сортировка списка аниме",
+                        "HELP": "Перетаскивайте элементы, чтобы отсортировать по своему вкусу"
                     }
                 },
                 "PROFILE_SETTINGS": {

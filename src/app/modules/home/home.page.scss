@@ -1,43 +1,25 @@
 @use 'src/scss/mixins' as *;
 
-.anime-rates {
-    padding: 0;
-    margin: 0;
+.home-page {
 
-    @include media-breakpoint-up('sm') {
-        margin: .5rem;
-    }
-
-    @include media-breakpoint-up('md') {
-        margin: 1.25rem;
-    }
-
-    @include media-breakpoint-up('lg') {
-        margin: 1.5rem 5rem;
-    }
-
-    @include media-breakpoint-up('xl') {
-        margin: 1.5rem 10rem;
-    }
-
-    &__label {
-        margin: 0 0 1rem;
-        padding: 5px 1rem;
+    &__anime-rates {
         display: flex;
-        justify-content: space-between;
-        align-items: center;
+        flex-direction: column;
 
-        color: var(--ion-color-dark-tint);
-        background-color: var(--ion-color-light-tint);
-    }
+        @include media-breakpoint-up('sm') {
+            margin: .5rem;
+        }
 
-    &__text {
-        font-weight: bold;
-        font-size: 15px;
-    }
+        @include media-breakpoint-up('md') {
+            margin: 1.25rem;
+        }
 
-    &__icon {
-        font-size: 25px;
-        cursor: pointer;
+        @include media-breakpoint-up('lg') {
+            margin: 1.5rem 5rem;
+        }
+
+        @include media-breakpoint-up('xl') {
+            margin: 1.5rem 10rem;
+        }
     }
 }

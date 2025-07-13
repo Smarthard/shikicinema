@@ -2,20 +2,10 @@ import { AnimeKindType } from '@app/shared/types/shikimori/anime-kind.type';
 import { PaginationRequest } from '@app/shared/types/shikimori/queries/pagination-request';
 import { UserRateStatusType } from '@app/shared/types/shikimori/user-rate-status.type';
 
-type AnimeOrderType = 'id'
-| 'id_desc'
-| 'ranked'
-| 'kind'
-| 'popularity'
-|'name'
-|'aired_on'
-|'episodes'
-|'status'
-|'created_at'
-|'created_at_desc'
-|'random';
+// eslint-disable-next-line max-len
+type AnimeOrderType = 'id' | 'id_desc' | 'ranked' | 'kind' | 'popularity' | 'name' | 'aired_on' | 'episodes' | 'status' | 'created_at' | 'created_at_desc' | 'random';
 
-type AnimeStatusType = 'anons' | 'ongoing' | 'released';
+export type AnimeStatusType = 'anons' | 'ongoing' | 'released';
 
 /**
  * @description "S" - less than 10 minutes,
@@ -23,7 +13,7 @@ type AnimeStatusType = 'anons' | 'ongoing' | 'released';
  * "F" - more than 30 minutes
  */
 type AnimeDurationType = 'S' | 'D' | 'F';
-type AnimeRatingType = 'none' | 'g' | 'pg' | 'pg_13' | 'r' | 'r_plus' | 'rx';
+export type AnimeRatingType = 'none' | 'g' | 'pg' | 'pg_13' | 'r' | 'r_plus' | 'rx';
 
 export interface FindAnimeQuery extends PaginationRequest {
     order?: AnimeOrderType;

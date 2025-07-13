@@ -14,6 +14,7 @@ export {
     serverOutline,
     settingsOutline,
     trashOutline,
+    playOutline,
     playBackOutline,
     playForwardOutline,
     send,
@@ -25,4 +26,6 @@ export {
     ellipsisVerticalOutline,
     checkmarkDoneOutline,
     warningOutline,
+    addOutline,
+    funnelOutline,
 } from 'ionicons/icons';

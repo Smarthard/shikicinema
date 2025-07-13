@@ -37,7 +37,7 @@
 }
 
 <ng-template #loadingSkeleton>
-    @for(_ of (3 | makeEmptyArray); track $index) {
+    @for(_ of 3 | repeat; track $index) {
         <div class="comments__item comments__item--skeleton skeleton"></div>
     }
 </ng-template>

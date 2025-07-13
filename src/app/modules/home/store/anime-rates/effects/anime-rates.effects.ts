@@ -3,112 +3,64 @@ import {
     createEffect,
     ofType,
 } from '@ngrx/effects';
-import { EMPTY, of } from 'rxjs';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
+import { Store } from '@ngrx/store';
 import {
     catchError,
+    concatMap,
     delay,
     exhaustMap,
-    filter,
     map,
-    mergeMap,
-    withLatestFrom,
+    switchMap,
 } from 'rxjs/operators';
-import { concatLatestFrom } from '@ngrx/operators';
+import { of } from 'rxjs';
 
-import { Action, Store } from '@ngrx/store';
-import { AnimeNameSortingConfig } from '@app/shared/utils/rx-anime-rates-functions';
-import { SettingsStoreInterface } from '@app/store/settings/types/settings-store.interface';
 import { ShikimoriClient } from '@app/shared/services/shikimori-client.service';
+import { UserRateTargetEnum } from '@app/shared/types/shikimori';
+import { concatLatestFrom } from '@ngrx/operators';
 import {
-    allPagesLoadedForStatusAction,
-    incrementPageForStatusAction,
-} from '@app/modules/home/store/anime-rates/actions/anime-rate-paging.actions';
-import {
-    isDuplicateArrayFilter,
-    sortAnimeRatesByUserRating,
-} from '@app/modules/home/store/anime-rates/utils/anime-rates.helpers';
-import {
-    loadAnimeRateByStatusAction,
-    loadAnimeRateByStatusFailureAction,
-    loadAnimeRateByStatusSuccessAction,
-} from '@app/modules/home/store/anime-rates/actions/load-anime-rate.action';
-import { selectAnimePaginationSize } from '@app/store/settings/selectors/settings.selectors';
-import {
-    selectIsRatesLoadedByStatus,
-    selectRatesByStatus,
-    selectRatesPageByStatus,
-} from '@app/modules/home/store/anime-rates/selectors/anime-rates.selectors';
-import { updateSettingsAction } from '@app/store/settings/actions/settings.actions';
+    getAnimeRatesMetadataAction,
+    getAnimeRatesMetadataFailureAction,
+    getAnimeRatesMetadataSuccessAction,
+    loadAllUserAnimeRatesAction,
+    loadAllUserAnimeRatesFailureAction,
+    loadAllUserAnimeRatesSuccessAction,
+} from '@app/modules/home/store/anime-rates/actions';
+import { selectRatesMetadata } from '@app/modules/home/store/anime-rates/selectors';
+import { splitArrayToChunks } from '@app/shared/utils/split-array-to-chunks.funtion';
 
 @Injectable()
 export class AnimeRatesEffects {
-    loadAnimeRateByStatusEffect$ = createEffect(() => this.actions$.pipe(
-        ofType(loadAnimeRateByStatusAction),
-        concatLatestFrom(({ status }) => [
-            this.store.select(selectRatesPageByStatus(status)),
-            this.store.select(selectIsRatesLoadedByStatus(status)),
-            this.store.select(selectAnimePaginationSize),
-        ]),
-        exhaustMap(([{ status, userId }, page, isLoad, limit]) => !isLoad
-            ? this.shikimoriClient.getUserAnimeRates(userId, { status, page, limit })
-                .pipe(
-                    withLatestFrom(this.store.select(selectRatesByStatus(status))),
-                    mergeMap(([newRates, oldRates]) => {
-                        const animeNameSortCfg: AnimeNameSortingConfig = {
-                            compareOriginalName: true,
-                            caseSensitive: false,
-                        };
-                        const isAllRatesLoaded = newRates?.length < limit;
-                        const maxItemsLoaded = page * limit;
-                        const rates = [...oldRates, ...newRates]
-                            .sort(sortAnimeRatesByUserRating(animeNameSortCfg))
-                            .filter(isDuplicateArrayFilter);
-                        const actions: Action[] = [
-                            loadAnimeRateByStatusSuccessAction({ status, rates, userId, newRates }),
-                        ];
+    private readonly actions$ = inject(Actions);
+    private readonly store = inject(Store);
+    private readonly shikimori = inject(ShikimoriClient);
 
-                        actions.push(isAllRatesLoaded
-                            ? allPagesLoadedForStatusAction({ status, maxItemsLoaded })
-                            : incrementPageForStatusAction({ status }),
-                        );
+    readonly METADATA_QUERY_LIMIT = 50;
+    readonly metadata$ = this.store.select(selectRatesMetadata);
 
-                        return actions;
-                    }),
-                    catchError((errors) => of(loadAnimeRateByStatusFailureAction({ status, errors }))),
-                )
-            : EMPTY),
-    ));
-
-    scheduleNextPageLoadEffect$ = createEffect(() => this.actions$.pipe(
-        ofType(loadAnimeRateByStatusSuccessAction),
-        // schedule next page of rates if not all have loaded
-        // it would dispatch an extra load action with delay
-        // until items amount is more or equal than page limit
-        concatLatestFrom(() => this.store.select(selectAnimePaginationSize)),
-        filter(([{ newRates }, limit]) => newRates?.length >= limit),
-        // Shikimori API is limited by 5 rps, 90 rpm!
-        delay(1000),
-        mergeMap(([action]) => of(action).pipe(
-            map(({ userId, status }) => loadAnimeRateByStatusAction({ userId, status })),
-            catchError((errors) => of(loadAnimeRateByStatusFailureAction({ errors, status: action.status }))),
+    loadAllUserAnimeRates$ = createEffect(() => this.actions$.pipe(
+        ofType(loadAllUserAnimeRatesAction),
+        exhaustMap(({ userId }) => this.shikimori.getUserRates(userId, UserRateTargetEnum.ANIME).pipe(
+            map((rates) => loadAllUserAnimeRatesSuccessAction({ userId, rates })),
+            catchError((errors) => of(loadAllUserAnimeRatesFailureAction({ errors }))),
         )),
     ));
 
-    allPagesLoadedForStatus$ = createEffect(() => this.actions$.pipe(
-        ofType(allPagesLoadedForStatusAction),
-        concatLatestFrom(() => this.store.select(selectAnimePaginationSize)),
-        filter(([{ maxItemsLoaded }, pageSize]) => maxItemsLoaded > pageSize),
-        map(([{ maxItemsLoaded }]) => {
-            const config: Pick<SettingsStoreInterface, 'animePaginationSize'> = { animePaginationSize: maxItemsLoaded };
-
-            return updateSettingsAction({ config });
-        }),
+    generateMetadataActions$ = createEffect(() => this.actions$.pipe(
+        ofType(loadAllUserAnimeRatesSuccessAction),
+        map(({ rates }) => rates?.map(({ target_id: targetId }) => targetId)),
+        concatLatestFrom(() => this.metadata$),
+        map(([animeIds, metadata]) => animeIds?.filter((animeId) => !metadata?.[animeId])),
+        map((animeIds) => splitArrayToChunks(animeIds, this.METADATA_QUERY_LIMIT)),
+        switchMap((chuckedIds) => chuckedIds.map((animeIds) => getAnimeRatesMetadataAction({ animeIds }))),
     ));
 
-    constructor(
-        private actions$: Actions,
-        private store: Store,
-        private shikimoriClient: ShikimoriClient,
-    ) {}
+    loadMetadata$ = createEffect(() => this.actions$.pipe(
+        ofType(getAnimeRatesMetadataAction),
+        delay(333),
+        concatMap(({ animeIds }) => this.shikimori.getUserAnimeRatesMetadataGQL(animeIds).pipe(
+            map((metadata) => getAnimeRatesMetadataSuccessAction({ metadata })),
+            catchError((errors) => of(getAnimeRatesMetadataFailureAction({ errors }))),
+        )),
+    ));
 }
