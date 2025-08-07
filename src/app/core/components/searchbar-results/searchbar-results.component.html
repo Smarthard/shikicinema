@@ -47,7 +47,7 @@
 
                         @if (result.aired_on) {
                             <ion-text class="anime-info__year">
-                                {{ 'GLOBAL.COMMON.DATES.YEAR' | transloco: { year: (result.aired_on | date: 'YYYY') } }}
+                                {{ 'GLOBAL.COMMON.DATES.YEAR' | transloco: { year: (result.aired_on | date: 'yyyy') } }}
                             </ion-text>
                         }
 

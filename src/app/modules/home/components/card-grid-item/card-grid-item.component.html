@@ -57,7 +57,7 @@
         }
 
         @if (releaseDate()) {
-            <time [dateTime]="releaseDate()">{{ releaseDate() | date: 'YYYY' }}</time>
+            <time [dateTime]="releaseDate()">{{ releaseDate() | date: 'yyyy' }}</time>
         }
     </footer>
 }

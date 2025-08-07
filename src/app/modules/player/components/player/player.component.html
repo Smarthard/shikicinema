@@ -1,7 +1,7 @@
 @if (nextEpisodeAt()) {
     <div class="responsive-16by9 player__video player__video--has-banner player__video--airing-soon-banner">
         <div class="player__placeholder">
-            @let date = nextEpisodeAt() | date: 'dd.MM.YYYY HH:mm';
+            @let date = nextEpisodeAt() | date: 'dd.MM.yyyy HH:mm';
 
             {{ 'PLAYER_MODULE.PLAYER_PAGE.PLAYER.NEXT_EPISODE_PLACEHOLDER' | transloco: { date } }}
         </div>
