@@ -1,5 +1,5 @@
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { Pipe, PipeTransform } from '@angular/core';
+import { Pipe, PipeTransform, inject } from '@angular/core';
 
 import { Comment } from '@app/shared/types/shikimori/comment';
 import { environment } from '@app-env/environment';
@@ -11,6 +11,8 @@ import { environment } from '@app-env/environment';
     pure: true,
 })
 export class BbToHtmlPipe implements PipeTransform {
+    private readonly _sanitizer = inject(DomSanitizer);
+
     private readonly SHIKIMORI_URL = environment.shikimori.apiURI;
 
     private readonly bbCodesReplacementMap: Array<[RegExp, string]> = [
@@ -115,10 +117,6 @@ export class BbToHtmlPipe implements PipeTransform {
 
         return parsed;
     }
-
-    constructor(
-        private readonly _sanitizer: DomSanitizer,
-    ) {}
 
     transform(comment: Comment): SafeHtml {
         return this._sanitizer.bypassSecurityTrustHtml(this._parseBb(comment));

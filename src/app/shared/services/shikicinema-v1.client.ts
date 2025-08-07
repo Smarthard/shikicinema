@@ -1,5 +1,5 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 
 import { ResourceIdType } from '@app/shared/types/resource-id.type';
 import { ShikivideosInterface, UploadToken } from '@app/shared/types/shikicinema/v1';
@@ -11,13 +11,11 @@ import { mapVideoKindToShikicinema } from '@app/shared/utils/map-video-kind-to-s
     providedIn: 'root',
 })
 export class ShikicinemaV1Client {
+    private http = inject(HttpClient);
+
     private readonly baseUri = environment.smarthard.apiURI;
     private readonly clientId = environment.smarthard.authClientId;
     private readonly clientSecret = environment.smarthard.authClientSecret;
-
-    constructor(
-        private http: HttpClient,
-    ) {}
 
     findAnimes(animeId: string) {
         const url = `${this.baseUri}/api/shikivideos/${animeId}`;

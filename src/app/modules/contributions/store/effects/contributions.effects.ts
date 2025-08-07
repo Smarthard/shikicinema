@@ -3,8 +3,13 @@ import {
     createEffect,
     ofType,
 } from '@ngrx/effects';
-import { Injectable } from '@angular/core';
-import { catchError, map, of, switchMap } from 'rxjs';
+import { Injectable, inject } from '@angular/core';
+import {
+    catchError,
+    map,
+    of,
+    switchMap,
+} from 'rxjs';
 
 import { ShikicinemaV1Client, ShikimoriClient } from '@app/shared/services';
 import {
@@ -20,6 +25,10 @@ import {
 
 @Injectable()
 export class ContributionsEffects {
+    private actions$ = inject(Actions);
+    private shikicinemaClient = inject(ShikicinemaV1Client);
+    private shikimoriClient = inject(ShikimoriClient);
+
     getUploaderEffect$ = createEffect(() => this.actions$.pipe(
         ofType(getUploaderAction),
         switchMap(({ uploaderName }) => this.shikimoriClient.getUser(uploaderName)
@@ -37,10 +46,4 @@ export class ContributionsEffects {
                 catchError((errors) => of(getContributionsFailureAction({ errors }))),
             )),
     ));
-
-    constructor(
-        private actions$: Actions,
-        private shikicinemaClient: ShikicinemaV1Client,
-        private shikimoriClient: ShikimoriClient,
-    ) {}
 }

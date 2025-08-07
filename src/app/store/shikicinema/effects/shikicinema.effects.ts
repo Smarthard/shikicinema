@@ -3,8 +3,7 @@ import {
     createEffect,
     ofType,
 } from '@ngrx/effects';
-import { Injectable } from '@angular/core';
-import { Store } from '@ngrx/store';
+import { Injectable, inject } from '@angular/core';
 import { ToastController } from '@ionic/angular/standalone';
 import { TranslocoService } from '@jsverse/transloco';
 import {
@@ -29,6 +28,11 @@ import {
 
 @Injectable()
 export class ShikicinemaEffects {
+    private _actions$ = inject(Actions);
+    private _shikicinemaV1 = inject(ShikicinemaV1Client);
+    private _transloco = inject(TranslocoService);
+    private _toast = inject(ToastController);
+
     getUploadToken$ = createEffect(() => this._actions$.pipe(
         ofType(getUploadTokenAction),
         switchMap(({ shikimoriToken }) => this._shikicinemaV1.getUploadToken(shikimoriToken?.shikimoriBearerToken).pipe(
@@ -74,12 +78,4 @@ export class ShikicinemaEffects {
             await toast.present();
         }),
     ), { dispatch: false });
-
-    constructor(
-        private _actions$: Actions,
-        private _store: Store,
-        private _shikicinemaV1: ShikicinemaV1Client,
-        private _transloco: TranslocoService,
-        private _toast: ToastController,
-    ) {}
 }

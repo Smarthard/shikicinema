@@ -5,7 +5,7 @@ import {
     race,
 } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import {
     catchError,
     first,
@@ -18,9 +18,7 @@ import {
     providedIn: 'root',
 })
 export class ShikimoriDomainsService {
-    constructor(
-        private readonly http: HttpClient,
-    ) {}
+    private readonly http = inject(HttpClient);
 
     public detect(...extraDomains: string[]): Observable<string> {
         const domainsRequests = [...extraDomains]

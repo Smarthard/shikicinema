@@ -1,5 +1,5 @@
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { Pipe, PipeTransform } from '@angular/core';
+import { Pipe, PipeTransform, inject } from '@angular/core';
 
 @Pipe({
     name: 'urlSanitizer',
@@ -7,7 +7,7 @@ import { Pipe, PipeTransform } from '@angular/core';
     standalone: true,
 })
 export class UrlSanitizerPipe implements PipeTransform {
-    constructor(private sanitizer: DomSanitizer) {}
+    private sanitizer = inject(DomSanitizer);
 
     transform(url: string | URL): SafeUrl {
         const asString = url instanceof URL ? url.toString() : url;

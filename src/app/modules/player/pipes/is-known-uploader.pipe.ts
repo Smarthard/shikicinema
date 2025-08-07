@@ -1,8 +1,7 @@
-import { Inject, Pipe, PipeTransform } from '@angular/core';
+import { Pipe, PipeTransform, inject } from '@angular/core';
 
 import { UploaderIdType } from '@app/shared/types/uploader-id.type';
 import { WELL_KNOWN_UPLOADERS_TOKEN } from '@app/shared/types/well-known-uploaders.token';
-import { WellKnownType } from '@app/shared/types/well-known-uploaders.type';
 
 
 @Pipe({
@@ -10,10 +9,7 @@ import { WellKnownType } from '@app/shared/types/well-known-uploaders.type';
     standalone: true,
 })
 export class isWellKnownUploaderPipe implements PipeTransform {
-    constructor(
-        @Inject(WELL_KNOWN_UPLOADERS_TOKEN)
-        private readonly wellkKownUploaders: WellKnownType,
-    ) {}
+    private readonly wellkKownUploaders = inject(WELL_KNOWN_UPLOADERS_TOKEN);
 
     transform(uploaderId: UploaderIdType): boolean {
         return Boolean(this.wellkKownUploaders?.[uploaderId]);

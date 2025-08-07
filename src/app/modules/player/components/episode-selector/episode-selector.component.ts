@@ -3,7 +3,7 @@ import {
     Component,
     HostBinding,
     ViewEncapsulation,
-    afterRender,
+    afterEveryRender,
     inject,
     input,
     output,
@@ -52,7 +52,7 @@ export class EpisodeSelectorComponent {
     selection = output<number>();
 
     constructor() {
-        afterRender({
+        afterEveryRender({
             read: () => {
                 if (!this.isLoading()) {
                     this.scrollToEpisode(this.selected());

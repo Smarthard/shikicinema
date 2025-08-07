@@ -2,13 +2,14 @@ import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import {
     ChangeDetectionStrategy,
     Component,
+    DOCUMENT,
     DestroyRef,
     OnInit,
     Renderer2,
     ViewEncapsulation,
     inject,
 } from '@angular/core';
-import { DOCUMENT } from '@angular/common';
+
 import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
 import { Store } from '@ngrx/store';
 import { TranslocoService, getBrowserLang } from '@jsverse/transloco';

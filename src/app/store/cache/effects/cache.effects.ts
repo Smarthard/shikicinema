@@ -6,7 +6,7 @@ import {
     map,
     take,
 } from 'rxjs';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 
 import {
@@ -19,6 +19,9 @@ import {
 
 @Injectable()
 export class CacheEffects {
+    private actions$ = inject(Actions);
+    private store = inject(Store);
+
     cacheHealthCheckUp$ = createEffect(() => this.actions$.pipe(
         ofType(cacheHealthCheckUpAction),
         exhaustMap(() => this.store.select(selectCachedAnimes).pipe(
@@ -32,9 +35,4 @@ export class CacheEffects {
             catchError(() => EMPTY),
         )),
     ));
-
-    constructor(
-        private actions$: Actions,
-        private store: Store,
-    ) {}
 }
