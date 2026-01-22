@@ -33,7 +33,7 @@ import { EpisodeSelectorItemComponent } from '@app/modules/player/components/epi
 })
 export class EpisodeSelectorComponent {
     @HostBinding('class.episode-selector')
-    private episodeSelectorClass = true;
+    protected episodeSelectorClass = true;
 
     private readonly transloco = inject(TranslocoService);
 

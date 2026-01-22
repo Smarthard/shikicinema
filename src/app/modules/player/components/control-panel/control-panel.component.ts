@@ -43,7 +43,7 @@ import { getLastAiredEpisode, getMaxEpisode } from '@app/modules/player/utils';
 })
 export class ControlPanelComponent {
     @HostBinding('class.control-panel')
-    private controlPanelClass = true;
+    protected controlPanelClass = true;
 
     private readonly _episodeInputEl = viewChild<IonInput>('episodeInputEl');
 

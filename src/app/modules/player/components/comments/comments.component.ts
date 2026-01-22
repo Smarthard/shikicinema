@@ -56,7 +56,7 @@ import { trackById } from '@app/shared/utils/common-ngfor-tracking';
 })
 export class CommentsComponent {
     @HostBinding('class.comments')
-    private commentsClass = true;
+    protected commentsClass = true;
 
     isLoading = input<boolean>(true);
 

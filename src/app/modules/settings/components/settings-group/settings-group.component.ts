@@ -20,7 +20,7 @@ import { IonIcon } from '@ionic/angular/standalone';
 })
 export class SettingsGroupComponent {
     @HostBinding('class.settings-group')
-    private settingsGroupClass = true;
+    protected settingsGroupClass = true;
 
     @Input({ required: true })
     title: string;

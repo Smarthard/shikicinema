@@ -43,7 +43,7 @@ import { ToCommentUrlPipe } from '@app/modules/player/pipes/to-comment-url.pipe'
 })
 export class CommentComponent {
     @HostBinding('class.comment')
-    private commentClass = true;
+    protected commentClass = true;
 
     private readonly _renderer = inject(Renderer2);
 

@@ -50,7 +50,7 @@ import { cleanAuthorName } from '@app/shared/utils/clean-author-name.function';
 })
 export class VideoSelectorComponent {
     @HostBinding('class.video-selector')
-    private videoSelectorClass = true;
+    protected videoSelectorClass = true;
 
     private readonly transloco = inject(TranslocoService);
 

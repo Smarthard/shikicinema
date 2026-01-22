@@ -26,7 +26,7 @@ import { TranslocoPipe } from '@jsverse/transloco';
 })
 export class ProfileInfoComponent {
     @HostBinding('class.profile-info')
-    private settingsPageClass = true;
+    protected settingsPageClass = true;
 
     @Input()
     serviceName: string;

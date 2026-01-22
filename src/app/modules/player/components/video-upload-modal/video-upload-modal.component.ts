@@ -65,7 +65,7 @@ import { getMaxEpisode } from '@app/modules/player/utils';
 })
 export class VideoUploadModalComponent extends IonModal implements OnInit {
     @HostBinding('class.video-upload-modal')
-    private videoUploadModalClass = true;
+    protected videoUploadModalClass = true;
 
     private readonly destroyRef = inject(DestroyRef);
     private readonly transloco = inject(TranslocoService);

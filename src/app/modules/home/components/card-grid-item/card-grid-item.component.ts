@@ -38,7 +38,7 @@ import { scale } from '@app/shared/animations/scale';
 })
 export class CardGridItemComponent extends AbstractImageCardComponent {
     @HostBinding('class.card-grid-item')
-    cardGridItemClass = true;
+    protected cardGridItemClass = true;
 
     kind = input<AnimeKindType>();
     releaseDate = input<string | Date>();

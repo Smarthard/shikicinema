@@ -41,7 +41,7 @@ import { TranslocoPipe } from '@jsverse/transloco';
 })
 export class EpisodeSelectorModalComponent extends IonModal {
     @HostBinding('class.episode-selector-modal')
-    private episodeSelectorModalClass = true;
+    protected episodeSelectorModalClass = true;
 
     private readonly _modalController = inject(ModalController);
 

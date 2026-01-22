@@ -103,7 +103,7 @@ import { urlValidator } from '@app/shared/validators';
 })
 export class SettingsPage implements OnInit {
     @HostBinding('class.settings-page')
-    private settingsPageClass = true;
+    protected settingsPageClass = true;
 
     private readonly transloco = inject(TranslocoService);
     private readonly title = inject(Title);

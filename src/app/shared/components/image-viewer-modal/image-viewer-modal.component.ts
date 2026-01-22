@@ -18,7 +18,7 @@ import { IonImg, IonModal } from '@ionic/angular/standalone';
 })
 export class ImageViewerModalComponent extends IonModal {
     @HostBinding('class.image-viewer-modal')
-    private imageViewerModalClass = true;
+    protected imageViewerModalClass = true;
 
     @Input() imageSrc: string;
 }

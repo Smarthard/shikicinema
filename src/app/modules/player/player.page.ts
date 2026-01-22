@@ -141,7 +141,7 @@ import { visitAnimePageAction } from '@app/modules/home/store/recent-animes/acti
 })
 export class PlayerPage implements OnInit {
     @HostBinding('class.player-page')
-    private playerPageClass = true;
+    protected playerPageClass = true;
 
     private readonly store = inject(Store);
     private readonly router = inject(Router);

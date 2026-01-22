@@ -41,7 +41,7 @@ import { ResourceIdType } from '@app/shared/types/resource-id.type';
 })
 export class UserCommentFormComponent {
     @HostBinding('class.user-comment-form')
-    private userCommentFormClass = true;
+    protected userCommentFormClass = true;
 
     comment = new FormControl('', [
         Validators.required,

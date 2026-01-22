@@ -44,7 +44,7 @@ import { UrlSanitizerPipe } from '@app/shared/pipes/url-sanitizer/url-sanitizer.
 })
 export class PlayerComponent {
     @HostBinding('class.player')
-    private playerClass = true;
+    protected playerClass = true;
 
     private readonly destroyRef = inject(DestroyRef);
 

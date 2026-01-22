@@ -63,7 +63,7 @@ import { trackById } from '@app/shared/utils/common-ngfor-tracking';
 })
 export class ContributionsPage implements OnInit {
     @HostBinding('class.contributions-page')
-    private contributionsPageClass = true;
+    protected contributionsPageClass = true;
 
     private readonly route = inject(ActivatedRoute);
     private readonly store = inject(Store);
