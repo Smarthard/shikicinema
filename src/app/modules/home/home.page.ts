@@ -11,13 +11,10 @@ import { IonContent } from '@ionic/angular/standalone';
 import { Store } from '@ngrx/store';
 import { Title } from '@angular/platform-browser';
 import { TranslocoService } from '@jsverse/transloco';
-import { combineLatest } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
 import { rxEffect } from 'ngxtension/rx-effect';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { switchMap } from 'rxjs/operators';
 
 import { AnimeRateSectionComponent } from '@app/modules/home/components/anime-rate-section';
-import { DEFAULT_ANIME_STATUS_ORDER } from '@app/shared/config/default-anime-status-order.config';
 import { ExtendedUserRateStatusType } from '@app/modules/home/types';
 import { FilterRatesByStatusPipe } from '@app/modules/home/pipes/filter-rates-by-status.pipe';
 import {
@@ -27,12 +24,12 @@ import {
 import {
     loadAllUserAnimeRatesAction,
     selectIsMetadataLoading,
+    selectIsUserRateSectionLoaded,
     selectRates,
+    selectUserRateSectionSize,
 } from '@app/modules/home/store/anime-rates';
-import { recentAnimesToRates } from '@app/modules/home/store/recent-animes/utils/recent-animes-to-rates.function';
-import { selectCachedAnimes } from '@app/store/cache/selectors/cache.selectors';
+import { selectAnimeStatusOrder } from '@app/store/settings/selectors/settings.selectors';
 import { selectRecentAnimes } from '@app/modules/home/store/recent-animes';
-import { selectSettings } from '@app/store/settings/selectors/settings.selectors';
 import {
     selectShikimoriCurrentUser,
     selectShikimoriCurrentUserNickname,
@@ -64,26 +61,19 @@ export class HomePage {
     private readonly title = inject(Title);
     private readonly transloco = inject(TranslocoService);
 
-    readonly settings = this.store.selectSignal(selectSettings);
+    readonly animeStatusOrder = this.store.selectSignal(selectAnimeStatusOrder);
     readonly currentUser = this.store.selectSignal(selectShikimoriCurrentUser);
-
     readonly userAnimeRates = this.store.selectSignal(selectRates);
     readonly isMetadataLoading = this.store.selectSignal(selectIsMetadataLoading);
-
-    readonly useCustomAnimeStatusOrder = computed(() => this.settings()?.useCustomAnimeStatusOrder);
-    readonly animeStatusOrder = computed(() => this.useCustomAnimeStatusOrder()
-        ? this.settings()?.userAnimeStatusOrder as ExtendedUserRateStatusType[]
-        : DEFAULT_ANIME_STATUS_ORDER,
-    );
+    readonly recent = this.store.selectSignal(selectRecentAnimes);
+    readonly isSectionLoaded = (section: ExtendedUserRateStatusType) =>
+        this.store.selectSignal(selectIsUserRateSectionLoaded(section));
+    readonly sectionSize = (section: ExtendedUserRateStatusType) =>
+        this.store.selectSignal(selectUserRateSectionSize(section));
 
     readonly pageTitle$ = this.store.select(selectShikimoriCurrentUserNickname).pipe(
         switchMap((nickname) => this.transloco.selectTranslate('HOME_MODULE.HOME_PAGE.PAGE_TITLE', { nickname })),
     );
-
-    readonly recent = toSignal(combineLatest([
-        this.store.select(selectRecentAnimes),
-        this.store.select(selectCachedAnimes),
-    ]).pipe(map(([recentAnimes, cachedAnimes]) => recentAnimesToRates(recentAnimes, cachedAnimes))));
 
     readonly userAnimeRatesWithRecent = computed(
         () => [...this.userAnimeRates(), ...this.recent()],

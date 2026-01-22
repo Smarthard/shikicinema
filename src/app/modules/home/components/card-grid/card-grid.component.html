@@ -21,7 +21,7 @@
 }
 
 <ng-template #skeletonTemplate>
-    @for (_ of 30 | repeat; track $index) {
+    @for (_ of size() | repeat; track $index) {
         <div class="anime-grid__item skeleton-item">
             <app-skeleton-block
                 class="skeleton-item__img responsive-9by13"

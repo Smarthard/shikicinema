@@ -41,6 +41,7 @@ export class AnimeRateSectionComponent {
     isHidden = input(false);
     isLoading = input(true);
     hasPriority = input(false);
+    size = input(50);
 
     visible = output();
     toggleHidden = output();

@@ -1,7 +1,9 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 
+import { DEFAULT_ANIME_STATUS_ORDER } from '@app/shared/config/default-anime-status-order.config';
+import { ExtendedUserRateStatusType } from '@app/modules/home/types';
 import { ResourceIdType } from '@app/shared/types/resource-id.type';
-import { SettingsStoreInterface } from '@app/store/settings/types/settings-store.interface';
+import { SettingsStoreInterface } from '@app/store/settings/types';
 import { cleanAuthorName } from '@app/shared/utils/clean-author-name.function';
 import { getMostPopularPreference } from '@app/shared/utils/get-most-popular-preference.function';
 import { mapPreferenceValue } from '@app/shared/utils/map-preference-value.function';
@@ -87,4 +89,11 @@ export const selectLastVisitedPage = createSelector(
 export const selectDomainFilters = createSelector(
     selectSettings,
     (state) => state.filterPlayerDomains,
+);
+
+export const selectAnimeStatusOrder = createSelector(
+    selectSettings,
+    ({ useCustomAnimeStatusOrder, userAnimeStatusOrder }) => (useCustomAnimeStatusOrder
+        ? userAnimeStatusOrder
+        : DEFAULT_ANIME_STATUS_ORDER) as ExtendedUserRateStatusType[],
 );

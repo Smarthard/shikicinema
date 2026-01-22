@@ -5,13 +5,16 @@
         @let sortedUserRates = status === 'recent'
             ? (userRatesForStatus | slice: 0: 6 | sortRatesByDateVisited)
             : (userRatesForStatus | sortRatesByUserScore: 'original': false | async);
+        @let isLoaded = isSectionLoaded(status);
+        @let size = sectionSize(status);
 
         <app-anime-rate-section
             class="home-page__anime-rates"
             [label]="'HOME_MODULE.HOME_PAGE.GRIDS.' + (status | uppercase)"
             [status]="status"
             [rates]="sortedUserRates"
-            [isLoading]="isMetadataLoading()"
+            [isLoading]="!isLoaded()"
+            [size]="size()"
             [isHidden]="getHiddenGridStatus(status)"
             [hasPriority]="hasPriority"
             (toggleHidden)="toggleHiddenGridStatus(status)"

@@ -63,4 +63,5 @@ export class CardGridComponent {
 
     isLoading = input(true);
     hasPriority = input(false);
+    size = input(50);
 }
