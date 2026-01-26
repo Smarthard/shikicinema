@@ -1,13 +1,12 @@
+import { AsyncPipe, SlicePipe, UpperCasePipe } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
     ViewEncapsulation,
-    computed,
     effect,
     inject,
 } from '@angular/core';
 import { IonContent } from '@ionic/angular/standalone';
-import { SlicePipe, UpperCasePipe } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { Title } from '@angular/platform-browser';
 import { TranslocoService } from '@jsverse/transloco';
@@ -16,16 +15,15 @@ import { switchMap } from 'rxjs/operators';
 
 import { AnimeRateSectionComponent } from '@app/modules/home/components/anime-rate-section';
 import { ExtendedUserRateStatusType } from '@app/modules/home/types';
-import { FilterRatesByStatusPipe } from '@app/modules/home/pipes/filter-rates-by-status.pipe';
 import {
     SortRatesByDateVisitedPipe,
     SortRatesByUserScorePipe,
 } from '@app/modules/home/pipes';
 import {
     loadAllUserAnimeRatesAction,
-    selectIsUserRateSectionLoaded,
-    selectRates,
+    selectIsUserRateSectionLoading,
     selectUserRateSectionSize,
+    selectUserRatesByStatus,
 } from '@app/modules/home/store/anime-rates';
 import { selectAnimeStatusOrder } from '@app/store/settings/selectors/settings.selectors';
 import { selectRecentAnimes } from '@app/modules/home/store/recent-animes';
@@ -40,11 +38,11 @@ import {
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     imports: [
+        AsyncPipe,
         UpperCasePipe,
         SlicePipe,
         IonContent,
         AnimeRateSectionComponent,
-        FilterRatesByStatusPipe,
         SortRatesByUserScorePipe,
         SortRatesByDateVisitedPipe,
     ],
@@ -61,19 +59,19 @@ export class HomePage {
 
     readonly animeStatusOrder = this.store.selectSignal(selectAnimeStatusOrder);
     readonly currentUserId = this.store.selectSignal(selectShikimoriCurrentUserId);
-    readonly userAnimeRates = this.store.selectSignal(selectRates);
     readonly recent = this.store.selectSignal(selectRecentAnimes);
-    readonly isSectionLoaded = (section: ExtendedUserRateStatusType) =>
-        this.store.selectSignal(selectIsUserRateSectionLoaded(section));
+
+    readonly isSectionLoading = (section: ExtendedUserRateStatusType) =>
+        this.store.selectSignal(selectIsUserRateSectionLoading(section));
+
+    readonly userRatesBySection = (section: ExtendedUserRateStatusType) =>
+        this.store.select(selectUserRatesByStatus(section));
+
     readonly sectionSize = (section: ExtendedUserRateStatusType) =>
         this.store.selectSignal(selectUserRateSectionSize(section));
 
     readonly pageTitle$ = this.store.select(selectShikimoriCurrentUserNickname).pipe(
         switchMap((nickname) => this.transloco.selectTranslate('HOME_MODULE.HOME_PAGE.PAGE_TITLE', { nickname })),
-    );
-
-    readonly userAnimeRatesWithRecent = computed(
-        () => [...this.userAnimeRates(), ...this.recent()],
     );
 
     readonly hiddenGridMap = new Map<ExtendedUserRateStatusType, boolean>();

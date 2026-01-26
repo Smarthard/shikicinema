@@ -1,19 +1,19 @@
 <ion-content [fullscreen]="true" class="page-content ion-padding">
     @for (status of animeStatusOrder(); track status; let index = $index) {
         @let hasPriority = index <= 1;
-        @let userRatesForStatus = userAnimeRatesWithRecent() | filterRatesByStatus: status;
-        @let sortedUserRates = status === 'recent'
-            ? (userRatesForStatus | slice: 0: 6 | sortRatesByDateVisited)
-            : (userRatesForStatus | sortRatesByUserScore: 'original': false);
-        @let isLoaded = isSectionLoaded(status);
+        @let isRecent = status === 'recent';
+        @let userRates = isRecent
+            ? (recent() | slice: 0: 6 | sortRatesByDateVisited)
+            : (userRatesBySection(status) | async | sortRatesByUserScore: 'original': false);
+        @let isLoading = isSectionLoading(status);
         @let size = sectionSize(status);
 
         <app-anime-rate-section
             class="home-page__anime-rates"
             [label]="'HOME_MODULE.HOME_PAGE.GRIDS.' + (status | uppercase)"
             [status]="status"
-            [rates]="sortedUserRates"
-            [isLoading]="!isLoaded()"
+            [rates]="userRates"
+            [isLoading]="isLoading()"
             [size]="size()"
             [isHidden]="getHiddenGridStatus(status)"
             [hasPriority]="hasPriority"

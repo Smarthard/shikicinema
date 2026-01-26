@@ -20,14 +20,14 @@ export const selectUserRatesByStatus = (status: ExtendedUserRateStatusType) => c
     ({ rates }) => rates.filter(({ status: rateStatus }) => rateStatus === status),
 );
 
-export const selectIsUserRateSectionLoaded = (section: ExtendedUserRateStatusType) => createSelector(
+export const selectIsUserRateSectionLoading = (section: ExtendedUserRateStatusType) => createSelector(
     selectAnimeRates,
     ({ isRatesLoading }) => {
         if (section === 'recent') {
-            return true;
+            return false;
         };
 
-        return !isRatesLoading;
+        return isRatesLoading;
     },
 );
 
