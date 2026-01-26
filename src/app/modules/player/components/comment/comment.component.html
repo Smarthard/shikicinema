@@ -1,5 +1,9 @@
 <a class="comment__avatar-wrap" [href]="comment()?.user?.url">
-    <app-image-card class="comment__avatar" [imageUrl]="comment()?.user?.image?.x160 || comment()?.user?.avatar" />
+    <app-image-card
+        class="comment__avatar"
+        [imageUrl]="comment()?.user?.image?.x160 || comment()?.user?.avatar"
+        [name]="comment()?.user?.nickname"
+    />
 </a>
 
 <div class="comment__message">
