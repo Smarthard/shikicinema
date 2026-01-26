@@ -11,7 +11,6 @@ import { SettingsEffects } from '@app/store/settings/effects/settings.effects';
 import { ShikicinemaEffects } from '@app/store/shikicinema/effects/shikicinema.effects';
 import { ShikimoriClient } from '@app/shared/services/shikimori-client.service';
 import { ShikimoriEffects } from '@app/store/shikimori/effects/shikimori.effects';
-import { animeRatesLocalStorageSyncReducer } from '@app/modules/home/store/anime-rates';
 import { authEffectFactory } from '@app/store/auth/factories/auth-effects.factories';
 import { authLocalStorageSyncReducer } from '@app/store/auth/reducers/auth.meta-reducer';
 import { authReducer } from '@app/store/auth/reducers/auth.reducer';
@@ -34,7 +33,6 @@ const storeConfig: RootStoreConfig<AppStoreInterface> = {
         settingsLocalStorageSyncReducer,
         shikicinemaLocalStorageSyncReducer,
         loggerMetaReducer,
-        animeRatesLocalStorageSyncReducer,
         recentAnimesLocalStorageSyncReducer,
         shikimoriLocalStorageSyncReducer,
     ],

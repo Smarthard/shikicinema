@@ -11,7 +11,7 @@ import { TranslocoPipe } from '@jsverse/transloco';
 import { UpperCasePipe } from '@angular/common';
 
 import { CardGridComponent } from '@app/modules/home/components/card-grid';
-import { UserBriefRateInterface } from '@app/shared/types/shikimori';
+import { UserAnimeRate } from '@app/shared/types/shikimori';
 
 @Component({
     selector: 'app-anime-rate-section',
@@ -36,7 +36,7 @@ import { UserBriefRateInterface } from '@app/shared/types/shikimori';
 export class AnimeRateSectionComponent {
     label = input.required<string>();
     status = input.required<string>();
-    rates = input.required<UserBriefRateInterface[]>();
+    rates = input.required<UserAnimeRate[]>();
 
     isHidden = input(false);
     isLoading = input(true);
@@ -48,7 +48,7 @@ export class AnimeRateSectionComponent {
 
     ratesCount = computed(() => this.rates()?.length || 0);
 
-    isSectionHidden(isLoaded: boolean, rates: UserBriefRateInterface[]): boolean {
+    isSectionHidden(isLoaded: boolean, rates: UserAnimeRate[]): boolean {
         return isLoaded && !rates?.length;
     }
 

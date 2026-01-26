@@ -8,7 +8,7 @@ import { Store } from '@ngrx/store';
 
 import { AnimeKindType } from '@app/shared/types/shikimori';
 import { ResourceIdType } from '@app/shared/types';
-import { selectRatesMetadata } from '@app/modules/home/store/anime-rates';
+import { selectRates } from '@app/modules/home/store/anime-rates';
 
 @Pipe({
     name: 'getAnimeKind',
@@ -17,9 +17,12 @@ import { selectRatesMetadata } from '@app/modules/home/store/anime-rates';
 })
 export class GetAnimeKindPipe implements PipeTransform {
     readonly store = inject(Store);
-    readonly ratesMetadata$ = this.store.select(selectRatesMetadata);
+    readonly rates$ = this.store.select(selectRates);
 
     transform(animeId: ResourceIdType): Observable<AnimeKindType> {
-        return this.ratesMetadata$.pipe(map((metadata) => metadata?.[animeId]?.kind));
+        return this.rates$.pipe(
+            map((rates) => rates?.find(({ anime }) => anime?.id === animeId)),
+            map((rate) => rate?.anime?.kind),
+        );
     }
 }

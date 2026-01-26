@@ -1,9 +1,9 @@
-import { AnimeRatesMetadataGQL } from '@app/shared/types/shikimori/graphql';
+import { UserAnimeRate } from '@app/shared/types/shikimori';
 import { getAnimeRateName } from '@app/modules/home/utils/get-anime-rate-name.function';
 
 export function sortRatesByAnimeName(
-    rateA: AnimeRatesMetadataGQL,
-    rateB: AnimeRatesMetadataGQL,
+    rateA: UserAnimeRate,
+    rateB: UserAnimeRate,
     language: string,
     isCaseSensitive = false,
 ): number {

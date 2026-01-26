@@ -8,7 +8,7 @@ import { Store } from '@ngrx/store';
 
 import { ResourceIdType } from '@app/shared/types';
 import { getAnimeRateName } from '@app/modules/home/utils';
-import { selectRatesMetadata } from '@app/modules/home/store/anime-rates';
+import { selectRates } from '@app/modules/home/store/anime-rates';
 
 @Pipe({
     name: 'getAnimeName',
@@ -17,9 +17,12 @@ import { selectRatesMetadata } from '@app/modules/home/store/anime-rates';
 })
 export class GetAnimeNamePipe implements PipeTransform {
     readonly store = inject(Store);
-    readonly ratesMetadata$ = this.store.select(selectRatesMetadata);
+    readonly rates$ = this.store.select(selectRates);
 
     transform(animeId: ResourceIdType, language: string): Observable<string> {
-        return this.ratesMetadata$.pipe(map((metadata) => getAnimeRateName(metadata?.[animeId], language)));
+        return this.rates$.pipe(
+            map((rates) => rates?.find(({ anime }) => anime?.id === animeId)),
+            map((rate) => getAnimeRateName(rate, language)),
+        );
     }
 }

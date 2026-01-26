@@ -1,6 +1,7 @@
-import { ExtendedUserRateStatusType } from '@app/modules/home/types';
 import { Pipe, PipeTransform } from '@angular/core';
-import { UserBriefRateInterface } from '@app/shared/types/shikimori';
+
+import { ExtendedUserRateStatusType } from '@app/modules/home/types';
+import { UserAnimeRate } from '@app/shared/types/shikimori';
 
 @Pipe({
     name: 'filterRatesByStatus',
@@ -8,7 +9,7 @@ import { UserBriefRateInterface } from '@app/shared/types/shikimori';
     pure: true,
 })
 export class FilterRatesByStatusPipe implements PipeTransform {
-    transform(rates: UserBriefRateInterface[], status: ExtendedUserRateStatusType): UserBriefRateInterface[] {
+    transform(rates: UserAnimeRate[], status: ExtendedUserRateStatusType): UserAnimeRate[] {
         return rates?.filter((rate) => rate?.status === status);
     }
 }

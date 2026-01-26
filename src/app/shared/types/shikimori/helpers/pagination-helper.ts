@@ -3,7 +3,7 @@ import { PaginationRequest } from '@app/shared/types/shikimori/queries/paginatio
 
 export function parsePagination<T extends PaginationRequest>(query: T): Required<PaginationRequest> {
     const page = query?.page || 1;
-    const limit = query?.limit || 10;
+    const limit = query?.limit || 1000;
 
     return { limit, page };
 }

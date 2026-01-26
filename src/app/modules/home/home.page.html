@@ -4,7 +4,7 @@
         @let userRatesForStatus = userAnimeRatesWithRecent() | filterRatesByStatus: status;
         @let sortedUserRates = status === 'recent'
             ? (userRatesForStatus | slice: 0: 6 | sortRatesByDateVisited)
-            : (userRatesForStatus | sortRatesByUserScore: 'original': false | async);
+            : (userRatesForStatus | sortRatesByUserScore: 'original': false);
         @let isLoaded = isSectionLoaded(status);
         @let size = sectionSize(status);
 

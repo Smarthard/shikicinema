@@ -21,7 +21,7 @@ import {
 import { GetPlayerLinkPipe } from '@app/shared/pipes/get-player-link/get-player-link.pipe';
 import { IS_SUPPORTS_AVIF } from '@app/core/providers/avif';
 import { SkeletonBlockComponent } from '@app/shared/components/skeleton-block/skeleton-block.component';
-import { UserBriefRateInterface } from '@app/shared/types/shikimori';
+import { UserAnimeRate } from '@app/shared/types/shikimori';
 import { provideSmarthardNetImageLoader } from '@app/shared/providers';
 import { trackById } from '@app/shared/utils/common-ngfor-tracking';
 
@@ -59,7 +59,7 @@ export class CardGridComponent {
     // TODO: добавить подключение настройки для экономия трафика
     readonly isHiRes = signal(true);
 
-    userAnimeRates = input.required<UserBriefRateInterface[]>();
+    userAnimeRates = input.required<UserAnimeRate[]>();
 
     isLoading = input(true);
     hasPriority = input(false);

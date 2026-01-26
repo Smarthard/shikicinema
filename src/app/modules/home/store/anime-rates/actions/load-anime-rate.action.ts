@@ -1,7 +1,7 @@
 import { createAction, props } from '@ngrx/store';
 
 import { ResourceIdType } from '@app/shared/types';
-import { UserBriefRateInterface } from '@app/shared/types/shikimori';
+import { UserAnimeRate } from '@app/shared/types/shikimori';
 
 export const loadAllUserAnimeRatesAction = createAction(
     '[Anime Rates] load all user anime rates',
@@ -10,14 +10,24 @@ export const loadAllUserAnimeRatesAction = createAction(
 
 export const loadAllUserAnimeRatesSuccessAction = createAction(
     '[Anime Rates] load all user anime rates success',
-    props<{
-        userId: ResourceIdType;
-        rates: UserBriefRateInterface[];
-    }>(),
 );
 
 export const loadAllUserAnimeRatesFailureAction = createAction(
     '[Anime Rates] load all user anime rates failure',
     props<{ errors: unknown }>(),
+);
+
+export const nextPageAction = createAction(
+    '[Anime Rates] load next page for user anime rates',
+    props<{ userId: ResourceIdType, page: number }>(),
+);
+
+export const pageLoadSuccessAction = createAction(
+    '[Anime Rates] page load success',
+    props<{
+        userId: ResourceIdType,
+        page: number,
+        rates: UserAnimeRate[],
+    }>(),
 );
 

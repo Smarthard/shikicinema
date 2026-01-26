@@ -1,20 +1,16 @@
-import { AnimeRatesMetadata } from '@app/modules/home/store/anime-rates';
-import { UserBriefRateInterface } from '@app/shared/types/shikimori';
+import { UserAnimeRate } from '@app/shared/types/shikimori';
 import { sortRatesByAnimeName } from '@app/modules/home/utils/sort-rates-by-anime-name.function';
 
 
 export function sortRatesByUserScore(
-    a: UserBriefRateInterface,
-    b: UserBriefRateInterface,
-    ratesMetadata: AnimeRatesMetadata,
+    rateA: UserAnimeRate,
+    rateB: UserAnimeRate,
     language: string,
     isCaseSensitive = false,
     isAsc = true,
 ): number {
-    const rateA = ratesMetadata?.[a?.target_id];
-    const rateB = ratesMetadata?.[b?.target_id];
-    const scoreA = a?.score || 0;
-    const scoreB = b?.score || 0;
+    const scoreA = rateA?.score || 0;
+    const scoreB = rateB?.score || 0;
     const compare = isAsc
         ? scoreB - scoreA
         : scoreA - scoreB;

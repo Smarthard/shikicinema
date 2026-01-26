@@ -2,7 +2,7 @@
 
 @if (!isLoading() && hasTestedAvif) {
     @for (rate of userAnimeRates(); track trackById($index, rate)) {
-        @let animeId = rate.target_id;
+        @let animeId = rate?.anime?.id;
 
         <app-card-grid-item
             class="anime-grid__item"

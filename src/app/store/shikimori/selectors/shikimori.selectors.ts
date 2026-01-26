@@ -24,24 +24,29 @@ export const selectShikimoriFoundAnimes = createSelector(
     (state) => state.foundAnimes,
 );
 
+export const selectShikimoriCurrentUserId = createSelector(
+    selectShikimoriCurrentUser,
+    (currentUser) => currentUser?.id,
+);
+
 export const selectShikimoriCurrentUserAvatar = createSelector(
-    selectShikimori,
-    (state) => state.currentUser?.image?.x80 || state.currentUser?.image?.x64 || state.currentUser?.avatar,
+    selectShikimoriCurrentUser,
+    (currentUser) => currentUser?.image?.x80 || currentUser?.image?.x64 || currentUser?.avatar,
 );
 
 export const selectShikimoriCurrentUserAvatarHiRes = createSelector(
-    selectShikimori,
-    (state) => state.currentUser?.image?.x160 || state.currentUser?.image?.x148 || state.currentUser?.avatar,
+    selectShikimoriCurrentUser,
+    (currentUser) => currentUser?.image?.x160 || currentUser?.image?.x148 || currentUser?.avatar,
 );
 
 export const selectShikimoriCurrentUserNickname = createSelector(
-    selectShikimori,
-    (state) => state.currentUser?.nickname,
+    selectShikimoriCurrentUser,
+    (currentUser) => currentUser?.nickname,
 );
 
 export const selectShikimoriCurrentUserProfileLink = createSelector(
-    selectShikimori,
-    (state) => state.currentUser?.url,
+    selectShikimoriCurrentUser,
+    (currentUser) => currentUser?.url,
 );
 
 export const selectShikimoriDomain = createSelector(

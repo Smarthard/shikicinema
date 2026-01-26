@@ -1,7 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
-import { AnimeRatesMetadata } from '@app/modules/home/store/anime-rates';
-import { UserBriefRateInterface } from '@app/shared/types/shikimori';
+import { UserAnimeRate } from '@app/shared/types/shikimori';
 import { sortRatesByAnimeName } from '@app/modules/home/utils';
 
 @Pipe({
@@ -11,14 +10,13 @@ import { sortRatesByAnimeName } from '@app/modules/home/utils';
 })
 export class SortRatesByAnimeNamePipe implements PipeTransform {
     transform(
-        rates: UserBriefRateInterface[],
-        ratesMetadata: AnimeRatesMetadata,
+        rates: UserAnimeRate[],
         language: string,
         isCaseSensitive = false,
-    ): UserBriefRateInterface[] {
+    ): UserAnimeRate[] {
         return rates?.sort((a, b) => sortRatesByAnimeName(
-            ratesMetadata?.[a.target_id],
-            ratesMetadata?.[b.target_id],
+            a,
+            b,
             language,
             isCaseSensitive,
         ));

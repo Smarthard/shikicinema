@@ -1,4 +1,3 @@
-import { AsyncPipe, SlicePipe, UpperCasePipe } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -8,6 +7,7 @@ import {
     inject,
 } from '@angular/core';
 import { IonContent } from '@ionic/angular/standalone';
+import { SlicePipe, UpperCasePipe } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { Title } from '@angular/platform-browser';
 import { TranslocoService } from '@jsverse/transloco';
@@ -23,7 +23,6 @@ import {
 } from '@app/modules/home/pipes';
 import {
     loadAllUserAnimeRatesAction,
-    selectIsMetadataLoading,
     selectIsUserRateSectionLoaded,
     selectRates,
     selectUserRateSectionSize,
@@ -31,7 +30,7 @@ import {
 import { selectAnimeStatusOrder } from '@app/store/settings/selectors/settings.selectors';
 import { selectRecentAnimes } from '@app/modules/home/store/recent-animes';
 import {
-    selectShikimoriCurrentUser,
+    selectShikimoriCurrentUserId,
     selectShikimoriCurrentUserNickname,
 } from '@app/store/shikimori/selectors/shikimori.selectors';
 
@@ -41,7 +40,6 @@ import {
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     imports: [
-        AsyncPipe,
         UpperCasePipe,
         SlicePipe,
         IonContent,
@@ -62,9 +60,8 @@ export class HomePage {
     private readonly transloco = inject(TranslocoService);
 
     readonly animeStatusOrder = this.store.selectSignal(selectAnimeStatusOrder);
-    readonly currentUser = this.store.selectSignal(selectShikimoriCurrentUser);
+    readonly currentUserId = this.store.selectSignal(selectShikimoriCurrentUserId);
     readonly userAnimeRates = this.store.selectSignal(selectRates);
-    readonly isMetadataLoading = this.store.selectSignal(selectIsMetadataLoading);
     readonly recent = this.store.selectSignal(selectRecentAnimes);
     readonly isSectionLoaded = (section: ExtendedUserRateStatusType) =>
         this.store.selectSignal(selectIsUserRateSectionLoaded(section));
@@ -82,7 +79,7 @@ export class HomePage {
     readonly hiddenGridMap = new Map<ExtendedUserRateStatusType, boolean>();
 
     loadAnimeRatesEffect = effect(() => {
-        const userId = this.currentUser()?.id;
+        const userId = this.currentUserId();
 
         if (userId) {
             this.store.dispatch(loadAllUserAnimeRatesAction({ userId }));

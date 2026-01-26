@@ -1,15 +1,15 @@
-import { AnimeRatesMetadataGQL } from '@app/shared/types/shikimori/graphql';
+import { UserAnimeRate } from '@app/shared/types/shikimori';
 
-export function getAnimeRateName(rateMetadata: AnimeRatesMetadataGQL, language: string): string {
-    const defaultName = rateMetadata?.name;
+export function getAnimeRateName(rate: UserAnimeRate, language: string): string {
+    const defaultName = rate?.anime?.name;
 
     switch (language) {
         case 'ru':
-            return rateMetadata?.russian || defaultName;
+            return rate?.anime?.russian || defaultName;
         case 'jp':
-            return rateMetadata?.japanese || defaultName;
+            return rate?.anime?.japanese || defaultName;
         case 'en':
-            return rateMetadata?.english || defaultName;
+            return rate?.anime?.english || defaultName;
         default:
             return defaultName;
     }
