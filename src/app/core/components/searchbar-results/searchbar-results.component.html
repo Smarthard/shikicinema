@@ -12,7 +12,7 @@
             @for (result of results(); track trackById($index, result)) {
                 <ion-item
                     class="anime-search-list-item"
-                    tabindex="0"
+                    button="true"
                     (click)="onResultClick($event, result, 'internal')"
                     (keydown.enter)="onResultClick($event, result, 'internal')"
                     (keydown.space)="onResultClick($event, result, 'internal')"
