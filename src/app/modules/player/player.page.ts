@@ -345,6 +345,9 @@ export class PlayerPage implements OnInit {
         const animeId = this.animeIdQ();
         const maxEpisodes = this.maxEpisode();
 
+        // сброс видео для корректной работы заглушек выхода серий
+        this.currentVideo.set(null);
+
         if (episode <= maxEpisodes && episode > 0) {
             void this.router.navigate(['/player', animeId, episode]);
         }
