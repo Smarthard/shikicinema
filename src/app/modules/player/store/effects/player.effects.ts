@@ -112,7 +112,8 @@ export class PlayerEffects {
         map(([{ animeId, episode: episodes, isRewarch }, user, rate, anime]) => {
             const maxEpisode = getMaxEpisode(anime);
             const isLastEpisodeWatched = episodes >= maxEpisode;
-            const status: UserRateStatusType = isLastEpisodeWatched
+            const isOngoing = anime.status !== 'released';
+            const status: UserRateStatusType = isLastEpisodeWatched && !isOngoing
                 ? 'completed'
                 : isRewarch ? 'rewatching' : 'watching';
             const rewatches = isLastEpisodeWatched && isRewarch
