@@ -36,9 +36,10 @@ export function animeToUserAnimeRate(
             score: anime.score,
             status: anime.status,
             url: anime.url,
-            japanese: null as never,
-            english: null as never,
-            russian: null as never,
+            // TODO: заменить костыли на велосипеды
+            japanese: anime.japanese as never,
+            english: anime.english as never,
+            russian: anime.russian as never,
         },
         user_id: null,
     };
