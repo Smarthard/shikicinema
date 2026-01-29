@@ -1,6 +1,7 @@
 import { createReducer, on } from '@ngrx/store';
 
 import { AnimeRatesStoreInterface } from '@app/modules/home/store/anime-rates/types';
+import { filterDuplicatedIds } from '@app/shared/utils/filter-duplicated-ids.function';
 import {
     loadAllUserAnimeRatesAction,
     loadAllUserAnimeRatesSuccessAction,
@@ -32,7 +33,7 @@ const reducer = createReducer(
             rates: [
                 ...state.rates,
                 ...rates,
-            ],
+            ].filter(filterDuplicatedIds),
         }),
     ),
 );
