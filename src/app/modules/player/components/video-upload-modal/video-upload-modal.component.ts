@@ -65,25 +65,17 @@ import { getMaxEpisode } from '@app/modules/player/utils';
 })
 export class VideoUploadModalComponent extends IonModal implements OnInit {
     @HostBinding('class.video-upload-modal')
-    private videoUploadModalClass = true;
+    protected videoUploadModalClass = true;
 
     private readonly destroyRef = inject(DestroyRef);
     private readonly transloco = inject(TranslocoService);
     private readonly _modalController = inject(ModalController);
 
-    private _episode: number;
-
     @Input()
     anime: AnimeBriefInfoInterface;
 
     @Input()
-    set episode(episode: number) {
-        this._episode = episode;
-    }
-
-    get episode(): number {
-        return this._episode;
-    }
+    episode: number;
 
     uploadForm: FormGroup;
 

@@ -10,6 +10,7 @@
                     <app-skeleton-block
                         height="2rem"
                         [width]="isSmallScreen() ? '10rem' : '30rem'"
+                        borderRadius="0.25rem"
                     />
                 } @else {
                     <ion-text>
@@ -36,7 +37,7 @@
             (selection)="onKindChange($event)"
         />
 
-        <app-player class="player-page__player"
+        <app-player class="player-page__player responsive-16by9"
             [loading]="isVideosLoading()"
             [source]="currentVideo()?.url"
             [nextEpisodeAt]="nextEpisodeAt()"
@@ -48,8 +49,10 @@
             [videos]="episodeVideos() | filterByKind: currentKind()"
             [selected]="currentVideo()"
             [kindDisplayMode]="playerKindDisplayMode()"
-            [warnAvailability]="videos() | authorAvailabilityWarning: lastAiredEpisode()"
+            [warnAvailability]="authorAvailability()"
+            [hasUnfilteredVideos]="hasUnfilteredVideos()"
             (selection)="onVideoChange($event)"
+            (disableFilters)="setDomainFilters(false)"
         />
 
         <app-control-panel
@@ -69,14 +72,16 @@
             (togglePlayerMode)="togglePlayerMode()"
         />
 
-        @if (isSmallScreen() === false) {
+        @if (!isSmallScreen()) {
             <app-side-panel
                 class="player-page__side-panel"
                 [anime]="anime()"
                 [episode]="episodeQ()"
                 [isLoading]="isAnimeLoading()"
                 [isMinified]="isPanelsMinified()"
+                [isDomainFiltersActive]="isDomainFilterOn()"
                 (uploaded)="onVideoUpload($event)"
+                (filtersToggle)="setDomainFilters($event)"
             />
         }
 
@@ -85,7 +90,7 @@
             [comments]="comments()"
             [isLoading]="isCommentsLoading()"
             [isPartialyLoading]="isCommentsPartiallyLoading()"
-            [showMoreButton]="isShownAllComments() === false"
+            [showMoreButton]="!isShownAllComments()"
             [highlightComment]="highlightComment()"
             (showMoreComments)="onShowMoreComments()"
             (editComment)="onCommentEdit($event)"

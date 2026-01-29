@@ -5,17 +5,14 @@
       "baseUrl": "./",
       "outDir": "./dist/out-tsc",
       "sourceMap": true,
+      "esModuleInterop": true,
       "declaration": false,
-      "downlevelIteration": true,
       "experimentalDecorators": true,
       "moduleResolution": "bundler",
       "importHelpers": true,
       "target": "es2022",
       "module": "es2022",
-      "lib": [
-        "es2020",
-        "dom"
-      ],
+      "skipLibCheck": true,
       "paths": {
         "@app-env/*": [
           "<rootDir>/../src/environments/*"

@@ -67,4 +67,9 @@ export class VideoSelectorItemComponent {
 
     toggleOpen = output<string>();
     selectVideo = output<VideoInfoInterface>();
+
+    onOpenVideoInOtherTab(video: VideoInfoInterface): void {
+        // TODO: заменить логику для native-app
+        window.open(video.url);
+    }
 }

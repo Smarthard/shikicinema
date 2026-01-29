@@ -1,12 +1,10 @@
 import {
     ChangeDetectionStrategy,
-    ChangeDetectorRef,
     Component,
-    ElementRef,
-    HostBinding,
-    Input,
-    NgZone,
+    Signal,
     ViewEncapsulation,
+    WritableSignal,
+    inject,
 } from '@angular/core';
 import {
     IonButton,
@@ -17,13 +15,15 @@ import {
     IonToolbar,
     ModalController,
 } from '@ionic/angular/standalone';
+import { TranslocoPipe } from '@jsverse/transloco';
 
+import { AuthorAvailabilityWarningPipe } from '@app/modules/player/pipes';
 import { FilterByKindPipe } from '@app/shared/pipes/filter-by-kind/filter-by-kind.pipe';
 import { GetActiveKindsPipe } from '@app/shared/pipes/get-active-kinds/get-active-kinds.pipe';
 import { KindSelectorComponent } from '@app/modules/player/components/kind-selector/kind-selector.component';
+import { PlayerKindDisplayMode } from '@app/store/settings/types';
 import { VideoInfoInterface, VideoKindEnum } from '@app/modules/player/types';
 import { VideoSelectorComponent } from '@app/modules/player/components/video-selector/video-selector.component';
-
 
 @Component({
     selector: 'app-video-selector-modal',
@@ -34,8 +34,10 @@ import { VideoSelectorComponent } from '@app/modules/player/components/video-sel
         IonButtons,
         IonButton,
         IonIcon,
+        AuthorAvailabilityWarningPipe,
         FilterByKindPipe,
         GetActiveKindsPipe,
+        TranslocoPipe,
         VideoSelectorComponent,
         KindSelectorComponent,
     ],
@@ -43,51 +45,34 @@ import { VideoSelectorComponent } from '@app/modules/player/components/video-sel
     styleUrl: './video-selector-modal.component.scss',
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        class: 'video-selector-modal',
+    },
 })
 export class VideoSelectorModalComponent extends IonModal {
-    @HostBinding('class.video-selector-modal')
-    private videoSelectorModalClass = true;
+    private readonly _modalController = inject(ModalController);
 
-    private _selectedKind: VideoKindEnum;
-    private _selectedVideo: VideoInfoInterface;
+    // TODO: перекидывание напрямую сигналов, а не их значений не выглядит хорошей идеей
+    public videos: Signal<VideoInfoInterface[]>;
+    public episodeVideos: Signal<VideoInfoInterface[]>;
+    public kindDisplayMode: Signal<PlayerKindDisplayMode>;
+    public hasUnfilteredVideos: Signal<boolean>;
+    public lastAiredEpisode: Signal<number>;
 
-    @Input()
-    videos: VideoInfoInterface[];
-
-    @Input()
-    set selectedKind(kind: VideoKindEnum) {
-        this._selectedKind = kind;
-    }
-
-    get selectedKind(): VideoKindEnum {
-        return this._selectedKind;
-    }
-
-    @Input()
-    set selectedVideo(video: VideoInfoInterface) {
-        this._selectedVideo = video;
-    }
-
-    get selectedVideo(): VideoInfoInterface {
-        return this._selectedVideo;
-    }
-
-    // TODO: инжект ModalController - костыль, нужно убрать вместе со всем конструктором (см. нижнее todo)
-    constructor(
-        private readonly _modalController: ModalController,
-        private readonly _changeDetectorRef: ChangeDetectorRef,
-        private readonly _elementRef: ElementRef,
-        private readonly _zone: NgZone,
-    ) {
-        super(_changeDetectorRef, _elementRef, _zone);
-    }
+    public isDomainFilterOn: WritableSignal<boolean>;
+    public selectedKind: WritableSignal<VideoKindEnum>;
+    public selectedVideo: WritableSignal<VideoInfoInterface>;
 
     onKindChange(kind: VideoKindEnum): void {
-        this._selectedKind = kind;
+        this.selectedKind.set(kind);
     }
 
     onVideoChange(video: VideoInfoInterface): void {
-        this._selectedVideo = video;
+        this.selectedVideo.set(video);
+    }
+
+    onToggleDomainFilters(): void {
+        this.isDomainFilterOn.set(false);
     }
 
     cancel(): void {
@@ -96,6 +81,6 @@ export class VideoSelectorModalComponent extends IonModal {
     }
 
     submit(): void {
-        this._modalController.dismiss(this.selectedVideo, 'submit');
+        this._modalController.dismiss(this.selectedVideo(), 'submit');
     }
 }

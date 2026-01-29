@@ -1,13 +1,15 @@
 import { AnimeKindType } from '@app/shared/types/shikimori/anime-kind.type';
 import { MangaKindType } from '@app/shared/types/shikimori/manga-kind.type';
+import { ResourceIdType } from '@app/shared/types/resource-id.type';
 import { UserImagesInterface } from '@app/shared/types/shikimori/user-images.interface';
 import { UserRateStatusType } from '@app/shared/types/shikimori/user-rate-status.type';
+import { UserRateTargetEnum } from '@app/shared/types/shikimori/user-rate-target.enum';
 
 export type AnimeReleaseStatus = 'anons' | 'ongoing' | 'released';
 export type MangaReleaseStatus = 'anons' | 'ongoing' | 'released' | 'paused' | 'discontinued';
 
 export interface RateUserInfo {
-    id: number;
+    id: ResourceIdType;
     nickname: string;
     avatar: string;
     image: UserImagesInterface;
@@ -22,7 +24,7 @@ export interface RateImage {
 }
 
 export interface Rate<K = string, S = string> {
-    id: number;
+    id: ResourceIdType;
     name: string;
     russian: string;
     image: RateImage;
@@ -50,7 +52,7 @@ export interface MangaRate extends Rate<MangaKindType, MangaReleaseStatus> {
 }
 
 interface UserFullRate<T> {
-    id: number;
+    id: ResourceIdType;
     score: number;
     status: UserRateStatusType;
     text: string | null;
@@ -61,9 +63,9 @@ interface UserFullRate<T> {
     rewatches: number;
     created_at: string;
     updated_at: string;
-    user_id: number;
-    target_id: number;
-    target_type: 'Anime' | 'Manga';
+    user_id: ResourceIdType;
+    target_id: ResourceIdType;
+    target_type: UserRateTargetEnum;
     anime: T;
     manga: T;
 }

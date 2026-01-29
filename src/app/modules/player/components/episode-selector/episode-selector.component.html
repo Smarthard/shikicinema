@@ -1,15 +1,14 @@
 <ng-scrollbar
-    #episodesScrollbar
     class="scrollbar"
     orientation="horizontal"
     appearance="compact"
     visibility="hover">
     <div class="episode-selector__wrapper">
-        @for (episode of episodes(); track episode) {
+        @for (i of maxEpisode() | repeat; track $index) {
+            @let episode = i + 1;
             @let isNotAired = episode > maxAiredEpisode();
 
             <app-episode-selector-item
-                #episodeEl
                 [episode]="episode"
                 [isWatched]="episode <= maxWatchedEpisode()"
                 [isSelected]="episode === selected()"
@@ -22,12 +21,11 @@
             />
         } @empty {
             @if (isLoading()) {
-                @for (episode of episodesSkeleton; track $index) {
+                @for (episode of 50 | repeat; track $index) {
                     <app-episode-selector-item class="skeleton" [episode]="episode" />
                 }
             } @else {
                 <app-episode-selector-item
-                    #episodeEl
                     [episode]="1"
                     [isSelected]="true"
                 />

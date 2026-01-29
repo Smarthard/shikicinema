@@ -4,6 +4,7 @@ import {
     ViewEncapsulation,
     input,
     output,
+    signal,
 } from '@angular/core';
 
 @Component({
@@ -25,10 +26,10 @@ export class AbstractImageCardComponent {
 
     imageLoad = output<HTMLImageElement>();
 
-    protected isLoading: boolean;
+    protected isLoading = signal(true);
 
     protected onImageLoad(image: EventTarget): void {
-        this.isLoading = false;
+        this.isLoading.set(false);
         this.imageLoad.emit(image as HTMLImageElement);
     }
 }

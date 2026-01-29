@@ -1,27 +1,24 @@
 @use 'src/scss/mixins' as *;
 
-$grid-side-columns-width: 160px;
+$grid-side-columns-width: 10rem;
 $grid-searchbar-column-width: 10fr;
 
+.ion-toolbar {
+  --background: transparent;
+  --border-color: transparent;
+}
+
 .toolbar {
-    display: grid;
+    display: flex;
     align-items: center;
-    grid-template-columns: $grid-searchbar-column-width repeat(2, calc($grid-side-columns-width / 2));
-    min-height: 64px;
+    min-height: var(--shc-header-height);
 
     &__search {
-        padding: 0 10px;
-    }
-
-    @include media-breakpoint-down('md') {
-        &--searchbar_focused {
-            grid-template-columns: 1fr;
-        }
+        padding: 0 !important;
+        margin-left: 1rem !important;
     }
 
     @include media-breakpoint-up('lg') {
-        grid-template-columns: $grid-side-columns-width $grid-searchbar-column-width repeat(2, calc($grid-side-columns-width / 2));
-
         &__menu-btn {
             margin-left: auto;
         }
@@ -46,6 +43,10 @@ $grid-searchbar-column-width: 10fr;
             padding: 0;
         }
     }
+}
+
+.avatar-btn {
+    --opacity: 1;
 }
 
 .user-item {

@@ -1,12 +1,10 @@
 import {
     ChangeDetectionStrategy,
-    ChangeDetectorRef,
     Component,
-    ElementRef,
     HostBinding,
     Input,
-    NgZone,
     ViewEncapsulation,
+    inject,
 } from '@angular/core';
 import {
     IonButton,
@@ -20,6 +18,7 @@ import {
     IonToolbar,
     ModalController,
 } from '@ionic/angular/standalone';
+import { TranslocoPipe } from '@jsverse/transloco';
 
 @Component({
     selector: 'app-episode-selector-modal',
@@ -33,6 +32,7 @@ import {
         IonPicker,
         IonPickerColumn,
         IonPickerColumnOption,
+        TranslocoPipe,
     ],
     templateUrl: './episode-selector-modal.component.html',
     styleUrl: './episode-selector-modal.component.scss',
@@ -41,7 +41,9 @@ import {
 })
 export class EpisodeSelectorModalComponent extends IonModal {
     @HostBinding('class.episode-selector-modal')
-    private episodeSelectorModalClass = true;
+    protected episodeSelectorModalClass = true;
+
+    private readonly _modalController = inject(ModalController);
 
     private _selected = 1;
 
@@ -55,16 +57,6 @@ export class EpisodeSelectorModalComponent extends IonModal {
 
     get selected(): number {
         return this._selected;
-    }
-
-    // TODO: инжект ModalController - костыль, нужно убрать вместе со всем конструктором (см. нижнее todo)
-    constructor(
-        private readonly _modalController: ModalController,
-        private readonly _changeDetectorRef: ChangeDetectorRef,
-        private readonly _elementRef: ElementRef,
-        private readonly _zone: NgZone,
-    ) {
-        super(_changeDetectorRef, _elementRef, _zone);
     }
 
     onSelectedChange(event: CustomEvent): void {

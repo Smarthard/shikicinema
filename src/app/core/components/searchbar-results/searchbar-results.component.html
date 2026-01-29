@@ -12,7 +12,7 @@
             @for (result of results(); track trackById($index, result)) {
                 <ion-item
                     class="anime-search-list-item"
-                    tabindex="0"
+                    button="true"
                     (click)="onResultClick($event, result, 'internal')"
                     (keydown.enter)="onResultClick($event, result, 'internal')"
                     (keydown.space)="onResultClick($event, result, 'internal')"
@@ -47,7 +47,7 @@
 
                         @if (result.aired_on) {
                             <ion-text class="anime-info__year">
-                                {{ 'GLOBAL.COMMON.DATES.YEAR' | transloco: { year: (result.aired_on | date: 'YYYY') } }}
+                                {{ 'GLOBAL.COMMON.DATES.YEAR' | transloco: { year: (result.aired_on | date: 'yyyy') } }}
                             </ion-text>
                         }
 
@@ -96,7 +96,7 @@
 
 <ng-template #loadingSkeleton>
     <ion-list class="anime-search-list">
-        @for (_ of fakeResults; track $index) {
+        @for (_ of 5 | repeat; track $index) {
             <ion-item class="anime-search-list-item">
                 <app-skeleton-block
                     class="anime-search-list-item__image"

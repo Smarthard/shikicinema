@@ -1,18 +1,9 @@
-import { AsyncPipe, NgTemplateOutlet, UpperCasePipe } from '@angular/common';
-import {
-    BehaviorSubject,
-    Observable,
-    Subject,
-    combineLatest,
-    firstValueFrom,
-} from 'rxjs';
-import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import {
     ChangeDetectionStrategy,
     Component,
-    OnInit,
     ViewEncapsulation,
     inject,
+    signal,
 } from '@angular/core';
 import {
     IonButton,
@@ -24,21 +15,13 @@ import {
     IonPopover,
     IonSearchbar,
     IonText,
-    IonTitle,
     IonToggle,
     IonToolbar,
 } from '@ionic/angular/standalone';
 import { NavigationExtras, Router, RouterLink } from '@angular/router';
+import { NgTemplateOutlet, UpperCasePipe } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
-import {
-    distinctUntilChanged,
-    filter,
-    map,
-    shareReplay,
-    take,
-    tap,
-} from 'rxjs/operators';
 
 import { B64encodePipe } from '@app/shared/pipes/base64/b64encode.pipe';
 import { ResultOpenTarget, SearchbarResult } from '@app/shared/types/searchbar.types';
@@ -51,7 +34,7 @@ import {
 import {
     selectShikimoriAnimeSearchLoading,
     selectShikimoriCurrentUser,
-    selectShikimoriCurrentUserAvatar,
+    selectShikimoriCurrentUserAvatarHiRes,
     selectShikimoriCurrentUserNickname,
     selectShikimoriCurrentUserProfileLink,
     selectShikimoriDomain,
@@ -68,7 +51,6 @@ import { updateLanguageAction, updateThemeAction } from '@app-root/app/store/set
     imports: [
         IonHeader,
         IonToolbar,
-        IonTitle,
         IonSearchbar,
         IonButton,
         IonIcon,
@@ -78,7 +60,6 @@ import { updateLanguageAction, updateThemeAction } from '@app-root/app/store/set
         IonItem,
         IonText,
         IonToggle,
-        AsyncPipe,
         RouterLink,
         UpperCasePipe,
         TranslocoPipe,
@@ -89,58 +70,31 @@ import { updateLanguageAction, updateThemeAction } from '@app-root/app/store/set
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent {
     private readonly store = inject(Store);
     private readonly router = inject(Router);
     private readonly transloco = inject(TranslocoService);
-    private readonly breakpointObserver = inject(BreakpointObserver);
 
     private readonly shikimoriDomain = this.store.selectSignal(selectShikimoriDomain);
 
-    readonly currentUser$ = this.store.select(selectShikimoriCurrentUser);
-    readonly theme$ = this.store.select(selectTheme);
-    readonly foundAnimes$ = this.store.select(selectShikimoriFoundAnimes);
-    readonly isSearchResultsLoading$ = this.store.select(selectShikimoriAnimeSearchLoading);
-    readonly avatarImg$ = this.store.select(selectShikimoriCurrentUserAvatar);
-    readonly nickname$ = this.store.select(selectShikimoriCurrentUserNickname);
-    readonly profileLink$ = this.store.select(selectShikimoriCurrentUserProfileLink);
+    readonly currentUser = this.store.selectSignal(selectShikimoriCurrentUser);
+    readonly theme = this.store.selectSignal(selectTheme);
+    readonly foundAnimes = this.store.selectSignal(selectShikimoriFoundAnimes);
+    readonly isSearchResultsLoading = this.store.selectSignal(selectShikimoriAnimeSearchLoading);
+    readonly avatarImg = this.store.selectSignal(selectShikimoriCurrentUserAvatarHiRes);
+    readonly nickname = this.store.selectSignal(selectShikimoriCurrentUserNickname);
+    readonly profileLink = this.store.selectSignal(selectShikimoriCurrentUserProfileLink);
 
     readonly availableLangs = this.transloco.getAvailableLangs() as string[];
 
-    isAnimeListPopoverOpen: boolean;
-    isSearchbarFocusedOnMobile$: Observable<boolean>;
-    isSearchingInCyrillic: boolean;
-
-    private searchbarFocusedSubject$: Subject<boolean>;
-
-    ngOnInit() {
-        this.initializeValues();
-    }
-
-    initializeValues(): void {
-        this.searchbarFocusedSubject$ = new BehaviorSubject<boolean>(false);
-        this.isAnimeListPopoverOpen = false;
-
-        this.isSearchbarFocusedOnMobile$ = combineLatest([
-            this.searchbarFocusedSubject$,
-            this.breakpointObserver.observe([
-                Breakpoints.XSmall,
-                Breakpoints.Small,
-                Breakpoints.Medium,
-            ]),
-        ]).pipe(
-            map(([hasFocus, { matches }]) => hasFocus && matches),
-            distinctUntilChanged(),
-            shareReplay(1),
-        );
-    }
+    readonly isAnimeListPopoverOpen = signal(false);
+    readonly isSearchingInCyrillic = signal(false);
 
     toShikimoriProfilePage(): void {
-        this.profileLink$.pipe(
-            take(1),
-            filter((profileLink) => !!profileLink),
-            tap((profileLink) => window.open(profileLink)),
-        ).subscribe();
+        if (this.profileLink()) {
+            // TODO: для native-app это не нужно
+            window.open(this.profileLink());
+        }
     }
 
     shikimoriLogin(): void {
@@ -156,23 +110,23 @@ export class HeaderComponent implements OnInit {
         const action = searchStr ? findAnimeAction({ searchStr }) : resetFoundAnimeAction();
 
         this.store.dispatch(action);
-        this.isAnimeListPopoverOpen = true;
-        this.isSearchingInCyrillic = /[а-яё]+/i.test(searchStr);
-    }
 
-    onSearchbarFocusChange(hasFocus: boolean): void {
-        this.searchbarFocusedSubject$.next(hasFocus);
+        if (searchStr) {
+            const isCyrillic = /[а-яё]+/i.test(searchStr);
+
+            this.isAnimeListPopoverOpen.set(true);
+            this.isSearchingInCyrillic.set(isCyrillic);
+        }
     }
 
     async openResult([result, target]: [SearchbarResult, ResultOpenTarget]): Promise<void> {
-        const shikimoriDomain = this.shikimoriDomain();
-        this.isAnimeListPopoverOpen = false;
+        this.isAnimeListPopoverOpen.set(false);
 
         if (target === 'internal') {
             await this.router.navigate(['/player', result.id]);
         } else {
             const extras: NavigationExtras = {
-                queryParams: { link: toBase64(shikimoriDomain + result.url) },
+                queryParams: { link: toBase64(this.shikimoriDomain() + result.url) },
             };
 
             await this.router.navigate(['/external'], extras);
@@ -180,8 +134,7 @@ export class HeaderComponent implements OnInit {
     }
 
     async onChangeTheme(): Promise<void> {
-        const currentTheme = await firstValueFrom(this.theme$);
-        const theme = currentTheme === 'dark' ? 'light' : 'dark';
+        const theme = this.theme() === 'dark' ? 'light' : 'dark';
 
         this.store.dispatch(updateThemeAction({ theme }));
     }

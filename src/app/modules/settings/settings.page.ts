@@ -21,11 +21,19 @@ import {
     IonButton,
     IonContent,
     IonIcon,
+    IonInput,
+    IonItem,
+    IonItemGroup,
+    IonLabel,
+    IonList,
     IonProgressBar,
+    IonReorder,
+    IonReorderGroup,
     IonSelect,
     IonSelectOption,
     IonTextarea,
     IonToggle,
+    ItemReorderEventDetail,
 } from '@ionic/angular/standalone';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
@@ -33,6 +41,7 @@ import { Title } from '@angular/platform-browser';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+import { DEFAULT_ANIME_STATUS_ORDER } from '@app/shared/config/default-anime-status-order.config';
 import { DEFAULT_SHIKIMORI_DOMAIN_TOKEN, SHIKIMORI_DOMAINS } from '@app/core/providers/shikimori-domain';
 import { GetShikimoriPagePipe } from '@app/shared/pipes/get-shikimori-page/get-shikimori-page.pipe';
 import { PersistenceService } from '@app/shared/services/persistence.service';
@@ -43,7 +52,8 @@ import { SettingsGroupComponent } from '@app/modules/settings/components/setting
 import { ThemeSettingsType } from '@app/store/settings/types/theme-settings.type';
 import { ToHumanReadableBytesPipe } from '@app/shared/pipes/to-human-readable-bytes/to-human-readable-bytes.pipe';
 import { authShikimoriAction, logoutShikimoriAction } from '@app/store/auth/actions/auth.actions';
-import { mapSettinsFormToState } from '@app/modules/settings/utils';
+import { getDomain } from '@app/shared/utils/get-domain.function';
+import { mapAnimeStatusOrderToFormArray, mapSettinsFormToState } from '@app/modules/settings/utils';
 import { resetCacheAction } from '@app/store/cache/actions';
 import { selectIsAuthenticated } from '@app/store/auth/selectors/auth.selectors';
 import { selectLastVisitedPage, selectSettings } from '@app/store/settings/selectors/settings.selectors';
@@ -54,6 +64,7 @@ import {
 } from '@app/store/shikimori/selectors/shikimori.selectors';
 import { updateSettingsAction } from '@app/store/settings/actions/settings.actions';
 import { updateShikimoriDomainAction } from '@app/store/shikimori/actions';
+import { urlValidator } from '@app/shared/validators';
 
 
 @Component({
@@ -74,6 +85,13 @@ import { updateShikimoriDomainAction } from '@app/store/shikimori/actions';
         IonButton,
         IonIcon,
         IonTextarea,
+        IonReorderGroup,
+        IonReorder,
+        IonItem,
+        IonItemGroup,
+        IonInput,
+        IonLabel,
+        IonList,
         SettingsGroupComponent,
         ProfileInfoComponent,
         ToHumanReadableBytesPipe,
@@ -85,7 +103,7 @@ import { updateShikimoriDomainAction } from '@app/store/shikimori/actions';
 })
 export class SettingsPage implements OnInit {
     @HostBinding('class.settings-page')
-    private settingsPageClass = true;
+    protected settingsPageClass = true;
 
     private readonly transloco = inject(TranslocoService);
     private readonly title = inject(Title);
@@ -119,12 +137,19 @@ export class SettingsPage implements OnInit {
         playerMode: new FormControl<PlayerModeType>('auto'),
         playerKindDisplayMode: new FormControl<PlayerKindDisplayMode>('special-only'),
         shikimoriDomain: new FormControl<string>(this.defaultShikimoriDomain),
+        useCustomAnimeStatusOrder: new FormControl<boolean>(false),
+        userAnimeStatusOrder: mapAnimeStatusOrderToFormArray(DEFAULT_ANIME_STATUS_ORDER),
+        filterPlayerDomains: new FormControl([]),
     });
 
     readonly themeCtrl = this.settingsForm?.get('theme');
     readonly playerModeCtrl = this.settingsForm?.get('playerMode');
     readonly playerKindDisplayModeCtrl = this.settingsForm?.get('playerKindDisplayMode');
     readonly shikimoriDomainCtrl = this.settingsForm?.get('shikimoriDomain');
+    readonly useCustomAnimeStatusOrder = this.settingsForm?.get('useCustomAnimeStatusOrder');
+    readonly userAnimeStatusOrderCtrl = this.settingsForm?.get('userAnimeStatusOrder');
+    readonly filterPlayerDomainsCtrl = this.settingsForm?.get('filterPlayerDomains');
+    readonly addFilterDomainCtrl = new FormControl('', [urlValidator()]);
 
     readonly localStorageLimit = this.persistenceService.getMaxByxes();
     readonly localStorageUsage$ = new BehaviorSubject(this.persistenceService.getUsedBytes());
@@ -189,5 +214,35 @@ export class SettingsPage implements OnInit {
 
     goToLastPage(): void {
         this.router.navigateByUrl(this.lastVisitedPage());
+    }
+
+    reorderAnimeStatusSections(event: CustomEvent<ItemReorderEventDetail>): void {
+        const newAnimeStatusOrder = [...this.userAnimeStatusOrderCtrl.value];
+        const itemToMove = newAnimeStatusOrder.splice(event.detail.from, 1)[0];
+
+        newAnimeStatusOrder.splice(event.detail.to, 0, itemToMove);
+
+        this.userAnimeStatusOrderCtrl.patchValue(newAnimeStatusOrder);
+
+        event.detail.complete(true);
+    }
+
+    addNewDomainFilter(): void {
+        if (this.addFilterDomainCtrl.valid) {
+            const { value: rawDomain } = this.addFilterDomainCtrl;
+            const newDomain = getDomain(rawDomain);
+            const { value: oldDomains } = this.filterPlayerDomainsCtrl;
+            const newFilters = [...new Set([...oldDomains, newDomain])];
+
+            this.filterPlayerDomainsCtrl.setValue(newFilters);
+            this.addFilterDomainCtrl.reset();
+        }
+    }
+
+    deleteDomainFilter(domain: string): void {
+        const { value: domains } = this.filterPlayerDomainsCtrl;
+        const newDomains = (domains || [])?.filter((d) => d !== domain);
+
+        this.filterPlayerDomainsCtrl.setValue(newDomains);
     }
 }

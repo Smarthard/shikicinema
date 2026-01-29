@@ -3,9 +3,9 @@ import { AsyncPipe } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
-    Inject,
     OnInit,
     ViewEncapsulation,
+    inject,
 } from '@angular/core';
 import { EMPTY, Observable } from 'rxjs';
 import { IonContent, IonSpinner } from '@ionic/angular/standalone';
@@ -37,14 +37,12 @@ import { fromBase64 } from '@app/shared/utils/base64-utils';
     encapsulation: ViewEncapsulation.None,
 })
 export class GoExternalPage implements OnInit {
+    private route = inject(ActivatedRoute);
+    private router = inject(Router);
+    private platformApi = inject<PlatformApi>(PLATFORM_API_TOKEN);
+
     exLink$: Observable<string>;
     exDomain$: Observable<string>;
-
-    constructor(
-        private route: ActivatedRoute,
-        private router: Router,
-        @Inject(PLATFORM_API_TOKEN) private platformApi: PlatformApi,
-    ) {}
 
     ngOnInit() {
         this.initializeValues();

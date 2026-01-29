@@ -13,26 +13,35 @@ import {
     take,
 } from 'rxjs/operators';
 
-import { AnimeBriefInfoInterface } from '@app/shared/types/shikimori/anime-brief-info.interface';
-import { Comment } from '@app/shared/types/shikimori/comment';
-import { CommentableEnum } from '@app/shared//types/shikimori/commentable.enum';
-import { CreateComment } from '@app/shared/types/shikimori/create-comment.interface';
-import { Credentials } from '@app/shared/types/shikimori/credentials';
-import { EpisodeNotification } from '@app/shared//types/shikimori/episode-notification.interface';
-import { EpisodeNotificationResponse } from '@app/shared/types/shikimori/episode-notification-response.interface';
-import { FindAnimeQuery } from '@app/shared/types/shikimori/queries/find-anime-query';
-import { ResourceIdType } from '@app/shared/types/resource-id.type';
+import {
+    AnimeBriefInfoInterface,
+    Comment,
+    CommentableEnum,
+    CreateComment,
+    Credentials,
+    EpisodeNotification,
+    EpisodeNotificationResponse,
+    Topic,
+    UserAnimeRate,
+    UserBriefInfoInterface,
+    UserBriefRateInterface,
+    UserInterface,
+    UserRateTargetEnum,
+} from '@app/shared/types/shikimori';
+import { AnimeRatesMetadataGQLResponse, UserAnimeRatesGQLResponse } from '@app/shared/types/shikimori/graphql';
+import { FindAnimeQuery, UserAnimeRatesQuery } from '@app/shared/types/shikimori/queries';
+import { ResourceIdType } from '@app/shared/types';
 import { ShikimoriCredentials } from '@app/store/auth/types/auth-store.interface';
-import { Topic } from '@app/shared/types/shikimori/topic';
-import { UserAnimeRate } from '@app/shared/types/shikimori/user-anime-rate';
-import { UserAnimeRatesQuery } from '@app/shared/types/shikimori/queries/user-anime-rates-query';
-import { UserBriefInfoInterface } from '@app/shared/types/shikimori/user-brief-info.interface';
-import { UserBriefRateInterface } from '@app/shared/types/shikimori/user-brief-rate.interface';
-import { UserInterface } from '@app/shared/types/shikimori/user.interface';
 import { environment } from '@app-env/environment';
+import {
+    mapAnimeRatesMetadataGQL,
+    mapAnimeRatesMetadataGQLQuery,
+    mapUserAnimeRatesGQL,
+    mapUserRatesGQLQuery,
+    toShikimoriCredentials,
+} from '@app/shared/types/shikimori/mappers';
 import { selectShikimoriDomain } from '@app/store/shikimori/selectors';
-import { setPaginationToParams } from '@app/shared/types/shikimori/helpers/pagination-helper';
-import { toShikimoriCredentials } from '@app/shared/types/shikimori/mappers/auth.mappers';
+import { setPaginationToParams } from '@app/shared/types/shikimori/helpers';
 
 
 @Injectable({
@@ -123,12 +132,10 @@ export class ShikimoriClient {
         );
     }
 
-    getUserRates(userId?: ResourceIdType): Observable<UserBriefRateInterface[]> {
-        let params = new HttpParams();
-
-        if (userId) {
-            params = params.set('user_id', userId);
-        }
+    getUserRates(userId: ResourceIdType, targetType: UserRateTargetEnum): Observable<UserBriefRateInterface[]> {
+        const params = new HttpParams()
+            .set('user_id', userId)
+            .set('target_type', targetType);
 
         return this.shikimoriDomain$.pipe(
             take(1),
@@ -151,6 +158,30 @@ export class ShikimoriClient {
             take(1),
             switchMap(
                 (domain) => this.http.get<UserAnimeRate[]>(`${domain}/api/users/${userId}/anime_rates`, { params }),
+            ),
+        );
+    }
+
+    getUserAnimeRatesMetadataGQL(animeIds: ResourceIdType[]) {
+        const query = mapAnimeRatesMetadataGQLQuery(animeIds);
+
+        return this.shikimoriDomain$.pipe(
+            take(1),
+            switchMap(
+                (domain) => this.http.post<AnimeRatesMetadataGQLResponse>(`${domain}/api/graphql`, { query })
+                    .pipe(map(mapAnimeRatesMetadataGQL)),
+            ),
+        );
+    }
+
+    getUserAnimeRatesGQL(animeRatesQuery: UserAnimeRatesQuery): Observable<UserAnimeRate[]> {
+        const query = mapUserRatesGQLQuery(animeRatesQuery);
+
+        return this.shikimoriDomain$.pipe(
+            take(1),
+            switchMap(
+                (domain) => this.http.post<UserAnimeRatesGQLResponse>(`${domain}/api/graphql`, { query })
+                    .pipe(map(mapUserAnimeRatesGQL)),
             ),
         );
     }
@@ -178,7 +209,7 @@ export class ShikimoriClient {
     getUserRate(
         userId: ResourceIdType,
         targetId: ResourceIdType,
-        targetType: 'Anime' | 'Manga',
+        targetType: UserRateTargetEnum,
     ): Observable<UserAnimeRate[]> {
         const params = new HttpParams()
             .set('user_id', userId)

@@ -1,4 +1,5 @@
 import { UserRateStatusType } from '@app/shared/types/shikimori/user-rate-status.type';
+import { UserRateTargetEnum } from '@app/shared/types/shikimori/user-rate-target.enum';
 
 interface StatusInterface<T> {
     anime: T[];
@@ -10,7 +11,7 @@ interface StatStatusInterface {
     grouped_id: UserRateStatusType;
     name: UserRateStatusType;
     size: number;
-    type: 'Anime' | 'Manga';
+    type: UserRateTargetEnum;
 }
 
 type ScoreNameType = '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9';

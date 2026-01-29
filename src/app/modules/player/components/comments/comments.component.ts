@@ -20,11 +20,11 @@ import {
     ToastController,
 } from '@ionic/angular/standalone';
 import { NgTemplateOutlet } from '@angular/common';
+import { RepeatPipe } from 'ngxtension/repeat-pipe';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 
 import { Comment } from '@app/shared/types/shikimori/comment';
 import { CommentComponent } from '@app/modules/player/components/comment/comment.component';
-import { MakeEmptyArrayPipe } from '@app/shared/pipes/make-empty-array/make-empty-array.pipe';
 import { ResourceIdType } from '@app/shared/types/resource-id.type';
 import { SortByCreatedAtPipe } from '@app/shared/pipes/sort-by-created-at/sort-by-created-at.pipe';
 import { isShowLastItemsPipe } from '@app/modules/player/pipes/is-show-last-items.pipe';
@@ -38,12 +38,12 @@ import { trackById } from '@app/shared/utils/common-ngfor-tracking';
         CommentComponent,
         SortByCreatedAtPipe,
         isShowLastItemsPipe,
-        MakeEmptyArrayPipe,
         IonButton,
         IonLabel,
         IonSpinner,
         NgTemplateOutlet,
         TranslocoPipe,
+        RepeatPipe,
     ],
     providers: [
         ModalController,
@@ -56,7 +56,7 @@ import { trackById } from '@app/shared/utils/common-ngfor-tracking';
 })
 export class CommentsComponent {
     @HostBinding('class.comments')
-    private commentsClass = true;
+    protected commentsClass = true;
 
     isLoading = input<boolean>(true);
 

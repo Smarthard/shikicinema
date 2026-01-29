@@ -6,7 +6,7 @@ import {
     switchMap,
     tap,
 } from 'rxjs';
-import { Pipe, PipeTransform } from '@angular/core';
+import { Pipe, PipeTransform, inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 
 import { DELETED_UPLOADER } from '@app/shared/types/well-known-uploader-ids';
@@ -23,10 +23,8 @@ import { updateUploadersCacheAction } from '@app/store/cache/actions';
     standalone: true,
 })
 export class ToUploaderPipe implements PipeTransform {
-    constructor(
-        private readonly shikimori: ShikimoriClient,
-        private readonly store: Store,
-    ) {}
+    private readonly shikimori = inject(ShikimoriClient);
+    private readonly store = inject(Store);
 
     transform(uploaderId: UploaderIdType): Observable<UploaderInterface> {
         const uploadersCache$ = this.store.select(selectKnownUploaders);

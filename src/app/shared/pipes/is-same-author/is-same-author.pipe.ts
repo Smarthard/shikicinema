@@ -1,4 +1,4 @@
-import { Pipe, PipeTransform } from '@angular/core';
+import { Pipe, PipeTransform, inject } from '@angular/core';
 
 import { TranslocoService } from '@jsverse/transloco';
 import { cleanAuthorName } from '@app/shared/utils/clean-author-name.function';
@@ -9,7 +9,8 @@ import { cleanAuthorName } from '@app/shared/utils/clean-author-name.function';
     standalone: true,
 })
 export class IsSameAuthorPipe implements PipeTransform {
-    constructor(private readonly transloco: TranslocoService) {}
+    private readonly transloco = inject(TranslocoService);
+
     transform(a: string, b: string): boolean {
         const defaultAuthor = this.transloco.translate('GLOBAL.VIDEO.AUTHORS.DEFAULT_NAME');
 

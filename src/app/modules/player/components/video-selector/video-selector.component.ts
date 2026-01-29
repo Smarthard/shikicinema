@@ -11,12 +11,18 @@ import {
     signal,
     untracked,
 } from '@angular/core';
-import { IonAccordionGroup } from '@ionic/angular/standalone';
+import {
+    IonAccordionGroup,
+    IonButton,
+    IonIcon,
+    IonText,
+} from '@ionic/angular/standalone';
 import { NgScrollbar } from 'ngx-scrollbar';
-import { TranslocoService } from '@jsverse/transloco';
+import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { toSignal } from '@angular/core/rxjs-interop';
 
 import { FilterByAuthorPipe } from '@app/shared/pipes/filter-by-author/filter-by-author.pipe';
+import { IncludesPipe } from '@app/shared/pipes/includes/includes.pipe';
 import { PlayerKindDisplayMode } from '@app/store/settings/types/player-kind-display-mode.type';
 import { VideoInfoInterface } from '@app/modules/player/types';
 import { VideoSelectorItemComponent } from '@app/modules/player/components/video-selector-item';
@@ -28,8 +34,13 @@ import { cleanAuthorName } from '@app/shared/utils/clean-author-name.function';
     standalone: true,
     imports: [
         IonAccordionGroup,
+        IonButton,
+        IonIcon,
+        IonText,
         FilterByAuthorPipe,
+        IncludesPipe,
         NgScrollbar,
+        TranslocoPipe,
         VideoSelectorItemComponent,
     ],
     templateUrl: './video-selector.component.html',
@@ -39,7 +50,7 @@ import { cleanAuthorName } from '@app/shared/utils/clean-author-name.function';
 })
 export class VideoSelectorComponent {
     @HostBinding('class.video-selector')
-    private videoSelectorClass = true;
+    protected videoSelectorClass = true;
 
     private readonly transloco = inject(TranslocoService);
 
@@ -48,9 +59,11 @@ export class VideoSelectorComponent {
     selected = input<VideoInfoInterface>();
     videos = input<VideoInfoInterface[]>();
     kindDisplayMode = input<PlayerKindDisplayMode>();
-    warnAvailability = input<string[]>();
+    warnAvailability = input<string[]>([]);
+    hasUnfilteredVideos = input<boolean>(false);
 
     selection = output<VideoInfoInterface>();
+    disableFilters = output<void>();
 
     readonly openedByDefaultAuthors = signal<string[]>([]);
 

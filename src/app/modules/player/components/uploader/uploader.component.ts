@@ -28,7 +28,7 @@ import { isWellKnownUploaderPipe } from '@app/modules/player/pipes/is-known-uplo
 })
 export class UploaderComponent {
     @HostBinding('class.uploader')
-    private uploaderClass = true;
+    protected uploaderClass = true;
 
     @Input()
     uploader: UploaderInterface;

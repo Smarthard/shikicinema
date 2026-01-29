@@ -2,12 +2,14 @@
 
 .player {
     display: flex;
+    border-radius: .25rem;
 
     &__video {
         flex: 1 0;
         overflow: hidden;
         background-color: var(--box-shadow);
         border: 0;
+        border-radius: inherit;
 
         &--has-banner {
             display: flex;

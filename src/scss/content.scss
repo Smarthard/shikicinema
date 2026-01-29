@@ -1,4 +1,4 @@
 .page-content::part(scroll) {
-    margin-top: 64px;
+    padding-top: var(--shc-header-height);
     scrollbar-width: thin;
 }

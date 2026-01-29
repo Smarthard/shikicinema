@@ -4,6 +4,10 @@
     overflow: hidden;
     // for ionic ripple effect -->
 
+    &.skeleton {
+        color: transparent;
+    }
+
     user-select: none;
     display: flex;
     align-items: center;

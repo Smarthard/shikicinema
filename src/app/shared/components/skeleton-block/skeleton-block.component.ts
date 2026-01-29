@@ -16,7 +16,7 @@ import {
 })
 export class SkeletonBlockComponent {
     @HostBinding('class.skeleton-block')
-    private skeletonBlockClass = true;
+    protected skeletonBlockClass = true;
 
     height = input.required<string>();
     width = input.required<string>();

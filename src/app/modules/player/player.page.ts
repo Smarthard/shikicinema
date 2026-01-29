@@ -38,10 +38,6 @@ import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { timer } from 'rxjs';
 
 import { AnimeBriefInfoInterface } from '@app/shared/types/shikimori/anime-brief-info.interface';
-import {
-    AuthorAvailabilityWarningPipe,
-    ToUploaderPipe,
-} from '@app/modules/player/pipes';
 import { Comment } from '@app/shared/types/shikimori/comment';
 import { CommentsComponent } from '@app/modules/player/components/comments/comments.component';
 import { ControlPanelComponent } from '@app/modules/player/components/control-panel/control-panel.component';
@@ -56,12 +52,20 @@ import { ShikimoriAnimeLinkPipe } from '@app/shared/pipes/shikimori-anime-link/s
 import { SidePanelComponent } from '@app/modules/player/components/side-panel/side-panel.component';
 import { SkeletonBlockComponent } from '@app/shared/components/skeleton-block/skeleton-block.component';
 import { SwipeDirective } from '@app/shared/directives/swipe.directive';
+import { ToUploaderPipe } from '@app/modules/player/pipes';
 import { UploaderComponent } from '@app/modules/player/components/uploader/uploader.component';
 import { UserCommentFormComponent } from '@app/modules/player/components/user-comment-form/user-comment-form.component';
 import { VideoInfoInterface } from '@app/modules/player/types';
 import { VideoKindEnum } from '@app/modules/player/types/video-kind.enum';
 import { VideoSelectorComponent } from '@app/modules/player/components/video-selector/video-selector.component';
 import { authShikimoriAction } from '@app/store/auth/actions/auth.actions';
+import {
+    authorAvailability,
+    filterVideosByDomains,
+    getLastAiredEpisode,
+    getMaxEpisode,
+    isEpisodeWatched,
+} from '@app/modules/player/utils';
 import {
     deleteCommentAction,
     editCommentAction,
@@ -77,11 +81,11 @@ import { filterByEpisode } from '@app/shared/utils/filter-by-episode.function';
 import { filterVideosByPreferences } from '@app/modules/player/utils/filter-videos-by-preferences.function';
 import { getAnimeName } from '@app/shared/utils/get-anime-name.function';
 import { getDomain } from '@app/shared/utils/get-domain.function';
-import { getLastAiredEpisode, getMaxEpisode, isEpisodeWatched } from '@app/modules/player/utils';
 import { isEq } from '@app/shared/utils/is-eq.function';
 import { isEqId } from '@app/shared/utils/is-eq-id.function';
 import {
     selectAuthorPreferencesByAnime,
+    selectDomainFilters,
     selectDomainPreferencesByAnime,
     selectKindPreferencesByAnime,
     selectPlayerKindDisplayMode,
@@ -128,7 +132,6 @@ import { visitAnimePageAction } from '@app/modules/home/store/recent-animes/acti
         UserCommentFormComponent,
         ShikimoriAnimeLinkPipe,
         GetShikimoriPagePipe,
-        AuthorAvailabilityWarningPipe,
         SidePanelComponent,
         IonText,
         IonContent,
@@ -138,7 +141,7 @@ import { visitAnimePageAction } from '@app/modules/home/store/recent-animes/acti
 })
 export class PlayerPage implements OnInit {
     @HostBinding('class.player-page')
-    private playerPageClass = true;
+    protected playerPageClass = true;
 
     private readonly store = inject(Store);
     private readonly router = inject(Router);
@@ -151,8 +154,8 @@ export class PlayerPage implements OnInit {
     private readonly modalController = inject(ModalController);
     private readonly destroyRef = inject(DestroyRef);
 
-    readonly animeId = input<string>(null);
-    readonly episode = input<string>();
+    readonly animeId = input.required<string>();
+    readonly episode = input.required<string>();
 
     private readonly userCommentFormEl = viewChild('userCommentForm', { read: ElementRef });
 
@@ -160,6 +163,7 @@ export class PlayerPage implements OnInit {
     readonly playerMode = this.store.selectSignal(selectPlayerMode);
     readonly playerKindDisplayMode = this.store.selectSignal(selectPlayerKindDisplayMode);
     readonly isUserAuthorized = this.store.selectSignal(selectIsAuthenticated);
+    readonly domainFilters = this.store.selectSignal(selectDomainFilters);
 
     readonly isMediaMatch = toSignal(this.breakpointObserver.observe([
         '(max-width: 1599px) and (max-resolution: 1dppx)',
@@ -201,13 +205,24 @@ export class PlayerPage implements OnInit {
     animeName = computed(() => getAnimeName(this.anime(), this.userSelectedLanguage()));
     isWatched = computed(() => isEpisodeWatched(this.episodeQ(), this.userRate()));
     isRewatching = computed(() => this.userRate()?.status === 'rewatching');
-    episodeVideos = computed(() => filterByEpisode(this.videos(), this.episodeQ()));
+
+    isDomainFilterOn = signal(true);
+    episodeVideosUnfiltered = computed(() => filterByEpisode(this.videos(), this.episodeQ()));
+    episodeVideosFiltered = computed(() => filterVideosByDomains(this.episodeVideosUnfiltered(), this.domainFilters()));
+    episodeVideos = computed(() => this.isDomainFilterOn()
+        ? this.episodeVideosFiltered()
+        : this.episodeVideosUnfiltered(),
+    );
+    hasUnfilteredVideos = computed(() => this.episodeVideosUnfiltered()?.length > 0 && this.isDomainFilterOn());
+
     nextEpisodeAt = computed(() => {
         const nextEpisodeAt = this.anime()?.next_episode_at;
         const isCurrentEpisodeNotAired = this.episodeQ() > this.lastAiredEpisode();
 
         return isCurrentEpisodeNotAired ? nextEpisodeAt : null;
     });
+
+    authorAvailability = computed(() => authorAvailability(this.videos(), this.lastAiredEpisode()));
 
     currentVideo = signal<VideoInfoInterface>(null);
     currentKind = signal<VideoKindEnum>(null);
@@ -330,6 +345,9 @@ export class PlayerPage implements OnInit {
         const animeId = this.animeIdQ();
         const maxEpisodes = this.maxEpisode();
 
+        // сброс видео для корректной работы заглушек выхода серий
+        this.currentVideo.set(null);
+
         if (episode <= maxEpisodes && episode > 0) {
             void this.router.navigate(['/player', animeId, episode]);
         }
@@ -337,10 +355,17 @@ export class PlayerPage implements OnInit {
 
     // TODO: для модалок нужно придумать какой-то сервис - слишком много бойлерплейта
     async onOpenVideoSelectorModal(): Promise<void> {
+        const prevVideo = this.currentVideo();
+
         const componentProps = {
-            videos: this.episodeVideos(),
-            selectedKind: this.currentKind(),
-            selectedVideo: this.currentVideo(),
+            videos: this.videos,
+            episodeVideos: this.episodeVideos,
+            kindDisplayMode: this.playerKindDisplayMode,
+            isDomainFilterOn: this.isDomainFilterOn,
+            hasUnfilteredVideos: this.hasUnfilteredVideos,
+            selectedKind: this.currentKind,
+            selectedVideo: this.currentVideo,
+            lastAiredEpisode: this.lastAiredEpisode,
         };
         const { VideoSelectorModalComponent } = await import('@app/modules/player/components/video-selector-modal');
 
@@ -351,10 +376,10 @@ export class PlayerPage implements OnInit {
 
         modal.present();
 
-        const { data: newSelected, role } = await modal.onDidDismiss<VideoInfoInterface>();
+        const { role } = await modal.onDidDismiss<VideoInfoInterface>();
 
-        if (role === 'submit') {
-            this.onVideoChange(newSelected);
+        if (role === 'cancel') {
+            this.onVideoChange(prevVideo);
         }
     }
 
@@ -470,5 +495,9 @@ export class PlayerPage implements OnInit {
 
     onCancelCommentEdit(): void {
         this.editComment.set(null);
+    }
+
+    setDomainFilters(isEnabled: boolean): void {
+        this.isDomainFilterOn.set(isEnabled);
     }
 }

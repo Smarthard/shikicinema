@@ -1,1 +1,1 @@
-export * from './anime-rates.reducer';
+export { animeRatesReducer } from './anime-rates.reducer';

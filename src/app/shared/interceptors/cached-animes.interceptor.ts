@@ -34,6 +34,7 @@ export const cachedAnimeInterceptor: HttpInterceptorFn = (request, next) => {
         const [animeId = -1] = request?.url?.match(/\d+/);
 
         const animeFromCache$ = store.select(selectCachedAnimeById(animeId));
+
         const userRate$: Observable<UserAnimeRate> = actions$.pipe(
             ofType(getUserRateSuccessAction, getUserRateFailureAction),
             take(1),
@@ -45,9 +46,18 @@ export const cachedAnimeInterceptor: HttpInterceptorFn = (request, next) => {
             catchError(() => of(null)),
         );
 
-        return store.select(selectShikimoriCurrentUser).pipe(
+        const user$ = store.select(selectShikimoriCurrentUser).pipe(
             first((user) => !!user?.id),
-            tap((user) => store.dispatch(getUserRateAction({ userId: user.id, animeId }))),
+            tap((user) => {
+                if (user) {
+                    store.dispatch(getUserRateAction({ userId: user.id, animeId }));
+                }
+            }),
+            timeout(5_000),
+            catchError(() => of(null)),
+        );
+
+        return user$.pipe(
             switchMap(() => animeFromCache$),
             combineLatestWith(userRate$),
             take(1),

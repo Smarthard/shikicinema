@@ -1,19 +1,19 @@
 import {
     ChangeDetectionStrategy,
     Component,
-    ElementRef,
     HostBinding,
     ViewEncapsulation,
-    computed,
+    afterEveryRender,
     effect,
     inject,
     input,
     output,
+    signal,
     viewChild,
-    viewChildren,
 } from '@angular/core';
 import { NgScrollbar } from 'ngx-scrollbar';
 import { NgxTippyModule } from 'ngx-tippy-wrapper';
+import { RepeatPipe } from 'ngxtension/repeat-pipe';
 import { TranslocoService } from '@jsverse/transloco';
 import { toSignal } from '@angular/core/rxjs-interop';
 
@@ -26,6 +26,7 @@ import { EpisodeSelectorItemComponent } from '@app/modules/player/components/epi
         NgScrollbar,
         NgxTippyModule,
         EpisodeSelectorItemComponent,
+        RepeatPipe,
     ],
     templateUrl: './episode-selector.component.html',
     styleUrl: './episode-selector.component.scss',
@@ -34,14 +35,13 @@ import { EpisodeSelectorItemComponent } from '@app/modules/player/components/epi
 })
 export class EpisodeSelectorComponent {
     @HostBinding('class.episode-selector')
-    private episodeSelectorClass = true;
+    protected episodeSelectorClass = true;
 
     private readonly transloco = inject(TranslocoService);
 
-    readonly episodesScrollbar = viewChild<NgScrollbar>('episodesScrollbar');
-    readonly episodesEl = viewChildren<ElementRef>('episodeEl');
+    private readonly scrollbar = viewChild(NgScrollbar);
 
-    readonly episodesSkeleton = new Array<number>(50);
+    private readonly isEpisodeChanged = signal(false);
 
     readonly notAiredText = toSignal(
         this.transloco.selectTranslate('PLAYER_MODULE.PLAYER_PAGE.PLAYER.EPISODE_IS_NOT_AIRED'),
@@ -55,21 +55,24 @@ export class EpisodeSelectorComponent {
 
     selection = output<number>();
 
-    episodes = computed(() => new Array(this.maxEpisode()).fill(0).map((_, index) => index + 1));
-
-    private scrollToEpisode(episode: number) {
-        this.episodesScrollbar()?.scrollToElement(`#episode-${episode}`, { duration: 800 });
+    constructor() {
+        afterEveryRender({
+            read: () => {
+                if (!this.isLoading() && this.isEpisodeChanged()) {
+                    this.isEpisodeChanged.set(false);
+                    this.scrollToEpisode(this.selected());
+                }
+            },
+        });
     }
 
-    onEpisodeSelectionChangeEffect = effect(() => {
-        const selectedEpisode = this.selected();
-        const episodesEl = this.episodesEl();
-        const scrollbarEl = this.episodesScrollbar();
-
-        if (scrollbarEl && episodesEl?.length) {
-            this.scrollToEpisode(selectedEpisode);
-        }
+    readonly selectedEpisodeChangedEffect = effect(() => {
+        this.isEpisodeChanged.set(Number.isInteger(this.selected()));
     });
+
+    private scrollToEpisode(episode: number): void {
+        this.scrollbar()?.scrollToElement(`#episode-${episode}`, { duration: 800 });
+    }
 
     onEpisodeSelect(episode: number): void {
         this.selection.emit(episode);

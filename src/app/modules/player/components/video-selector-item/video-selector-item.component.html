@@ -5,7 +5,7 @@
                 class="author-accordion__item">
             <ion-label class="author-accordion__header"
                     [color]="selected()?.author | isSameAuthor: author() | getColorForSelectable">
-                {{ author() }}
+                <span class="author text-ellipsis">{{ author() }}</span>
 
                 @if (!isAvailableForAllEpisodes()) {
                     <ion-icon
@@ -54,6 +54,7 @@
                     expand="block"
                     [color]="selected() | isSameVideo: video | getColorForSelectable"
                     [title]="video?.url"
+                    (auxclick)="$event.stopPropagation(); onOpenVideoInOtherTab(video)"
                     (click)="$event.stopPropagation(); selectVideo.emit(video)">
 
                     {{ video?.url | getUrlDomain }}

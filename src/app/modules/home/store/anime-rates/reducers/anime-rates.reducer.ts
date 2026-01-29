@@ -1,59 +1,39 @@
 import { createReducer, on } from '@ngrx/store';
 
-import { AnimeRatesStoreInterface } from '@app/modules/home/store/anime-rates/types/anime-rates-store.interface';
+import { AnimeRatesStoreInterface } from '@app/modules/home/store/anime-rates/types';
+import { filterDuplicatedIds } from '@app/shared/utils/filter-duplicated-ids.function';
 import {
-    allPagesLoadedForStatusAction,
-    incrementPageForStatusAction,
-} from '@app/modules/home/store/anime-rates/actions/anime-rate-paging.actions';
-import {
-    getRateLoadedKey,
-    getRatePageKey,
-    getRateStoreKey,
-} from '@app/modules/home/store/anime-rates/utils/anime-rates-store-key.helpers';
-import { loadAnimeRateByStatusSuccessAction } from '@app/modules/home/store/anime-rates/actions/load-anime-rate.action';
+    loadAllUserAnimeRatesAction,
+    loadAllUserAnimeRatesSuccessAction,
+    pageLoadSuccessAction,
+} from '@app/modules/home/store/anime-rates/actions';
 
 const initialState: AnimeRatesStoreInterface = {
-    planned: [],
-    watching: [],
-    rewatching: [],
-    completed: [],
-    onHold: [],
-    dropped: [],
-    plannedPage: 1,
-    watchingPage: 1,
-    completedPage: 1,
-    rewatchingPage: 1,
-    onHoldPage: 1,
-    droppedPage: 1,
-    isCompletedLoaded: false,
-    isDroppedLoaded: false,
-    isOnHoldLoaded: false,
-    isPlannedLoaded: false,
-    isRewatchingLoaded: false,
-    isWatchingLoaded: false,
+    rates: [],
+    isRatesLoading: true,
 };
 
 const reducer = createReducer(
     initialState,
     on(
-        allPagesLoadedForStatusAction,
-        (state, { status }) => ({
+        loadAllUserAnimeRatesAction,
+        () => ({ ...initialState }),
+    ),
+    on(
+        loadAllUserAnimeRatesSuccessAction,
+        (state) => ({
             ...state,
-            [getRateLoadedKey(status)]: true,
+            isRatesLoading: false,
         }),
     ),
     on(
-        loadAnimeRateByStatusSuccessAction,
-        (state, { status, rates }) => ({
+        pageLoadSuccessAction,
+        (state, { rates }) => ({
             ...state,
-            [getRateStoreKey(status)]: rates,
-        }),
-    ),
-    on(
-        incrementPageForStatusAction,
-        (state, { status }) => ({
-            ...state,
-            [getRatePageKey(status)]: state[getRatePageKey(status)] + 1,
+            rates: [
+                ...state.rates,
+                ...rates,
+            ].filter(filterDuplicatedIds),
         }),
     ),
 );

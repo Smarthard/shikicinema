@@ -7,6 +7,7 @@
         [width]="width()"
         [name]="name()"
         [imageUrl]="imageUrl()"
+        [hasPriority]="hasPriority()"
         (imageLoad)="onImageLoad($event)"
         (mouseover)="mouseOver = true"
         (mouseleave)="mouseOver = false"
@@ -15,37 +16,48 @@
     />
 </a>
 
-@if (isLoading) {
+@if (isLoading()) {
     <app-skeleton-block
-        class="card-grid-item__name card-grid-item__name--skeleton"
-        [height]="'33px'"
-        [width]="width()"
+        class="card-grid-item__name"
+        height="1.08rem"
+        width="100%"
+        borderRadius="0.25rem"
     />
+
+    <div class="card-grid-item__other-info card-grid-item__other-info--skeleton">
+        <app-skeleton-block
+            height="0.8625rem"
+            width="3rem"
+            borderRadius="0.25rem"
+        />
+
+        <app-skeleton-block
+            height="0.8625rem"
+            width="2.5rem"
+            borderRadius="0.25rem"
+        />
+    </div>
+} @else {
+    <h2
+        class="card-grid-item__name"
+        [ngxTippy]="name()"
+        [tippyProps]="{
+            'placement': 'top'
+        }"
+        [ngStyle]="{
+            'max-width': width()
+        }"
+    >
+        {{ name() }}
+    </h2>
+
+    <footer class="card-grid-item__other-info">
+        @if (kind()) {
+            <span>{{ 'GLOBAL.SHIKIMORI.ANIME_KINDS.' + (kind() | uppercase) | transloco }}</span>
+        }
+
+        @if (releaseDate()) {
+            <time [dateTime]="releaseDate()">{{ releaseDate() | date: 'yyyy' }}</time>
+        }
+    </footer>
 }
-
-<h2
-    class="card-grid-item__name"
-    [class.ion-hide]="isLoading"
-    [ngxTippy]="name()"
-    [tippyProps]="{
-        'placement': 'top'
-    }"
-    [ngStyle]="{
-        'max-width': width()
-    }"
->
-    {{ name() }}
-</h2>
-
-<footer
-    class="card-grid-item__other-info"
-    [class.ion-hide]="isLoading"
->
-    @if (kind()) {
-        <span>{{ 'GLOBAL.SHIKIMORI.ANIME_KINDS.' + (kind() | uppercase) | transloco }}</span>
-    }
-
-    @if (releaseDate()) {
-        <time [dateTime]="releaseDate()">{{ releaseDate() | date: 'YYYY' }}</time>
-    }
-</footer>

@@ -1,33 +1,15 @@
-<ion-header [translucent]="true">
-    <ion-toolbar>
-        <div
-            class="toolbar"
-            [class.toolbar--searchbar_focused]="(isSearchbarFocusedOnMobile$ | async) === true"
-        >
-            <ion-title class="toolbar__title ion-hide-lg-down">
-                <a [routerLink]="(currentUser$ | async) ? '/home' : null">{{ 'GLOBAL.APP_NAME' | transloco }}</a>
-            </ion-title>
-
+<!-- translucent не работает в mode="md" -->
+<ion-header mode="ios" translucent="true">
+    <ion-toolbar class="ion-toolbar">
+        <div class="toolbar">
             <ion-searchbar
+                #animeSearchbar
                 id="anime-searchbar"
                 class="toolbar__search"
-                debounce="500"
+                debounce="1000"
                 (ionInput)="onAnimeSearch($event)"
-                (click)="isAnimeListPopoverOpen = true"
-                (ionFocus)="onSearchbarFocusChange(true)"
-                (ionBlur)="onSearchbarFocusChange(false)"
                 [placeholder]="'HOME_MODULE.HOME_PAGE.ANIME_SEARCHBAR_PLACEHOLDER' | transloco"
-            ></ion-searchbar>
-
-            <ion-button
-                expand="full"
-                fill="clear"
-                color="medium"
-                size="large"
-                [class.ion-hide-md-down]="(isSearchbarFocusedOnMobile$ | async) === true"
-            >
-                <ion-icon name="notifications"></ion-icon>
-            </ion-button>
+            />
 
             <ion-button
                 id="menu-trigger"
@@ -35,14 +17,13 @@
                 fill="clear"
                 color="medium"
                 size="large"
-                class="toolbar__menu-btn user-item"
-                [class.ion-hide-md-down]="(isSearchbarFocusedOnMobile$ | async) === true"
+                class="toolbar__menu-btn user-item avatar-btn"
                 (auxclick)="toShikimoriProfilePage()"
             >
-                @if (avatarImg$ | async) {
+                @if (avatarImg()) {
                     <img
-                        [src]="avatarImg$ | async"
-                        [alt]="nickname$ | async"
+                        [src]="avatarImg()"
+                        [alt]="nickname()"
                         class="user-item__avatar"
                     />
                 } @else {
@@ -55,6 +36,7 @@
         </div>
 
         <ion-popover
+            mode="md"
             trigger="anime-searchbar"
             triggerAction="context-menu"
             size="cover"
@@ -62,22 +44,25 @@
             alignment="center"
             arrow="false"
             keyboardClose="false"
-            [isOpen]="isAnimeListPopoverOpen"
+            focusTrap="true"
+            [isOpen]="isAnimeListPopoverOpen()"
             [showBackdrop]="false"
-            (didDismiss)="isAnimeListPopoverOpen = false"
+            (didPresent)="animeSearchbar.setFocus()"
+            (didDismiss)="isAnimeListPopoverOpen.set(false)"
         >
             <ng-template>
                 <app-searchbar-results
-                    [results]="foundAnimes$ | async"
-                    [isLoading]="isSearchResultsLoading$ | async"
-                    [originalNameFirst]="!isSearchingInCyrillic"
+                    [results]="foundAnimes()"
+                    [isLoading]="isSearchResultsLoading()"
+                    [originalNameFirst]="!isSearchingInCyrillic()"
                     (openResult)="openResult($event)"
-                ></app-searchbar-results>
+                />
             </ng-template>
         </ion-popover>
 
         <ion-popover
             #menuPopover
+            mode="md"
             class="menu-popover"
             trigger="menu-trigger"
             triggerAction="click"
@@ -86,12 +71,10 @@
             (click)="menuPopover.dismiss()"
         >
             <ng-template>
-                @if (currentUser$ | async; as currentUser) {
+                @if (currentUser(); as currentUser) {
                     <ng-template
                         [ngTemplateOutlet]="signedInUserMenuTemplate"
-                        [ngTemplateOutletContext]="{
-                            currentUser: currentUser
-                        }"
+                        [ngTemplateOutletContext]="{ currentUser }"
                     ></ng-template>
                 } @else {
                     <ng-template [ngTemplateOutlet]="noUserMenuTemplate"></ng-template>
@@ -189,15 +172,15 @@
                 </ion-text>
             </ion-item>
 
-            @if ((theme$ | async) !== 'custom') {
+            @if (theme() !== 'custom') {
                 <ion-item class="menu-item">
                     <ion-toggle
                         labelPlacement="end"
                         justify="start"
-                        [checked]="(theme$ | async) === 'dark'"
+                        [checked]="theme() === 'dark'"
                         (ionChange)="onChangeTheme()"
                     >
-                        {{ 'GLOBAL.HEADER.TOOLBAR_MENU.THEME_TOGGLE.' + (theme$ | async | uppercase) | transloco }}
+                        {{ 'GLOBAL.HEADER.TOOLBAR_MENU.THEME_TOGGLE.' + (theme() | uppercase) | transloco }}
                     </ion-toggle>
                 </ion-item>
             }
@@ -273,10 +256,10 @@
                 <ion-toggle
                     labelPlacement="end"
                     justify="start"
-                    [checked]="(theme$ | async) === 'dark'"
+                    [checked]="theme() === 'dark'"
                     (ionChange)="onChangeTheme()"
                 >
-                    {{ 'GLOBAL.HEADER.TOOLBAR_MENU.THEME_TOGGLE.' + (theme$ | async | uppercase) | transloco }}
+                    {{ 'GLOBAL.HEADER.TOOLBAR_MENU.THEME_TOGGLE.' + (theme() | uppercase) | transloco }}
                 </ion-toggle>
             </ion-item>
 

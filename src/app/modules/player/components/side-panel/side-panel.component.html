@@ -1,8 +1,8 @@
-@if (isMinified) {
+@if (isMinified()) {
     <ion-button
         class="side-panel__upload-btn"
         fill="clear"
-        [disabled]="isLoading"
+        [disabled]="isLoading()"
         (click)="onOpenUploadModal()">
         <ion-icon slot="icon-only" name="cloud-upload-outline" />
     </ion-button>
@@ -10,13 +10,27 @@
     <ion-button
         class="side-panel__upload-btn"
         fill="clear"
-        [disabled]="isLoading"
+        [disabled]="isLoading()"
         (click)="onOpenUploadModal()">
         <ion-icon slot="start" name="cloud-upload-outline" />
         {{ 'PLAYER_MODULE.PLAYER_PAGE.UPLOAD_VIDEO.FORM_ACTIONS.UPLOAD' | transloco }}
     </ion-button>
 
-    <ion-button class="side-panel__settings-btn" fill="clear" routerLink="/settings">
-        <ion-icon slot="icon-only" name="settings-outline" />
-    </ion-button>
+    <div class="side-panel__pull-right-wrap">
+        @if (showDomainFilters()) {
+            <ion-button
+                class="side-panel__settings-btn"
+                fill="clear"
+                (click)="filtersToggle.emit(!isDomainFiltersActive())">
+                <ion-icon slot="icon-only" [name]="funnelIcon()" />
+            </ion-button>
+        }
+
+        <ion-button
+            class="side-panel__settings-btn"
+            fill="clear"
+            routerLink="/settings">
+            <ion-icon slot="icon-only" name="settings-outline" />
+        </ion-button>
+    </div>
 }

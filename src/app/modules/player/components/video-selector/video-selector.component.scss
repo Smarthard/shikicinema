@@ -9,4 +9,12 @@
         --scrollbar-thumb-color: var(--shc-scrollbar-color);
         --scrollbar-track-color: var(--shc-scrollbar-background-color);
     }
+
+    &__empty {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 60vh;
+    }
 }

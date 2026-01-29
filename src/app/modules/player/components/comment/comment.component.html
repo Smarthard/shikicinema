@@ -1,5 +1,9 @@
 <a class="comment__avatar-wrap" [href]="comment()?.user?.url">
-    <app-image-card class="comment__avatar" [imageUrl]="comment()?.user?.image?.x160 || comment()?.user?.avatar" />
+    <app-image-card
+        class="comment__avatar"
+        [imageUrl]="comment()?.user?.image?.x160 || comment()?.user?.avatar"
+        [name]="comment()?.user?.nickname"
+    />
 </a>
 
 <div class="comment__message">
@@ -11,8 +15,8 @@
 
             <div class="comment__date">
                 <time [dateTime]="comment()?.updated_at"
-                    [title]="comment()?.updated_at | date: 'dd.MM.YYYY hh:mm:ss'">
-                    {{ comment()?.updated_at | date: 'dd.MM.YYYY' }}
+                    [title]="comment()?.updated_at | date: 'dd.MM.yyyy hh:mm:ss'">
+                    {{ comment()?.updated_at | date: 'dd.MM.yyyy' }}
                 </time>
             </div>
 

@@ -1,21 +1,33 @@
 import { createAction, props } from '@ngrx/store';
 
-import { ResourceIdType } from '@app/shared/types/resource-id.type';
-import { UserAnimeRate } from '@app/shared/types/shikimori/user-anime-rate';
-import { UserRateStatusType } from '@app/shared/types/shikimori/user-rate-status.type';
+import { ResourceIdType } from '@app/shared/types';
+import { UserAnimeRate } from '@app/shared/types/shikimori';
 
-export const loadAnimeRateByStatusAction = createAction(
-    '[Anime Rates] load anime rate by status',
-    props<{ status: UserRateStatusType; userId: ResourceIdType }>(),
+export const loadAllUserAnimeRatesAction = createAction(
+    '[Anime Rates] load all user anime rates',
+    props<{ userId: ResourceIdType }>(),
 );
 
-export const loadAnimeRateByStatusSuccessAction = createAction(
-    '[Anime Rates] load anime rate by status success',
-    props<{ status: UserRateStatusType; userId: ResourceIdType; rates: UserAnimeRate[]; newRates: UserAnimeRate[] }>(),
+export const loadAllUserAnimeRatesSuccessAction = createAction(
+    '[Anime Rates] load all user anime rates success',
 );
 
-export const loadAnimeRateByStatusFailureAction = createAction(
-    '[Anime Rates] load anime rate by status failure',
-    props<{ status: UserRateStatusType; errors: unknown }>(),
+export const loadAllUserAnimeRatesFailureAction = createAction(
+    '[Anime Rates] load all user anime rates failure',
+    props<{ errors: unknown }>(),
+);
+
+export const nextPageAction = createAction(
+    '[Anime Rates] load next page for user anime rates',
+    props<{ userId: ResourceIdType, page: number }>(),
+);
+
+export const pageLoadSuccessAction = createAction(
+    '[Anime Rates] page load success',
+    props<{
+        userId: ResourceIdType,
+        page: number,
+        rates: UserAnimeRate[],
+    }>(),
 );
 

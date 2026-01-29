@@ -22,6 +22,7 @@ import { merge, of, switchMap } from 'rxjs';
 import { KodikClient, ShikicinemaV1Client, ShikimoriClient } from '@app/shared/services';
 import { UserAnimeRate } from '@app/shared/types/shikimori/user-anime-rate';
 import { UserRateStatusType } from '@app/shared/types/shikimori/user-rate-status.type';
+import { UserRateTargetEnum } from '@app/shared/types/shikimori';
 import {
     addVideosAction,
     deleteCommentAction,
@@ -111,7 +112,8 @@ export class PlayerEffects {
         map(([{ animeId, episode: episodes, isRewarch }, user, rate, anime]) => {
             const maxEpisode = getMaxEpisode(anime);
             const isLastEpisodeWatched = episodes >= maxEpisode;
-            const status: UserRateStatusType = isLastEpisodeWatched
+            const isOngoing = anime.status !== 'released';
+            const status: UserRateStatusType = isLastEpisodeWatched && !isOngoing
                 ? 'completed'
                 : isRewarch ? 'rewatching' : 'watching';
             const rewatches = isLastEpisodeWatched && isRewarch
@@ -124,7 +126,7 @@ export class PlayerEffects {
                 ...rate || {} as UserAnimeRate,
                 user_id: user.id,
                 target_id: animeId,
-                target_type: 'Anime',
+                target_type: UserRateTargetEnum.ANIME,
                 episodes,
                 status,
                 rewatches,
@@ -261,7 +263,7 @@ export class PlayerEffects {
     getUserRate$ = createEffect(() => this.actions$.pipe(
         ofType(getUserRateAction),
         debounceTime(50),
-        switchMap(({ userId, animeId }) => this.shikimori.getUserRate(userId, animeId, 'Anime').pipe(
+        switchMap(({ userId, animeId }) => this.shikimori.getUserRate(userId, animeId, UserRateTargetEnum.ANIME).pipe(
             map((userRates) => getUserRateSuccessAction({ animeId, userRate: userRates?.[0] || null })),
             catchError((error) => {
                 // возможно удален пользователем на самом сайте Шикимори

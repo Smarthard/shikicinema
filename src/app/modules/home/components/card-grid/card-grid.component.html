@@ -1,26 +1,27 @@
-@if (userAnimeRates()?.length) {
-    @for (rate of userAnimeRates(); track $index) {
+@let hasTestedAvif = isSupportsAvif() !== undefined;
+
+@if (!isLoading() && hasTestedAvif) {
+    @for (rate of userAnimeRates(); track trackById($index, rate)) {
+        @let animeId = rate?.anime?.id;
+
         <app-card-grid-item
             class="anime-grid__item"
             height="100%"
             width="auto"
-            [link]="rate.anime | getPlayerLink"
-            [imageUrl]="rate.anime?.image?.original"
-            [name]="rate.anime | getAnimeName: currentLang()"
-            [kind]="rate.anime.kind"
-            [releaseDate]="rate.anime.released_on || rate.anime.aired_on"
+            [link]="animeId | getPlayerLink"
+            [imageUrl]="animeId | getAnimePoster: isHiRes(): isSupportsAvif()"
+            [name]="animeId | getAnimeName: currentLang() | async"
+            [kind]="animeId | getAnimeKind | async"
+            [releaseDate]="animeId | getAnimeReleaseDate | async"
+            [hasPriority]="hasPriority()"
         />
-    }
-
-    @if (isLoading()) {
-        <ng-container [ngTemplateOutlet]="skeletonTemplate" />
     }
 } @else {
     <ng-container [ngTemplateOutlet]="skeletonTemplate" />
 }
 
 <ng-template #skeletonTemplate>
-    @for (_ of userAnimeRatesSkeleton; track $index) {
+    @for (_ of size() | repeat; track $index) {
         <div class="anime-grid__item skeleton-item">
             <app-skeleton-block
                 class="skeleton-item__img responsive-9by13"
@@ -42,14 +43,14 @@
                         class="skeleton-item__text"
                         height="0.8625rem"
                         width="3rem"
-                    borderRadius="0.25rem"
+                        borderRadius="0.25rem"
                     />
 
                     <app-skeleton-block
                         class="skeleton-item__text"
                         height="0.8625rem"
                         width="2.5rem"
-                    borderRadius="0.25rem"
+                        borderRadius="0.25rem"
                     />
                 </div>
             </div>

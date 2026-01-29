@@ -3,6 +3,8 @@
 .card-grid-item {
     display: flex;
     flex-direction: column;
+    // скрываем alt текст для картинок на фоне (т.к. он всё равно заблюрен)
+    font-size: 0;
 
     :focus {
         outline: 0.25rem solid var(--ion-color-primary);
@@ -11,11 +13,19 @@
     }
 
     &__name {
-        margin: 5px 0 0;
+        margin: .25rem 0 0;
         font-size: .9rem;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+
+        @include media-breakpoint-up('xxxl') {
+            font-size: 1.2rem;
+        }
+
+        @include media-breakpoint-up('x4k') {
+            font-size: 2rem;
+        }
     }
 
     &__other-info {
@@ -24,9 +34,22 @@
         display: flex;
         flex-direction: row;
         justify-content: space-between;
+
+        &--skeleton {
+            margin-top: 1px;
+        }
+
+        @include media-breakpoint-up('xxxl') {
+            font-size: 1rem;
+        }
+
+        @include media-breakpoint-up('x4k') {
+            font-size: 1.5rem;
+        }
     }
 
     .wrapper {
         display: contents;
+        position: relative;
     }
 }
