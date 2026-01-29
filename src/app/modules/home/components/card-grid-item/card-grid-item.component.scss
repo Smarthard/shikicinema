@@ -18,6 +18,14 @@
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+
+        @include media-breakpoint-up('xxxl') {
+            font-size: 1.2rem;
+        }
+
+        @include media-breakpoint-up('x4k') {
+            font-size: 2rem;
+        }
     }
 
     &__other-info {
@@ -29,6 +37,14 @@
 
         &--skeleton {
             margin-top: 1px;
+        }
+
+        @include media-breakpoint-up('xxxl') {
+            font-size: 1rem;
+        }
+
+        @include media-breakpoint-up('x4k') {
+            font-size: 1.5rem;
         }
     }
 
