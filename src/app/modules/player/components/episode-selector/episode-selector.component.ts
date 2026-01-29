@@ -4,9 +4,11 @@ import {
     HostBinding,
     ViewEncapsulation,
     afterEveryRender,
+    effect,
     inject,
     input,
     output,
+    signal,
     viewChild,
 } from '@angular/core';
 import { NgScrollbar } from 'ngx-scrollbar';
@@ -39,6 +41,8 @@ export class EpisodeSelectorComponent {
 
     private readonly scrollbar = viewChild(NgScrollbar);
 
+    private readonly isEpisodeChanged = signal(false);
+
     readonly notAiredText = toSignal(
         this.transloco.selectTranslate('PLAYER_MODULE.PLAYER_PAGE.PLAYER.EPISODE_IS_NOT_AIRED'),
     );
@@ -54,12 +58,17 @@ export class EpisodeSelectorComponent {
     constructor() {
         afterEveryRender({
             read: () => {
-                if (!this.isLoading()) {
+                if (!this.isLoading() && this.isEpisodeChanged()) {
+                    this.isEpisodeChanged.set(false);
                     this.scrollToEpisode(this.selected());
                 }
             },
         });
     }
+
+    readonly selectedEpisodeChangedEffect = effect(() => {
+        this.isEpisodeChanged.set(Number.isInteger(this.selected()));
+    });
 
     private scrollToEpisode(episode: number): void {
         this.scrollbar()?.scrollToElement(`#episode-${episode}`, { duration: 800 });
