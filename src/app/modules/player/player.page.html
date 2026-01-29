@@ -72,15 +72,16 @@
             (togglePlayerMode)="togglePlayerMode()"
         />
 
-        @if (isSmallScreen() === false) {
+        @if (!isSmallScreen()) {
             <app-side-panel
                 class="player-page__side-panel"
                 [anime]="anime()"
                 [episode]="episodeQ()"
                 [isLoading]="isAnimeLoading()"
                 [isMinified]="isPanelsMinified()"
+                [isDomainFiltersActive]="isDomainFilterOn()"
                 (uploaded)="onVideoUpload($event)"
-                (filtersToggle)="setDomainFilters(!isDomainFilterOn())"
+                (filtersToggle)="setDomainFilters($event)"
             />
         }
 
@@ -89,7 +90,7 @@
             [comments]="comments()"
             [isLoading]="isCommentsLoading()"
             [isPartialyLoading]="isCommentsPartiallyLoading()"
-            [showMoreButton]="isShownAllComments() === false"
+            [showMoreButton]="!isShownAllComments()"
             [highlightComment]="highlightComment()"
             (showMoreComments)="onShowMoreComments()"
             (editComment)="onCommentEdit($event)"

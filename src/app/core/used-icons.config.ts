@@ -27,5 +27,6 @@ export {
     checkmarkDoneOutline,
     warningOutline,
     addOutline,
+    funnel,
     funnelOutline,
 } from 'ionicons/icons';
