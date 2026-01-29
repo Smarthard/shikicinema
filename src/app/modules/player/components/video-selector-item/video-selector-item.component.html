@@ -54,6 +54,7 @@
                     expand="block"
                     [color]="selected() | isSameVideo: video | getColorForSelectable"
                     [title]="video?.url"
+                    (auxclick)="$event.stopPropagation(); onOpenVideoInOtherTab(video)"
                     (click)="$event.stopPropagation(); selectVideo.emit(video)">
 
                     {{ video?.url | getUrlDomain }}
