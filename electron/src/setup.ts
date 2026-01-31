@@ -1,15 +1,23 @@
-import type { CapacitorElectronConfig } from '@capacitor-community/electron';
-import {
-    CapElectronEventEmitter,
-    CapacitorSplashScreen,
-    setupCapacitorElectronPlugins,
-} from '@capacitor-community/electron';
 import chokidar from 'chokidar';
-import type { MenuItemConstructorOptions } from 'electron';
-import { app, BrowserWindow, Menu, MenuItem, nativeImage, Tray, session } from 'electron';
 import electronIsDev from 'electron-is-dev';
 import electronServe from 'electron-serve';
 import windowStateKeeper, { State } from 'electron-window-state';
+import {
+    BrowserWindow,
+    Menu,
+    MenuItem,
+    MenuItemConstructorOptions,
+    Tray,
+    app,
+    nativeImage,
+    session,
+} from 'electron';
+import {
+    CapElectronEventEmitter,
+    CapacitorElectronConfig,
+    CapacitorSplashScreen,
+    setupCapacitorElectronPlugins,
+} from '@capacitor-community/electron';
 import { join } from 'path';
 
 // Define components for a watcher to detect when the webapp is changed so we can reload in Dev mode.
@@ -66,7 +74,7 @@ export class ElectronCapacitorApp {
     constructor(
         capacitorFileConfig: CapacitorElectronConfig,
         trayMenuTemplate?: (MenuItemConstructorOptions | MenuItem)[],
-        appMenuBarMenuTemplate?: (MenuItemConstructorOptions | MenuItem)[]
+        appMenuBarMenuTemplate?: (MenuItemConstructorOptions | MenuItem)[],
     ) {
         this.capacitorFileConfig = capacitorFileConfig;
 
@@ -80,7 +88,6 @@ export class ElectronCapacitorApp {
             this.appMenuBarMenuTemplate = appMenuBarMenuTemplate;
         }
 
-        // Setup our web app loader, this lets us load apps like react, vue, and angular without changing their build chains.
         this.loadWebApp = electronServe({
             directory: join(app.getAppPath(), 'app'),
             scheme: this.customScheme,
@@ -103,7 +110,7 @@ export class ElectronCapacitorApp {
 
     async init(): Promise<void> {
         const icon = nativeImage.createFromPath(
-            join(app.getAppPath(), 'assets', process.platform === 'win32' ? 'appIcon.ico' : 'appIcon.png')
+            join(app.getAppPath(), 'assets', process.platform === 'win32' ? 'appIcon.ico' : 'appIcon.png'),
         );
         this.mainWindowState = windowStateKeeper({
             defaultWidth: 1000,
@@ -122,8 +129,6 @@ export class ElectronCapacitorApp {
             webPreferences: {
                 nodeIntegration: true,
                 contextIsolation: true,
-                // Use preload to inject the electron varriant overrides for capacitor plugins.
-                // preload: join(app.getAppPath(), "node_modules", "@capacitor-community", "electron", "dist", "runtime", "electron-rt.js"),
                 preload: preloadPath,
             },
         });
@@ -231,6 +236,8 @@ export function setupContentSecurityPolicy(customScheme: string): void {
         'https://*.shikimori.one',
         'https://shikimori.org',
         'https://*.shikimori.org',
+        'https://shiki.one',
+        'https://*.shiki.one',
         'https://smarthard.net',
         'https://*.smarthard.net',
         'https://smarthard.net',
