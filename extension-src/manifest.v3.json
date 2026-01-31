@@ -10,7 +10,7 @@
 
     "description": "Returns video player on Shikimori",
     "content_security_policy": {
-      "extension_pages": "default-src 'self'; img-src *; frame-src *; font-src *; style-src 'unsafe-inline' https://*.googleapis.com; connect-src https://kodikapi.com https://smarthard.net https://shikimori.org https://shikimori.one https://shikimori.me; script-src 'self'"
+      "extension_pages": "default-src 'self'; img-src *; frame-src *; font-src *; style-src 'unsafe-inline' https://*.googleapis.com; connect-src *; script-src 'self'"
     },
 
     "content_scripts": [
@@ -18,7 +18,8 @@
         "matches": [
           "*://shikimori.org/*",
           "*://shikimori.one/*",
-          "*://shikimori.me/*"
+          "*://shikimori.me/*",
+          "*://shiki.one/*"
         ],
         "js": [
           "shikicinema.js"
@@ -58,6 +59,7 @@
       "https://shikimori.org/*",
       "https://shikimori.one/*",
       "https://shikimori.me/*",
+      "https://shiki.one/*",
       "https://smarthard.net/*",
       "https://kodikapi.com/*",
       "https://smotret-anime.online/*"

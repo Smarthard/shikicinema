@@ -37,6 +37,7 @@ import {
     selectContributions,
     selectUploaderId,
 } from '@app/modules/contributions/store/selectors/contributions.selectors';
+import { selectShikimoriDomain } from '@app/store/shikimori/selectors';
 import { trackById } from '@app/shared/utils/common-ngfor-tracking';
 
 
@@ -72,6 +73,7 @@ export class ContributionsPage implements OnInit {
     private readonly destroyRef = inject(DestroyRef);
 
     readonly trackById = trackById;
+    readonly shikimoriDomain = this.store.selectSignal(selectShikimoriDomain);
 
     uploaderName$: Observable<string>;
     uploaderId$: Observable<ResourceIdType>;
