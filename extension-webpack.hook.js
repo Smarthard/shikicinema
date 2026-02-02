@@ -50,6 +50,7 @@ const webpackConfig = {
             files: '**.js',
             exclude: [ 'node_modules', 'dist' ],
             failOnError: true,
+            eslintPath: 'eslint/use-at-your-own-risk'
         }),
         new CopyPlugin({
             patterns: [

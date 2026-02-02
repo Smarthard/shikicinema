@@ -42,14 +42,21 @@ module.exports = {
             'rules': {
                 '@angular-eslint/component-class-suffix': 'off',
                 '@typescript-eslint/no-empty-function': ['error', { 'allow': ['constructors'] }],
-                '@typescript-eslint/no-unused-vars': ['warn', { 'argsIgnorePattern': '^_' }],
+                'no-unused-vars': 'off',
+                '@typescript-eslint/no-unused-vars': ['warn', {
+                    "args": "all",
+                    "argsIgnorePattern": "^_",
+                    "caughtErrors": "all",
+                    "caughtErrorsIgnorePattern": "^_",
+                    "destructuredArrayIgnorePattern": "^_",
+                    "varsIgnorePattern": "^_",
+                    "ignoreRestSiblings": true
+                }],
                 '@typescript-eslint/interface-name-prefix': 'off',
                 '@typescript-eslint/explicit-function-return-type': 'off',
                 '@typescript-eslint/explicit-module-boundary-types': 'off',
                 '@typescript-eslint/no-explicit-any': 'off',
-                '@typescript-eslint/quotes': ['error', 'single'],
                 'semi': 'off',
-                '@typescript-eslint/semi': ['error', 'always'],
                 'no-extra-parens': 'error',
                 'require-atomic-updates': 'error',
                 'block-scoped-var': 'error',
@@ -79,11 +86,7 @@ module.exports = {
                 'no-duplicate-imports': 'error',
                 'no-useless-computed-key': 'error',
                 'no-useless-rename': 'error',
-                // see https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/indent.md
-                'indent': 'off',
-                // see https://github.com/typescript-eslint/typescript-eslint/issues/1824#issuecomment-957559729
-                // indent rules are broken for decorators
-                '@typescript-eslint/indent': [
+                'indent': [
                     'error',
                     4,
                     {

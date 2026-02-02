@@ -4,7 +4,7 @@ export function urlValidator() {
     return (control: FormControl<string>) => {
         try {
             new URL(control?.value);
-        } catch (e) {
+        } catch (_e) {
             return { isNotUrl: true };
         }
 

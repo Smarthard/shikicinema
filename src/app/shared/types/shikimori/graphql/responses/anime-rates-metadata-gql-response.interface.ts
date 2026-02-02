@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/indent */
 import { AnimeGQL } from '@app/shared/types/shikimori/graphql/anime.interface';
 
 export type AnimeRatesMetadataGQL = Pick<AnimeGQL,
