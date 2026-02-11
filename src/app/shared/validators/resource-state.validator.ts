@@ -1,11 +1,13 @@
-import { FormControl } from '@angular/forms';
+import { Validator } from '@angular/forms/signals';
 
 import { ResourceStateEnum } from '@app/shared/types/resource-state.enum';
 
-export function ResourceStateValidator() {
-    return (control: FormControl<ResourceStateEnum>) => {
-        const isLoadFailed = control?.value !== ResourceStateEnum.LOAD_SUCCESS;
+export function ResourceStateValidator(): Validator<ResourceStateEnum> {
+    return ({ value }) => {
+        const isLoadFailed = value() !== ResourceStateEnum.LOAD_SUCCESS;
 
-        return isLoadFailed ? { resourceLoadFail: true } : null;
+        return isLoadFailed
+            ? { kind: 'resourceLoadFail' }
+            : null;
     };
 }

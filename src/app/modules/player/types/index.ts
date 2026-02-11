@@ -1,6 +1,7 @@
-export * from './video-info.interface';
-export * from './uploader.interface';
-export * from './episode-comments.interface';
-export * from './video-quality.enum';
-export * from './video-kind.enum';
-export * from './video-language.enum';
+export { VideoInfoInterface } from './video-info.interface';
+export { UploaderInterface } from './uploader.interface';
+export { EpisodeCommentsInterface } from './episode-comments.interface';
+export { VideoQualityEnum } from './video-quality.enum';
+export { VideoKindEnum } from './video-kind.enum';
+export { VideoLanguageEnum } from './video-language.enum';
+export { VideoUploadFormInterface } from './video-upload-form.interface';
