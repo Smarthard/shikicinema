@@ -39,8 +39,8 @@ import {
     VideoLanguageEnum,
     VideoQualityEnum,
 } from '@app/modules/player/types';
+import { cutUrlFromText, getMaxEpisode } from '@app/modules/player/utils';
 import { getAnimeName } from '@app/shared/utils/get-anime-name.function';
-import { getMaxEpisode } from '@app/modules/player/utils';
 
 
 @Component({
@@ -131,5 +131,15 @@ export class VideoUploadModalComponent extends IonModal implements OnInit {
         const { value } = this.uploadForm;
 
         this._modalController.dismiss(value as VideoInfoInterface, 'submit');
+    }
+
+    cutUrlFromClipboard(event: ClipboardEvent): void {
+        const clipboardText = event.clipboardData.getData('text');
+        const clipboardUrl = cutUrlFromText(clipboardText);
+
+        // вставку текста без обработки отменяем
+        event.preventDefault();
+
+        this.uploadForm.get('url').setValue(clipboardUrl);
     }
 }

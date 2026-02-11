@@ -34,6 +34,7 @@
                 type="url"
                 labelPlacement="floating"
                 fill="outline"
+                (paste)="cutUrlFromClipboard($event)"
                 [label]="'PLAYER_MODULE.PLAYER_PAGE.UPLOAD_VIDEO.FORM.URL.LABEL' | transloco"
                 [placeholder]="'PLAYER_MODULE.PLAYER_PAGE.UPLOAD_VIDEO.FORM.URL.PLACEHOLDER' | transloco"
             />

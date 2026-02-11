@@ -5,3 +5,4 @@ export { getLastUnwatchedEpisode } from './get-last-unwatched-episode.function';
 export { toUserRatesUpdate } from './to-user-rates-update.function';
 export { getMaxEpisode } from './get-max-episodes.function';
 export { authorAvailability } from './authors-availability.function';
+export { cutUrlFromText } from './cut-url-from-text.function';
