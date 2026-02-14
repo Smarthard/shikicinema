@@ -1,6 +1,6 @@
 import { CanActivateChildFn, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { first, map, switchMap } from 'rxjs';
+import { first, map } from 'rxjs';
 import { inject } from '@angular/core';
 
 import { getAnimeInfoAction } from '@app/modules/player/store/actions';
@@ -23,7 +23,7 @@ export const skipWatchedEpisodesGuard: CanActivateChildFn = (route) => {
         return store.select(selectPlayerAnime(animeId)).pipe(
             first((anime) => !!anime?.id),
             map((anime) => getLastUnwatchedEpisode(anime)),
-            switchMap((episode) => router.navigate(['/player', animeId, episode], { replaceUrl: true })),
+            map((episode) => router.createUrlTree(['/player', animeId, episode])),
         );
     }
 };

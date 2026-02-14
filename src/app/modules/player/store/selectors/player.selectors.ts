@@ -6,38 +6,37 @@ import { ResourceIdType } from '@app/shared/types/resource-id.type';
 
 export const selectPlayer = createFeatureSelector<PlayerStoreInterface>('player');
 
-export const selectPlayerVideos = (animeId: string) => createSelector(
+export const selectPlayerVideos = (animeId: ResourceIdType) => createSelector(
     selectPlayer,
     ({ videos }) => videos[animeId] || [],
 );
 
-export const selectPlayerVideosLoading = (animeId: string) => createSelector(
+export const selectPlayerVideosLoading = (animeId: ResourceIdType) => createSelector(
     selectPlayer,
     ({ videos }) => !videos[animeId],
 );
 
-export const selectPlayerAnime = (animeId: string | number) => createSelector(
+export const selectPlayerAnime = (animeId: ResourceIdType) => createSelector(
     selectPlayer,
     ({ animeInfo }) => animeInfo[`${animeId}`] || {} as AnimeBriefInfoInterface,
 );
 
-export const selectPlayerAnimeLoading = (animeId: string | number) => createSelector(
+export const selectPlayerAnimeLoading = (animeId: ResourceIdType) => createSelector(
     selectPlayer,
     ({ animeInfo }) => !animeInfo[`${animeId}`],
 );
 
-export const selectPlayerUserRate = (animeId: string | number) => createSelector(
+export const selectPlayerUserRate = (animeId: ResourceIdType) => createSelector(
     selectPlayerAnime(animeId),
-    // eslint-disable-next-line camelcase
-    ({ user_rate }) => user_rate,
+    ({ user_rate: rate }) => rate,
 );
 
-export const selectPlayerTopic = (animeId: string | number, episode: string | number) => createSelector(
+export const selectPlayerTopic = (animeId: ResourceIdType, episode: ResourceIdType) => createSelector(
     selectPlayer,
     ({ comments }) => comments?.[animeId]?.[episode]?.topic,
 );
 
-export const selectPlayerIsCommentsLoading = (animeId: string | number, episode: string | number) => createSelector(
+export const selectPlayerIsCommentsLoading = (animeId: ResourceIdType, episode: ResourceIdType) => createSelector(
     selectPlayer,
     ({ comments }) => comments?.[animeId]?.[episode]?.isLoading,
 );
@@ -49,12 +48,12 @@ export const selectPlayerIsCommentsPartiallyLoading = (animeId: ResourceIdType, 
             comments?.[animeId]?.[episode]?.comments?.length < comments?.[animeId]?.[episode]?.topic?.comments_count,
     );
 
-export const selectPlayerIsShownAllComments = (animeId: string | number, episode: string | number) => createSelector(
+export const selectPlayerIsShownAllComments = (animeId: ResourceIdType, episode: ResourceIdType) => createSelector(
     selectPlayer,
     ({ comments }) => comments?.[animeId]?.[episode]?.isShownAll,
 );
 
-export const selectPlayerComments = (animeId: string | number, episode: string | number) => createSelector(
+export const selectPlayerComments = (animeId: ResourceIdType, episode: ResourceIdType) => createSelector(
     selectPlayer,
     ({ comments }) => comments?.[animeId]?.[episode]?.comments || [],
 );

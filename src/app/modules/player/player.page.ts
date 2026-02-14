@@ -64,6 +64,7 @@ import {
     filterVideosByDomains,
     getLastAiredEpisode,
     getMaxEpisode,
+    getMaxEpisodeFromVideos,
     isEpisodeWatched,
 } from '@app/modules/player/utils';
 import {
@@ -201,7 +202,8 @@ export class PlayerPage implements OnInit {
     )());
 
     lastAiredEpisode = computed(() => getLastAiredEpisode(this.anime()));
-    maxEpisode = computed(() => getMaxEpisode(this.anime()));
+    maxVideosEpisode = computed(() => getMaxEpisodeFromVideos(this.videos()));
+    maxEpisode = computed(() => getMaxEpisode(this.anime(), this.maxVideosEpisode()));
     animeName = computed(() => getAnimeName(this.anime(), this.userSelectedLanguage()));
     isWatched = computed(() => isEpisodeWatched(this.episodeQ(), this.userRate()));
     isRewatching = computed(() => this.userRate()?.status === 'rewatching');
