@@ -6,12 +6,10 @@ import {
     HostBinding,
     ViewEncapsulation,
     computed,
-    effect,
     inject,
     input,
     output,
     signal,
-    untracked,
 } from '@angular/core';
 import {
     Observable,
@@ -22,6 +20,7 @@ import {
     timer,
 } from 'rxjs';
 import { TranslocoPipe } from '@jsverse/transloco';
+import { explicitEffect } from 'ngxtension/explicit-effect';
 import { shareReplay, take } from 'rxjs/operators';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 
@@ -82,15 +81,11 @@ export class PlayerComponent {
         );
     }
 
-    sourceChangedEffect = effect(() => {
-        this.source();
+    sourceChangedEffect = explicitEffect([this.source], () => {
+        this.loaded.emit(false);
+        this._sourceLoading.set(true);
 
-        untracked(() => {
-            this.loaded.emit(false);
-            this._sourceLoading.set(true);
-
-            this.timeout$ = this._getTimeout(10_000);
-        });
+        this.timeout$ = this._getTimeout(10_000);
     });
 
     onLoad(): void {
