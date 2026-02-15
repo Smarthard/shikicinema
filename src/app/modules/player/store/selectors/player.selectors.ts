@@ -22,8 +22,8 @@ export const selectPlayerAnime = (animeId: ResourceIdType) => createSelector(
 );
 
 export const selectPlayerAnimeLoading = (animeId: ResourceIdType) => createSelector(
-    selectPlayer,
-    ({ animeInfo }) => !animeInfo[`${animeId}`],
+    selectPlayerAnime(animeId),
+    (anime) => !anime,
 );
 
 export const selectPlayerUserRate = (animeId: ResourceIdType) => createSelector(

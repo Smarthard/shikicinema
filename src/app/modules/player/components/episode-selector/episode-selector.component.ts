@@ -15,6 +15,7 @@ import { NgScrollbar } from 'ngx-scrollbar';
 import { NgxTippyModule } from 'ngx-tippy-wrapper';
 import { RepeatPipe } from 'ngxtension/repeat-pipe';
 import { TranslocoService } from '@jsverse/transloco';
+import { effectOnceIf } from 'ngxtension/effect-once-if'
 import { toSignal } from '@angular/core/rxjs-interop';
 
 import { EpisodeSelectorItemComponent } from '@app/modules/player/components/episode-selector-item';
@@ -65,6 +66,11 @@ export class EpisodeSelectorComponent {
             },
         });
     }
+
+    readonly afterLoadedEffect = effectOnceIf(
+        () => !this.isLoading(),
+        () => setTimeout(() => this.scrollToEpisode(this.selected()), 100),
+    );
 
     readonly selectedEpisodeChangedEffect = effect(() => {
         this.isEpisodeChanged.set(Number.isInteger(this.selected()));

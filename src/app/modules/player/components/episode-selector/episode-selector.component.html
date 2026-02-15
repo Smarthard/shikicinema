@@ -22,7 +22,10 @@
         } @empty {
             @if (isLoading()) {
                 @for (episode of 50 | repeat; track $index) {
-                    <app-episode-selector-item class="skeleton" [episode]="episode" />
+                    <app-episode-selector-item
+                        class="skeleton"
+                        [episode]="episode"
+                    />
                 }
             } @else {
                 <app-episode-selector-item
