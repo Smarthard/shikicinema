@@ -3,13 +3,11 @@ import {
     Component,
     HostBinding,
     ViewEncapsulation,
+    afterEveryRender,
     computed,
-    effect,
     inject,
     input,
     output,
-    signal,
-    untracked,
 } from '@angular/core';
 import {
     IonAccordionGroup,
@@ -18,6 +16,7 @@ import {
     IonText,
 } from '@ionic/angular/standalone';
 import { NgScrollbar } from 'ngx-scrollbar';
+import { SignalSet } from 'ngxtension/collections';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { toSignal } from '@angular/core/rxjs-interop';
 
@@ -65,7 +64,9 @@ export class VideoSelectorComponent {
     selection = output<VideoInfoInterface>();
     disableFilters = output<void>();
 
-    readonly openedByDefaultAuthors = signal<string[]>([]);
+    private readonly _openedByDefaultAuthors = new SignalSet<string>();
+
+    readonly openedAuthors = computed(() => [...this._openedByDefaultAuthors])
 
     readonly authors = computed(() => {
         const defaultAuthorName = this.defaultAuthorName();
@@ -77,34 +78,31 @@ export class VideoSelectorComponent {
         return new Set(authors);
     });
 
-    readonly selectedChangeEffect = effect(() => {
-        const selected = this.selected();
-        /*
-            нужно обновить сигнал, если поменялись видео
-            иначе сломается открывашка групп
-         */
-        this.videos();
+    constructor() {
+        afterEveryRender({
+            mixedReadWrite: () => {
+                if (this.selected()) {
+                    this.videos()
+                    const defaultAuthorName = this.defaultAuthorName();
+                    const cleaned = cleanAuthorName(this.selected().author, defaultAuthorName);
 
-        untracked(() => {
-            if (selected) {
-                const defaultAuthorName = this.defaultAuthorName();
-                const cleaned = cleanAuthorName(selected.author, defaultAuthorName);
-
-                this.openedByDefaultAuthors.update((prevAuthors) => [...prevAuthors, cleaned]);
-            }
-        });
-    });
+                    this._openedByDefaultAuthors.add(cleaned);
+                }
+            },
+        })
+    }
 
     onSelectionChange(selectedVideo: VideoInfoInterface): void {
         this.selection.emit(selectedVideo);
     }
 
     onAuthorSectionToggle(author: string): void {
-        const previouslySelected = this.openedByDefaultAuthors();
-        const isClosingClick = previouslySelected.includes(author);
-        const filteredAuthor = previouslySelected.filter((previous) => previous !== author);
-        const withAuthor = [...previouslySelected, author];
+        const isClosingClick = this._openedByDefaultAuthors.has(author);
 
-        this.openedByDefaultAuthors.set(isClosingClick ? filteredAuthor : withAuthor);
+        if (isClosingClick) {
+            this._openedByDefaultAuthors.delete(author);
+        } else {
+            this._openedByDefaultAuthors.add(author);
+        }
     }
 }

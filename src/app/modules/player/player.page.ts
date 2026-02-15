@@ -14,7 +14,6 @@ import {
     inject,
     input,
     signal,
-    untracked,
     viewChild,
 } from '@angular/core';
 import {
@@ -34,6 +33,7 @@ import {
     take,
     tap,
 } from 'rxjs/operators';
+import { explicitEffect } from 'ngxtension/explicit-effect';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { timer } from 'rxjs';
 
@@ -239,16 +239,15 @@ export class PlayerPage implements OnInit {
         this.store.dispatch(getAnimeInfoAction({ animeId }));
     });
 
-    readonly episodeVideosChangeEffect = effect(() => {
-        const videos = this.episodeVideos();
+    readonly episodeVideosChangeEffect = explicitEffect(
+        [this.episodeVideos, this.isVideosLoading],
+        ([videos, isLoading]) => {
+            if (!isLoading && videos?.length > 0) {
+                const author = this.authorPreferences();
+                const domain = this.domainPreferences();
+                const kind = this.kindPreferences();
+                const isPreferencesToggleOn = this.isPreferencesToggleOn();
 
-        untracked(() => {
-            const author = this.authorPreferences();
-            const domain = this.domainPreferences();
-            const kind = this.kindPreferences();
-            const isPreferencesToggleOn = this.isPreferencesToggleOn();
-
-            if (videos?.length > 0) {
                 const relevantVideos = isPreferencesToggleOn
                     ? filterVideosByPreferences(videos, author, domain, kind)
                     : videos;
@@ -270,8 +269,8 @@ export class PlayerPage implements OnInit {
 
                 this.onVideoChange(chosenVideo, false);
             }
-        });
-    });
+        },
+    );
 
     readonly animeOrEpisodeChangeEffect = effect(() => {
         const anime = this.anime();
