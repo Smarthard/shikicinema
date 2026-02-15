@@ -1,7 +1,8 @@
-import { Pipe, PipeTransform } from '@angular/core';
+import { Pipe, PipeTransform, inject } from '@angular/core';
+import { Store } from '@ngrx/store';
 
 import { Comment } from '@app/shared/types/shikimori/comment';
-import { environment } from '@app-env/environment';
+import { selectShikimoriDomain } from '@app/store/shikimori/selectors';
 
 
 @Pipe({
@@ -10,9 +11,10 @@ import { environment } from '@app-env/environment';
     pure: true,
 })
 export class ToCommentUrlPipe implements PipeTransform {
-    readonly SHIKIMORI_URL = environment.shikimori.apiURI;
+    readonly store = inject(Store);
+    readonly SHIKIMORI_URL = this.store.selectSignal(selectShikimoriDomain);
 
     transform(comment: Comment): string {
-        return `${this.SHIKIMORI_URL}/comments/${comment?.id}`;
+        return `${this.SHIKIMORI_URL()}/comments/${comment?.id}`;
     }
 }
