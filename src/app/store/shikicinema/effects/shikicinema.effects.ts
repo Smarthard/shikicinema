@@ -15,11 +15,13 @@ import {
 } from 'rxjs';
 
 import { ShikicinemaV1Client } from '@app/shared/services';
+import { addVideosAction } from '@app/modules/player/store/actions';
 import {
     getUploadTokenAction,
     getUploadTokenFailureAction,
     getUploadTokenSuccessAction,
 } from '@app/store/shikicinema/actions/get-upload-token.action';
+import { shikicinemaToVideo } from '@app/shared/types/shikicinema/v1';
 import {
     uploadVideoAction,
     uploadVideoFailureAction,
@@ -47,6 +49,11 @@ export class ShikicinemaEffects {
             map((video) => uploadVideoSuccessAction({ video })),
             catchError((errors) => of(uploadVideoFailureAction({ errors }))),
         )),
+    ));
+
+    uploadVideoSuccess$ = createEffect(() => this._actions$.pipe(
+        ofType(uploadVideoSuccessAction),
+        map(({ video }) => addVideosAction({ animeId: `${video.anime_id}`, videos: [shikicinemaToVideo(video)] })),
     ));
 
     getUploadTokenFailure$ = createEffect(() => this._actions$.pipe(

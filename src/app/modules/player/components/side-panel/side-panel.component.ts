@@ -56,8 +56,8 @@ export class SidePanelComponent {
     async onOpenUploadModal(): Promise<void> {
         const cssClass = 'side-panel__upload-modal';
         const componentProps = {
-            anime: this.anime(),
-            episode: this.episode(),
+            anime: this.anime,
+            episode: this.episode,
         };
         const { VideoUploadModalComponent } = await import('@app/modules/player/components/video-upload-modal');
 

@@ -1,8 +1,9 @@
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Pipe, PipeTransform, inject } from '@angular/core';
+import { Store } from '@ngrx/store';
 
 import { Comment } from '@app/shared/types/shikimori/comment';
-import { environment } from '@app-env/environment';
+import { selectShikimoriDomain } from '@app/store/shikimori/selectors';
 
 
 @Pipe({
@@ -12,8 +13,9 @@ import { environment } from '@app-env/environment';
 })
 export class ProcessShikimoriHtmlPipe implements PipeTransform {
     private readonly _sanitizer = inject(DomSanitizer);
+    private readonly store = inject(Store);
 
-    private readonly SHIKIMORI_URL = environment.shikimori.apiURI;
+    private readonly SHIKIMORI_URL = this.store.selectSignal(selectShikimoriDomain);
 
     private readonly htmlReplacementMap: Array<[RegExp, string]> = [
         // спойлеры, картинки и т.п. имеют мусорные классы - объединяем в единый интерактивный
@@ -39,7 +41,7 @@ export class ProcessShikimoriHtmlPipe implements PipeTransform {
         for (const smiley of Array.from(processedHtml.querySelectorAll('img.smiley'))) {
             const src = smiley.getAttribute('src');
 
-            smiley.setAttribute('src', `${this.SHIKIMORI_URL}${src}`);
+            smiley.setAttribute('src', `${this.SHIKIMORI_URL()}${src}`);
         }
 
         // вставки с видео заменяем с картинок на iframe'ы

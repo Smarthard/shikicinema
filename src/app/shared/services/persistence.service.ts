@@ -50,7 +50,7 @@ export class PersistenceService {
             for (i = step; i <= 10 * 1024; i += step) {
                 this.setItem('test', new Array(i * 1024).join('a'));
             }
-        } catch (e) {
+        } catch (_e) {
             this.removeItem('test');
         } finally {
             const maxSize = i - step;

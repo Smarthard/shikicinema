@@ -2,6 +2,7 @@
 import { ShikivideosInterface } from '@app/shared/types/shikicinema/v1/shikivideos.interface';
 import { ShikivideosKindType } from '@app/shared/types/shikicinema/v1/shikivideos-kind.type';
 import { UploaderIdType } from '@app/shared/types/uploader-id.type';
+import { VideoInfoInterface } from '@app/modules/player/types/video-info.interface';
 import { VideoKindEnum } from '@app/modules/player/types/video-kind.enum';
 import { VideoMapperFn } from '@app/shared/types/video-mapper.type';
 import { VideoQualityEnum } from '@app/modules/player/types';
@@ -19,12 +20,15 @@ function mapShikicinemaKindToCommon(kind: ShikivideosKindType): VideoKindEnum {
     }
 }
 
-export const shikicinemaVideoMapper: VideoMapperFn<ShikivideosInterface[]> = (videos) => videos?.map(
-    ({ kind, uploader, quality, ...others }) => ({
+export function shikicinemaToVideo({ kind, uploader, quality, ...others }: ShikivideosInterface): VideoInfoInterface {
+    return {
         ...others,
         kind: mapShikicinemaKindToCommon(kind),
         urlType: 'iframe',
         quality: quality as VideoQualityEnum,
         uploader: uploader as UploaderIdType,
-    }),
-);
+    }
+}
+
+export const shikicinemaVideoMapper: VideoMapperFn<ShikivideosInterface[]> =
+    (videos) => videos?.map(shikicinemaToVideo);

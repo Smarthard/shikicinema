@@ -1,8 +1,9 @@
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Pipe, PipeTransform, inject } from '@angular/core';
+import { Store } from '@ngrx/store';
 
 import { Comment } from '@app/shared/types/shikimori/comment';
-import { environment } from '@app-env/environment';
+import { selectShikimoriDomain } from '@app/store/shikimori/selectors';
 
 
 @Pipe({
@@ -12,21 +13,22 @@ import { environment } from '@app-env/environment';
 })
 export class BbToHtmlPipe implements PipeTransform {
     private readonly _sanitizer = inject(DomSanitizer);
+    private readonly store = inject(Store);
 
-    private readonly SHIKIMORI_URL = environment.shikimori.apiURI;
+    private readonly SHIKIMORI = this.store.selectSignal(selectShikimoriDomain);
 
     private readonly bbCodesReplacementMap: Array<[RegExp, string]> = [
         // linebreak
         [/\n/g, '<br>'],
 
         // smileys: :-D :-P :-( :-o :) +_+ and other
-        [/ (:-?[DP(]) /g, `<img class="smiley" title="$1" alt="$1" src="${this.SHIKIMORI_URL}/images/smileys/$1.gif">`],
-        [/ :-o /g, `<img class="smiley" title=":-o" alt=":-o" src="${this.SHIKIMORI_URL}/images/smileys/:-o.gif">`],
-        [/ :\) /g, `<img class="smiley" title=":)" alt=":)" src="${this.SHIKIMORI_URL}/images/smileys/:).gif">`],
-        [/ \+_\+ /g, `<img class="smiley" title="+_+" alt="+_+" src="${this.SHIKIMORI_URL}/images/smileys/+_+.gif">`],
+        [/ (:-?[DP(]) /g, `<img class="smiley" title="$1" alt="$1" src="${this.SHIKIMORI()}/images/smileys/$1.gif">`],
+        [/ :-o /g, `<img class="smiley" title=":-o" alt=":-o" src="${this.SHIKIMORI()}/images/smileys/:-o.gif">`],
+        [/ :\) /g, `<img class="smiley" title=":)" alt=":)" src="${this.SHIKIMORI()}/images/smileys/:).gif">`],
+        [/ \+_\+ /g, `<img class="smiley" title="+_+" alt="+_+" src="${this.SHIKIMORI()}/images/smileys/+_+.gif">`],
         [
             / :(.*?): /g,
-            `<img class="smiley" title=":$1:" alt=":$1:" src="${this.SHIKIMORI_URL}/images/smileys/:$1:.gif">`,
+            `<img class="smiley" title=":$1:" alt=":$1:" src="${this.SHIKIMORI()}/images/smileys/:$1:.gif">`,
         ],
 
         // common rich text formats like bold, underlined and so on
@@ -89,8 +91,8 @@ export class BbToHtmlPipe implements PipeTransform {
             /\[quote=c(.*?);(.*?);(.*?)](.*?)\[\/quote]/ig,
             `<div class="shc-quote">
                 <div class="quoteable">
-                    <a class="shc-links b-user16" href="${this.SHIKIMORI_URL}/comments/$1">
-                        <img src="${this.SHIKIMORI_URL}/system/users/x16/$2.png" alt="$3">
+                    <a class="shc-links b-user16" href="${this.SHIKIMORI()}/comments/$1">
+                        <img src="${this.SHIKIMORI()}/system/users/x16/$2.png" alt="$3">
                         <span>$3</span>
                     </a>
                 </div>$4

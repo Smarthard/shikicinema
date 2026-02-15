@@ -9,7 +9,7 @@ export function getPath(url: string): string {
         path = toUrl instanceof URL
             ? toUrl.pathname + toUrl.search + toUrl.hash
             : url;
-    } catch (e) {
+    } catch (_e) {
         path = url;
     }
 
