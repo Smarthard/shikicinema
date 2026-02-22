@@ -23,3 +23,4 @@ export { UserRateStatusType } from './user-rate-status.type';
 export { UserStatsInterface } from './user-stats.interface';
 export { UserInterface } from './user.interface';
 export { UserRateTargetEnum } from './user-rate-target.enum';
+export { ShikimoriFranchise, AnimeFranchiseItem, FranchiseRelationEnum, FranchiseRelationRussianEnum } from './anime-franchise.interface';

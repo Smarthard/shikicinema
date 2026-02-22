@@ -11,6 +11,7 @@ import {
     editCommentSuccessAction,
     getAnimeInfoSuccessAction,
     getCommentsSuccessAction,
+    getFranchiseSuccessAction,
     getTopicsAction,
     getTopicsSuccessAction,
     getUserRateSuccessAction,
@@ -25,6 +26,7 @@ const initialState: PlayerStoreInterface = {
     videos: {},
     animeInfo: {},
     comments: {},
+    franchise: {},
 };
 
 export const playerReducer = createReducer(initialState,
@@ -174,6 +176,16 @@ export const playerReducer = createReducer(initialState,
                         comments: filterComments(deletedId, state.comments?.[animeId]?.[episode]?.comments),
                     },
                 },
+            },
+        }),
+    ),
+    on(
+        getFranchiseSuccessAction,
+        (state, { animeId, franchise }) => ({
+            ...state,
+            franchise: {
+                ...state.franchise,
+                [animeId]: franchise,
             },
         }),
     ),

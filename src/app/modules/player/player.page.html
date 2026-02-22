@@ -56,6 +56,7 @@
         />
 
         <app-control-panel
+            #controlPanel
             class="player-page__control-panel"
             [anime]="anime()"
             [maxEpisode]="maxEpisode()"
@@ -86,28 +87,41 @@
             />
         }
 
-        <app-comments
-            class="player-page__comments"
-            [comments]="comments()"
-            [isLoading]="isCommentsLoading()"
-            [isPartialyLoading]="isCommentsPartiallyLoading()"
-            [showMoreButton]="!isShownAllComments()"
-            [highlightComment]="highlightComment()"
-            (showMoreComments)="onShowMoreComments()"
-            (editComment)="onCommentEdit($event)"
-            (deleteComment)="onCommentDelete($event)"
-        />
+        <!-- эта фича пока не готова -->
 
-        <app-user-comment-form
-            #userCommentForm
-            class="player-page__comment-form"
-            [isAuthorized]="isUserAuthorized()"
-            [editComment]="editComment()"
-            (send)="onCommentSend($event)"
-            (sendEdited)="onCommentSendEdited($event)"
-            (login)="onCommentLogin()"
-            (highlightEdit)="onHighlightComment($event)"
-            (cancelEdit)="onCancelCommentEdit()"
-        />
+        <!-- @defer (on timer(1000ms)) {
+            <app-franchise
+                class="player-page__franchise"
+                [animeId]="animeIdQ()"
+            />
+        } @placeholder {
+            <div class="player-page__franchise skeleton"></div>
+        } -->
+
+        @defer (on idle) {
+            <app-comments
+                class="player-page__comments"
+                [comments]="comments()"
+                [isLoading]="isCommentsLoading()"
+                [isPartialyLoading]="isCommentsPartiallyLoading()"
+                [showMoreButton]="!isShownAllComments()"
+                [highlightComment]="highlightComment()"
+                (showMoreComments)="onShowMoreComments()"
+                (editComment)="onCommentEdit($event)"
+                (deleteComment)="onCommentDelete($event)"
+            />
+
+            <app-user-comment-form
+                #userCommentForm
+                class="player-page__comment-form"
+                [isAuthorized]="isUserAuthorized()"
+                [editComment]="editComment()"
+                (send)="onCommentSend($event)"
+                (sendEdited)="onCommentSendEdited($event)"
+                (login)="onCommentLogin()"
+                (highlightEdit)="onHighlightComment($event)"
+                (cancelEdit)="onCancelCommentEdit()"
+            />
+        }
     </div>
 </ion-content>

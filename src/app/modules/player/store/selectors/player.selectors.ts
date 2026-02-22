@@ -57,3 +57,13 @@ export const selectPlayerComments = (animeId: ResourceIdType, episode: ResourceI
     selectPlayer,
     ({ comments }) => comments?.[animeId]?.[episode]?.comments || [],
 );
+
+export const selectPlayerIsFranchiseLoading = (animeId: ResourceIdType) => createSelector(
+    selectPlayer,
+    ({ franchise }) => !franchise?.[animeId],
+);
+
+export const selectPlayerFranchise = (animeId: ResourceIdType) => createSelector(
+    selectPlayer,
+    ({ franchise }) => franchise?.[animeId],
+);

@@ -38,6 +38,9 @@ import {
     getCommentsAction,
     getCommentsFailureAction,
     getCommentsSuccessAction,
+    getFranchiseAction,
+    getFranchiseFailureAction,
+    getFranchiseSuccessAction,
     getTopicsAction,
     getTopicsFailureAction,
     getTopicsSuccessAction,
@@ -358,5 +361,13 @@ export class PlayerEffects {
     loadCommentsOnTopicExists$ = createEffect(() => this.actions$.pipe(
         ofType(getTopicsSuccessAction),
         map(({ animeId, episode }) => getCommentsAction({ animeId, episode, page: 1, limit: 30 })),
+    ));
+
+    getFranchise$ = createEffect(() => this.actions$.pipe(
+        ofType(getFranchiseAction),
+        switchMap(({ animeId }) => this.shikimori.getAnimeFranchise(animeId).pipe(
+            map((franchise) => getFranchiseSuccessAction({ animeId, franchise })),
+            catchError((errors) => of(getFranchiseFailureAction({ errors }))),
+        )),
     ));
 }

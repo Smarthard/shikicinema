@@ -21,6 +21,7 @@ import {
     Credentials,
     EpisodeNotification,
     EpisodeNotificationResponse,
+    ShikimoriFranchise,
     Topic,
     UserAnimeRate,
     UserBriefInfoInterface,
@@ -332,5 +333,12 @@ export class ShikimoriClient {
             take(1),
             switchMap((domain) => this.http.delete<void>(`${domain}/api/comments/${commentId}`)),
         );
+    }
+
+    getAnimeFranchise(animeId: ResourceIdType): Observable<ShikimoriFranchise[]> {
+        return this.shikimoriDomain$.pipe(
+            take(1),
+            switchMap((domain) => this.http.get<ShikimoriFranchise[]>(`${domain}/api/animes/${animeId}/related`)),
+        )
     }
 }
