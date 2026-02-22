@@ -238,6 +238,8 @@ export function setupContentSecurityPolicy(customScheme: string): void {
         'https://*.shikimori.org',
         'https://shiki.one',
         'https://*.shiki.one',
+        'https://*.shikimori.io',
+        'https://shikimori.io',
         'https://smarthard.net',
         'https://*.smarthard.net',
         'https://smarthard.net',

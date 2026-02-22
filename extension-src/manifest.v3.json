@@ -19,6 +19,7 @@
           "*://shikimori.org/*",
           "*://shikimori.one/*",
           "*://shikimori.me/*",
+          "*://shikimori.io/*",
           "*://shiki.one/*"
         ],
         "js": [
@@ -59,6 +60,7 @@
       "https://shikimori.org/*",
       "https://shikimori.one/*",
       "https://shikimori.me/*",
+      "https://shikimori.io/*",
       "https://shiki.one/*",
       "https://smarthard.net/*",
       "https://kodikapi.com/*",
