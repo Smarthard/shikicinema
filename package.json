@@ -87,7 +87,7 @@
     "@angular-eslint/template-parser": "^21.2.0",
     "@angular/build": "^21.1.1",
     "@angular/cli": "^21.1.1",
-    "@angular/compiler": "^21.1.1",
+    "@angular/compiler": "^21.2.4",
     "@angular/compiler-cli": "^21.1.1",
     "@angular/language-service": "^21.1.1",
     "@capacitor/cli": "^8.0.1",
