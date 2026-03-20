@@ -113,17 +113,17 @@ export class VideoUploadModalComponent extends IonModal implements OnInit {
     })
 
     ngOnInit(): void {
-        this.uploadForm.episode().setControlValue(this.episode());
+        this.uploadForm.episode().value.set(this.episode());
     }
 
     onUrlLoadReset(): void {
-        this.uploadForm.urlState().setControlValue(ResourceStateEnum.LOADING);
+        this.uploadForm.urlState().value.set(ResourceStateEnum.LOADING);
     }
 
     onUrlLoad(isLoaded: boolean): void {
         const status = isLoaded ? ResourceStateEnum.LOAD_SUCCESS : ResourceStateEnum.LOAD_FAILED;
 
-        this.uploadForm.urlState().setControlValue(status);
+        this.uploadForm.urlState().value.set(status);
     }
 
     cancel(): void {
@@ -142,6 +142,6 @@ export class VideoUploadModalComponent extends IonModal implements OnInit {
         // вставку текста без обработки отменяем
         event.preventDefault();
 
-        this.uploadForm.url().setControlValue(clipboardUrl);
+        this.uploadForm.url().value.set(clipboardUrl);
     }
 }
