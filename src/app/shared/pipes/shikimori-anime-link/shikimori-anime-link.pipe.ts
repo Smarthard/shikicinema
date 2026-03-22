@@ -9,6 +9,6 @@ import { ResourceIdType } from '@app/shared/types/resource-id.type';
 })
 export class ShikimoriAnimeLinkPipe implements PipeTransform {
     transform(animeId: ResourceIdType): string {
-        return `/animes/${animeId}`;
+        return `/animes/${animeId}?ignore302=1`;
     }
 }
