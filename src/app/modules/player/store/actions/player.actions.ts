@@ -4,9 +4,12 @@ import { AnimeBriefInfoInterface } from '@app/shared/types/shikimori/anime-brief
 import { ApiErrorInfo } from '@app/shared/types/shikimori/api-error-info.interface';
 import { Comment } from '@app/shared/types/shikimori/comment';
 import { ResourceIdType } from '@app/shared/types/resource-id.type';
+import { ShikimoriFranchise } from '@app/shared/types/shikimori';
 import { Topic } from '@app/shared/types/shikimori/topic';
 import { UserAnimeRate } from '@app/shared/types/shikimori/user-anime-rate';
 import { VideoInfoInterface } from '@app/modules/player/types';
+
+// TODO: это надо распилить на разные файлы
 
 export const addVideosAction = createAction(
     '[Player] Add videos',
@@ -197,5 +200,25 @@ export const deleteCommentSuccessAction = createAction(
 
 export const deleteCommentFailureAction = createAction(
     '[Player] delete comment failure',
+    props<{ errors: any }>(),
+);
+
+export const getFranchiseAction = createAction(
+    '[Player] get franchise',
+    props<{
+        animeId: ResourceIdType,
+    }>(),
+);
+
+export const getFranchiseSuccessAction = createAction(
+    '[Player] get franchise success',
+    props<{
+        animeId: ResourceIdType,
+        franchise: ShikimoriFranchise[],
+    }>(),
+);
+
+export const getFranchiseFailureAction = createAction(
+    '[Player] get franchise failure',
     props<{ errors: any }>(),
 );

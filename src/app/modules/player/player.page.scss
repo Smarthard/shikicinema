@@ -54,6 +54,15 @@
         max-height: 90vh;
     }
 
+    &__franchise {
+        grid-area: franchise;
+
+        height: 16rem;
+        overflow-x: scroll;
+
+        border-radius: .25rem;
+    }
+
     &__wrapper {
         display: grid;
         row-gap: 1rem;
@@ -63,6 +72,7 @@
         grid-template:  "info info"
                         "player player"
                         "conpan sidepan"
+                        "franchise franchise"
                         "comments comments"
                         "comment-form comment-form";
 
@@ -110,6 +120,7 @@
                     grid-template:  "info   kind"
                                     "player video"
                                     "conpan sidepan"
+                                    "franchise franchise"
                                     "comments comments"
                                     "comment-form comment-form";
 
@@ -135,6 +146,7 @@
             grid-template:  "info   kind"
                             "player video"
                             "conpan sidepan"
+                            "franchise franchise"
                             "comments comments"
                             "comment-form comment-form";
 
@@ -148,6 +160,7 @@
                 grid-template:  "info   kind"
                                 "player video"
                                 "conpan sidepan"
+                                "franchise franchise"
                                 "comments comments"
                                 "comment-form comment-form";
             }

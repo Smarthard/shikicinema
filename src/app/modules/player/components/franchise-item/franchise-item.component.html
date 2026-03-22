@@ -1,0 +1,12 @@
+<app-image-card
+    class="franchise-item__img"
+    [imageUrl]="`https://smarthard.net/static/animes/${animeId()}.avif`"
+    [name]="name()"
+    [ngxTippy]="name()"
+/>
+
+<span
+    class="franchise-item__relation text-ellipsis"
+    [ngxTippy]="relation()">
+    {{ relation() | toFranchiseRelation }}
+</span>

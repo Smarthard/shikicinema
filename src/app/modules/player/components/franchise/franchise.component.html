@@ -1,0 +1,11 @@
+@for (item of sortedFranchise(); track trackById($index, item.anime)) {
+    @let link = `/player/${item.anime.id}/1`;
+
+    <app-franchise-item
+        [franchiseItem]="item"
+        [isEnglishNames]="isEnglishNamesPrefered()"
+        [routerLink]="link"
+        (keydown.space)="onNavigate(link)"
+        (keydown.enter)="onNavigate(link)"
+    />
+}

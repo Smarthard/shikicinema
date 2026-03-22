@@ -1,0 +1,53 @@
+.franchise-item {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+
+    border: .125rem solid transparent;
+    border-radius: .25rem;
+
+    cursor: pointer;
+
+    &:hover,
+    &:focus {
+        border-color: var(--ion-color-primary);
+
+        .franchise-item__relation {
+            display: none;
+        }
+    }
+
+    &.sequel {
+        .franchise-item__relation {
+            background-color: var(--ion-color-primary);
+        }
+    }
+
+    &.prequel {
+        .franchise-item__relation {
+            color: var(--ion-color-warning-contrast);
+            background-color: var(--ion-color-warning);
+        }
+    }
+
+    &__img {
+        display: block;
+        height: 16rem;
+        width: 9rem;
+        min-width: 9rem;
+    }
+
+    &__relation {
+        position: absolute;
+        top: .5rem;
+        right: .5rem;
+
+        font-size: .825rem;
+        padding: .25rem .5rem;
+        border-radius: 0.5rem;
+        background-color: var(--ion-color-light-tint);
+
+        max-width: 9rem;
+        white-space: nowrap;
+    }
+}
