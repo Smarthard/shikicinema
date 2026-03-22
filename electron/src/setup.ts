@@ -244,7 +244,7 @@ export function setupContentSecurityPolicy(customScheme: string): void {
         'https://*.smarthard.net',
         'https://smarthard.net',
         'https://*.smarthard.net',
-        'https://kodikapi.com',
+        'https://kodik-api.com',
         'https://*.recaptcha.net',
         'https://*.gstatic.com',
         'https://vk.com',

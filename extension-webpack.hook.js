@@ -65,7 +65,8 @@ const webpackConfig = {
             ]
         }),
         new webpack.DefinePlugin({
-            'process.env.KODIK_AUTH_TOKEN': JSON.stringify(process.env.KODIK_AUTH_TOKEN)
+            'process.env.KODIK_API_URI': JSON.stringify(process.env.KODIK_API_URI),
+            'process.env.KODIK_AUTH_TOKEN': JSON.stringify(process.env.KODIK_AUTH_TOKEN),
         })
     ],
     optimization: {
