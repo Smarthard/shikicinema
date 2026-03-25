@@ -5,6 +5,11 @@ import { VideoMapperFn } from '@app/shared/types/video-mapper.type';
 import { mapKodikKind } from '@app/shared/types/kodik/mappers/map-kodik-kind.function';
 import { mapKodikQuality } from '@app/shared/types/kodik/mappers/map-kodik-quality.function';
 
+function toHttps(url: string): string {
+    return /^\/\//.test(url)
+        ? url.replace(/^\/\//, 'https://')
+        : url;
+}
 
 export const kodikVideoMapper: VideoMapperFn<KodikApiResponse<KodikAnimeInfo>> = ({ results }) => results.flatMap(
     ({ seasons, translation, quality: kodikQuality, link }) => {
@@ -18,13 +23,13 @@ export const kodikVideoMapper: VideoMapperFn<KodikApiResponse<KodikAnimeInfo>> =
             const seasonIndex = Object.keys(seasons)?.filter((season) => Number(season) > 0)?.[0];
             const episodesObj = seasons?.[seasonIndex]?.episodes || {} as KodikEpisodes;
 
-            for (const [episode, url] of Object.entries(episodesObj)) {
+            for (const [episode, url] of Object.entries<string>(episodesObj)) {
                 episodes.push({
                     quality,
                     author,
                     kind,
                     uploader,
-                    url: url as string,
+                    url: toHttps(url),
                     episode: Number(episode),
                     urlType: 'iframe',
                     language: 'ru',
@@ -38,7 +43,7 @@ export const kodikVideoMapper: VideoMapperFn<KodikApiResponse<KodikAnimeInfo>> =
                 author,
                 kind,
                 uploader,
-                url: link as string,
+                url: toHttps(link),
                 episode: 1,
                 urlType: 'iframe',
                 language: 'ru',
