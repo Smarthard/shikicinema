@@ -7,11 +7,6 @@
         font-size: 1rem;
     }
 
-    $player-min-height: 30vh;
-    $player-max-height: 60vh;
-    $player-min-width: calc($player-min-height * 16/9);
-    $player-max-width: calc($player-max-height * 16/9);
-
     &__title {
         max-width: 50vw;
 
@@ -64,22 +59,15 @@
     }
 
     &__wrapper {
-        display: grid;
-        row-gap: 1rem;
+        display: flex;
+        flex-direction: column;
 
         justify-content: center;
 
-        grid-template:  "info info"
-                        "player player"
-                        "conpan sidepan"
-                        "franchise franchise"
-                        "comments comments"
-                        "comment-form comment-form";
+        row-gap: 1rem;
+        margin-top: .5rem;
 
         &--mobile {
-            display: flex;
-            flex-direction: column;
-
             .control-panel__episode-wrapper {
                 min-width: 3.125rem;
 
@@ -92,56 +80,14 @@
             }
 
             @include media-breakpoint-up('md') {
+                margin-top: .75rem;
                 justify-content: unset;
             }
         }
 
-        @include media-breakpoint-up('xxl') {
-            // чтобы не сломалось отображение на планшетах
-            &:not(.player-page__wrapper--mobile) {
-
-                // от 1400px до 1600px - скрываем боковые панели, т.к. для них слишком мало места
-                // для экранов с высоким DPI эта граница немного меньше
-                @media (max-width: 1599px) and (max-resolution: 1dppx),
-                (max-width: 1399px) and (min-resolution: 2dppx)
-                {
-                    grid-template-rows: auto $player-max-height;
-                    grid-template-columns: $player-max-width min-content;
-                }
-
-                // тут стили для обычных десктопных 16:9 (или около того) экранов
-                @media (min-width: 1600px) and (max-resolution: 1dppx),
-                (min-width: 1400px) and (min-resolution: 2dppx),
-                (min-resolution: 1.01dppx) and (max-resolution: 1.99dppx)
-                {
-                    margin-top: .5rem;
-                    padding: 0 5%;
-
-                    grid-template:  "info   kind"
-                                    "player video"
-                                    "conpan sidepan"
-                                    "franchise franchise"
-                                    "comments comments"
-                                    "comment-form comment-form";
-
-                    column-gap: 2.75rem;
-                    grid-template-rows: auto $player-max-height;
-                    grid-template-columns: $player-max-width min-content;
-                }
-            }
-        }
-
-        @include media-breakpoint-down('xxl') {
-            &:not(.player-page__wrapper--mobile) {
-                grid-template-rows: auto clamp($player-min-height, 70%, $player-max-height);
-                grid-template-columns: clamp($player-min-width, 70%, $player-max-width) min-content;
-                column-gap: 1rem;
-            }
-        }
-
-        @include media-breakpoint-up('xxxl') {
-            margin-top: .5rem;
-            padding: 0 5%;
+        // десктопные стили
+        &:not(.player-page__wrapper--mobile) {
+            display: grid;
 
             grid-template:  "info   kind"
                             "player video"
@@ -149,20 +95,35 @@
                             "franchise franchise"
                             "comments comments"
                             "comment-form comment-form";
+            grid-template-columns: clamp(360px, 65vw, 75vw) 23.5rem;
 
-            column-gap: 2.75rem;
-            grid-template-rows: auto 70vh;
-            grid-template-columns: calc(70vh * (16/9)) min-content;
-        }
+            @include media-breakpoint-down('fhd') {
+                column-gap: 1rem;
+            }
 
-        &--compact {
-            &:not(.player-page__wrapper--mobile) {
+            @include media-breakpoint-up('fhd') {
+                padding: 0 var(--shc-player-sides-padding);
+
+                column-gap: 2.75rem;
+            }
+
+            @include media-breakpoint-up('2k') {
+                padding: 0 calc(var(--shc-player-sides-padding) * 3);
+            }
+
+            @include media-breakpoint-up('4k') {
+                padding: 0 calc(var(--shc-player-sides-padding) * 5);
+            }
+
+            .player-page__wrapper--compact {
+                display: grid;
                 grid-template:  "info   kind"
                                 "player video"
                                 "conpan sidepan"
                                 "franchise franchise"
                                 "comments comments"
                                 "comment-form comment-form";
+                grid-template-columns: clamp(360px, 65vw, 75vw) 23.5rem;
             }
         }
     }

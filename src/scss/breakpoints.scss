@@ -1,10 +1,10 @@
 $grid-breakpoints: (
     xs: 0,
-    sm: 576px,      // smartphones
-    md: 768px,      // smartphones in landscape mode
-    lg: 992px,      // tablets
-    xl: 1200px,     // old HD or other
-    xxl: 1400px,    // pretty much any FHD
-    xxxl: 2560px,   // 2K
-    x4k: 3840px,    // 4K
+    sm: 576px,      // смартфоны
+    md: 768px,      // смартфоны (широкоформатный режим)
+    lg: 992px,      // планшеты
+    xl: 1199px,     // старые мониторы HD
+    fhd: 1399px,    // Full-HD
+    2k: 2559px,     // тут и ниже: телевизоры, современные ноуты и т.п.  
+    4k: 3839px,
 );
