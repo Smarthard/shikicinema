@@ -87,16 +87,14 @@
             />
         }
 
-        <!-- эта фича пока не готова -->
-
-        <!-- @defer (on timer(1000ms)) {
+        @defer (on timer(1000ms)) {
             <app-franchise
                 class="player-page__franchise"
                 [animeId]="animeIdQ()"
             />
         } @placeholder {
             <div class="player-page__franchise skeleton"></div>
-        } -->
+        }
 
         @defer (on idle) {
             <app-comments
