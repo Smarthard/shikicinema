@@ -94,6 +94,10 @@
             "DATES": {
                 "YEAR": "{{ year }}"
             }
+        },
+        "INLINE_EXPANDER": {
+            "OPEN": "...ще",
+            "CLOSE": "приховати"
         }
     },
     "HOME_MODULE": {
@@ -194,6 +198,11 @@
                     "REMINDER_TEXT": "Тут є відео, але потрібно",
                     "DISABLE_FILTERS_BTN": "Вимкнути Фільтри"
                 }
+            },
+            "DESCRIPTION": {
+                "EMPTY_ANIME_DESCRIPTION": "Опис відсутній",
+                "UPLOADER_IS_A_SERVICE": "Сервіс",
+                "UPLOADS_COUNT": "{{ count }}{ suffix, select, K { тис.} M { млн.} B { млрд.} T { трлн.} other {} } { count, plural, one {завантаження} few {завантаження} other {завантажень} }"
             }
         },
         "VIDEO_SELECT_MODAL": {

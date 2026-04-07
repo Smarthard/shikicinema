@@ -4,55 +4,29 @@
     <div class="player-page__wrapper"
         [class.player-page__wrapper--mobile]="isSmallScreen()"
         [class.player-page__wrapper--compact]="playerMode() === 'compact'">
-        <div class="player-page__anime-info common-info">
-            <div class="common-info__title">
-                @if (isAnimeLoading()) {
-                    <app-skeleton-block
-                        height="2rem"
-                        [width]="isSmallScreen() ? '10rem' : '30rem'"
-                        borderRadius="0.25rem"
-                    />
-                } @else {
-                    <ion-text>
-                        <h1 class="player-page__title text-ellipsis"
-                            [title]="animeName()">
-                            <a [href]="animeId() | shikimoriAnimeLink | getShikimoriPage | async">
-                                {{ animeName() }}
-                            </a>
-                        </h1>
-                    </ion-text>
-                }
-            </div>
 
-            <div class="common-info__video">
-                <app-uploader [uploader]="currentVideo()?.uploader | toUploader | async" />
-            </div>
-        </div>
-
-        <app-kind-selector
-            class="player-page__kind"
-            [class.ion-hide]="isSmallScreen()"
-            [kinds]="episodeVideos() | getActiveKinds"
-            [selected]="currentKind()"
-            (selection)="onKindChange($event)"
-        />
-
-        <app-player class="player-page__player responsive-16by9"
+        <app-player
+            #player
+            class="player-page__player responsive-16by9"
             [loading]="isVideosLoading()"
             [source]="currentVideo()?.url"
             [nextEpisodeAt]="nextEpisodeAt()"
         />
 
-        <app-video-selector
-            class="player-page__video-selector"
+        <app-player-selector
+            class="player-page__player-selector"
             [class.ion-hide]="isSmallScreen()"
-            [videos]="episodeVideos() | filterByKind: currentKind()"
-            [selected]="currentVideo()"
-            [kindDisplayMode]="playerKindDisplayMode()"
-            [warnAvailability]="authorAvailability()"
-            [hasUnfilteredVideos]="hasUnfilteredVideos()"
-            (selection)="onVideoChange($event)"
-            (disableFilters)="setDomainFilters(false)"
+            [isLoading]="isVideosLoading()"
+            [animeId]="animeIdQ()"
+            [kind]="currentKind()"
+            [episode]="episodeQ()"
+            [isFilterDomains]="isDomainFilterOn()"
+            [lastAiredEpisode]="lastAiredEpisode()"
+            [videos]="videos()"
+            [selectedVideo]="currentVideo()"
+            (changeKind)="onKindChange($event)"
+            (changeVideo)="onVideoChange($event, false)"
+            (domainFiltersOff)="setDomainFilters(false)"
         />
 
         <app-control-panel
@@ -87,13 +61,15 @@
             />
         }
 
-        @defer (on timer(1000ms)) {
-            <app-franchise
-                class="player-page__franchise"
-                [animeId]="animeIdQ()"
-            />
+        @defer (when anime()?.id) {
+            <app-description
+                class="player-page__description"
+                [anime]="anime()"
+                [animeName]="animeName()"
+                [video]="currentVideo()"
+            />   
         } @placeholder {
-            <div class="player-page__franchise skeleton"></div>
+            <div class="player-page__description player-page__description--skeleton skeleton"></div>
         }
 
         @defer (on idle) {

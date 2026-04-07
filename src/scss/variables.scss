@@ -7,7 +7,11 @@ body {
     --shc-scrollbar-color: rgba(var(--ion-color-primary-rgb), 1);
     --shc-scrollbar-background-color: rgba(var(--ion-color-primary-rgb), 0.5);
 
+    --shc-border-radius: .25rem;
+
     --shc-header-height: 5rem;
     
     --shc-player-sides-padding: 5rem;
+
+    --shc-comment-avatar-size: 7vh;
 }

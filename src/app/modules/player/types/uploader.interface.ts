@@ -4,5 +4,6 @@ export interface UploaderInterface {
     id: UploaderIdType;
     name: string;
     avatar: string;
+    count: number;
     url?: string;
 }

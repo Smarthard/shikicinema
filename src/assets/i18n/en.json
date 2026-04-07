@@ -94,6 +94,10 @@
             "DATES": {
                 "YEAR": "{{ year }}"
             }
+        },
+        "INLINE_EXPANDER": {
+            "OPEN": "...more",
+            "CLOSE": "hide"
         }
     },
     "HOME_MODULE": {
@@ -194,6 +198,11 @@
                     "REMINDER_TEXT": "There are videos here, but you need to",
                     "DISABLE_FILTERS_BTN": "turn off filters"
                 }
+            },
+            "DESCRIPTION": {
+                "EMPTY_ANIME_DESCRIPTION": "Description missing",
+                "UPLOADER_IS_A_SERVICE": "Service",
+                "UPLOADS_COUNT": "{{ count }}{{ suffix }} { count, plural, one {upload} other {uploads} }"
             }
         },
         "VIDEO_SELECT_MODAL": {

@@ -17,13 +17,9 @@ import {
 } from '@ionic/angular/standalone';
 import { TranslocoPipe } from '@jsverse/transloco';
 
-import { AuthorAvailabilityWarningPipe } from '@app/modules/player/pipes';
-import { FilterByKindPipe } from '@app/shared/pipes/filter-by-kind/filter-by-kind.pipe';
-import { GetActiveKindsPipe } from '@app/shared/pipes/get-active-kinds/get-active-kinds.pipe';
-import { KindSelectorComponent } from '@app/modules/player/components/kind-selector/kind-selector.component';
-import { PlayerKindDisplayMode } from '@app/store/settings/types';
+import { PlayerSelectorComponent } from '@app/modules/player/components/player-selector';
+import { ResourceIdType } from '@app/shared/types';
 import { VideoInfoInterface, VideoKindEnum } from '@app/modules/player/types';
-import { VideoSelectorComponent } from '@app/modules/player/components/video-selector/video-selector.component';
 
 @Component({
     selector: 'app-video-selector-modal',
@@ -34,12 +30,8 @@ import { VideoSelectorComponent } from '@app/modules/player/components/video-sel
         IonButtons,
         IonButton,
         IonIcon,
-        AuthorAvailabilityWarningPipe,
-        FilterByKindPipe,
-        GetActiveKindsPipe,
         TranslocoPipe,
-        VideoSelectorComponent,
-        KindSelectorComponent,
+        PlayerSelectorComponent,
     ],
     templateUrl: './video-selector-modal.component.html',
     styleUrl: './video-selector-modal.component.scss',
@@ -53,15 +45,15 @@ export class VideoSelectorModalComponent extends IonModal {
     private readonly _modalController = inject(ModalController);
 
     // TODO: перекидывание напрямую сигналов, а не их значений не выглядит хорошей идеей
-    public videos: Signal<VideoInfoInterface[]>;
-    public episodeVideos: Signal<VideoInfoInterface[]>;
-    public kindDisplayMode: Signal<PlayerKindDisplayMode>;
-    public hasUnfilteredVideos: Signal<boolean>;
-    public lastAiredEpisode: Signal<number>;
+    public selectedVideo!: WritableSignal<VideoInfoInterface>;
+    public selectedKind!: WritableSignal<VideoKindEnum>;
+    public isFilterDomains!: WritableSignal<boolean>;
 
-    public isDomainFilterOn: WritableSignal<boolean>;
-    public selectedKind: WritableSignal<VideoKindEnum>;
-    public selectedVideo: WritableSignal<VideoInfoInterface>;
+    public animeId!: Signal<ResourceIdType>;
+    public episode!: Signal<number>;
+    public lastAiredEpisode!: Signal<number>;
+    public isLoading!: Signal<boolean>;
+    public videos!: Signal<VideoInfoInterface[]>;
 
     onKindChange(kind: VideoKindEnum): void {
         this.selectedKind.set(kind);
@@ -72,7 +64,7 @@ export class VideoSelectorModalComponent extends IonModal {
     }
 
     onToggleDomainFilters(): void {
-        this.isDomainFilterOn.set(false);
+        this.isFilterDomains.set(false);
     }
 
     cancel(): void {

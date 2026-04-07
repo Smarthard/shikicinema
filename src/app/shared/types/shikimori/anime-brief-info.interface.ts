@@ -19,6 +19,9 @@ export interface AnimeBriefInfoInterface {
     /** другие названия или сокращения их (сортировка по популярности) */
     synonyms: string[];
 
+    description: string;
+    description_html: string;
+
     image: {
         original: string;
         preview: string;

@@ -94,6 +94,10 @@
             "DATES": {
                 "YEAR": "{{ year }} год"
             }
+        },
+        "INLINE_EXPANDER": {
+            "OPEN": "...ещё",
+            "CLOSE": "скрыть"
         }
     },
     "HOME_MODULE": {
@@ -199,6 +203,11 @@
                     "REMINDER_TEXT": "Тут есть видео, но нужно",
                     "DISABLE_FILTERS_BTN": "Отключить Фильтры"
                 }
+            },
+            "DESCRIPTION": {
+                "EMPTY_ANIME_DESCRIPTION": "Описание отсутствует",
+                "UPLOADER_IS_A_SERVICE": "Сервис",
+                "UPLOADS_COUNT": "{ count }{ suffix, select, K { тыс.} M { млн.} B { млрд.} T { трлн.} other {} } { count, plural, one {загрузка} few {загрузки} other {загрузок} }"
             }
         },
         "VIDEO_SELECT_MODAL": {

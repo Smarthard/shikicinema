@@ -1,29 +1,47 @@
-@if (uploader?.url; as href) {
-    <a class="uploader__link-wrapper" [href]="href">
-        <ng-container *ngTemplateOutlet="uploaderTempl"></ng-container>
+@if (link()) {
+    <a [href]="link()">
+        <app-image-card
+            class="uploader__avatar"
+            [imageUrl]="avatar()"
+            [name]="name()"
+        />
     </a>
-} @else {
-    <ng-container *ngTemplateOutlet="uploaderTempl"></ng-container>
-}
 
-<ng-template #uploaderTempl>
-    @if (uploader?.name; as name) {
-        <span class="uploader__name ion-hide-md-down">
-            @if (uploader?.id | isWellKnownUploader) {
-                {{ name | transloco }}
+    <div class="uploader__info">
+        <a [href]="link()">
+            <span class="uploader__name">
+                    @if (id() | isWellKnownUploader) {
+                        {{ name() | transloco }}
+                    } @else {
+                        {{ name() }}
+                    }
+            </span>
+        </a>
+
+        <span class="uploader__counter">
+            @if (isKodik()) {
+                {{ 'PLAYER_MODULE.PLAYER_PAGE.DESCRIPTION.UPLOADER_IS_A_SERVICE' | transloco }}
             } @else {
-                {{ name }}
+                {{ 'PLAYER_MODULE.PLAYER_PAGE.DESCRIPTION.UPLOADS_COUNT' | transloco: { count: count(), suffix: suffix() } }}
             }
         </span>
-    } @else {
-        <app-skeleton-block height="1rem" width="5rem" />
-    }
+    </div>
+} @else {
+    <app-image-card
+        class="uploader__avatar"
+        [imageUrl]="avatar()"
+        [name]="name()"
+    />
 
-    @if (uploader?.avatar; as avatar) {
-        <img class="uploader__avatar"
-            [src]="uploader?.avatar"
-            alt="avatar" />
-    } @else {
-        <app-skeleton-block height="1.625rem" width="1.625rem" />
-    }
-</ng-template>
+    <div class="uploader__info">
+        <span class="uploader__name">
+                @if (id() | isWellKnownUploader) {
+                    {{ name() | transloco }}
+                } @else {
+                    {{ name() }}
+                }
+        </span>
+
+        <span class="uploader__counter"></span>
+    </div>
+}

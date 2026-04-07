@@ -1,0 +1,58 @@
+@use 'src/scss/mixins' as *;
+
+.description {
+    $anime-poster-width: 18rem;
+
+    border-radius: var(--shc-border-radius);
+    background-color: var(--ion-color-light);
+    padding: .5rem;
+
+    line-height: 10px;
+
+    @include media-breakpoint-up('lg') {
+        line-height: 20px;
+    }
+
+    &__about {
+        display: flex;
+        gap: .5rem;
+    }
+
+    &__poster {
+        display: block;
+        height: 100%;
+        min-width: 19rem;
+    }
+
+    &__text {
+        display: flex;
+        flex: 1;
+    }
+
+    &__wrapper {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+
+        max-width: calc(100% - ($anime-poster-width + 1rem));
+    }
+
+    &__title {
+        &--skeleton {
+            border-radius: var(--shc-border-radius);
+            height: 2rem;
+            width: 10rem;
+        }
+    }
+
+    &__franchise {
+        display: flex;
+        flex: 1;
+        width: 100%;
+
+        height: 16rem;
+        overflow-x: scroll;
+
+        border-radius: var(--shc-border-radius);
+    }
+}

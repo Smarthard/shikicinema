@@ -7,33 +7,12 @@
         font-size: 1rem;
     }
 
-    &__title {
-        max-width: 50vw;
-
-        @include media-breakpoint-down('lg') {
-            max-width: 80vw;
-            font-size: 1rem;
-        }
-    }
-
-    &__anime-info {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-
-        grid-area: info;
-
-        @include media-breakpoint-up('lg') {
-            align-items: flex-end;
-        }
-    }
-
-    &__kind {
-        grid-area: kind;
-    }
-
     &__player {
         grid-area: player;
+    }
+
+    &__player-selector {
+        grid-area: selector;
     }
 
     &__comment-form {
@@ -44,18 +23,13 @@
         grid-area: conpan;
     }
 
-    &__video-selector {
-        grid-area: video;
-        max-height: 90vh;
-    }
+    &__description {
+        grid-area: descr;
 
-    &__franchise {
-        grid-area: franchise;
-
-        height: 16rem;
-        overflow-x: scroll;
-
-        border-radius: .25rem;
+        &--skeleton {
+            height: 7.5rem;
+            border-radius: var(--shc-border-radius);
+        }
     }
 
     &__wrapper {
@@ -89,13 +63,13 @@
         &:not(.player-page__wrapper--mobile) {
             display: grid;
 
-            grid-template:  "info   kind"
-                            "player video"
+            grid-template:  "player selector"
                             "conpan sidepan"
-                            "franchise franchise"
+                            "descr descr"
                             "comments comments"
                             "comment-form comment-form";
-            grid-template-columns: clamp(360px, 65vw, 75vw) 23.5rem;
+            grid-template-columns: 65vw 23.5rem;
+            grid-template-rows: calc(65vw * 9 / 16) auto;
 
             @include media-breakpoint-down('fhd') {
                 column-gap: 1rem;
@@ -107,23 +81,23 @@
                 column-gap: 2.75rem;
             }
 
-            @include media-breakpoint-up('2k') {
+            @include media-breakpoint-up('x2k') {
                 padding: 0 calc(var(--shc-player-sides-padding) * 3);
             }
 
-            @include media-breakpoint-up('4k') {
+            @include media-breakpoint-up('x4k') {
                 padding: 0 calc(var(--shc-player-sides-padding) * 5);
             }
 
             .player-page__wrapper--compact {
                 display: grid;
-                grid-template:  "info   kind"
-                                "player video"
+                grid-template:  "player selector"
                                 "conpan sidepan"
-                                "franchise franchise"
+                                "descr descr"
                                 "comments comments"
                                 "comment-form comment-form";
-                grid-template-columns: clamp(360px, 65vw, 75vw) 23.5rem;
+                grid-template-columns: 65vw 23.5rem;
+                grid-template-rows: calc(65vw * 9 / 16) auto;
             }
         }
     }

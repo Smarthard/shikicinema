@@ -270,3 +270,10 @@ html {
 .marker {
     display: none;
 }
+
+.b-text_with_paragraphs br {
+    content: '';
+    display: block;
+    height: 0;
+    margin-bottom: 5px;
+}

@@ -77,12 +77,12 @@
             grid-template-rows: 8fr 1fr;
         }
 
-        @include media-breakpoint-up('2k') {
+        @include media-breakpoint-up('x2k') {
             // 6 cards
             grid-template-rows: 16fr 1.5fr;
         }
 
-        @include media-breakpoint-up('4k') {
+        @include media-breakpoint-up('x4k') {
             // 6 cards
             grid-template-rows: 30fr 1.5fr;
         }
