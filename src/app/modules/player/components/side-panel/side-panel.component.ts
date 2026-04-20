@@ -10,9 +10,11 @@ import {
 import { IonButton, IonIcon, ModalController } from '@ionic/angular/standalone';
 import { RouterLink } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { TranslocoPipe } from '@jsverse/transloco';
 
 import { AnimeBriefInfoInterface } from '@app/shared/types/shikimori/anime-brief-info.interface';
+import { AsyncPipe } from '@angular/common';
+import { ToUploaderPipe } from '@app/modules/player/pipes';
+import { UploaderComponent } from '@app/modules/player/components/uploader/uploader.component';
 import { VideoInfoInterface } from '@app/modules/player/types';
 import { selectDomainFilters } from '@app/store/settings/selectors/settings.selectors';
 
@@ -22,8 +24,10 @@ import { selectDomainFilters } from '@app/store/settings/selectors/settings.sele
     imports: [
         IonButton,
         IonIcon,
-        TranslocoPipe,
+        AsyncPipe,
         RouterLink,
+        UploaderComponent,
+        ToUploaderPipe,
     ],
     templateUrl: './side-panel.component.html',
     styleUrl: './side-panel.component.scss',
@@ -41,17 +45,19 @@ export class SidePanelComponent {
     private readonly domainFilters = this.store.selectSignal(selectDomainFilters);
     readonly showDomainFilters = computed(() => this.domainFilters()?.length > 0);
 
-    anime = input.required<AnimeBriefInfoInterface>();
-    episode = input.required<number>();
+    readonly anime = input.required<AnimeBriefInfoInterface>();
+    readonly episode = input.required<number>();
+    readonly video = input<VideoInfoInterface>();
 
-    isLoading = input(true);
-    isMinified = input(false);
-    isDomainFiltersActive = input(true);
+    readonly isLoading = input(true);
+    readonly isMinified = input(false);
+    readonly isDomainFiltersActive = input(true);
 
-    uploaded = output<VideoInfoInterface>();
-    filtersToggle = output<boolean>();
+    readonly uploaded = output<VideoInfoInterface>();
+    readonly filtersToggle = output<boolean>();
 
     readonly funnelIcon = computed(() => this.isDomainFiltersActive() ? 'funnel' : 'funnel-outline');
+    readonly uploader = computed(() => this.video()?.uploader);
 
     async onOpenUploadModal(): Promise<void> {
         const cssClass = 'side-panel__upload-modal';

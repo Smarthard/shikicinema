@@ -24,4 +24,12 @@
             --width: auto;
         }
     }
+
+    &__uploader {
+        border-radius: var(--shc-border-radius);
+        height: 100%;
+        width: 50%;
+        min-width: 25%;
+        max-width: 75%;
+    }
 }

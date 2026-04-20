@@ -56,6 +56,7 @@
                 [isLoading]="isAnimeLoading()"
                 [isMinified]="isPanelsMinified()"
                 [isDomainFiltersActive]="isDomainFilterOn()"
+                [video]="currentVideo()"
                 (uploaded)="onVideoUpload($event)"
                 (filtersToggle)="setDomainFilters($event)"
             />
@@ -66,7 +67,6 @@
                 class="player-page__description"
                 [anime]="anime()"
                 [animeName]="animeName()"
-                [video]="currentVideo()"
             />   
         } @placeholder {
             <div class="player-page__description player-page__description--skeleton skeleton"></div>
