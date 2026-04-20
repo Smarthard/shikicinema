@@ -11,20 +11,27 @@
                 [placeholder]="'HOME_MODULE.HOME_PAGE.ANIME_SEARCHBAR_PLACEHOLDER' | transloco"
             />
 
-            <ion-button
+            @if (isPlayerPage()) {
+                <app-upload-button
+                    class="toolbar__upload-btn"
+                    fill="clear"
+                    size="large"
+                />
+            }
+
+            <div
                 id="menu-trigger"
-                expand="full"
-                fill="clear"
-                color="medium"
-                size="large"
-                class="toolbar__menu-btn user-item avatar-btn"
+                class="toolbar__menu-btn user-item"
+                tabindex="0"
+                (keydown.space)="menuPopover.present()"
+                (keydown.enter)="menuPopover.present()"
                 (auxclick)="toShikimoriProfilePage()"
             >
                 @if (avatarImg()) {
                     <img
+                        class="user-item__avatar"
                         [src]="avatarImg()"
                         [alt]="nickname()"
-                        class="user-item__avatar"
                     />
                 } @else {
                     <ion-icon
@@ -32,7 +39,7 @@
                         name="person-circle"
                     ></ion-icon>
                 }
-            </ion-button>
+            </div>
         </div>
 
         <ion-popover
@@ -84,6 +91,7 @@
     </ion-toolbar>
 </ion-header>
 
+<!-- дальше шаблоны для popover'ов -->
 <ng-template
     #signedInUserMenuTemplate
     let-currentUser="currentUser"

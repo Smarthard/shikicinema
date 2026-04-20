@@ -15,8 +15,6 @@ import { GetShikimoriPagePipe } from '@app/shared/pipes/get-shikimori-page/get-s
 import { ImageCardComponent } from '@app/shared/components/image-card';
 import { InlineExpanderComponent } from '@app/shared/components/inline-expander';
 import { ShikimoriAnimeLinkPipe } from '@app/shared/pipes/shikimori-anime-link/shikimori-anime-link.pipe';
-import { ToUploaderPipe } from '@app/modules/player/pipes';
-import { UploaderComponent } from '@app/modules/player/components/uploader/uploader.component';
 import { VideoInfoInterface } from '@app/modules/player/types';
 import { provideSmarthardNetImageLoader } from '@app/shared/providers';
 
@@ -29,8 +27,6 @@ import { provideSmarthardNetImageLoader } from '@app/shared/providers';
         FranchiseComponent,
         ImageCardComponent,
         InlineExpanderComponent,
-        UploaderComponent,
-        ToUploaderPipe,
         TranslocoPipe,
     ],
     providers: [

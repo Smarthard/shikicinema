@@ -7,6 +7,8 @@ import { AnimeBriefInfoInterface } from '@app/shared/types/shikimori/anime-brief
 import { PlayerStoreInterface } from '@app/modules/player/store/types';
 import {
     addVideosAction,
+    changeCurrentAnimeAction,
+    changeCurrentEpisodeAction,
     deleteCommentSuccessAction,
     editCommentSuccessAction,
     getAnimeInfoSuccessAction,
@@ -23,6 +25,8 @@ import { filterComments, patchComments } from '@app/modules/player/store/utils';
 import { filterDuplicatedIds } from '@app/shared/utils/filter-duplicated-ids.function';
 
 const initialState: PlayerStoreInterface = {
+    currentAnimeId: undefined,
+    currentEpisode: undefined,
     videos: {},
     animeInfo: {},
     comments: {},
@@ -30,6 +34,20 @@ const initialState: PlayerStoreInterface = {
 };
 
 export const playerReducer = createReducer(initialState,
+    on(
+        changeCurrentAnimeAction,
+        (state, { animeId }) => ({
+            ...state,
+            currentAnimeId: animeId,
+        }),
+    ),
+    on(
+        changeCurrentEpisodeAction,
+        (state, { episode }) => ({
+            ...state,
+            currentEpisode: episode,
+        }),
+    ),
     on(
         addVideosAction,
         (state, { animeId, videos }) => ({

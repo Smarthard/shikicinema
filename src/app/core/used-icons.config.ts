@@ -19,7 +19,6 @@ export {
     playForwardOutline,
     send,
     checkmarkOutline,
-    cloudUploadOutline,
     listOutline,
     resizeOutline,
     pencilOutline,

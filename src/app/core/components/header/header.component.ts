@@ -18,7 +18,12 @@ import {
     IonToggle,
     IonToolbar,
 } from '@ionic/angular/standalone';
-import { NavigationExtras, Router, RouterLink } from '@angular/router';
+import {
+    NavigationExtras,
+    Router,
+    RouterLink,
+    isActive,
+} from '@angular/router';
 import { NgTemplateOutlet, UpperCasePipe } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
@@ -26,6 +31,7 @@ import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { B64encodePipe } from '@app/shared/pipes/base64/b64encode.pipe';
 import { ResultOpenTarget, SearchbarResult } from '@app/shared/types/searchbar.types';
 import { SearchbarResultsComponent } from '@app/core/components/searchbar-results/searchbar-results.component';
+import { UploadButtonComponent } from '@app/core/components/upload-button';
 import { authShikimoriAction, logoutShikimoriAction } from '@app/store/auth/actions/auth.actions';
 import {
     findAnimeAction,
@@ -66,6 +72,7 @@ import { updateLanguageAction, updateThemeAction } from '@app-root/app/store/set
         B64encodePipe,
         SearchbarResultsComponent,
         NgTemplateOutlet,
+        UploadButtonComponent,
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
@@ -86,6 +93,8 @@ export class HeaderComponent {
     readonly profileLink = this.store.selectSignal(selectShikimoriCurrentUserProfileLink);
 
     readonly availableLangs = this.transloco.getAvailableLangs() as string[];
+
+    readonly isPlayerPage = isActive('/player', this.router);
 
     readonly isAnimeListPopoverOpen = signal(false);
     readonly isSearchingInCyrillic = signal(false);

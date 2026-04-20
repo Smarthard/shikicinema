@@ -7,7 +7,7 @@ import {
     input,
     output,
 } from '@angular/core';
-import { IonButton, IonIcon, ModalController } from '@ionic/angular/standalone';
+import { IonButton, IonIcon } from '@ionic/angular/standalone';
 import { RouterLink } from '@angular/router';
 import { Store } from '@ngrx/store';
 
@@ -39,7 +39,6 @@ import { selectDomainFilters } from '@app/store/settings/selectors/settings.sele
     },
 })
 export class SidePanelComponent {
-    private readonly modalController = inject(ModalController);
     private readonly store = inject(Store);
 
     private readonly domainFilters = this.store.selectSignal(selectDomainFilters);
@@ -53,32 +52,8 @@ export class SidePanelComponent {
     readonly isMinified = input(false);
     readonly isDomainFiltersActive = input(true);
 
-    readonly uploaded = output<VideoInfoInterface>();
     readonly filtersToggle = output<boolean>();
 
     readonly funnelIcon = computed(() => this.isDomainFiltersActive() ? 'funnel' : 'funnel-outline');
     readonly uploader = computed(() => this.video()?.uploader);
-
-    async onOpenUploadModal(): Promise<void> {
-        const cssClass = 'side-panel__upload-modal';
-        const componentProps = {
-            anime: this.anime,
-            episode: this.episode,
-        };
-        const { VideoUploadModalComponent } = await import('@app/modules/player/components/video-upload-modal');
-
-        const modal = await this.modalController.create({
-            component: VideoUploadModalComponent,
-            componentProps,
-            cssClass,
-        });
-
-        modal.present();
-
-        const { data: uploadedVideo, role } = await modal.onDidDismiss<VideoInfoInterface>();
-
-        if (role === 'submit') {
-            this.uploaded.emit(uploadedVideo);
-        }
-    }
 }

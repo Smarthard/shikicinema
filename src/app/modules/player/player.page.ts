@@ -48,6 +48,8 @@ import { VideoInfoInterface } from '@app/modules/player/types';
 import { VideoKindEnum } from '@app/modules/player/types/video-kind.enum';
 import { authShikimoriAction } from '@app/store/auth/actions/auth.actions';
 import {
+    changeCurrentAnimeAction,
+    changeCurrentEpisodeAction,
     deleteCommentAction,
     editCommentAction,
     editCommentSuccessAction,
@@ -68,9 +70,8 @@ import {
 } from '@app/modules/player/utils';
 import { isEq } from '@app/shared/utils/is-eq.function';
 import { isEqId } from '@app/shared/utils/is-eq-id.function';
-import { selectIsAuthenticated } from '@app/store/auth/selectors/auth.selectors';
 import {
-    selectPlayerAnime,
+    selectCurrentPlayerAnime,
     selectPlayerAnimeLoading,
     selectPlayerComments,
     selectPlayerIsCommentsLoading,
@@ -80,12 +81,12 @@ import {
     selectPlayerVideos,
     selectPlayerVideosLoading,
 } from '@app/modules/player/store/selectors/player.selectors';
+import { selectIsAuthenticated } from '@app/store/auth/selectors/auth.selectors';
 import { selectPlayerMode } from '@app/store/settings/selectors/settings.selectors';
 import {
     togglePlayerModeAction,
     updatePlayerPreferencesAction,
 } from '@app/store/settings/actions/settings.actions';
-import { uploadVideoAction } from '@app/store/shikicinema/actions/upload-video.action';
 import { visitAnimePageAction } from '@app/modules/home/store/recent-animes/actions';
 
 
@@ -155,7 +156,7 @@ export class PlayerPage implements OnInit {
     isVideosLoading = computed(() => this.store.selectSignal(selectPlayerVideosLoading(this.animeIdQ()))());
     videos = computed(() => this.store.selectSignal(selectPlayerVideos(this.animeIdQ()))());
     isAnimeLoading = computed(() => this.store.selectSignal(selectPlayerAnimeLoading(this.animeIdQ()))());
-    anime = computed(() => this.store.selectSignal(selectPlayerAnime(this.animeIdQ()))(), { equal: isEqId });
+    anime = this.store.selectSignal(selectCurrentPlayerAnime, { equal: isEqId });
     userRate = computed(() => this.store.selectSignal(selectPlayerUserRate(this.animeIdQ()))());
     comments = computed(() => this.store.selectSignal(selectPlayerComments(this.animeIdQ(), this.episodeQ()))());
     isShownAllComments = computed(() => this.store.selectSignal(
@@ -193,6 +194,7 @@ export class PlayerPage implements OnInit {
     readonly animeChangeEffect = effect(() => {
         const animeId = this.animeIdQ();
 
+        this.store.dispatch(changeCurrentAnimeAction({ animeId }));
         this.store.dispatch(findVideosAction({ animeId }));
         this.store.dispatch(getAnimeInfoAction({ animeId }));
     });
@@ -200,6 +202,9 @@ export class PlayerPage implements OnInit {
     readonly animeOrEpisodeChangeEffect = effect(() => {
         const anime = this.anime();
         const episode = this.episodeQ();
+
+        this.store.dispatch(changeCurrentAnimeAction({ animeId: anime.id }));
+        this.store.dispatch(changeCurrentEpisodeAction({ episode }));
 
         if (anime?.name) {
             this.changeTitle(anime, episode);
@@ -337,12 +342,6 @@ export class PlayerPage implements OnInit {
         const episode = this.episodeQ();
 
         this.store.dispatch(sendCommentAction({ animeId, episode, commentText }));
-    }
-
-    onVideoUpload(video: VideoInfoInterface): void {
-        const animeId = this.animeIdQ();
-
-        this.store.dispatch(uploadVideoAction({ animeId, video }));
     }
 
     togglePlayerMode(): void {

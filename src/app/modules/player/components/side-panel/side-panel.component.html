@@ -1,30 +1,9 @@
-@if (isMinified()) {
-    <!-- TODO: удалить -->
-
-    <!-- <ion-button
-        class="side-panel__upload-btn"
-        fill="clear"
-        [disabled]="isLoading()"
-        (click)="onOpenUploadModal()">
-        <ion-icon slot="icon-only" name="cloud-upload-outline" />
-    </ion-button> -->
-} @else {
+@if (!isMinified()) {
     @if (uploader() | toUploader | async; as uploader) {
         <app-uploader class="side-panel__uploader" [uploader]="uploader" />
     } @else {
         <div class="side-panel__uploader side-panel__uploader--skeleton skeleton"></div>
     }
-
-    <!-- TODO: удалить -->
-
-    <!-- <ion-button
-        class="side-panel__upload-btn"
-        fill="clear"
-        [disabled]="isLoading()"
-        (click)="onOpenUploadModal()">
-        <ion-icon slot="start" name="cloud-upload-outline" />
-        {{ 'PLAYER_MODULE.PLAYER_PAGE.UPLOAD_VIDEO.FORM_ACTIONS.UPLOAD' | transloco }}
-    </ion-button> -->
 
     <div class="side-panel__pull-right-wrap">
         @if (showDomainFilters()) {

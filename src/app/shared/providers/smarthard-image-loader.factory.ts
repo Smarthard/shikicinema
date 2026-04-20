@@ -24,10 +24,6 @@ export const smarthardNetImageLoader = (): ImageLoader => {
             ? '-placeholder.jpeg'
             : `.${extension}`;
 
-        if (`${domain}${imagePath}${extensionPath}` === 'https://smarthard.net/static/animes/undefined.avif') {
-            console.log('???', config);
-        }
-
         return `${domain}${imagePath}${extensionPath}`;
     };
 };
