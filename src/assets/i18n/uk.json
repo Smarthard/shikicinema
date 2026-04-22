@@ -83,6 +83,9 @@
                 },
                 "LANGUAGE": "Мова",
                 "EXIT": "Вихід"
+            },
+            "UPLOAD_BUTTON": {
+                "ACTION_TEXT": "Додати"
             }
         },
         "GO_EXTERNAL_PAGE": {

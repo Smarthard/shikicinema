@@ -83,6 +83,9 @@
                 },
                 "LANGUAGE": "Language",
                 "EXIT": "Exit"
+            },
+            "UPLOAD_BUTTON": {
+                "ACTION_TEXT": "Upload"
             }
         },
         "GO_EXTERNAL_PAGE": {

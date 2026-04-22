@@ -83,6 +83,9 @@
                 },
                 "LANGUAGE": "Язык",
                 "EXIT": "Выход"
+            },
+            "UPLOAD_BUTTON": {
+                "ACTION_TEXT": "Добавить"
             }
         },
         "GO_EXTERNAL_PAGE": {
