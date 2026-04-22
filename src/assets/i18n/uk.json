@@ -216,10 +216,9 @@
                     "DISABLE_FILTERS_BTN": "Вимкнути Фільтри"
                 }
             },
-            "DESCRIPTION": {
-                "EMPTY_ANIME_DESCRIPTION": "Опис відсутній",
+            "UPLOADER": {
                 "UPLOADER_IS_A_SERVICE": "Сторонній сервіс",
-                "UPLOADS_COUNT": "{{ count }}{ suffix, select, K { тис.} M { млн.} B { млрд.} T { трлн.} other {} } { count, plural, one {завантаження} few {завантаження} other {завантажень} }"
+                "UPLOADS_COUNT": "{ count }{ suffix, select, K { тис.} M { млн.} B { млрд.} T { трлн.} other {} } { count, plural, one {завантаження} few {завантаження} other {завантажень} }"
             }
         },
         "VIDEO_SELECT_MODAL": {

@@ -221,8 +221,7 @@
                     "DISABLE_FILTERS_BTN": "Отключить Фильтры"
                 }
             },
-            "DESCRIPTION": {
-                "EMPTY_ANIME_DESCRIPTION": "Описание отсутствует",
+            "UPLOADER": {
                 "UPLOADER_IS_A_SERVICE": "Сторонний сервис",
                 "UPLOADS_COUNT": "{ count }{ suffix, select, K { тыс.} M { млн.} B { млрд.} T { трлн.} other {} } { count, plural, one {загрузка} few {загрузки} other {загрузок} }"
             }

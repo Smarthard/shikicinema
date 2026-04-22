@@ -216,10 +216,9 @@
                     "DISABLE_FILTERS_BTN": "turn off filters"
                 }
             },
-            "DESCRIPTION": {
-                "EMPTY_ANIME_DESCRIPTION": "Description missing",
+            "UPLOADER": {
                 "UPLOADER_IS_A_SERVICE": "Third-party service",
-                "UPLOADS_COUNT": "{{ count }}{{ suffix }} { count, plural, one {upload} other {uploads} }"
+                "UPLOADS_COUNT": "{ count }{ suffix } { count, plural, one {upload} other {uploads} }"
             }
         },
         "VIDEO_SELECT_MODAL": {

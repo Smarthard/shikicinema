@@ -18,11 +18,14 @@
             </span>
         </a>
 
-        <span class="uploader__counter">
+        <span
+            class="uploader__counter"
+            [title]="'PLAYER_MODULE.PLAYER_PAGE.UPLOADER.UPLOADS_COUNT' | transloco: { count: rawCount(), suffix: '' }"
+        >
             @if (isKodik()) {
-                {{ 'PLAYER_MODULE.PLAYER_PAGE.DESCRIPTION.UPLOADER_IS_A_SERVICE' | transloco }}
+                {{ 'PLAYER_MODULE.PLAYER_PAGE.UPLOADER.UPLOADER_IS_A_SERVICE' | transloco }}
             } @else {
-                {{ 'PLAYER_MODULE.PLAYER_PAGE.DESCRIPTION.UPLOADS_COUNT' | transloco: { count: count(), suffix: suffix() } }}
+                {{ 'PLAYER_MODULE.PLAYER_PAGE.UPLOADER.UPLOADS_COUNT' | transloco: { count: count(), suffix: suffix() } }}
             }
         </span>
     </div>
