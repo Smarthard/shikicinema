@@ -17,6 +17,20 @@
                 "ANONS": "анонс",
                 "ONGOING": "онгоинг",
                 "RELEASED": "вышло"
+            },
+            "FRANCHISE_RELATION": {
+                "PREQUEL": "Приквел",
+                "SEQUEL": "Сиквел",
+                "SPIN-OFF": "Спинофф",
+                "PARENT_STORY": "Предыстория",
+                "SIDE_STORY": "Другая история",
+                "ALTERNATIVE_VERSION": "Альт. История",
+                "ALTERNATIVE_SETTING": "Альт. Вселенная",
+                "OTHER": "Прочее",
+                "SUMMARY": "Рекап",
+                "CHARACTER": "Общий персонаж",
+                "FRANCHISE": "Франшиза",
+                "ADAPTATION": "Адапатация"
             }
         },
         "VIDEO": {
@@ -206,7 +220,7 @@
             },
             "DESCRIPTION": {
                 "EMPTY_ANIME_DESCRIPTION": "Описание отсутствует",
-                "UPLOADER_IS_A_SERVICE": "Сервис",
+                "UPLOADER_IS_A_SERVICE": "Сторонний сервис",
                 "UPLOADS_COUNT": "{ count }{ suffix, select, K { тыс.} M { млн.} B { млрд.} T { трлн.} other {} } { count, plural, one {загрузка} few {загрузки} other {загрузок} }"
             }
         },

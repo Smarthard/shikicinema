@@ -17,6 +17,20 @@
                 "ANONS": "planned",
                 "ONGOING": "airing",
                 "RELEASED": "released"
+            },
+            "FRANCHISE_RELATION": {
+                "PREQUEL": "Prequel",
+                "SEQUEL": "Sequel",
+                "SPINOFF": "Spin-off",
+                "PARENT_STORY": "Parent Story",
+                "SIDE_STORY": "Side Story",
+                "ALT_VERSION": "Alt. Story",
+                "ALT_SETTING": "Alt. Setting",
+                "OTHER": "Other",
+                "SUMMARY": "Summary",
+                "CHARACTER": "Same Character",
+                "FRANCHISE": "Franchise",
+                "ADAPTATION": "Adaptation"
             }
         },
         "VIDEO": {
@@ -201,7 +215,7 @@
             },
             "DESCRIPTION": {
                 "EMPTY_ANIME_DESCRIPTION": "Description missing",
-                "UPLOADER_IS_A_SERVICE": "Service",
+                "UPLOADER_IS_A_SERVICE": "Third-party service",
                 "UPLOADS_COUNT": "{{ count }}{{ suffix }} { count, plural, one {upload} other {uploads} }"
             }
         },

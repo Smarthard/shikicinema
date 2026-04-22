@@ -23,12 +23,14 @@
         grid-area: conpan;
     }
 
-    &__description {
-        grid-area: descr;
+    &__franchise {
+        grid-area: franchise;
+
+        padding: .5rem;
+        border-radius: var(--shc-border-radius);
 
         &--skeleton {
-            height: 7.5rem;
-            border-radius: var(--shc-border-radius);
+            height: 14.25rem;
         }
     }
 
@@ -65,7 +67,7 @@
 
             grid-template:  "player selector"
                             "conpan sidepan"
-                            "descr descr"
+                            "franchise franchise"
                             "comments comments"
                             "comment-form comment-form";
             grid-template-columns: 65vw 23.5rem;
@@ -93,7 +95,7 @@
                 display: grid;
                 grid-template:  "player selector"
                                 "conpan sidepan"
-                                "descr descr"
+                                "franchise franchise"
                                 "comments comments"
                                 "comment-form comment-form";
                 grid-template-columns: 65vw 23.5rem;

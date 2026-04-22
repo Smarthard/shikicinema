@@ -6,3 +6,4 @@ export {
     mapGqlToV2UserAnimeRate,
     mapUserAnimeRatesGQL,
 } from './grapql.mappers';
+export { franchiseRelationI18N } from './franchise-relation-i18n.mapper'

@@ -6,17 +6,18 @@ import {
     input,
 } from '@angular/core';
 import { NgxTippyModule } from 'ngx-tippy-wrapper';
+import { TranslocoPipe } from '@jsverse/transloco';
 
 import { ImageCardComponent } from '@app/shared/components/image-card/image-card.component';
 import { ShikimoriFranchise } from '@app/shared/types/shikimori';
-import { ToFranchiseRelationPipe } from '@app/modules/player/pipes';
+import { franchiseRelationI18N } from '@app/shared/types/shikimori/mappers';
 
 @Component({
     selector: 'app-franchise-item',
     imports: [
         ImageCardComponent,
         NgxTippyModule,
-        ToFranchiseRelationPipe,
+        TranslocoPipe,
     ],
     templateUrl: './franchise-item.component.html',
     styleUrl: './franchise-item.component.scss',
@@ -27,8 +28,8 @@ import { ToFranchiseRelationPipe } from '@app/modules/player/pipes';
     },
 })
 export class FranchiseItemComponent {
-    franchiseItem = input.required<ShikimoriFranchise>();
-    isEnglishNames = input(false)
+    readonly franchiseItem = input.required<ShikimoriFranchise>();
+    readonly isEnglishNames = input(false)
 
     readonly anime = computed(() => this.franchiseItem().anime);
 
@@ -39,10 +40,7 @@ export class FranchiseItemComponent {
         : this.anime()?.russian,
     );
 
-    readonly relation = computed(() => this.isEnglishNames()
-        ? this.franchiseItem().relation
-        : this.franchiseItem().relation_russian,
-    );
+    readonly relation = computed(() => franchiseRelationI18N(this.franchiseItem().relation));
 
-    readonly relationClass = computed(() => this.franchiseItem().relation.toLocaleLowerCase().replace(/\s+/, '-'));
+    readonly relationClass = computed(() => this.relation()?.toLocaleLowerCase());
 }

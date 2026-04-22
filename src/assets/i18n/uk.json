@@ -17,6 +17,20 @@
                 "ANONS": "заплановано",
                 "ONGOING": "онгоїнг",
                 "RELEASED": "вийшло"
+            },
+            "FRANCHISE_RELATION": {
+                "PREQUEL": "Приквел",
+                "SEQUEL": "Сіквел",
+                "SPIN-OFF": "Спін Офф",
+                "PARENT_STORY": "Передісторія",
+                "SIDE_STORY": "Інша історія",
+                "ALTERNATIVE_VERSION": "Альт. Історія",
+                "ALTERNATIVE_SETTING": "Альт. Всесвіт",
+                "OTHER": "Інше",
+                "SUMMARY": "Рекап",
+                "CHARACTER": "Загальний персонаж",
+                "FRANCHISE": "Франшиза",
+                "ADAPTATION": "Адаптація"
             }
         },
         "VIDEO": {
@@ -201,7 +215,7 @@
             },
             "DESCRIPTION": {
                 "EMPTY_ANIME_DESCRIPTION": "Опис відсутній",
-                "UPLOADER_IS_A_SERVICE": "Сервіс",
+                "UPLOADER_IS_A_SERVICE": "Сторонній сервіс",
                 "UPLOADS_COUNT": "{{ count }}{ suffix, select, K { тис.} M { млн.} B { млрд.} T { трлн.} other {} } { count, plural, one {завантаження} few {завантаження} other {завантажень} }"
             }
         },

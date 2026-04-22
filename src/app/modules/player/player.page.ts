@@ -37,7 +37,7 @@ import { AnimeBriefInfoInterface } from '@app/shared/types/shikimori/anime-brief
 import { Comment } from '@app/shared/types/shikimori/comment';
 import { CommentsComponent } from '@app/modules/player/components/comments/comments.component';
 import { ControlPanelComponent } from '@app/modules/player/components/control-panel/control-panel.component';
-import { DescriptionComponent } from '@app/modules/player/components/description/description.component';
+import { FranchiseComponent } from '@app/modules/player/components/franchise/franchise.component';
 import { PlayerComponent } from '@app/modules/player/components/player/player.component';
 import { PlayerSelectorComponent } from '@app/modules/player/components/player-selector/player-selector.component';
 import { ResourceIdType } from '@app/shared/types/resource-id.type';
@@ -70,8 +70,9 @@ import {
 } from '@app/modules/player/utils';
 import { isEq } from '@app/shared/utils/is-eq.function';
 import { isEqId } from '@app/shared/utils/is-eq-id.function';
+import { selectIsAuthenticated } from '@app/store/auth/selectors/auth.selectors';
 import {
-    selectCurrentPlayerAnime,
+    selectPlayerAnime,
     selectPlayerAnimeLoading,
     selectPlayerComments,
     selectPlayerIsCommentsLoading,
@@ -81,7 +82,6 @@ import {
     selectPlayerVideos,
     selectPlayerVideosLoading,
 } from '@app/modules/player/store/selectors/player.selectors';
-import { selectIsAuthenticated } from '@app/store/auth/selectors/auth.selectors';
 import { selectPlayerMode } from '@app/store/settings/selectors/settings.selectors';
 import {
     togglePlayerModeAction,
@@ -102,8 +102,8 @@ import { visitAnimePageAction } from '@app/modules/home/store/recent-animes/acti
         UserCommentFormComponent,
         SidePanelComponent,
         IonContent,
-        DescriptionComponent,
         PlayerSelectorComponent,
+        FranchiseComponent,
     ],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -156,7 +156,7 @@ export class PlayerPage implements OnInit {
     isVideosLoading = computed(() => this.store.selectSignal(selectPlayerVideosLoading(this.animeIdQ()))());
     videos = computed(() => this.store.selectSignal(selectPlayerVideos(this.animeIdQ()))());
     isAnimeLoading = computed(() => this.store.selectSignal(selectPlayerAnimeLoading(this.animeIdQ()))());
-    anime = this.store.selectSignal(selectCurrentPlayerAnime, { equal: isEqId });
+    anime = computed(() => this.store.selectSignal(selectPlayerAnime(this.animeIdQ()))(), { equal: isEqId });
     userRate = computed(() => this.store.selectSignal(selectPlayerUserRate(this.animeIdQ()))());
     comments = computed(() => this.store.selectSignal(selectPlayerComments(this.animeIdQ(), this.episodeQ()))());
     isShownAllComments = computed(() => this.store.selectSignal(

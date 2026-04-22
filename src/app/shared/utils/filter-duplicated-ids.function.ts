@@ -1,5 +1,9 @@
 import { ResourceIdType } from '@app/shared/types/resource-id.type';
 
-export function filterDuplicatedIds<T extends { id: ResourceIdType }>(item: T, pos: number, array: T[]) {
-    return !pos || item.id !== array[pos - 1].id;
+const defaultExtractIdFn = (item: any) => item.id;
+
+export function filterDuplicatedIds<T>(extractId: (item: T) => ResourceIdType = defaultExtractIdFn) {
+    return function(item: T, pos: number, array: T[]) {
+        return !pos || extractId(item) !== extractId(array[pos - 1]);
+    }
 }

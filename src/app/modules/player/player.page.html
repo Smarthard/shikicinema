@@ -61,14 +61,13 @@
             />
         }
 
-        @defer (when anime()?.id) {
-            <app-description
-                class="player-page__description"
-                [anime]="anime()"
-                [animeName]="animeName()"
-            />   
+        @defer (on timer(3000)) {
+            <app-franchise
+                class="player-page__franchise"
+                [animeId]="animeIdQ()"
+            />
         } @placeholder {
-            <div class="player-page__description player-page__description--skeleton skeleton"></div>
+            <div class="player-page__franchise player-page__franchise--skeleton skeleton"></div>
         }
 
         @defer (on idle) {

@@ -4,6 +4,9 @@
 
     min-height: 13rem;
 
+    max-width: 100%;
+    overflow-x: scroll;
+
     &--empty {
         display: none;
     }
