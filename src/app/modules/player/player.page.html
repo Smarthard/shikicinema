@@ -25,7 +25,7 @@
             [videos]="videos()"
             [selectedVideo]="currentVideo()"
             (changeKind)="onKindChange($event)"
-            (changeVideo)="onVideoChange($event, false)"
+            (changeVideo)="onVideoChange($event[0], $event[1])"
             (domainFiltersOff)="setDomainFilters(false)"
         />
 

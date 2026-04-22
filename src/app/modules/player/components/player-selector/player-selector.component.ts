@@ -65,7 +65,7 @@ export class PlayerSelectorComponent {
     readonly videos = input<VideoInfoInterface[]>([]);
     readonly selectedVideo = input<VideoInfoInterface>();
 
-    readonly changeVideo = output<VideoInfoInterface>();
+    readonly changeVideo = output<[VideoInfoInterface, boolean]>();
     readonly changeKind = output<VideoKindEnum>();
     readonly domainFiltersOff = output();
 
@@ -119,7 +119,7 @@ export class PlayerSelectorComponent {
 
                 const chosenVideo = (relevantVideos || videos)?.[0];
 
-                this.onVideoChange(chosenVideo);
+                this.onVideoChange(chosenVideo, false);
             }
         },
     );
@@ -128,8 +128,8 @@ export class PlayerSelectorComponent {
         this.changeKind.emit(kind);
     }
 
-    onVideoChange(video: VideoInfoInterface): void {
-        this.changeVideo.emit(video);
+    onVideoChange(video: VideoInfoInterface, isShouldUpdatePref = true): void {
+        this.changeVideo.emit([video, isShouldUpdatePref]);
     }
 
     onDisableDomainFilters(): void {
