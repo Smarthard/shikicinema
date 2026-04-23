@@ -1,3 +1,5 @@
+@use 'src/scss/mixins' as *;
+
 .episode-selector-item {
     // <-- for ionic ripple effect
     position: relative;
@@ -18,8 +20,19 @@
     min-height: 2rem;
     padding: .25rem;
     font-weight: 600;
-    font-size: 1rem;
     cursor: pointer;
+
+    @include media-breakpoint-up('x2k') {
+        min-width: 3rem;
+        min-height: 3rem;
+        border-width: .125rem;
+    }
+
+    @include media-breakpoint-up('x4k') {
+        min-width: 4.5rem;
+        min-height: 4.5rem;
+        border-width: .25rem;
+    }
 
     &--watched {
         background-color: rgba(var(--shc-watched-episode-color-rgb), 0.85) !important;

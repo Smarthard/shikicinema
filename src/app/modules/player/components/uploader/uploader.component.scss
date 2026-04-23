@@ -1,5 +1,15 @@
+@use 'src/scss/mixins' as *;
+
 .uploader {
-    --shc-comment-avatar-size: 5vh;
+    --shc-comment-avatar-size: 3rem;
+
+    @include media-breakpoint-up('x2k') {
+        --shc-comment-avatar-size: 4rem;
+    }
+
+    @include media-breakpoint-up('x4k') {
+        --shc-comment-avatar-size: 5.5rem;
+    }
 
     display: flex;
     gap: .75rem;
@@ -21,9 +31,5 @@
         flex-direction: column;
         gap: .125rem;
         white-space: nowrap;
-    }
-
-    &__name {
-        font-size: 1rem;
     }
 }

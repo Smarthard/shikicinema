@@ -11,7 +11,7 @@
                 class="side-panel__settings-btn"
                 fill="clear"
                 (click)="filtersToggle.emit(!isDomainFiltersActive())">
-                <ion-icon slot="icon-only" [name]="funnelIcon()" />
+                <ion-icon class="side-panel__icon" slot="icon-only" [name]="funnelIcon()" />
             </ion-button>
         }
 
@@ -19,7 +19,7 @@
             class="side-panel__settings-btn"
             fill="clear"
             routerLink="/settings">
-            <ion-icon slot="icon-only" name="settings-outline" />
+            <ion-icon class="side-panel__icon" slot="icon-only" name="settings-outline" />
         </ion-button>
     </div>
 }

@@ -39,12 +39,12 @@
                         0 2px 0 black,
                         -2px 0 0 black;
 
-        max-width: 95%;
-        font-size: large;
+        max-width: 85%;
+        font-size: calc(var(--shc-font-size) * 1.5);
 
         @include media-breakpoint-up('lg') {
             max-width: 100%;
-            font-size: x-large;
+            font-size: calc(var(--shc-font-size) * 2);
         }
     }
 }

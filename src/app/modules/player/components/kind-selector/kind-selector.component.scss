@@ -1,6 +1,24 @@
+@use 'src/scss/mixins' as *;
+
 .kind-selector {
     background-color: var(--ion-color-light);
     border-radius: .25rem;
+
+    &__item {
+        @include media-breakpoint-up('x2k') {
+            min-height: 4rem;
+        }
+        
+        @include media-breakpoint-up('x4k') {
+            min-height: 5rem;
+        }
+    }
+
+    &__label {
+        @include media-breakpoint-up('x2k') {
+            line-height: unset;
+        }
+    }
 
     .segment-button-checked {
         --ion-color-base: var(--ion-color-primary);

@@ -6,7 +6,7 @@
                 [value]="kind"
                 [disabled]="!kinds()?.includes(kind)"
                 (click)="selection.emit(kind)">
-            <ion-label>{{ ('GLOBAL.VIDEO.KINDS.' + kind) | transloco }}</ion-label>
+            <ion-label class="kind-selector__label">{{ ('GLOBAL.VIDEO.KINDS.' + kind) | transloco }}</ion-label>
         </ion-segment-button>
     }
 </ion-segment>

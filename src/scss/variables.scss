@@ -1,4 +1,8 @@
+@use 'src/scss/mixins' as *;
+
 body {
+    --shc-font-size-value: 1rem;
+
     --shc-watched-episode-color-rgb: 41, 196, 103;
     --shc-watched-episode-color: rgb(var(--shc-watched-episode-color-rgb));
     --shc-episode-not-aired-color: var(--ion-color-light);
@@ -14,4 +18,14 @@ body {
     --shc-player-sides-padding: 5rem;
 
     --shc-comment-avatar-size: 7vh;
+
+    @include media-breakpoint-up('x2k') {
+        --shc-border-radius: .5rem;
+        --shc-header-height: 7.5rem;
+    }
+
+    @include media-breakpoint-up('x4k') {
+        --shc-border-radius: 1rem;
+        --shc-header-height: 10rem;
+    }
 }

@@ -76,6 +76,9 @@ import { updateLanguageAction, updateThemeAction } from '@app-root/app/store/set
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
+    host: {
+        class: 'header',
+    },
 })
 export class HeaderComponent {
     private readonly store = inject(Store);

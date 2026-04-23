@@ -1,12 +1,6 @@
 @use 'src/scss/mixins' as *;
 
 .player-page {
-    font-size: .825rem;
-
-    @include media-breakpoint-up('lg') {
-        font-size: 1rem;
-    }
-
     &__player {
         grid-area: player;
     }
@@ -30,7 +24,15 @@
         border-radius: var(--shc-border-radius);
 
         &--skeleton {
-            height: 14.25rem;
+            height: 14.5rem;
+
+            @include media-breakpoint-up('x2k') {
+                height: 26.5rem;
+            }
+
+            @include media-breakpoint-up('x4k') {
+                height: 39.5rem;
+            }
         }
     }
 
@@ -84,10 +86,12 @@
             }
 
             @include media-breakpoint-up('x2k') {
+                grid-template-columns: 65vw 35rem;
                 padding: 0 calc(var(--shc-player-sides-padding) * 3);
             }
 
             @include media-breakpoint-up('x4k') {
+                grid-template-columns: 65vw 45rem;
                 padding: 0 calc(var(--shc-player-sides-padding) * 5);
             }
 

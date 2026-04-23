@@ -1,0 +1,48 @@
+@use 'src/scss/mixins' as *;
+
+// по какой-то причине Ionic Framework положил большой и толстый на разрешения 2K и 4K
+html body,
+ion-item,
+ion-button {
+    --shc-font-size: calc(var(--shc-font-size-value) * .825);
+    font-size: var(--shc-font-size);
+
+    @include media-breakpoint-up('lg') {
+        --shc-font-size: var(--shc-font-size-value);
+    }
+
+    @include media-breakpoint-up('x2k') {
+        --shc-font-size: calc(var(--shc-font-size-value) * 1.5);
+    }
+
+    @include media-breakpoint-up('x4k') {
+        --shc-font-size: calc(var(--shc-font-size-value) * 2);
+    }
+}
+
+ion-segment-button {
+    --shc-font-size: calc(var(--shc-font-size-value) * .825);
+    font-size: var(--shc-font-size);
+
+    @include media-breakpoint-up('x2k') {
+        --shc-font-size: calc(var(--shc-font-size-value) * 1.5);
+    }
+
+    @include media-breakpoint-up('x4k') {
+        --shc-font-size: calc(var(--shc-font-size-value) * 2);
+    }
+}
+
+ion-icon {
+    font-size: calc(var(--shc-font-size) * 1.5);
+
+    @include media-breakpoint-up('x2k') {
+        width: 2rem;
+        height: 2rem;
+    }
+
+    @include media-breakpoint-up('x4k') {
+        width: 3rem;
+        height: 3rem;
+    }
+}
