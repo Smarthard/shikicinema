@@ -56,6 +56,7 @@ export class VideoSelectorModalComponent extends IonModal {
     public animeId!: Signal<ResourceIdType>;
     public episode!: Signal<number>;
     public lastAiredEpisode!: Signal<number>;
+    public maxEpisode!: Signal<number>;
     public isLoading!: Signal<boolean>;
     public videos!: Signal<VideoInfoInterface[]>;
 

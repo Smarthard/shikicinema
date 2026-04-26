@@ -296,6 +296,7 @@ export class PlayerPage implements OnInit {
             animeId: this.animeIdQ,
             episode: this.episodeQ,
             lastAiredEpisode: this.lastAiredEpisode,
+            maxEpisode: this.maxEpisode,
             isLoading: this.isVideosLoading,
             videos: this.videos,
         };

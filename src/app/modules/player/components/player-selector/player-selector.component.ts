@@ -59,6 +59,7 @@ export class PlayerSelectorComponent {
     readonly kind = input.required<VideoKindEnum>();
     readonly episode = input.required<number>();
     readonly lastAiredEpisode = input.required<number>();
+    readonly maxEpisode = input.required<number>();
     readonly isFilterDomains = input.required<boolean>();
     readonly isLoading = input.required<boolean>();
 
@@ -88,7 +89,7 @@ export class PlayerSelectorComponent {
         ? this.episodeVideosFiltered()
         : this.episodeVideosUnfiltered(),
     );
-    readonly availability = computed(() => authorAvailability(this.videos(), this.lastAiredEpisode()));
+    readonly availability = computed(() => authorAvailability(this.videos(), this.maxEpisode()));
     readonly hasUnfilteredVideos = computed(() => this.episodeVideosUnfiltered()?.length > 0 && this.isFilterDomains());
 
     readonly episodeVideosChangeEffect = explicitEffect(
