@@ -15,8 +15,6 @@
     }
 
     &__avatar-wrap {
-        --shc-comment-avatar-size: 7vh;
-
         position: relative;
         overflow: hidden;
         border-radius: 100%;
@@ -41,7 +39,7 @@
         gap: 1rem;
 
         @include media-breakpoint-down('lg') {
-            font-size: .825rem;
+            font-size: calc(var(--shc-font-size) * 0.825);
         }
     }
 
@@ -59,7 +57,7 @@
     }
 
     &__date {
-        font-size: small;
+        font-size: calc(var(--shc-font-size) * 0.75);
         color: var(--ion-color-medium);
     }
 }

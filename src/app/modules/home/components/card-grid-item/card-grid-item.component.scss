@@ -19,7 +19,7 @@
         overflow: hidden;
         text-overflow: ellipsis;
 
-        @include media-breakpoint-up('xxxl') {
+        @include media-breakpoint-up('x2k') {
             font-size: 1.2rem;
         }
 
@@ -39,7 +39,7 @@
             margin-top: 1px;
         }
 
-        @include media-breakpoint-up('xxxl') {
+        @include media-breakpoint-up('x2k') {
             font-size: 1rem;
         }
 

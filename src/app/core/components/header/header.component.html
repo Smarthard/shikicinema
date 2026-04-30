@@ -1,6 +1,6 @@
 <!-- translucent не работает в mode="md" -->
 <ion-header mode="ios" translucent="true">
-    <ion-toolbar class="ion-toolbar">
+    <ion-toolbar class="header__toolbar-wrap">
         <div class="toolbar">
             <ion-searchbar
                 #animeSearchbar
@@ -11,28 +11,35 @@
                 [placeholder]="'HOME_MODULE.HOME_PAGE.ANIME_SEARCHBAR_PLACEHOLDER' | transloco"
             />
 
-            <ion-button
+            @if (isPlayerPage()) {
+                <app-upload-button
+                    class="toolbar__upload-btn"
+                    fill="clear"
+                    size="large"
+                />
+            }
+
+            <div
                 id="menu-trigger"
-                expand="full"
-                fill="clear"
-                color="medium"
-                size="large"
-                class="toolbar__menu-btn user-item avatar-btn"
+                class="toolbar__menu-btn user-item"
+                tabindex="0"
+                (keydown.space)="menuPopover.present()"
+                (keydown.enter)="menuPopover.present()"
                 (auxclick)="toShikimoriProfilePage()"
             >
                 @if (avatarImg()) {
                     <img
+                        class="user-item__avatar user-item__avatar--img"
                         [src]="avatarImg()"
                         [alt]="nickname()"
-                        class="user-item__avatar"
                     />
                 } @else {
                     <ion-icon
                         class="user-item__avatar"
                         name="person-circle"
-                    ></ion-icon>
+                    />
                 }
-            </ion-button>
+            </div>
         </div>
 
         <ion-popover
@@ -84,11 +91,12 @@
     </ion-toolbar>
 </ion-header>
 
+<!-- дальше шаблоны для popover'ов -->
 <ng-template
     #signedInUserMenuTemplate
     let-currentUser="currentUser"
 >
-    <ion-content>
+    <ion-content class="menu-content">
         <ion-list>
             <ion-item
                 class="menu-item"

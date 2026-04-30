@@ -1,0 +1,38 @@
+@use 'src/scss/mixins' as *;
+
+.upload-btn {
+    display: flex;
+    gap: .5rem;
+    align-items: center;
+
+    cursor: pointer;
+    user-select: none;
+
+    padding: .5rem;
+    border-radius: 3rem;
+    background-color: var(--ion-color-light);
+
+    &__icon {
+        font-size: calc(var(--shc-font-size) * 1.5);
+    }
+
+    &__text {
+        white-space: nowrap;
+    }
+
+    &__modal {
+        --height: auto;
+
+        @include media-breakpoint-down('lg') {
+            align-items: end;
+        }
+
+        @include media-breakpoint-up('lg') {
+            --width: auto;
+        }
+    }
+    
+    @include media-breakpoint-up('lg') {
+        padding: .5rem 1rem;
+    }
+}

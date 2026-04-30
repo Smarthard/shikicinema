@@ -3,24 +3,78 @@
 $grid-side-columns-width: 10rem;
 $grid-searchbar-column-width: 10fr;
 
-.ion-toolbar {
-  --background: transparent;
-  --border-color: transparent;
+.header {
+    &__toolbar-wrap {
+        --background: transparent;
+        --border-color: transparent;
+    }
 }
 
 .toolbar {
     display: flex;
     align-items: center;
+    gap: 1rem;
+
+    margin: 0 .5rem;
     min-height: var(--shc-header-height);
 
     &__search {
         padding: 0 !important;
-        margin-left: 1rem !important;
+
+        & > .searchbar-input-container {
+            --border-radius: var(--shc-border-radius);
+
+            @include media-breakpoint-up('x2k') {
+                min-height: 4.875rem;
+            }
+    
+            @include media-breakpoint-up('x4k') {
+                min-height: 6rem;
+            }
+
+            .searchbar-search-icon {
+                @include media-breakpoint-up('x2k') {
+                    width: 2.25rem;
+                }
+
+                @include media-breakpoint-up('x2k') {
+                    width: 3rem;
+                }
+            }
+
+            .searchbar-input {
+                font-size: var(--shc-font-size);
+
+                @include media-breakpoint-up('x2k') {
+                    padding-inline-start: 3.25rem !important;
+                }
+
+                @include media-breakpoint-up('x2k') {
+                    padding-inline-start: 4rem !important;
+                }
+            }
+        }
+    }
+
+    &__menu-btn {
+        cursor: pointer;
+        max-height: 2.25rem;
+        max-width: 2.25rem;
     }
 
     @include media-breakpoint-up('lg') {
+        margin: 0 1.5rem;
+
         &__menu-btn {
-            margin-left: auto;
+            @include media-breakpoint-up('x2k') {
+                max-height: 4.875rem;
+                max-width: 4.875rem;
+            }
+
+            @include media-breakpoint-up('x2k') {
+                max-height: 5.25rem;
+                max-width: 5.25rem;
+            }
         }
 
         &__search {
@@ -37,7 +91,6 @@ $grid-searchbar-column-width: 10fr;
             }
         }
 
-        &__title,
         &__search,
         &__menu-btn {
             padding: 0;
@@ -45,20 +98,37 @@ $grid-searchbar-column-width: 10fr;
     }
 }
 
-.avatar-btn {
-    --opacity: 1;
-}
-
 .user-item {
 
     &__avatar {
         border-radius: 100%;
-        font-size: 2.375rem;
-        max-height: 3.75rem;
+        max-height: 100%;
+        width: 2.25rem;
+        height: 2.25rem;
 
-        @include media-breakpoint-up('lg') {
-            max-height: 2.375rem;
+        &--img {
+            max-width: fit-content;
         }
+
+        @include media-breakpoint-up('x2k') {
+            width: 4.875rem;
+            height: 4.875rem;
+        }
+
+        @include media-breakpoint-up('x4k') {
+            width: 5.25rem;
+            height: 5.25rem;
+        }
+    }
+}
+
+.menu-popover {
+    @include media-breakpoint-up('x2k') {
+        --width: 30rem;
+    }
+
+    @include media-breakpoint-up('x4k') {
+        --width: 35rem;
     }
 }
 
@@ -71,6 +141,15 @@ $grid-searchbar-column-width: 10fr;
     }
 
     &__icon {
+        @include media-breakpoint-up('x2k') {
+            width: 3.5rem;
+            height: 3.5rem;
+        }
+
+        @include media-breakpoint-up('x4k') {
+            width: 5rem;
+            height: 5rem;
+        }
 
         &--rotated {
             transform: rotate(30grad);

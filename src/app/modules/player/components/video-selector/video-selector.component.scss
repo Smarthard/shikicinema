@@ -1,9 +1,19 @@
+@use 'src/scss/mixins' as *;
+
 .video-selector {
     display: flex;
     min-width: 23.5rem;
     overflow: auto;
     background-color: var(--ion-color-light);
     border-radius: .25rem;
+
+    @include media-breakpoint-up('x2k') {
+        min-width: 35rem;
+    }
+    
+    @include media-breakpoint-up('x4k') {
+        min-width: 45rem;
+    }
 
     .scrollbar {
         --scrollbar-thumb-color: var(--shc-scrollbar-color);

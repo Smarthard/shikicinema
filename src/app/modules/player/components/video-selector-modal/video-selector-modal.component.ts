@@ -15,15 +15,14 @@ import {
     IonToolbar,
     ModalController,
 } from '@ionic/angular/standalone';
+import { Store } from '@ngrx/store';
 import { TranslocoPipe } from '@jsverse/transloco';
 
-import { AuthorAvailabilityWarningPipe } from '@app/modules/player/pipes';
-import { FilterByKindPipe } from '@app/shared/pipes/filter-by-kind/filter-by-kind.pipe';
-import { GetActiveKindsPipe } from '@app/shared/pipes/get-active-kinds/get-active-kinds.pipe';
-import { KindSelectorComponent } from '@app/modules/player/components/kind-selector/kind-selector.component';
-import { PlayerKindDisplayMode } from '@app/store/settings/types';
+import { PlayerSelectorComponent } from '@app/modules/player/components/player-selector';
+import { ResourceIdType } from '@app/shared/types';
 import { VideoInfoInterface, VideoKindEnum } from '@app/modules/player/types';
-import { VideoSelectorComponent } from '@app/modules/player/components/video-selector/video-selector.component';
+import { getDomain } from '@app/shared/utils/get-domain.function';
+import { updatePlayerPreferencesAction } from '@app/store/settings/actions/settings.actions';
 
 @Component({
     selector: 'app-video-selector-modal',
@@ -34,12 +33,8 @@ import { VideoSelectorComponent } from '@app/modules/player/components/video-sel
         IonButtons,
         IonButton,
         IonIcon,
-        AuthorAvailabilityWarningPipe,
-        FilterByKindPipe,
-        GetActiveKindsPipe,
         TranslocoPipe,
-        VideoSelectorComponent,
-        KindSelectorComponent,
+        PlayerSelectorComponent,
     ],
     templateUrl: './video-selector-modal.component.html',
     styleUrl: './video-selector-modal.component.scss',
@@ -50,37 +45,55 @@ import { VideoSelectorComponent } from '@app/modules/player/components/video-sel
     },
 })
 export class VideoSelectorModalComponent extends IonModal {
-    private readonly _modalController = inject(ModalController);
+    private readonly modalController = inject(ModalController);
+    private readonly store = inject(Store);
 
     // TODO: перекидывание напрямую сигналов, а не их значений не выглядит хорошей идеей
-    public videos: Signal<VideoInfoInterface[]>;
-    public episodeVideos: Signal<VideoInfoInterface[]>;
-    public kindDisplayMode: Signal<PlayerKindDisplayMode>;
-    public hasUnfilteredVideos: Signal<boolean>;
-    public lastAiredEpisode: Signal<number>;
+    public selectedVideo!: WritableSignal<VideoInfoInterface>;
+    public selectedKind!: WritableSignal<VideoKindEnum>;
+    public isFilterDomains!: WritableSignal<boolean>;
 
-    public isDomainFilterOn: WritableSignal<boolean>;
-    public selectedKind: WritableSignal<VideoKindEnum>;
-    public selectedVideo: WritableSignal<VideoInfoInterface>;
+    public animeId!: Signal<ResourceIdType>;
+    public episode!: Signal<number>;
+    public lastAiredEpisode!: Signal<number>;
+    public maxEpisode!: Signal<number>;
+    public isLoading!: Signal<boolean>;
+    public videos!: Signal<VideoInfoInterface[]>;
+
+    private updateUserPreferences(): void {
+        const currentVideo = this.selectedVideo();
+
+        if (currentVideo) {
+            const animeId = this.animeId();
+            const { author, kind, url } = currentVideo;
+            const domain = getDomain(url);
+
+            this.store.dispatch(updatePlayerPreferencesAction({ animeId, author, kind, domain }));
+        }
+    }
 
     onKindChange(kind: VideoKindEnum): void {
         this.selectedKind.set(kind);
     }
 
-    onVideoChange(video: VideoInfoInterface): void {
+    onVideoChange(video: VideoInfoInterface, isShouldUpdatePref = true): void {
         this.selectedVideo.set(video);
+
+        if (isShouldUpdatePref) {
+            this.updateUserPreferences();
+        }
     }
 
     onToggleDomainFilters(): void {
-        this.isDomainFilterOn.set(false);
+        this.isFilterDomains.set(false);
     }
 
     cancel(): void {
         // TODO: выяснить почему this.dismiss() кидает ошибку
-        this._modalController.dismiss(null, 'cancel');
+        this.modalController.dismiss(null, 'cancel');
     }
 
     submit(): void {
-        this._modalController.dismiss(this.selectedVideo(), 'submit');
+        this.modalController.dismiss(this.selectedVideo(), 'submit');
     }
 }

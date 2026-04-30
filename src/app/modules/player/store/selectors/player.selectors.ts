@@ -21,6 +21,16 @@ export const selectPlayerAnime = (animeId: ResourceIdType) => createSelector(
     ({ animeInfo }) => animeInfo[`${animeId}`] || {} as AnimeBriefInfoInterface,
 );
 
+export const selectCurrentPlayerAnime = createSelector(
+    selectPlayer,
+    ({ animeInfo, currentAnimeId }) => animeInfo[`${currentAnimeId}`] || {} as AnimeBriefInfoInterface,
+);
+
+export const selectCurrentPlayerEpisode = createSelector(
+    selectPlayer,
+    ({ currentEpisode }) => currentEpisode || 1,
+);
+
 export const selectPlayerAnimeLoading = (animeId: ResourceIdType) => createSelector(
     selectPlayerAnime(animeId),
     (anime) => !anime,

@@ -5,6 +5,7 @@ import { ResourceIdType } from '@app/shared/types/resource-id.type';
 import { ShikivideosInterface, UploadToken } from '@app/shared/types/shikicinema/v1';
 import { VideoInfoInterface } from '@app/modules/player/types';
 import { environment } from '@app-env/environment';
+import { map } from 'rxjs';
 import { mapVideoKindToShikicinema } from '@app/shared/utils/map-video-kind-to-shikicinema-v1.function';
 
 @Injectable({
@@ -70,5 +71,15 @@ export class ShikicinemaV1Client {
         }
 
         return this.http.get<ShikivideosInterface[]>(url, { params });
+    }
+
+    getTotalContributions(uploaderId: ResourceIdType) {
+        const url = `${this.baseUri}/api/shikivideos/contributions`;
+        const params = new HttpParams()
+            .set('uploader', uploaderId);
+
+        return this.http.get(url, { params }).pipe(
+            map((res: any) => res?.count as number),
+        )
     }
 }

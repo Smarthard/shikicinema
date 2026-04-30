@@ -1,3 +1,5 @@
+@use 'src/scss/mixins' as *;
+
 .author-accordion {
     overflow: hidden;
     background-color: var(--ion-color-light);
@@ -11,6 +13,14 @@
 
     &__item {
         max-height: 2.625rem;
+
+        @include media-breakpoint-up('x2k') {
+            max-height: 3.25rem;
+        }
+
+        @include media-breakpoint-up('x4k') {
+            max-height: 4rem;
+        }
     }
 
     &__header {
@@ -63,6 +73,18 @@
             height: 1rem;
             background-color: white;
             padding: 1px;
+        }
+
+        &--dvd,
+        &--vhs,
+        &--bd {
+            @include media-breakpoint-up('x2k') {
+                max-height: 1.25rem;
+            }
+
+            @include media-breakpoint-up('x4k') {
+                max-height: 1.5rem;
+            }
         }
     }
 

@@ -1,7 +1,15 @@
 @use 'src/scss/mixins' as *;
 
 .control-panel {
-    $inputMinHeight: 2rem;
+    --shc-min-episode-input-height: 2rem;
+
+    @include media-breakpoint-up('x2k') {
+        --shc-min-episode-input-height: 2.5rem;
+    }
+
+    @include media-breakpoint-up('x4k') {
+        --shc-min-episode-input-height: 4rem;
+    }
 
     display: flex;
 
@@ -36,14 +44,25 @@
         justify-self: center;
         align-self: center;
 
-        --min-height: $inputMinHeight;
+        --min-height: var(--shc-min-episode-input-height);
         --border-width: 0.125rem;
         --border-radius: 0.25rem;
+
+        @include media-breakpoint-up('x2k') {
+            min-width: 7rem;
+            max-width: 7rem;
+        }
+    
+        @include media-breakpoint-up('x4k') {
+            min-width: 9.25rem;
+            max-width: 9.25rem;
+        }
     }
 
     &__episode {
         text-align: center;
-        min-height: $inputMinHeight !important;
+        min-height: var(--shc-min-episode-input-height) !important;
+        font-size: var(--shc-font-size);
     }
 
     &__episode-selector {
@@ -57,6 +76,10 @@
 
         @include media-breakpoint-between('md', 'xl') {
             max-width: 70vw;
+        }
+
+        @include media-breakpoint-up('x2k') {
+            max-width: 60vw;
         }
 
         &--modal {

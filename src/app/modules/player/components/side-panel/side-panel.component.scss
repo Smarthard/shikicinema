@@ -1,5 +1,3 @@
-@use 'src/scss/mixins' as *;
-
 .side-panel {
     display: flex;
     align-items: center;
@@ -9,19 +7,11 @@
         justify-content: unset;
     }
 
-    &__upload-btn {
+    &__uploader {
+        border-radius: var(--shc-border-radius);
         height: 100%;
-    }
-
-    &__upload-modal {
-        --height: auto;
-
-        @include media-breakpoint-down('lg') {
-            align-items: end;
-        }
-
-        @include media-breakpoint-up('lg') {
-            --width: auto;
-        }
+        width: 50%;
+        min-width: 25%;
+        max-width: 75%;
     }
 }

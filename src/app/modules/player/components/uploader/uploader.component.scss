@@ -1,22 +1,35 @@
+@use 'src/scss/mixins' as *;
+
 .uploader {
-    &,
-    &__link-wrapper {
-        display: flex;
-        align-items: center;
-        gap: .25rem;
+    --shc-comment-avatar-size: 3rem;
+
+    @include media-breakpoint-up('x2k') {
+        --shc-comment-avatar-size: 4rem;
     }
+
+    @include media-breakpoint-up('x4k') {
+        --shc-comment-avatar-size: 5.5rem;
+    }
+
+    display: flex;
+    gap: .75rem;
+    align-items: center;
 
     &__avatar {
-        object-fit: cover;
+        display: block;
 
-        border: 1px var(--ion-color-primary) solid;
-        border-radius: .125rem;
+        width: var(--shc-comment-avatar-size);
+        height: var(--shc-comment-avatar-size);
 
-        width: 1.625rem;
-        height: 1.625rem;
+        &.image-card {
+            border-radius: 100%;
+        }
     }
 
-    &__name {
-        font-size: 1rem;
+    &__info {
+        display: flex;
+        flex-direction: column;
+        gap: .125rem;
+        white-space: nowrap;
     }
 }

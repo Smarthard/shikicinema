@@ -1,0 +1,1 @@
+export { PlayerSelectorComponent } from './player-selector.component';

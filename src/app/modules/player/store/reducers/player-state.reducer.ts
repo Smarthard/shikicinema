@@ -7,6 +7,8 @@ import { AnimeBriefInfoInterface } from '@app/shared/types/shikimori/anime-brief
 import { PlayerStoreInterface } from '@app/modules/player/store/types';
 import {
     addVideosAction,
+    changeCurrentAnimeAction,
+    changeCurrentEpisodeAction,
     deleteCommentSuccessAction,
     editCommentSuccessAction,
     getAnimeInfoSuccessAction,
@@ -23,6 +25,8 @@ import { filterComments, patchComments } from '@app/modules/player/store/utils';
 import { filterDuplicatedIds } from '@app/shared/utils/filter-duplicated-ids.function';
 
 const initialState: PlayerStoreInterface = {
+    currentAnimeId: undefined,
+    currentEpisode: undefined,
     videos: {},
     animeInfo: {},
     comments: {},
@@ -30,6 +34,20 @@ const initialState: PlayerStoreInterface = {
 };
 
 export const playerReducer = createReducer(initialState,
+    on(
+        changeCurrentAnimeAction,
+        (state, { animeId }) => ({
+            ...state,
+            currentAnimeId: animeId,
+        }),
+    ),
+    on(
+        changeCurrentEpisodeAction,
+        (state, { episode }) => ({
+            ...state,
+            currentEpisode: episode,
+        }),
+    ),
     on(
         addVideosAction,
         (state, { animeId, videos }) => ({
@@ -111,7 +129,7 @@ export const playerReducer = createReducer(initialState,
                         isLoading: comments?.length > limit,
                         isShownAll: state.comments?.[animeId]?.[episode]?.isShownAll ?? comments?.length <= 20,
                         comments: [...state.comments?.[animeId]?.[episode]?.comments || [], ...comments]
-                            .filter(filterDuplicatedIds),
+                            .filter(filterDuplicatedIds()),
                     },
                 },
             },
@@ -185,7 +203,7 @@ export const playerReducer = createReducer(initialState,
             ...state,
             franchise: {
                 ...state.franchise,
-                [animeId]: franchise,
+                [animeId]: franchise.filter(filterDuplicatedIds((item) => item?.anime?.id)),
             },
         }),
     ),

@@ -17,6 +17,20 @@
                 "ANONS": "planned",
                 "ONGOING": "airing",
                 "RELEASED": "released"
+            },
+            "FRANCHISE_RELATION": {
+                "PREQUEL": "Prequel",
+                "SEQUEL": "Sequel",
+                "SPINOFF": "Spin-off",
+                "PARENT_STORY": "Parent Story",
+                "SIDE_STORY": "Side Story",
+                "ALT_VERSION": "Alt. Story",
+                "ALT_SETTING": "Alt. Setting",
+                "OTHER": "Other",
+                "SUMMARY": "Summary",
+                "CHARACTER": "Same Character",
+                "FRANCHISE": "Franchise",
+                "ADAPTATION": "Adaptation"
             }
         },
         "VIDEO": {
@@ -69,6 +83,9 @@
                 },
                 "LANGUAGE": "Language",
                 "EXIT": "Exit"
+            },
+            "UPLOAD_BUTTON": {
+                "ACTION_TEXT": "Upload"
             }
         },
         "GO_EXTERNAL_PAGE": {
@@ -94,6 +111,10 @@
             "DATES": {
                 "YEAR": "{{ year }}"
             }
+        },
+        "INLINE_EXPANDER": {
+            "OPEN": "...more",
+            "CLOSE": "hide"
         }
     },
     "HOME_MODULE": {
@@ -194,6 +215,10 @@
                     "REMINDER_TEXT": "There are videos here, but you need to",
                     "DISABLE_FILTERS_BTN": "turn off filters"
                 }
+            },
+            "UPLOADER": {
+                "UPLOADER_IS_A_SERVICE": "Third-party service",
+                "UPLOADS_COUNT": "{ count }{ suffix } { count, plural, one {upload} other {uploads} }"
             }
         },
         "VIDEO_SELECT_MODAL": {

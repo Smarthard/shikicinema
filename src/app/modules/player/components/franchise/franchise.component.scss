@@ -2,8 +2,14 @@
     display: flex;
     gap: .5rem;
 
-    min-height: 16rem;
+    min-height: 13rem;
+
+    max-width: 100%;
+    overflow-x: scroll;
+
+    &--empty {
+        display: none;
+    }
 
     background-color: var(--ion-color-light);
-    padding: .5rem;
 }

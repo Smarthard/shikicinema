@@ -1,4 +1,4 @@
-@for (item of sortedFranchise(); track trackById($index, item.anime)) {
+@for (item of franchise(); track trackById($index, item.anime)) {
     @let link = `/player/${item.anime.id}/1`;
 
     <app-franchise-item

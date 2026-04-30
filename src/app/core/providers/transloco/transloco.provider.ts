@@ -4,8 +4,10 @@ import {
     Translation,
     TranslocoLoader,
     provideTransloco,
+    provideTranslocoTranspiler,
 } from '@jsverse/transloco';
 
+import { ICUTranspiler } from '@app/core/providers/transloco/icu.transpiler';
 import { environment } from '@app-env/environment';
 
 @Injectable({ providedIn: 'root' })
@@ -32,5 +34,6 @@ export function provideTranslocoRoot() {
             },
             loader: TranslocoHttpLoader,
         }),
+        provideTranslocoTranspiler(ICUTranspiler),
     ];
 }

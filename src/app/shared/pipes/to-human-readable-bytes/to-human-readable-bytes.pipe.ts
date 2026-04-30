@@ -1,7 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 import { Bytes, BytesSI } from '@app/shared/types/bytes.type';
-import { bytesToHumanReadable } from '@app/shared/utils/bytes-to-human-readable.function';
+import { bytesToHumanReadable } from '@app/shared/utils/human-readable/bytes-to-human-readable.function';
 import { reverseHumanBytesMap } from '@app/shared/config/reverse-human-bytes.map';
 
 @Pipe({

@@ -1,0 +1,9 @@
+.player-selector {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+
+    &__video-selector {
+        flex: 1;
+    }
+}
