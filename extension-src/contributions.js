@@ -9,7 +9,7 @@ const PLAYER_URL = chrome.runtime.getURL('/index.html');
 const SHIKIVIDEOS_API = 'https://smarthard.net/api/shikivideos';
 const CONTRIBUTIONS_ELEMENT_CLASS_NAME = 'uploader_contributions';
 
-function hasAppendedCotributions(htmlEl) {
+function hasAppendedContributions(htmlEl) {
     return htmlEl && htmlEl instanceof HTMLElement && htmlEl.classList.contains(CONTRIBUTIONS_ELEMENT_CLASS_NAME);
 }
 
@@ -24,7 +24,7 @@ async function checkAndAppendContribs() {
     const uploads = document.querySelector('div[data-type="video_uploads"]') || document.createElement('div');
     const profileBody = document.querySelector('body#profiles_show');
     const isOtherShikimoriPage = /\/(animes)|(mangas)|(ranobe)(forum)|(clubs)|(collections)|(articles)|(users)|(contests)|(ongoings)|(about)|(moderations)|(list)\//i.test(window.location);
-    const isContributionsAppended = hasAppendedCotributions(uploads);
+    const isContributionsAppended = hasAppendedContributions(uploads);
 
     if (profileBody && !isOtherShikimoriPage && !isContributionsAppended) {
       await correctContributions(uploads);
@@ -36,12 +36,10 @@ let observer = new MutationObserver(() => {
     clearTimeout(timeout);
   }
 
-  checkAndAppendContribs()
-
-  timeout = setTimeout(checkAndAppendContribs, 150);
+  timeout = setTimeout(checkAndAppendContribs, 300);
 });
 
-observer.observe(window.document, {childList: true, subtree: true});
+observer.observe(window.document, { childList: true, subtree: true });
 
 async function correctContributions(element) {
   const cInfoDiv = document.querySelector('div.c-info');
@@ -64,7 +62,7 @@ async function correctContributions(element) {
     if (
       contributions > 0 &&
       !activityDiv &&
-      !hasAppendedCotributions(cInfoDiv)
+      !hasAppendedContributions(cInfoDiv)
     ) {
       cInfoDiv.classList.add(CONTRIBUTIONS_ELEMENT_CLASS_NAME);
       activityDiv = document.createElement('div');
@@ -77,13 +75,11 @@ async function correctContributions(element) {
     if (
       contributions > 0 &&
       !element.hasAttribute('data-type') &&
-      !hasAppendedCotributions(activityDiv)
+      !hasAppendedContributions(activityDiv)
     ) {
       activityDiv.classList.add(CONTRIBUTIONS_ELEMENT_CLASS_NAME);
       element.setAttribute('data-type', 'video_uploads');
       activityDiv?.appendChild(element);
     }
   }
-
-  clearTimeout(timeout);
 }
