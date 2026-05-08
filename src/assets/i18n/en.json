@@ -73,6 +73,7 @@
             },
             "TOOLBAR_MENU": {
                 "SIGN_IN": "Sign In",
+                "TO_ANIME_PAGE": "Open anime page",
                 "TO_PROFILE": "Profile",
                 "ANIME_LIST": "Anime list",
                 "MANGA_LIST": "Manga list",

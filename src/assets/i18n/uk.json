@@ -73,6 +73,7 @@
             },
             "TOOLBAR_MENU": {
                 "SIGN_IN": "Увійти",
+                "TO_ANIME_PAGE": "На сторінку аніме",
                 "TO_PROFILE": "Профіль",
                 "ANIME_LIST": "Список аніме",
                 "MANGA_LIST": "Список манги",

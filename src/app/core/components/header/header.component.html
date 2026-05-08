@@ -98,6 +98,29 @@
 >
     <ion-content>
         <ion-list>
+            @if (isPlayerPage()) {
+                <ion-item
+                    class="menu-item"
+                    color="primary"
+                    [routerLink]="[ '/external' ]"
+                    [queryParams]="{
+                        link: (anime().id | shikimoriAnimeLink | getShikimoriPage | async | b64encode),
+                        target: '_self',
+                    }"
+                    [disabled]="!anime()?.id"
+                    (click)="$event.stopPropagation()"
+                >
+                    <ion-icon
+                        class="menu-item__icon"
+                        icon="open-outline"
+                    ></ion-icon>
+
+                    <ion-text class="menu-item__label menu-item__label--with-icon">
+                        {{ 'GLOBAL.HEADER.TOOLBAR_MENU.TO_ANIME_PAGE' | transloco }}
+                    </ion-text>
+                </ion-item>
+            }
+
             <ion-item
                 class="menu-item"
                 [routerLink]="['home']"
@@ -116,7 +139,6 @@
                     size="small"
                     [routerLink]="[ '/external' ]"
                     [queryParams]="{ link: (currentUser.url + '/list/anime') | b64encode }"
-                    [skipLocationChange]="true"
                     (click)="$event.stopPropagation()"
                 >
                     <ion-icon
@@ -144,7 +166,6 @@
                     size="small"
                     [routerLink]="[ '/external' ]"
                     [queryParams]="{ link: (currentUser.url + '/list/manga') | b64encode }"
-                    [skipLocationChange]="true"
                     (click)="$event.stopPropagation()"
                 >
                     <ion-icon
@@ -192,22 +213,6 @@
                     </ion-toggle>
                 </ion-item>
             }
-
-            <ion-item
-                color="danger"
-                class="menu-item"
-                [button]="true"
-                [disabled]="true"
-                (click)="shikimoriLogout()"
-            >
-                <ion-icon
-                    class="menu-item__icon"
-                    icon="close-outline"
-                ></ion-icon>
-                <ion-text class="menu-item__label menu-item__label--with-icon">
-                    {{ 'GLOBAL.HEADER.TOOLBAR_MENU.EXIT' | transloco }}
-                </ion-text>
-            </ion-item>
         </ion-list>
     </ion-content>
 
@@ -218,7 +223,30 @@
     #noUserMenuTemplate
 >
     <ion-content>
-        <ion-list>
+        <ion-list> 
+            @if (isPlayerPage()) {
+                <ion-item
+                    class="menu-item"
+                    color="primary"
+                    [routerLink]="[ '/external' ]"
+                    [queryParams]="{
+                        link: (anime().id | shikimoriAnimeLink | getShikimoriPage | async | b64encode),
+                        target: '_self',
+                    }"
+                    [disabled]="!anime()?.id"
+                    (click)="$event.stopPropagation()"
+                >
+                    <ion-icon
+                        class="menu-item__icon"
+                        icon="open-outline"
+                    ></ion-icon>
+
+                    <ion-text class="menu-item__label menu-item__label--with-icon">
+                        {{ 'GLOBAL.HEADER.TOOLBAR_MENU.TO_ANIME_PAGE' | transloco }}
+                    </ion-text>
+                </ion-item>
+            }
+
             <ion-item
                 class="menu-item menu-item--nolinks"
                 [button]="true"
@@ -269,21 +297,6 @@
                 >
                     {{ 'GLOBAL.HEADER.TOOLBAR_MENU.THEME_TOGGLE.' + (theme() | uppercase) | transloco }}
                 </ion-toggle>
-            </ion-item>
-
-            <ion-item
-                color="danger"
-                class="menu-item"
-                [button]="true"
-                [disabled]="true"
-            >
-                <ion-icon
-                    class="menu-item__icon"
-                    icon="close-outline"
-                ></ion-icon>
-                <ion-text class="menu-item__label menu-item__label--with-icon">
-                    {{ 'GLOBAL.HEADER.TOOLBAR_MENU.EXIT' | transloco }}
-                </ion-text>
             </ion-item>
         </ion-list>
     </ion-content>

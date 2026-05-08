@@ -1,7 +1,7 @@
 <ion-content class="page-content">
     <div class="external">
         <h1>
-            {{ 'GLOBAL.GO_EXTERNAL_PAGE.MESSAGE' | transloco: { link: exDomain$ | async } }}
+            {{ 'GLOBAL.GO_EXTERNAL_PAGE.MESSAGE' | transloco: { link: domain() } }}
         </h1>
         <ion-spinner class="external__spinner"></ion-spinner>
     </div>
