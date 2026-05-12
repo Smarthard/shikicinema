@@ -142,12 +142,12 @@ export class PlayerPage implements OnInit {
         '(max-width: 1399px) and (min-resolution: 2dppx)',
     ]).pipe(map(({ matches }) => matches)));
 
-    readonly isSmallScreen = computed(
-        () => this.playerMode() !== 'compact' && this.isMediaMatch() || this.playerMode() === 'full',
-        { equal: isEq },
-    );
+    readonly isSmallScreen = computed(() => this.isMediaMatch(), { equal: isEq });
 
-    readonly isPanelsMinified = computed(() => this.isOrientationPortrait() || this.isSmallScreen());
+    readonly isCompactPlayer = computed(() => this.playerMode() !== 'full');
+    readonly isFullScreenPlayer = computed(() => this.playerMode() === 'full');
+
+    readonly isPanelsMinified = computed(() => this.isSmallScreen());
     readonly userSelectedLanguage = toSignal(this.transloco.langChanges$);
 
     animeIdQ = computed(() => this.animeId(), { equal: isEq });

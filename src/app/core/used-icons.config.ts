@@ -20,7 +20,6 @@ export {
     send,
     checkmarkOutline,
     listOutline,
-    resizeOutline,
     pencilOutline,
     ellipsisVerticalOutline,
     checkmarkDoneOutline,
@@ -28,4 +27,6 @@ export {
     addOutline,
     funnel,
     funnelOutline,
+    expandOutline,
+    contractOutline,
 } from 'ionicons/icons';

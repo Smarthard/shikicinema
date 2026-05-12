@@ -29,17 +29,10 @@
         }
     </ion-button>
 
-    @if (isMinified()) {
+    @if (showVideoSelectionBtn()) {
         <ion-button class="control-panel__btn" fill="clear"
             (click)="openVideoModal.emit()">
             <ion-icon slot="icon-only" name="list-outline" />
-        </ion-button>
-    }
-
-    @if (playerMode() !== 'auto') {
-        <ion-button class="control-panel__btn" fill="clear"
-            (click)="togglePlayerMode.emit()">
-            <ion-icon slot="icon-only" name="resize-outline" />
         </ion-button>
     }
 
@@ -63,4 +56,15 @@
                         [maxWatchedEpisode]="maxWatchedEpisode()"
                         (selection)="onEpisodeChange($event)"
     />
+
+    <ng-template [ngTemplateOutlet]="playerModeButton" />
 }
+
+<ng-template #playerModeButton>
+    <ion-button class="control-panel__btn"
+        fill="clear"
+        (click)="togglePlayerMode.emit()"
+    >
+        <ion-icon slot="icon-only" [name]="changePlayerModeIcon()" />
+    </ion-button>
+</ng-template>

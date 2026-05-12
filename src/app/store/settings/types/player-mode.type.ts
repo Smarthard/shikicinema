@@ -1,1 +1,1 @@
-export type PlayerModeType = 'auto' | 'compact' | 'full';
+export type PlayerModeType = 'compact' | 'full';

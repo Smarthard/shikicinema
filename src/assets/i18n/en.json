@@ -265,12 +265,10 @@
                     "PLAYER_MODE": {
                         "LABEL": "Player display mode",
                         "OPTIONS": {
-                            "AUTO": "Auto",
                             "COMPACT": "Compact",
                             "FULL": "Full screen"
                         },
                         "OPTIONS_HELP": {
-                            "AUTO": "The player display and the side menu for selecting videos will automatically change depending on the screen size",
                             "COMPACT": "The video selection side menu is always displayed next to the player",
                             "FULL": "Player full screen, side menu hidden, video selection via button under the player"
                         }

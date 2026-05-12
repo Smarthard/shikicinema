@@ -18,7 +18,7 @@ const initialState: SettingsStoreInterface = {
     theme: 'dark',
     customTheme: '',
     preferencesToggle: true,
-    playerMode: 'auto',
+    playerMode: 'compact',
     playerKindDisplayMode: 'special-only',
     availableLangs: defaultAvailableLangs,
     authorPreferences: {},
@@ -86,7 +86,7 @@ const reducer = createReducer(
         togglePlayerModeAction,
         (state) => ({
             ...state,
-            playerMode: state.playerMode === 'compact'
+            playerMode: state.playerMode !== 'full'
                 ? 'full' as const
                 : 'compact' as const,
         }),

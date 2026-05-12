@@ -15,6 +15,7 @@ import {
     IonInput,
     IonItem,
 } from '@ionic/angular/standalone';
+import { NgTemplateOutlet } from '@angular/common';
 
 import { AnimeBriefInfoInterface } from '@app/shared/types/shikimori/anime-brief-info.interface';
 import { EpisodeSelectorComponent } from '@app/modules/player/components/episode-selector/episode-selector.component';
@@ -31,6 +32,7 @@ import { getLastAiredEpisode } from '@app/modules/player/utils';
     imports: [
         EpisodeSelectorComponent,
         SidePanelComponent,
+        NgTemplateOutlet,
         IonIcon,
         IonButton,
         IonItem,
@@ -57,7 +59,7 @@ export class ControlPanelComponent {
     showSidePanel = input(false);
     isRewatching = input(false);
     isMinified = input(false);
-    playerMode = input<PlayerModeType>('auto');
+    playerMode = input<PlayerModeType>('compact');
 
     selection = output<number>();
     watch = output<number>();
@@ -67,6 +69,8 @@ export class ControlPanelComponent {
 
     maxAiredEpisode = computed(() => getLastAiredEpisode(this.anime()));
     maxWatchedEpisode = computed(() => this.userRate()?.episodes || 0);
+    changePlayerModeIcon = computed(() => this.playerMode() === 'full' ? 'contract-outline' : 'expand-outline');
+    showVideoSelectionBtn = computed(() => this.isMinified() || this.playerMode() === 'full');
 
     private adjustEpisode(episode): number {
         return adjustEpisode(episode, this.selected(), this.maxEpisode());

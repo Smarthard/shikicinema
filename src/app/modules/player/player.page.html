@@ -3,7 +3,8 @@
     (appSwipeRight)="onOpenVideoSelectorModal()">
     <div class="player-page__wrapper"
         [class.player-page__wrapper--mobile]="isSmallScreen()"
-        [class.player-page__wrapper--compact]="playerMode() === 'compact'">
+        [class.player-page__wrapper--compact]="isCompactPlayer()"
+        [class.player-page__wrapper--fullscreen]="isFullScreenPlayer()">
 
         <app-player
             #player

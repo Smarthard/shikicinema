@@ -91,15 +91,20 @@
                 padding: 0 calc(var(--shc-player-sides-padding) * 5);
             }
 
-            .player-page__wrapper--compact {
+            &.player-page__wrapper--fullscreen {
                 display: grid;
-                grid-template:  "player selector"
-                                "conpan sidepan"
+                grid-template:  "player player"
+                                "conpan conpan"
                                 "franchise franchise"
                                 "comments comments"
                                 "comment-form comment-form";
-                grid-template-columns: 65vw 23.5rem;
-                grid-template-rows: calc(65vw * 9 / 16) auto;
+                grid-template-columns: 71vw 5rem;
+                grid-template-rows: auto;
+
+                .player-page__player-selector,
+                .player-page__side-panel {
+                    display: none;
+                }
             }
         }
     }
