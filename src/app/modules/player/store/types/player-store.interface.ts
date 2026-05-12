@@ -17,5 +17,5 @@ export interface PlayerStoreInterface {
     };
     franchise: {
         [animeId: string]: ShikimoriFranchise[];
-    }
+    };
 }

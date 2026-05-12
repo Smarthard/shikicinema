@@ -14,7 +14,6 @@ import {
     IonItem,
     IonList,
     IonPopover,
-    IonRouterLinkWithHref,
     IonSearchbar,
     IonText,
     IonToggle,

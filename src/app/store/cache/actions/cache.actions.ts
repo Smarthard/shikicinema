@@ -3,7 +3,7 @@ import { createAction, props } from '@ngrx/store';
 import { AnimeBriefInfoInterface } from '@app/shared/types/shikimori/anime-brief-info.interface';
 import { AnimeCacheType, CacheStoreInterface } from '@app/store/cache/types';
 import { UploaderIdType } from '@app/shared/types/uploader-id.type';
-import { UploaderInterface } from '@app/modules/player/types';
+import { UploaderInterface, VideoUploadFormInterface } from '@app/modules/player/types';
 
 type CacheStoreKeyType = keyof CacheStoreInterface;
 
@@ -34,4 +34,9 @@ export const cacheHealthCheckUpSuccessAction = createAction(
 
 export const resetCacheAction = createAction(
     '[Cache] Reset',
+);
+
+export const saveVideoUploadFormAction = createAction(
+    '[Cache] save video upload form',
+    props<{ form: VideoUploadFormInterface }>(),
 );
