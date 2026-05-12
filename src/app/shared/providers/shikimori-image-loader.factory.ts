@@ -46,6 +46,10 @@ export const shikimoriImageLoader = (): ImageLoader => {
     const defaultShikimoriDomain = inject(DEFAULT_SHIKIMORI_DOMAIN_TOKEN);
 
     return (config: ImageLoaderConfig): string => {
+        if (config?.src?.startsWith('/assets/')) {
+            return config.src;
+        }
+
         const path = getPath(config.src);
         const domain = domainSignal() || defaultShikimoriDomain;
         const isShikimori = config?.src?.includes('shikimori');

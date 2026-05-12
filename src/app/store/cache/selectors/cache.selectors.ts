@@ -24,3 +24,8 @@ export const selectCacheLastCheckUp = createSelector(
     selectCache,
     ({ lastCheckUp }) => new Date(lastCheckUp),
 );
+
+export const selectVideoUploadForm = createSelector(
+    selectCache,
+    ({ videoUploadForm }) => videoUploadForm,
+);

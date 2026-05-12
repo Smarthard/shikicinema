@@ -5,8 +5,6 @@
     [ngxTippy]="name()"
 />
 
-<span
-    class="franchise-item__relation text-ellipsis"
-    [ngxTippy]="relation()">
-    {{ relation() | toFranchiseRelation }}
+<span class="franchise-item__relation text-ellipsis">
+    {{ 'GLOBAL.SHIKIMORI.FRANCHISE_RELATION.' + relation() | transloco }}
 </span>

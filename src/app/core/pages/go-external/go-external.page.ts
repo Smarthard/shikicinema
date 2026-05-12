@@ -1,26 +1,22 @@
-import { ActivatedRoute, Router } from '@angular/router';
-import { AsyncPipe } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
 import {
     ChangeDetectionStrategy,
     Component,
     OnInit,
     ViewEncapsulation,
+    computed,
     inject,
 } from '@angular/core';
-import { EMPTY, Observable } from 'rxjs';
 import { IonContent, IonSpinner } from '@ionic/angular/standalone';
+import { Location } from '@angular/common';
 import { TranslocoPipe } from '@jsverse/transloco';
-import {
-    catchError,
-    delay,
-    map,
-    pluck,
-    take,
-    tap,
-} from 'rxjs/operators';
+import { take, tap } from 'rxjs/operators';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { timer } from 'rxjs';
 
 import { PLATFORM_API_TOKEN } from '@app/shared/services/platform-api/platform-api.factory';
 import { PlatformApi } from '@app/shared/types/platform/platform-api';
+import { environment } from '@app-env/environment';
 import { fromBase64 } from '@app/shared/utils/base64-utils';
 
 @Component({
@@ -31,44 +27,41 @@ import { fromBase64 } from '@app/shared/utils/base64-utils';
         IonContent,
         IonSpinner,
         TranslocoPipe,
-        AsyncPipe,
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
 })
 export class GoExternalPage implements OnInit {
-    private route = inject(ActivatedRoute);
-    private router = inject(Router);
-    private platformApi = inject<PlatformApi>(PLATFORM_API_TOKEN);
+    private readonly route = inject(ActivatedRoute);
+    private readonly location = inject(Location);
+    private readonly platformApi = inject<PlatformApi>(PLATFORM_API_TOKEN);
 
-    exLink$: Observable<string>;
-    exDomain$: Observable<string>;
+    private readonly isInstant = environment.target === 'web-extension';
+
+    readonly query = toSignal(this.route.queryParams);
+    readonly link = computed<string>(() => fromBase64(this.query()?.['link']));
+    readonly target = computed<string>(() => this.query()?.['target'] || '_blank');
+    readonly domain = computed(() => new URL(this.link()).hostname);
+
+    private openExternalPage(): void {
+        this.platformApi.openInBrowser(this.link(), this.target());
+
+        if (this.target() !== '_self') {
+            this.location.back();
+        }
+    }
 
     ngOnInit() {
-        this.initializeValues();
-        this.initializeSubscriptions();
-    }
-
-    initializeValues(): void {
-        this.exLink$ = this.route.queryParams.pipe(
-            pluck('link'),
-            map((b64EncodedLink) => fromBase64(b64EncodedLink)),
-        );
-
-        this.exDomain$ = this.exLink$.pipe(
-            map((link) => new URL(link).hostname),
-            catchError(() => EMPTY),
-        );
-    }
-
-    initializeSubscriptions(): void {
-        this.exLink$.pipe(
-            take(1),
-            delay(3000),
-            tap(async (url) => {
-                this.platformApi.openInBrowser(url, '_blank');
-                await this.router.navigate(['/home']);
-            }),
-        ).subscribe();
+        if (this.isInstant) {
+            this.openExternalPage();
+        } else {
+            timer(3000)
+                .pipe(
+                    take(1),
+                    tap(() => this.openExternalPage()),
+                    takeUntilDestroyed(),
+                )
+                .subscribe();
+        }
     }
 }

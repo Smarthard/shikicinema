@@ -11,16 +11,22 @@ $grid-searchbar-column-width: 10fr;
 .toolbar {
     display: flex;
     align-items: center;
+    gap: 1rem;
+
+    margin: 0 .5rem;
     min-height: var(--shc-header-height);
 
     &__search {
         padding: 0 !important;
-        margin-left: 1rem !important;
     }
 
     @include media-breakpoint-up('lg') {
+        margin: 0 1.5rem;
+
         &__menu-btn {
-            margin-left: auto;
+            cursor: pointer;
+            max-height: 2rem;
+            max-width: 2rem;
         }
 
         &__search {
@@ -37,16 +43,11 @@ $grid-searchbar-column-width: 10fr;
             }
         }
 
-        &__title,
         &__search,
         &__menu-btn {
             padding: 0;
         }
     }
-}
-
-.avatar-btn {
-    --opacity: 1;
 }
 
 .user-item {

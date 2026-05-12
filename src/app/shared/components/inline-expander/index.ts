@@ -1,0 +1,1 @@
+export { InlineExpanderComponent } from './inline-expander.component';

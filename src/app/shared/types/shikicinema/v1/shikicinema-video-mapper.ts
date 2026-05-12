@@ -1,4 +1,5 @@
 
+import { DELETED_UPLOADER } from '@app/shared/types/well-known-uploader-ids';
 import { ShikivideosInterface } from '@app/shared/types/shikicinema/v1/shikivideos.interface';
 import { ShikivideosKindType } from '@app/shared/types/shikicinema/v1/shikivideos-kind.type';
 import { UploaderIdType } from '@app/shared/types/uploader-id.type';
@@ -20,13 +21,17 @@ function mapShikicinemaKindToCommon(kind: ShikivideosKindType): VideoKindEnum {
     }
 }
 
+function mapUploader(uploaderId: string | null): UploaderIdType {
+    return uploaderId === null ? DELETED_UPLOADER : uploaderId as UploaderIdType;
+}
+
 export function shikicinemaToVideo({ kind, uploader, quality, ...others }: ShikivideosInterface): VideoInfoInterface {
     return {
         ...others,
         kind: mapShikicinemaKindToCommon(kind),
         urlType: 'iframe',
         quality: quality as VideoQualityEnum,
-        uploader: uploader as UploaderIdType,
+        uploader: mapUploader(uploader),
     }
 }
 

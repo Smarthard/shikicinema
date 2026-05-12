@@ -17,6 +17,20 @@
                 "ANONS": "анонс",
                 "ONGOING": "онгоинг",
                 "RELEASED": "вышло"
+            },
+            "FRANCHISE_RELATION": {
+                "PREQUEL": "Приквел",
+                "SEQUEL": "Сиквел",
+                "SPIN-OFF": "Спинофф",
+                "PARENT_STORY": "Предыстория",
+                "SIDE_STORY": "Другая история",
+                "ALTERNATIVE_VERSION": "Альт. История",
+                "ALTERNATIVE_SETTING": "Альт. Вселенная",
+                "OTHER": "Прочее",
+                "SUMMARY": "Рекап",
+                "CHARACTER": "Общий персонаж",
+                "FRANCHISE": "Франшиза",
+                "ADAPTATION": "Адапатация"
             }
         },
         "VIDEO": {
@@ -59,6 +73,7 @@
             },
             "TOOLBAR_MENU": {
                 "SIGN_IN": "Войти",
+                "TO_ANIME_PAGE": "На страницу аниме",
                 "TO_PROFILE": "В профиль",
                 "ANIME_LIST": "Список аниме",
                 "MANGA_LIST": "Список манги",
@@ -69,6 +84,9 @@
                 },
                 "LANGUAGE": "Язык",
                 "EXIT": "Выход"
+            },
+            "UPLOAD_BUTTON": {
+                "ACTION_TEXT": "Добавить"
             }
         },
         "GO_EXTERNAL_PAGE": {
@@ -94,6 +112,10 @@
             "DATES": {
                 "YEAR": "{{ year }} год"
             }
+        },
+        "INLINE_EXPANDER": {
+            "OPEN": "...ещё",
+            "CLOSE": "скрыть"
         }
     },
     "HOME_MODULE": {
@@ -199,6 +221,10 @@
                     "REMINDER_TEXT": "Тут есть видео, но нужно",
                     "DISABLE_FILTERS_BTN": "Отключить Фильтры"
                 }
+            },
+            "UPLOADER": {
+                "UPLOADER_IS_A_SERVICE": "Сторонний сервис",
+                "UPLOADS_COUNT": "{ count }{ suffix, select, K { тыс.} M { млн.} B { млрд.} T { трлн.} other {} } { count, plural, one {загрузка} few {загрузки} other {загрузок} }"
             }
         },
         "VIDEO_SELECT_MODAL": {
@@ -244,12 +270,10 @@
                     "PLAYER_MODE": {
                         "LABEL": "Режим отображения плеера",
                         "OPTIONS": {
-                            "AUTO": "Автоматический",
                             "COMPACT": "Компактный",
                             "FULL": "Во весь экран"
                         },
                         "OPTIONS_HELP": {
-                            "AUTO": "Отображение плеера и боковое меню выбора видео будет автоматически изменяться в зависимости от размеров экрана",
                             "COMPACT": "Боковое меню выбора видео всегда отображается рядом с плеером",
                             "FULL": "Плеер во весь экран, боковое меню скрыто, выбор видео через кнопку под плеером"
                         }

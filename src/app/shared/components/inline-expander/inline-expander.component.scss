@@ -1,0 +1,36 @@
+.inline-expander {
+    display: block;
+    position: relative;
+    overflow: hidden;
+    contain: content;
+    cursor: pointer;
+
+    &__toggler {
+        position: absolute;
+        cursor: pointer;
+        user-select: none;
+
+        bottom: 0;
+        right: 5px;
+
+        padding: 0 0 0 100%;
+        background: var(--ion-color-light-rgb);
+        backdrop-filter: blur(.125rem);
+    }
+
+    &--open {
+        cursor: default;
+
+        transition: max-height .5s ease-in-out;
+        max-height: 50rem;
+
+        .inline-expander__toggler {
+            padding: 0;
+        }
+    }
+
+    &--closed {
+        transition: max-height .5s ease-in-out;
+        max-height: 6.5rem;
+    }
+}

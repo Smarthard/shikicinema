@@ -1,11 +1,9 @@
 import {
     ChangeDetectionStrategy,
     Component,
-    EventEmitter,
-    HostBinding,
-    Input,
-    Output,
     ViewEncapsulation,
+    input,
+    output,
 } from '@angular/core';
 import { IonLabel, IonSegment, IonSegmentButton } from '@ionic/angular/standalone';
 import { TranslocoPipe } from '@jsverse/transloco';
@@ -25,23 +23,19 @@ import { VideoKindEnum } from '@app/modules/player/types/video-kind.enum';
     styleUrl: './kind-selector.component.scss',
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        class: 'kind-selector',
+    },
 })
 export class KindSelectorComponent {
-    @HostBinding('class.kind-selector')
-    kindSelectorClass = true;
-
     readonly ALL_KINDS: VideoKindEnum[] = [
         VideoKindEnum.DUBBING,
         VideoKindEnum.SUBTITLES,
         VideoKindEnum.ORIGINAL,
     ];
 
-    @Input()
-    kinds: VideoKindEnum[] = [];
+    readonly kinds = input.required<VideoKindEnum[]>();
+    readonly selected = input<VideoKindEnum>();
 
-    @Input()
-    selected: VideoKindEnum;
-
-    @Output()
-    selection = new EventEmitter<VideoKindEnum>();
+    readonly selection = output<VideoKindEnum>();
 }

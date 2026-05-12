@@ -1,0 +1,10 @@
+<ng-content></ng-content>
+
+<span class="inline-expander__toggler"
+    tabindex="1"
+    (click)="onToggle($event)"
+    (keydown.enter)="onToggle($event)"
+    (keydown.space)="onToggle($event)"
+>
+    <span>{{ action() }}</span>
+</span>

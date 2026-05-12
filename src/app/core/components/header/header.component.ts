@@ -1,3 +1,4 @@
+import { AsyncPipe, NgTemplateOutlet, UpperCasePipe } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -18,19 +19,27 @@ import {
     IonToggle,
     IonToolbar,
 } from '@ionic/angular/standalone';
-import { NavigationExtras, Router, RouterLink } from '@angular/router';
-import { NgTemplateOutlet, UpperCasePipe } from '@angular/common';
+import {
+    NavigationExtras,
+    Router,
+    RouterLink,
+    isActive,
+} from '@angular/router';
 import { Store } from '@ngrx/store';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 
 import { B64encodePipe } from '@app/shared/pipes/base64/b64encode.pipe';
+import { GetShikimoriPagePipe } from '@app/shared/pipes/get-shikimori-page/get-shikimori-page.pipe';
 import { ResultOpenTarget, SearchbarResult } from '@app/shared/types/searchbar.types';
 import { SearchbarResultsComponent } from '@app/core/components/searchbar-results/searchbar-results.component';
+import { ShikimoriAnimeLinkPipe } from '@app/shared/pipes/shikimori-anime-link/shikimori-anime-link.pipe';
+import { UploadButtonComponent } from '@app/core/components/upload-button';
 import { authShikimoriAction, logoutShikimoriAction } from '@app/store/auth/actions/auth.actions';
 import {
     findAnimeAction,
     resetFoundAnimeAction,
 } from '@app/store/shikimori/actions';
+import { selectCurrentPlayerAnime } from '@app/modules/player/store/selectors/player.selectors';
 import {
     selectShikimoriAnimeSearchLoading,
     selectShikimoriCurrentUser,
@@ -49,6 +58,7 @@ import { updateLanguageAction, updateThemeAction } from '@app-root/app/store/set
     templateUrl: './header.component.html',
     styleUrls: ['./header.component.scss'],
     imports: [
+        AsyncPipe,
         IonHeader,
         IonToolbar,
         IonSearchbar,
@@ -64,8 +74,11 @@ import { updateLanguageAction, updateThemeAction } from '@app-root/app/store/set
         UpperCasePipe,
         TranslocoPipe,
         B64encodePipe,
+        ShikimoriAnimeLinkPipe,
+        GetShikimoriPagePipe,
         SearchbarResultsComponent,
         NgTemplateOutlet,
+        UploadButtonComponent,
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
@@ -84,8 +97,11 @@ export class HeaderComponent {
     readonly avatarImg = this.store.selectSignal(selectShikimoriCurrentUserAvatarHiRes);
     readonly nickname = this.store.selectSignal(selectShikimoriCurrentUserNickname);
     readonly profileLink = this.store.selectSignal(selectShikimoriCurrentUserProfileLink);
+    readonly anime = this.store.selectSignal(selectCurrentPlayerAnime);
 
     readonly availableLangs = this.transloco.getAvailableLangs() as string[];
+
+    readonly isPlayerPage = isActive('/player', this.router);
 
     readonly isAnimeListPopoverOpen = signal(false);
     readonly isSearchingInCyrillic = signal(false);

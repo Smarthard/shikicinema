@@ -38,6 +38,7 @@ import { trackById } from '@app/shared/utils/common-ngfor-tracking';
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         'class': 'franchise',
+        '[class.franchise--empty]': 'isEmptyFranchise()',
     },
 })
 export class FranchiseComponent {
@@ -48,7 +49,7 @@ export class FranchiseComponent {
     animeId = input.required<ResourceIdType>();
 
     isFranchiseLoading = computed(() => this.store.selectSignal(selectPlayerIsFranchiseLoading(this.animeId())));
-    franchise = computed(() => this.store.selectSignal(selectPlayerFranchise(this.animeId()))());
+    rawFranchise = computed(() => this.store.selectSignal(selectPlayerFranchise(this.animeId()))());
 
     readonly trackById = trackById;
     readonly language = toSignal(this.transloco.langChanges$);
@@ -56,11 +57,13 @@ export class FranchiseComponent {
     /* TODO: сделать отдельную настройку для отображения названий */
     readonly isEnglishNamesPrefered = computed(() => this.language() !== 'ru');
 
-    readonly sortedFranchise = computed(
-        () => this.franchise()
+    readonly franchise = computed(
+        () => this.rawFranchise()
             ?.filter(({ anime }) => anime?.id)
             ?.sort(sortFranchise),
     );
+
+    readonly isEmptyFranchise = computed(() => this.franchise()?.length < 1)
 
     onAnimeIdChangeEffect = effect(() => this.store.dispatch(getFranchiseAction({ animeId: this.animeId() })));
 

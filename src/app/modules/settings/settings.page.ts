@@ -134,7 +134,7 @@ export class SettingsPage implements OnInit {
         theme: new FormControl<ThemeSettingsType>('dark', [Validators.required]),
         customTheme: new FormControl<string>(''),
         preferencesToggle: new FormControl<boolean>(true),
-        playerMode: new FormControl<PlayerModeType>('auto'),
+        playerMode: new FormControl<PlayerModeType>('compact'),
         playerKindDisplayMode: new FormControl<PlayerKindDisplayMode>('special-only'),
         shikimoriDomain: new FormControl<string>(this.defaultShikimoriDomain),
         useCustomAnimeStatusOrder: new FormControl<boolean>(false),

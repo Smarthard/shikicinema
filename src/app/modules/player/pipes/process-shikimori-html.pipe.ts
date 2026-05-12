@@ -59,6 +59,15 @@ export class ProcessShikimoriHtmlPipe implements PipeTransform {
             video.remove();
         }
 
+        for (const link of Array.from(processedHtml.querySelectorAll('a'))) {
+            // Ссылки на страницы Шикимори исправляем, т.к. все они начинаются на / и портят роутинг
+            if (!link?.getAttribute('href')?.startsWith('http')) {
+                const path = new URL(link.href).pathname;
+
+                link.setAttribute('href', `${this.SHIKIMORI_URL()}${path}`);
+            }
+        }
+
         return processedHtml.innerHTML;
     }
 

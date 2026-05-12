@@ -8,4 +8,4 @@ export { authorAvailability } from './authors-availability.function';
 export { cutUrlFromText } from './cut-url-from-text.function';
 export { getMaxEpisodeFromVideos } from './get-max-episode-from-videos.function';
 export { sortFranchise } from './sort-franchise.function';
-export { getFranchiseRelation } from './get-franchise-relation.function';
+export { isWellKnownUploader } from './is-well-known-uploader.function';

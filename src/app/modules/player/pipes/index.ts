@@ -6,4 +6,3 @@ export { isShowLastItemsPipe } from './is-show-last-items.pipe';
 export { ProcessShikimoriHtmlPipe } from './process-shikimori-html.pipe';
 export { ToCommentUrlPipe } from './to-comment-url.pipe';
 export { ToUploaderPipe } from './to-uploader.pipe';
-export { ToFranchiseRelationPipe } from './to-franchise-relation.pipe';

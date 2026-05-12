@@ -33,7 +33,7 @@ const reducer = createReducer(
             rates: [
                 ...state.rates,
                 ...rates,
-            ].filter(filterDuplicatedIds),
+            ].filter(filterDuplicatedIds()),
         }),
     ),
 );

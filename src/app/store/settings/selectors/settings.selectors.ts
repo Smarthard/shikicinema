@@ -73,7 +73,7 @@ export const selectPreferencesToggle = createSelector(
 
 export const selectPlayerMode = createSelector(
     selectSettings,
-    (state) => state.playerMode || 'auto',
+    (state) => state.playerMode || 'compact',
 );
 
 export const selectPlayerKindDisplayMode = createSelector(

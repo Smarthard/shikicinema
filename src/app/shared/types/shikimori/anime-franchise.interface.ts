@@ -1,5 +1,8 @@
 import { AnimeBriefInfoInterface } from '@app/shared/types/shikimori/anime-brief-info.interface';
 
+/*
+    @see https://github.com/shikimori/shikimori/blob/a900114c48be8fdbc212139017b18e81a1c9a76f/config/locales/ru.yml#L618-L630
+*/
 export enum FranchiseRelationEnum {
     PREQUEL = 'Prequel',
     SEQUEL = 'Sequel',
@@ -7,6 +10,7 @@ export enum FranchiseRelationEnum {
     PARENT_STORY = 'Parent Story',
     SIDE_STORY = 'Side Story',
     ALT_VERSION = 'Alternative Version',
+    ALT_SETTING = 'Alternative Setting',
     OTHER = 'Other',
     SUMMARY = 'Summary',
     CHARACTER = 'Character',
@@ -23,6 +27,7 @@ export enum FranchiseRelationRussianEnum {
     PARENT_STORY = 'Изначальная история',
     SIDE_STORY = 'Другая история',
     ALT_VERSION = 'Альтернативная история',
+    ALT_SETTING = 'Альтернативная вселенная',
     OTHER = 'Прочее',
     SUMMARY = 'Обобщение',
     CHARACTER = 'Общий персонаж',

@@ -1,7 +1,6 @@
 import {
     ChangeDetectionStrategy,
     Component,
-    HostBinding,
     ViewEncapsulation,
     afterEveryRender,
     computed,
@@ -46,11 +45,11 @@ import { cleanAuthorName } from '@app/shared/utils/clean-author-name.function';
     styleUrl: './video-selector.component.scss',
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        class: 'video-selector',
+    },
 })
 export class VideoSelectorComponent {
-    @HostBinding('class.video-selector')
-    protected videoSelectorClass = true;
-
     private readonly transloco = inject(TranslocoService);
 
     readonly defaultAuthorName = toSignal<string>(this.transloco.selectTranslate('GLOBAL.VIDEO.AUTHORS.DEFAULT_NAME'));

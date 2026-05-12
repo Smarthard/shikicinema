@@ -2,7 +2,6 @@ import { AsyncPipe } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
-    HostBinding,
     OnInit,
     ViewEncapsulation,
     effect,
@@ -27,6 +26,7 @@ import {
     IonSelectOption,
     ModalController,
 } from '@ionic/angular/standalone';
+import { Store } from '@ngrx/store';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 
 import { AnimeBriefInfoInterface } from '@app/shared/types/shikimori/anime-brief-info.interface';
@@ -41,6 +41,7 @@ import {
 } from '@app/modules/player/types';
 import { cutUrlFromText, getMaxEpisode } from '@app/modules/player/utils';
 import { getAnimeName } from '@app/shared/utils/get-anime-name.function';
+import { saveVideoUploadFormAction, selectVideoUploadForm } from '@app/store/cache';
 
 
 @Component({
@@ -61,13 +62,16 @@ import { getAnimeName } from '@app/shared/utils/get-anime-name.function';
     styleUrl: './video-upload-modal.component.scss',
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'class': 'video-upload-modal',
+    },
 })
 export class VideoUploadModalComponent extends IonModal implements OnInit {
-    @HostBinding('class.video-upload-modal')
-    protected videoUploadModalClass = true;
-
     private readonly transloco = inject(TranslocoService);
-    private readonly _modalController = inject(ModalController);
+    private readonly modalController = inject(ModalController);
+    private readonly store = inject(Store);
+
+    readonly previousForm = this.store.selectSignal(selectVideoUploadForm);
 
     readonly anime= input.required<AnimeBriefInfoInterface>();
 
@@ -112,8 +116,18 @@ export class VideoUploadModalComponent extends IonModal implements OnInit {
         this.onUrlLoadReset();
     })
 
+    readonly onFormChangeEffect = effect(() => {
+        if (this.uploadForm().valid()) {
+            this.store.dispatch(saveVideoUploadFormAction({ form: this.uploadForm().value() }));
+        }
+    });
+
     ngOnInit(): void {
         this.uploadForm.episode().value.set(this.episode());
+
+        if (this.previousForm()) {
+            this.uploadForm().controlValue.set(this.previousForm());
+        }
     }
 
     onUrlLoadReset(): void {
@@ -128,11 +142,11 @@ export class VideoUploadModalComponent extends IonModal implements OnInit {
 
     cancel(): void {
         // TODO: выяснить почему this.dismiss() кидает ошибку
-        this._modalController.dismiss(null, 'cancel');
+        this.modalController.dismiss(null, 'cancel');
     }
 
     submit(): void {
-        this._modalController.dismiss(this.uploadForm().value(), 'submit');
+        this.modalController.dismiss(this.uploadForm().value(), 'submit');
     }
 
     cutUrlFromClipboard(event: ClipboardEvent): void {

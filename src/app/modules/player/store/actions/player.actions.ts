@@ -222,3 +222,13 @@ export const getFranchiseFailureAction = createAction(
     '[Player] get franchise failure',
     props<{ errors: any }>(),
 );
+
+export const changeCurrentAnimeAction = createAction(
+    '[Player] change current anime',
+    props<{ animeId: ResourceIdType }>(),
+);
+
+export const changeCurrentEpisodeAction = createAction(
+    '[Player] change current episode',
+    props<{ episode: number }>(),
+);

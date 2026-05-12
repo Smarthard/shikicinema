@@ -15,21 +15,19 @@
 </ion-toolbar>
 
 <div class="video-selector-modal__selector-wrap">
-    <app-kind-selector
-        class="video-selector-modal__kind-selector"
-        [kinds]="episodeVideos() | getActiveKinds"
-        [selected]="selectedKind()"
-        (selection)="onKindChange($event)"
-    />
-
-    <app-video-selector
-        class="video-selector-modal__video-selector"
-        [videos]="episodeVideos() | filterByKind: selectedKind()"
-        [selected]="selectedVideo()"
-        [kindDisplayMode]="kindDisplayMode()"
-        [warnAvailability]="videos() | authorAvailabilityWarning: lastAiredEpisode()"
-        [hasUnfilteredVideos]="hasUnfilteredVideos()"
-        (selection)="onVideoChange($event)"
-        (disableFilters)="onToggleDomainFilters()"
+    <app-player-selector
+        class="video-selector-modal__selector"
+        [isLoading]="isLoading()"
+        [animeId]="animeId()"
+        [kind]="selectedKind()"
+        [episode]="episode()"
+        [isFilterDomains]="isFilterDomains()"
+        [lastAiredEpisode]="lastAiredEpisode()"
+        [maxEpisode]="maxEpisode()"
+        [videos]="videos()"
+        [selectedVideo]="selectedVideo()"
+        (changeKind)="onKindChange($event)"
+        (changeVideo)="onVideoChange($event[0], $event[1])"
+        (domainFiltersOff)="onToggleDomainFilters()"
     />
 </div>

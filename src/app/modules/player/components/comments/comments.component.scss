@@ -11,7 +11,7 @@
         gap: .5rem;
         padding: .5rem;
         background-color: var(--ion-color-light);
-        border-radius: 1rem;
+        border-radius: var(--shc-border-radius);
 
         @include media-breakpoint-up('lg') {
             padding: 1rem;

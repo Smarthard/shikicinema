@@ -5,6 +5,7 @@ import { WELL_KNOWN_UPLOADERS_MAP } from '@app/shared/config/well-known-uploader
 import {
     cacheHealthCheckUpSuccessAction,
     resetCacheAction,
+    saveVideoUploadFormAction,
     updateAnimesCacheAction,
     updateCacheAction,
     updateUploadersCacheAction,
@@ -15,6 +16,7 @@ import { getUserRateSuccessAction, watchAnimeSuccessAction } from '@app/modules/
 const initialState: CacheStoreInterface = {
     knownUploaders: WELL_KNOWN_UPLOADERS_MAP,
     animes: {},
+    videoUploadForm: undefined,
     lastCheckUp: '1970-01-01T00:00:00.000Z',
 };
 
@@ -78,6 +80,13 @@ const reducer = createReducer(
     on(
         resetCacheAction,
         () => ({ ...initialState }),
+    ),
+    on(
+        saveVideoUploadFormAction,
+        (state, { form }) => ({
+            ...state,
+            videoUploadForm: form,
+        }),
     ),
 );
 

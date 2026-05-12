@@ -7,6 +7,10 @@ export const smarthardNetImageLoader = (): ImageLoader => {
     const domain = 'https://smarthard.net';
 
     return (config: ImageLoaderConfig): string => {
+        if (config?.src?.startsWith('/assets/')) {
+            return config.src;
+        }
+
         const path = getPath(config.src);
         const isSmarthardNet = config?.src?.startsWith(domain);
 
