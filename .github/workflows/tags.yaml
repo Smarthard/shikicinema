@@ -83,7 +83,9 @@ jobs:
           CLIENT_SECRET: ${{ secrets.CWS_CLIENT_SECRET }}
           REFRESH_TOKEN: ${{ secrets.CWS_REFRESH_TOKEN }}
           EXTENSION_ID: ${{ secrets.CWS_EXTENSION_ID }}
+          PUBLISHER_ID: ${{ secrets.CWS_PUBLISHER_ID }}
         run: |
           npx chrome-webstore-upload-cli upload \
             --source dist/ \
-            --extension-id $EXTENSION_ID
+            --extension-id $EXTENSION_ID \
+            --publisher-id $PUBLISHER_ID
