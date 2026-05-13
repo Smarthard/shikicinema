@@ -78,14 +78,12 @@ jobs:
 
       - name: Publish to CWS
         if: matrix.manifest == 'v3'
+        working-directory: dist
         env:
+          EXTENSION_ID: ${{ secrets.CWS_EXTENSION_ID }}
           CLIENT_ID: ${{ secrets.CWS_CLIENT_ID }}
           CLIENT_SECRET: ${{ secrets.CWS_CLIENT_SECRET }}
           REFRESH_TOKEN: ${{ secrets.CWS_REFRESH_TOKEN }}
-          EXTENSION_ID: ${{ secrets.CWS_EXTENSION_ID }}
           PUBLISHER_ID: ${{ secrets.CWS_PUBLISHER_ID }}
         run: |
-          npx chrome-webstore-upload-cli upload \
-            --source dist/ \
-            --extension-id $EXTENSION_ID \
-            --publisher-id $PUBLISHER_ID
+          npx chrome-webstore-upload-cli@4
