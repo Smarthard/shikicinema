@@ -66,3 +66,24 @@ jobs:
             shikicinema-*.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Sign and publish to AMO
+        if: matrix.manifest == 'v2'
+        run: |
+          npx web-ext sign \
+            --channel=listed \
+            --api-key=${{ secrets.AMO_API_KEY }} \
+            --api-secret=${{ secrets.AMO_API_SECRET }} \
+            --source-dir=dist/
+
+      - name: Publish to CWS
+        if: matrix.manifest == 'v3'
+        env:
+          CLIENT_ID: ${{ secrets.CWS_CLIENT_ID }}
+          CLIENT_SECRET: ${{ secrets.CWS_CLIENT_SECRET }}
+          REFRESH_TOKEN: ${{ secrets.CWS_REFRESH_TOKEN }}
+          EXTENSION_ID: ${{ secrets.CWS_EXTENSION_ID }}
+        run: |
+          npx chrome-webstore-upload-cli upload \
+            --source dist/ \
+            --extension-id $EXTENSION_ID
