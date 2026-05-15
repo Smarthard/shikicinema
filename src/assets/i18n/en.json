@@ -95,9 +95,10 @@
                 "VK": "VK",
                 "SHIKIMORI": "Delevoper on Shikimori"
             },
-            "INSTRUCTIONS": {
+            "OTHER_LINKS": {
                 "HOW_TO_UPLOAD_VIDEO": "How to upload videos",
-                "HOW_TO_ADD_TRANSLATION": "How to add translation"
+                "HOW_TO_ADD_TRANSLATION": "How to add translation",
+                "DONATE": "Donate"
             }
         },
         "GO_EXTERNAL_PAGE": {

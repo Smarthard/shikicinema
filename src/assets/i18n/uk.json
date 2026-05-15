@@ -95,9 +95,10 @@
                 "VK": "ВКонтакті",
                 "SHIKIMORI": "Розробник на Шикиморі"
             },
-            "INSTRUCTIONS": {
+            "OTHER_LINKS": {
                 "HOW_TO_UPLOAD_VIDEO": "Як завантажити відео",
-                "HOW_TO_ADD_TRANSLATION": "Як додати переклад"
+                "HOW_TO_ADD_TRANSLATION": "Як додати переклад",
+                "DONATE": "Підтримати"
             }
         },
         "GO_EXTERNAL_PAGE": {

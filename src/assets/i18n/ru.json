@@ -95,9 +95,10 @@
                 "VK": "ВКонтакте",
                 "SHIKIMORI": "Разработчик на Шикимори"
             },
-            "INSTRUCTIONS": {
+            "OTHER_LINKS": {
                 "HOW_TO_UPLOAD_VIDEO": "Как загрузить видео",
-                "HOW_TO_ADD_TRANSLATION": "Как добавить перевод"
+                "HOW_TO_ADD_TRANSLATION": "Как добавить перевод",
+                "DONATE": "Поддержать"
             }
         },
         "GO_EXTERNAL_PAGE": {
