@@ -37,6 +37,7 @@ import { AnimeBriefInfoInterface } from '@app/shared/types/shikimori/anime-brief
 import { Comment } from '@app/shared/types/shikimori/comment';
 import { CommentsComponent } from '@app/modules/player/components/comments/comments.component';
 import { ControlPanelComponent } from '@app/modules/player/components/control-panel/control-panel.component';
+import { FooterDirective } from '@app/shared/directives/footer.directive';
 import { FranchiseComponent } from '@app/modules/player/components/franchise/franchise.component';
 import { PlayerComponent } from '@app/modules/player/components/player/player.component';
 import { PlayerSelectorComponent } from '@app/modules/player/components/player-selector/player-selector.component';
@@ -98,6 +99,7 @@ import { visitAnimePageAction } from '@app/modules/home/store/recent-animes/acti
         PlayerComponent,
         ControlPanelComponent,
         SwipeDirective,
+        FooterDirective,
         CommentsComponent,
         UserCommentFormComponent,
         SidePanelComponent,

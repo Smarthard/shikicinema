@@ -15,6 +15,7 @@ import { switchMap } from 'rxjs/operators';
 
 import { AnimeRateSectionComponent } from '@app/modules/home/components/anime-rate-section';
 import { ExtendedUserRateStatusType } from '@app/modules/home/types';
+import { FooterDirective } from '@app/shared/directives/footer.directive';
 import {
     SortRatesByDateVisitedPipe,
     SortRatesByUserScorePipe,
@@ -42,6 +43,7 @@ import {
         UpperCasePipe,
         SlicePipe,
         IonContent,
+        FooterDirective,
         AnimeRateSectionComponent,
         SortRatesByUserScorePipe,
         SortRatesByDateVisitedPipe,

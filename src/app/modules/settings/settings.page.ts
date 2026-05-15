@@ -43,6 +43,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { DEFAULT_ANIME_STATUS_ORDER } from '@app/shared/config/default-anime-status-order.config';
 import { DEFAULT_SHIKIMORI_DOMAIN_TOKEN, SHIKIMORI_DOMAINS } from '@app/core/providers/shikimori-domain';
+import { FooterDirective } from '@app/shared/directives/footer.directive';
 import { GetShikimoriPagePipe } from '@app/shared/pipes/get-shikimori-page/get-shikimori-page.pipe';
 import { PersistenceService } from '@app/shared/services/persistence.service';
 import { PlayerKindDisplayMode } from '@app/store/settings/types/player-kind-display-mode.type';
@@ -95,6 +96,7 @@ import { urlValidator } from '@app/shared/validators';
         SettingsGroupComponent,
         ProfileInfoComponent,
         ToHumanReadableBytesPipe,
+        FooterDirective,
     ],
     templateUrl: 'settings.page.html',
     styleUrl: 'settings.page.scss',

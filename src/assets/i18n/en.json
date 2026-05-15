@@ -89,6 +89,17 @@
                 "ACTION_TEXT": "Upload"
             }
         },
+        "FOOTER": {
+            "SOCIALS": {
+                "TELEGRAM": "Telegram",
+                "VK": "VK",
+                "SHIKIMORI": "Delevoper on Shikimori"
+            },
+            "INSTRUCTIONS": {
+                "HOW_TO_UPLOAD_VIDEO": "How to upload videos",
+                "HOW_TO_ADD_TRANSLATION": "How to add translation"
+            }
+        },
         "GO_EXTERNAL_PAGE": {
             "MESSAGE": "You're going outside of the Shikicinema, now redirecting to {{ link }}"
         },
