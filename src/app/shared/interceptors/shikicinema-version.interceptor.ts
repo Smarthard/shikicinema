@@ -6,12 +6,11 @@ import { ShikicinemaMetaService } from '@app/core/services/shikicinema-meta.serv
 export const shikicinemaVersionInterceptor: HttpInterceptorFn = (req, next) => {
     const shikicinemaMeta = inject(ShikicinemaMetaService);
     const version = shikicinemaMeta.getAppVersion();
+    const isShikicinemaApi = req?.url?.includes('smarthard');
 
-    const modifiedReq = req.clone({
-        setHeaders: {
-            'X-Shikicinema': version,
-        },
-    });
+    const modifiedReq = isShikicinemaApi
+        ? req.clone({ setHeaders: { 'X-Shikicinema': version } })
+        : req;
 
     return next(modifiedReq);
 };
