@@ -4,23 +4,6 @@
      x="0px"
      y="0px"
      viewBox="0 0 300 300">
-  <style>
-    .telegram-logo {
-      fill: #4AA6C9;
-    }
-
-    .telegram-logo:hover {
-      fill: #50B3D9;
-    }
-
-    .dark-theme * .telegram-logo {
-      fill: #eeeeee;
-    }
-
-    .dark-theme * .telegram-logo:hover {
-      fill: #ffffff;
-    }
-  </style>
   <g>
     <path d="M5.299,144.645l69.126,25.8l26.756,86.047c1.712,5.511,8.451,7.548,12.924,3.891l38.532-31.412
           c4.039-3.291,9.792-3.455,14.013-0.391l69.498,50.457c4.785,3.478,11.564,0.856,12.764-4.926L299.823,29.22

@@ -37,6 +37,7 @@ import { AnimeBriefInfoInterface } from '@app/shared/types/shikimori/anime-brief
 import { Comment } from '@app/shared/types/shikimori/comment';
 import { CommentsComponent } from '@app/modules/player/components/comments/comments.component';
 import { ControlPanelComponent } from '@app/modules/player/components/control-panel/control-panel.component';
+import { FooterDirective } from '@app/shared/directives/footer.directive';
 import { FranchiseComponent } from '@app/modules/player/components/franchise/franchise.component';
 import { PlayerComponent } from '@app/modules/player/components/player/player.component';
 import { PlayerSelectorComponent } from '@app/modules/player/components/player-selector/player-selector.component';
@@ -98,6 +99,7 @@ import { visitAnimePageAction } from '@app/modules/home/store/recent-animes/acti
         PlayerComponent,
         ControlPanelComponent,
         SwipeDirective,
+        FooterDirective,
         CommentsComponent,
         UserCommentFormComponent,
         SidePanelComponent,
@@ -177,6 +179,7 @@ export class PlayerPage implements OnInit {
     isRewatching = computed(() => this.userRate()?.status === 'rewatching');
 
     isDomainFilterOn = signal(true);
+    isEpisodeReleased = signal(true);
 
     nextEpisodeAt = computed(() => {
         const nextEpisodeAt = this.anime()?.next_episode_at;
@@ -205,6 +208,8 @@ export class PlayerPage implements OnInit {
 
         this.store.dispatch(changeCurrentAnimeAction({ animeId: anime.id }));
         this.store.dispatch(changeCurrentEpisodeAction({ episode }));
+
+        this.isEpisodeReleased.set(episode <= this.lastAiredEpisode());
 
         if (anime?.name) {
             this.changeTitle(anime, episode);
@@ -276,9 +281,6 @@ export class PlayerPage implements OnInit {
     onEpisodeChange(episode: number): void {
         const animeId = this.animeIdQ();
         const maxEpisodes = this.maxEpisode();
-
-        // сброс видео для корректной работы заглушек выхода серий
-        this.currentVideo.set(null);
 
         if (episode <= maxEpisodes && episode > 0) {
             void this.router.navigate(['/player', animeId, episode]);

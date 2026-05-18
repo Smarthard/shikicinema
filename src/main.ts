@@ -19,6 +19,7 @@ import {
 import {
     cachedAnimeInterceptor,
     shikicinemaApiInterceptor,
+    shikicinemaVersionInterceptor,
     shikimoriApiInterceptor,
 } from '@app/shared/interceptors';
 import { environment } from '@app-root/environments/environment';
@@ -46,6 +47,7 @@ bootstrapApplication(AppComponent, {
                 cachedAnimeInterceptor,
                 shikicinemaApiInterceptor,
                 shikimoriApiInterceptor,
+                shikicinemaVersionInterceptor,
             ]),
         ),
         provideAnimations(),

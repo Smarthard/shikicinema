@@ -1,4 +1,8 @@
-<ion-content [fullscreen]="true" class="page-content ion-padding">
+<ion-content
+    [fullscreen]="true"
+    class="page-content ion-no-padding"
+    appWithFooter
+>
     @for (status of animeStatusOrder(); track status; let index = $index) {
         @let hasPriority = index <= 1;
         @let isRecent = status === 'recent';

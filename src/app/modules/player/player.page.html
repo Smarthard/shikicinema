@@ -1,5 +1,6 @@
-<ion-content [fullscreen]="true" class="page-content ion-padding"
+<ion-content [fullscreen]="true" class="page-content ion-no-padding"
     appSwipe
+    appWithFooter
     (appSwipeRight)="onOpenVideoSelectorModal()">
     <div class="player-page__wrapper"
         [class.player-page__wrapper--mobile]="isSmallScreen()"
@@ -9,8 +10,8 @@
         <app-player
             #player
             class="player-page__player responsive-16by9"
-            [loading]="isVideosLoading()"
             [source]="currentVideo()?.url"
+            [showNextEpisodeAt]="!isEpisodeReleased()"
             [nextEpisodeAt]="nextEpisodeAt()"
         />
 

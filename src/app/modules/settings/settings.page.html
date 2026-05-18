@@ -1,4 +1,8 @@
-<ion-content [fullscreen]="true" class="ion-padding page-content">
+<ion-content
+    [fullscreen]="true"
+    class="ion-no-padding page-content"
+    appWithFooter
+>
     <form class="settings-page__form" [formGroup]="settingsForm">
         <!-- Общие Настройки -->
         <app-settings-group

@@ -28,6 +28,7 @@ import { Title } from '@angular/platform-browser';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+import { FooterDirective } from '@app/shared/directives/footer.directive';
 import { LanguageToIsoCodePipe } from '@app/shared/pipes/language-to-iso-code/language-to-iso-code.pipe';
 import { ResourceIdType } from '@app/shared/types/resource-id.type';
 import { ShikivideosInterface } from '@app/shared/types/shikicinema/v1';
@@ -56,6 +57,7 @@ import { trackById } from '@app/shared/utils/common-ngfor-tracking';
         IonCol,
         IonText,
         LanguageToIsoCodePipe,
+        FooterDirective,
     ],
     templateUrl: 'contributions.page.html',
     styleUrl: 'contributions.page.scss',

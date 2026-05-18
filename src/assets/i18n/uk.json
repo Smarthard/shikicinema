@@ -89,6 +89,18 @@
                 "ACTION_TEXT": "Додати"
             }
         },
+        "FOOTER": {
+            "SOCIALS": {
+                "TELEGRAM": "Телеграм",
+                "VK": "ВКонтакті",
+                "SHIKIMORI": "Розробник на Шикиморі"
+            },
+            "OTHER_LINKS": {
+                "HOW_TO_UPLOAD_VIDEO": "Як завантажити відео",
+                "HOW_TO_ADD_TRANSLATION": "Як додати переклад",
+                "DONATE": "Підтримати"
+            }
+        },
         "GO_EXTERNAL_PAGE": {
             "MESSAGE": "Ви покидаєте Shikicinema та направляєтесь на {{ link }}"
         },
