@@ -179,6 +179,7 @@ export class PlayerPage implements OnInit {
     isRewatching = computed(() => this.userRate()?.status === 'rewatching');
 
     isDomainFilterOn = signal(true);
+    isEpisodeReleased = signal(true);
 
     nextEpisodeAt = computed(() => {
         const nextEpisodeAt = this.anime()?.next_episode_at;
@@ -207,6 +208,8 @@ export class PlayerPage implements OnInit {
 
         this.store.dispatch(changeCurrentAnimeAction({ animeId: anime.id }));
         this.store.dispatch(changeCurrentEpisodeAction({ episode }));
+
+        this.isEpisodeReleased.set(episode <= this.lastAiredEpisode());
 
         if (anime?.name) {
             this.changeTitle(anime, episode);
@@ -278,9 +281,6 @@ export class PlayerPage implements OnInit {
     onEpisodeChange(episode: number): void {
         const animeId = this.animeIdQ();
         const maxEpisodes = this.maxEpisode();
-
-        // сброс видео для корректной работы заглушек выхода серий
-        this.currentVideo.set(null);
 
         if (episode <= maxEpisodes && episode > 0) {
             void this.router.navigate(['/player', animeId, episode]);

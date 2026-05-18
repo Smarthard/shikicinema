@@ -13,7 +13,6 @@
         <app-player
             class="video-upload-modal__player responsive-16by9"
             [source]="url"
-            [loading]="false"
             (loaded)="onUrlLoad(true)"
             (timedOut)="onUrlLoad(false)"
         />
