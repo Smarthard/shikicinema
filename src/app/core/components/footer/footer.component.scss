@@ -1,31 +1,55 @@
+@use 'src/scss/mixins' as *;
+
 .footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     gap: 0.5rem 1rem;
-    margin-top: 2rem;
+    align-items: center;
+
+    margin-top: 2.5rem;
     padding: 0.75rem 1rem;
     width: 100%;
     background-color: var(--ion-color-light-shade);
-    font-size: 13px;
+    font-size: .75rem;
+
+    @include media-breakpoint-up('lg') {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 0.5rem 1rem;
+    }
 
     &__section {
         display: flex;
         align-items: center;
         gap: 0.5rem;
 
+        &:first-child {
+            justify-content: flex-start;
+            grid-column: 1;
+        }
+
         &--socials {
             gap: 1.5rem;
-        }
-
-        &:first-child,
-        &:last-child {
-            flex: 1;
-        }
-
-        &:last-child {
             justify-content: flex-end;
+            grid-column: 2;
+        }
+
+        &:last-child {
+            justify-content: center;
+            grid-column: 1 / -1;
+
+            @include media-breakpoint-up('lg') {
+                grid-column: auto;
+                justify-content: flex-end;
+                flex: 1;
+            }
+        }
+
+        @include media-breakpoint-up('lg') {
+            &:first-child {
+                flex: 1;
+            }
         }
     }
 
