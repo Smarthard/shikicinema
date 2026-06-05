@@ -53,7 +53,7 @@ export class PlayerComponent {
 
     source = input<string>();
     showNextEpisodeAt = input(false);
-    nextEpisodeAt = input<Date | string | number>();
+    nextEpisodeAt = input<Date | string | number | null>();
 
     loaded = output<boolean>();
     timedOut = output<boolean>();

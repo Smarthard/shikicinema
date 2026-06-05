@@ -114,25 +114,9 @@
                     }
                 },
                 "test": {
-                    "builder": "@angular/build:karma",
+                    "builder": "@angular/build:unit-test",
                     "options": {
-                        "main": "src/test.ts",
-                        "tsConfig": "tsconfig.spec.json",
-                        "karmaConfig": "karma.conf.js",
-                        "styles": [],
-                        "scripts": [],
-                        "assets": [
-                            {
-                                "glob": "favicon.ico",
-                                "input": "src/",
-                                "output": "/"
-                            },
-                            {
-                                "glob": "**/*",
-                                "input": "src/assets",
-                                "output": "/assets"
-                            }
-                        ]
+                        "tsConfig": "tsconfig.spec.json"
                     },
                     "configurations": {
                         "ci": {
