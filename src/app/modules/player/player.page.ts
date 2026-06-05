@@ -205,11 +205,12 @@ export class PlayerPage implements OnInit {
     readonly animeOrEpisodeChangeEffect = effect(() => {
         const anime = this.anime();
         const episode = this.episodeQ();
+        const hasVideo = Boolean(this.currentVideo()?.url && this.currentVideo()?.episode === episode);
 
         this.store.dispatch(changeCurrentAnimeAction({ animeId: anime.id }));
         this.store.dispatch(changeCurrentEpisodeAction({ episode }));
 
-        this.isEpisodeReleased.set(episode <= this.lastAiredEpisode());
+        this.isEpisodeReleased.set(episode <= this.lastAiredEpisode() || hasVideo);
 
         if (anime?.name) {
             this.changeTitle(anime, episode);
