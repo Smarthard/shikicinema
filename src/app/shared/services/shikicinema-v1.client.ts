@@ -1,8 +1,16 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 
+import { AnimeQueryFiltersInterface } from '@app/shared/types/shikicinema/v1/anime-filters.interface';
 import { ResourceIdType } from '@app/shared/types/resource-id.type';
-import { ShikivideosInterface, UploadToken } from '@app/shared/types/shikicinema/v1';
+import {
+    ShikicinemaAnime,
+    ShikicinemaAnimeUserRate,
+    ShikicinemaGenre,
+    ShikicinemaStudio,
+    ShikivideosInterface,
+    UploadToken,
+} from '@app/shared/types/shikicinema/v1';
 import { VideoInfoInterface } from '@app/modules/player/types';
 import { environment } from '@app-env/environment';
 import { map } from 'rxjs';
@@ -81,5 +89,79 @@ export class ShikicinemaV1Client {
         return this.http.get(url, { params }).pipe(
             map((res: any) => res?.count as number),
         )
+    }
+
+    getAnimes(name?: string, filters: AnimeQueryFiltersInterface = {}) {
+        let params = new HttpParams();
+
+        const url = `${this.baseUri}/v1/api/animes`;
+        const {
+            genres = [],
+            studios = [],
+            kinds = [],
+            statuses = [],
+            ageRatings = [],
+            sort,
+            order,
+        } = filters;
+
+        if (name) {
+            params = params.append('name', name);
+        }
+
+        for (const genreId of genres) {
+            params = params.append('genres', genreId);
+        }
+
+        for (const studioId of studios) {
+            params = params.append('studios', studioId);
+        }
+
+        for (const kind of kinds) {
+            params = params.append('kinds', kind);
+        }
+
+        for (const status of statuses) {
+            params = params.append('statuses', status);
+        }
+
+        for (const rating of ageRatings) {
+            params = params.append('ageRatings', rating);
+        }
+
+        if (sort) params = params.set('sort', sort);
+        if (order) params = params.set('order', order);
+
+        return this.http.get<ShikicinemaAnime[]>(url, { params });
+    }
+
+    filterAnimes(
+        userRates: ShikicinemaAnimeUserRate[],
+        filters: AnimeQueryFiltersInterface = {},
+    ) {
+        const url = `${this.baseUri}/v1/api/animes/query`;
+
+        return this.http.post<ShikicinemaAnime[]>(url, { userRates, ...filters });
+    }
+
+    getGenres() {
+        const url = `${this.baseUri}/v1/api/genres`;
+
+        return this.http.get<ShikicinemaGenre[]>(url);
+    }
+
+    getStudios(name?: string, limit = 10) {
+        const url = `${this.baseUri}/v1/api/studios`;
+        let params = new HttpParams();
+
+        if (name) {
+            params = params.set('name', name);
+        }
+
+        if (limit) {
+            params = params.set('limit', limit);
+        }
+
+        return this.http.get<ShikicinemaStudio[]>(url, { params });
     }
 }

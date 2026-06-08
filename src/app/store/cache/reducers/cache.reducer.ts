@@ -3,6 +3,7 @@ import { createReducer, on } from '@ngrx/store';
 import { CacheStoreInterface } from '@app/store/cache/types';
 import { WELL_KNOWN_UPLOADERS_MAP } from '@app/shared/config/well-known-uploaders.config';
 import {
+    batchUpdateAnimesCacheAction,
     cacheHealthCheckUpSuccessAction,
     resetCacheAction,
     saveVideoUploadFormAction,
@@ -49,6 +50,24 @@ const reducer = createReducer(
                     anime,
                     ttl: getAnimeCacheTtl(anime),
                 },
+            },
+        }),
+    ),
+    on(
+        batchUpdateAnimesCacheAction,
+        (state, { animes }) => ({
+            ...state,
+            animes: {
+                ...state.animes,
+                ...Object.fromEntries(
+                    animes.map((anime) => [
+                        anime.id,
+                        {
+                            anime,
+                            ttl: getAnimeCacheTtl(anime),
+                        },
+                    ]),
+                ),
             },
         }),
     ),

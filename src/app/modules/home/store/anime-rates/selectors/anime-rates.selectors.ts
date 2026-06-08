@@ -5,9 +5,19 @@ import { ExtendedUserRateStatusType } from '@app/modules/home/types';
 
 export const selectAnimeRates = createFeatureSelector<AnimeRatesStoreInterface>('animeRates');
 
+export const selectRawRates = createSelector(
+    selectAnimeRates,
+    ({ rawRates }) => rawRates,
+);
+
 export const selectRates = createSelector(
     selectAnimeRates,
     ({ rates }) => rates,
+);
+
+export const selectIsRawRatesLoading = createSelector(
+    selectAnimeRates,
+    ({ isRawRatesLoading }) => isRawRatesLoading,
 );
 
 export const selectIsRatesLoading = createSelector(
@@ -16,8 +26,8 @@ export const selectIsRatesLoading = createSelector(
 );
 
 export const selectUserRatesByStatus = (status: ExtendedUserRateStatusType) => createSelector(
-    selectAnimeRates,
-    ({ rates }) => rates.filter(({ status: rateStatus }) => rateStatus === status),
+    selectRates,
+    (rates) => rates.filter(({ status: rateStatus }) => rateStatus === status),
 );
 
 export const selectIsUserRateSectionLoading = (section: ExtendedUserRateStatusType) => createSelector(
@@ -35,3 +45,19 @@ export const selectUserRateSectionSize = (section: ExtendedUserRateStatusType) =
     selectUserRatesByStatus(section),
     (sectionRates) => sectionRates.length || 50,
 );
+
+export const selectIsFiltersOpen = createSelector(
+    selectAnimeRates,
+    ({ isFiltersOpen }) => isFiltersOpen,
+)
+
+export const selectRatesFilters = createSelector(
+    selectAnimeRates,
+    ({ filters }) => filters,
+);
+
+export const selectIsGenresLoading = createSelector(selectAnimeRates, ({ isGenresLoading }) => isGenresLoading);
+export const selectGenres = createSelector(selectAnimeRates, ({ genres }) => genres);
+
+export const selectIsStudiosLoading = createSelector(selectAnimeRates, ({ isStudiosLoading }) => isStudiosLoading);
+export const selectStudios = createSelector(selectAnimeRates, ({ studios }) => studios);

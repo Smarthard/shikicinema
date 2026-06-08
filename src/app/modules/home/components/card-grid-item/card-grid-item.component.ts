@@ -41,7 +41,7 @@ export class CardGridItemComponent extends AbstractImageCardComponent {
     protected cardGridItemClass = true;
 
     kind = input<AnimeKindType>();
-    releaseDate = input<string | Date>();
+    airedDate = input<string | Date>();
     link = input('#');
     hasPriority = input(false);
 

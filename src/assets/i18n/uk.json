@@ -13,10 +13,10 @@
                 "PV": "Промовідео",
                 "CM": "Реклама"
             },
-            "ANIME_STATUSES": {
-                "ANONS": "заплановано",
-                "ONGOING": "онгоїнг",
-                "RELEASED": "вийшло"
+            "ANIME_STATUSES": { 
+                "ANONS": "Анонсовано", 
+                "ONGOING": "Зараз виходить", 
+                "RELEASED": "Вийшло" 
             },
             "FRANCHISE_RELATION": {
                 "PREQUEL": "Приквел",
@@ -31,6 +31,22 @@
                 "CHARACTER": "Загальний персонаж",
                 "FRANCHISE": "Франшиза",
                 "ADAPTATION": "Адаптація"
+            },
+            "AGE_RATINGS": { 
+                "G": "G", 
+                "PG": "PG", 
+                "PG_13": "PG-13", 
+                "R": "R", 
+                "R_PLUS": "NC-17", 
+                "RX": "RX" 
+            },
+            "AGE_RATINGS_EXPLANATION": {
+                "G": "Без обмежень",
+                "PG": "Рекомендується присутність батьків",
+                "PG_13": "Дітям до 13 років не рекомендується",
+                "R": "До 17 років обов'язкова присутність дорослого",
+                "R_PLUS": "Особам до 18 років заборонено",
+                "RX": "Тільки для дорослих"
             }
         },
         "VIDEO": {
@@ -87,6 +103,9 @@
             },
             "UPLOAD_BUTTON": {
                 "ACTION_TEXT": "Додати"
+            },
+            "FILTERS_BUTTON": {
+                "ACTION_TEXT": "Фільтри"
             }
         },
         "FOOTER": {
@@ -142,6 +161,33 @@
                 "COMPLETED": "Завершено",
                 "ON_HOLD": "Відкладено",
                 "DROPPED": "Кинуто"
+            },
+            "SORT": {
+                "LABEL": "Сортування",
+                "DEFAULT": "За замовчуванням",
+                "NAME": "За назвою",
+                "SCORE": "За рейтингом",
+                "AIRED_ON": "За датою виходу",
+                "USER_SCORE": "За оцінкою",
+                "USER_CREATED": "За датою додавання",
+                "USER_UPDATED": "За датою оновлення"
+            },
+            "FILTERS": {
+                "SEARCH_GENRES": "Пошук за жанрами",
+                "NOT_SELECTED_OPTION": "Не вибрано",
+                "KIND": "Тип",
+                "STATUS": "Статус",
+                "AGE_RATING": "Віковий рейтинг",
+                "GENRES": "Жанри",
+                "STUDIOS": "Студія", 
+                "YEAR_RANGE": "Року",
+                "SCORE_RANGE": "Рейтинг",
+                "SEARCH_STUDIOS": "Пошук по студіям",
+                "GENRE_KINDS": { 
+                    "GENRE": "Жанр", 
+                    "THEME": "Тематика", 
+                    "DEMOGRAPHIC": "Аудиторія" 
+                }
             }
         }
     },

@@ -26,7 +26,7 @@ export class GetAnimeReleaseDatePipe implements PipeTransform {
     transform(animeId: ResourceIdType): Observable<string> {
         return this.allRates$.pipe(map((rates) => {
             const rate = rates?.find(({ anime }) => anime?.id === animeId);
-            const date = rate?.anime?.released_on || rate?.anime?.aired_on;
+            const date = rate?.anime?.aired_on || rate?.anime?.released_on;
 
             return date ? new Date(date)?.toISOString() : null;
         }));

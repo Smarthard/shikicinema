@@ -56,8 +56,8 @@
             <span>{{ 'GLOBAL.SHIKIMORI.ANIME_KINDS.' + (kind() | uppercase) | transloco }}</span>
         }
 
-        @if (releaseDate()) {
-            <time [dateTime]="releaseDate()">{{ releaseDate() | date: 'yyyy' }}</time>
+        @if (airedDate()) {
+            <time [dateTime]="airedDate()">{{ airedDate() | date: 'yyyy' }}</time>
         }
     </footer>
 }

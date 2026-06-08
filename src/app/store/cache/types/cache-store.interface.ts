@@ -5,6 +5,6 @@ import { WellKnownType } from '@app/shared/types/well-known-uploaders.type';
 export interface CacheStoreInterface {
     knownUploaders: WellKnownType;
     animes: AnimeCacheType;
-    videoUploadForm: VideoUploadFormInterface;
+    videoUploadForm?: VideoUploadFormInterface;
     lastCheckUp: string;
 }

@@ -27,7 +27,7 @@ export interface Rate<K = string, S = string> {
     id: ResourceIdType;
     name: string;
     russian: string;
-    image: RateImage;
+    image: RateImage | null;
     url: string;
     /* score: 1.0 */
     score: string;
@@ -61,8 +61,8 @@ interface UserFullRate<T> {
     volumes: number | null;
     text_html: string | null;
     rewatches: number;
-    created_at: string;
-    updated_at: string;
+    created_at: string | null;
+    updated_at: string | null;
     user_id: ResourceIdType;
     target_id: ResourceIdType;
     target_type: UserRateTargetEnum;

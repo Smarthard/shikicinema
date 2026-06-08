@@ -6,11 +6,16 @@ import {
     input,
     output,
 } from '@angular/core';
-import { IonButton, IonIcon, IonText } from '@ionic/angular/standalone';
+import {
+    IonButton,
+    IonIcon,
+    IonText,
+} from '@ionic/angular/standalone';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { UpperCasePipe } from '@angular/common';
 
 import { CardGridComponent } from '@app/modules/home/components/card-grid';
+import { ExtendedUserRateStatusType } from '@app/modules/home/types';
 import { UserAnimeRate } from '@app/shared/types/shikimori';
 
 @Component({
@@ -35,8 +40,8 @@ import { UserAnimeRate } from '@app/shared/types/shikimori';
 })
 export class AnimeRateSectionComponent {
     label = input.required<string>();
-    status = input.required<string>();
     rates = input.required<UserAnimeRate[]>();
+    status = input.required<ExtendedUserRateStatusType>();
 
     isHidden = input(false);
     isLoading = input(true);

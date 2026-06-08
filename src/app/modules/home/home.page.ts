@@ -1,4 +1,4 @@
-import { AsyncPipe, SlicePipe, UpperCasePipe } from '@angular/common';
+import { AsyncPipe, UpperCasePipe } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -13,16 +13,20 @@ import { TranslocoService } from '@jsverse/transloco';
 import { rxEffect } from 'ngxtension/rx-effect';
 import { switchMap } from 'rxjs/operators';
 
+import { AnimeFilterPanelComponent } from '@app/modules/home/components/anime-filters-panel';
+import { AnimeQueryFiltersInterface } from '@app/shared/types/shikicinema/v1';
 import { AnimeRateSectionComponent } from '@app/modules/home/components/anime-rate-section';
 import { ExtendedUserRateStatusType } from '@app/modules/home/types';
 import { FooterDirective } from '@app/shared/directives/footer.directive';
 import {
-    SortRatesByDateVisitedPipe,
-    SortRatesByUserScorePipe,
-} from '@app/modules/home/pipes';
-import {
+    changeAnimeRatesFiltersAction,
+    getSortedRatesAction,
     loadAllUserAnimeRatesAction,
+    selectIsFiltersOpen,
+    selectIsRawRatesLoading,
     selectIsUserRateSectionLoading,
+    selectRatesFilters,
+    selectRawRates,
     selectUserRateSectionSize,
     selectUserRatesByStatus,
 } from '@app/modules/home/store/anime-rates';
@@ -41,12 +45,10 @@ import {
     imports: [
         AsyncPipe,
         UpperCasePipe,
-        SlicePipe,
         IonContent,
         FooterDirective,
         AnimeRateSectionComponent,
-        SortRatesByUserScorePipe,
-        SortRatesByDateVisitedPipe,
+        AnimeFilterPanelComponent,
     ],
     templateUrl: 'home.page.html',
     styleUrls: ['home.page.scss'],
@@ -63,6 +65,12 @@ export class HomePage {
     readonly currentUserId = this.store.selectSignal(selectShikimoriCurrentUserId);
     readonly recent = this.store.selectSignal(selectRecentAnimes);
 
+    readonly rawRates = this.store.selectSignal(selectRawRates);
+    readonly isRawRatesLoading = this.store.selectSignal(selectIsRawRatesLoading);
+
+    readonly isFiltersOpen = this.store.selectSignal(selectIsFiltersOpen);
+    readonly filters = this.store.selectSignal(selectRatesFilters);
+
     readonly isSectionLoading = (section: ExtendedUserRateStatusType) =>
         this.store.selectSignal(selectIsUserRateSectionLoading(section));
 
@@ -77,6 +85,19 @@ export class HomePage {
     );
 
     readonly hiddenGridMap = new Map<ExtendedUserRateStatusType, boolean>();
+
+    readonly filtersChangeEffect = effect(() => {
+        if (!this.isRawRatesLoading() && this.currentUserId()) {
+            const rates = this.rawRates();
+            const filters = this.filters();
+
+            this.store.dispatch(getSortedRatesAction({ rates, filters }));
+        }
+    });
+
+    onFiltersChange(filters: AnimeQueryFiltersInterface): void {
+        this.store.dispatch(changeAnimeRatesFiltersAction({ filters }));
+    }
 
     loadAnimeRatesEffect = effect(() => {
         const userId = this.currentUserId();
