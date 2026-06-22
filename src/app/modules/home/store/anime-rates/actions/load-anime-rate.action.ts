@@ -53,29 +53,29 @@ export const changeAnimeRatesFiltersAction = createAction(
 export const loadGenresAction = createAction('[Genres] Load genres');
 
 export const loadGenresSuccessAction = createAction(
-    '[Genres] Load genres success',
+    '[Anime Rates] Load genres success',
     props<{ genres: ShikicinemaGenre[] }>(),
 );
 
 export const loadGenresFailureAction = createAction(
-    '[Genres] Load genres failure',
+    '[Anime Rates] Load genres failure',
     props<{ error: any }>(),
 );
 
 export const loadStudiosAction = createAction(
-    '[Genres] Load studios',
+    '[Anime Rates] Load studios',
     props<{ name?: string }>(),
 );
 
 export const loadStudiosSuccessAction = createAction(
-    '[Genres] Load studios success',
+    '[Anime Rates] Load studios success',
     props<{ studios: ShikicinemaStudio[] }>(),
 );
 
 export const loadStudiosFailureAction = createAction(
-    '[Genres] Load studios failure',
+    '[Anime Rates] Load studios failure',
     props<{ error: any }>(),
 );
 
-export const toggleAnimeFiltersAction = createAction('[Genres] Toggle anime filters');
+export const toggleAnimeFiltersAction = createAction('[Anime Rates] Toggle anime filters');
 
