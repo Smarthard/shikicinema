@@ -7,13 +7,12 @@
         top: var(--shc-header-height);
         right: 0;
         bottom: 0;
-        width: 33%;
-        min-width: 320px;
-        max-width: 450px;
+        width: 30%;
+        min-width: 20rem;
+        max-width: 30%;
         overflow-y: auto;
         z-index: 1;
         background: var(--ion-item-background);
-        box-shadow: -2px 0 8px rgba(0,0,0,0.1);
         padding: 1rem;
     }
 
