@@ -146,6 +146,8 @@ export class AnimeFilterPanelComponent implements OnInit {
 
     readonly scoreRange = signal({ lower: 0, upper: 10 });
 
+    readonly isExtendedYears = signal(false);
+
     readonly genreGroups = computed(() => {
         const lang = this.currentLang();
         const search = this.genreSearch().toLocaleLowerCase();
@@ -341,5 +343,28 @@ export class AnimeFilterPanelComponent implements OnInit {
             scoreMin: lower > 0 ? lower : undefined,
             scoreMax: upper < 10 ? upper : undefined,
         }));
+    }
+
+    toggleExtendedYears(): void {
+        const extended = !this.isExtendedYears();
+        this.isExtendedYears.set(extended);
+        const newMin = extended ? 1900 : 1980;
+        this.minYear.set(newMin);
+        this.yearRange.update((r) => ({ ...r, lower: newMin }));
+    }
+
+    resetFilters(): void {
+        this.filters.set({
+            sort: 'user_score',
+            order: 'DESC',
+            genres: [],
+            studios: [],
+            kinds: [],
+            statuses: [],
+            ageRatings: [],
+        });
+        this.yearRange.set({ lower: this.minYear(), upper: this.nextYear() });
+        this.scoreRange.set({ lower: 0, upper: 10 });
+        this.minYear.set(1980);
     }
 }

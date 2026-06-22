@@ -26,7 +26,7 @@ const initialState: AnimeRatesStoreInterface = {
 
     isFiltersOpen: false,
     filters: {
-        sort: 'score',
+        sort: 'user_score',
         order: 'DESC',
     },
 

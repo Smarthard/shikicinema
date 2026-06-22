@@ -297,7 +297,7 @@
     </ion-item>
 
     <!-- Оценка -->
-    <ion-item class="anime-filter-panel__item anime-filter-panel__item--full">
+    <ion-item class="anime-filter-panel__item">
         <ion-range
             class="anime-filter-panel__range"
             pin="true"
@@ -321,12 +321,12 @@
     </ion-item>
 
     <!-- Год выхода -->
-    <ion-item class="anime-filter-panel__item anime-filter-panel__item--full">
+    <ion-item class="anime-filter-panel__item anime-filter-panel__item--years-range">
         <ion-range
             class="anime-filter-panel__range"
             pin="true"
-            ticks="true"
-            snaps="true"
+            [ticks]="!isExtendedYears()"
+            [snaps]="!isExtendedYears()"
             dualKnobs="true"
             debounce="1000"
             labelPlacement="stacked"
@@ -340,5 +340,23 @@
             <ion-label slot="start">{{ minYear() }}</ion-label>
             <ion-label slot="end">{{ nextYear() }}</ion-label>
         </ion-range>
+        
+        <!-- Расширить года -->
+        <ion-checkbox
+            labelPlacement="end"
+            [checked]="isExtendedYears()"
+            (ionChange)="toggleExtendedYears()"
+        >
+            {{ 'HOME_MODULE.HOME_PAGE.FILTERS.EXTEND_YEARS' | transloco }}
+        </ion-checkbox>
     </ion-item>
+
+    <!-- Сбросить фильтры -->
+    <ion-button
+        color="primary"
+        expand="block"
+        (click)="resetFilters()"
+    >
+        {{ 'HOME_MODULE.HOME_PAGE.FILTERS.RESET_BTN' | transloco }}
+    </ion-button>
 </ion-list>

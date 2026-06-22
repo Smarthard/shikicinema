@@ -187,7 +187,9 @@
                     "GENRE": "Genres",
                     "THEME": "Themes",
                     "DEMOGRAPHIC": "Audience"
-                }
+                },
+                "EXTEND_YEARS": "Show earlier years",
+                "RESET_BTN": "Reset"
             }
         }
     },
