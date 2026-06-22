@@ -23,6 +23,7 @@ import {
     getSortedRatesAction,
     loadAllUserAnimeRatesAction,
     selectIsFiltersOpen,
+    selectIsFirstLoading,
     selectIsRawRatesLoading,
     selectIsUserRateSectionLoading,
     selectRatesFilters,
@@ -66,6 +67,7 @@ export class HomePage {
     readonly recent = this.store.selectSignal(selectRecentAnimes);
 
     readonly rawRates = this.store.selectSignal(selectRawRates);
+    readonly isFirstLoading = this.store.selectSignal(selectIsFirstLoading);
     readonly isRawRatesLoading = this.store.selectSignal(selectIsRawRatesLoading);
 
     readonly isFiltersOpen = this.store.selectSignal(selectIsFiltersOpen);

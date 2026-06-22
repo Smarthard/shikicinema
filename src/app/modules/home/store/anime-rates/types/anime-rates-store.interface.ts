@@ -4,6 +4,7 @@ import { UserAnimeRate } from '@app/shared/types/shikimori/user-anime-rate';
 export interface AnimeRatesStoreInterface {
     rawRates: UserAnimeRate[];
     isRawRatesLoading: boolean;
+    isFirstLoading: boolean;
 
     isRatesLoading: boolean;
     rates: UserAnimeRate[];

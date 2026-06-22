@@ -61,3 +61,5 @@ export const selectGenres = createSelector(selectAnimeRates, ({ genres }) => gen
 
 export const selectIsStudiosLoading = createSelector(selectAnimeRates, ({ isStudiosLoading }) => isStudiosLoading);
 export const selectStudios = createSelector(selectAnimeRates, ({ studios }) => studios);
+
+export const selectIsFirstLoading = createSelector(selectAnimeRates, ({ isFirstLoading }) => isFirstLoading);

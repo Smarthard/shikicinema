@@ -19,13 +19,13 @@
             @let hasPriority = index <= 1;
             @let isLoading = isSectionLoading(status);
             @let size = sectionSize(status);
-    
+
             <app-anime-rate-section
                 class="home-page__anime-rates"
                 [rates]="userRatesBySection(status) | async"
                 [label]="'HOME_MODULE.HOME_PAGE.GRIDS.' + (status | uppercase)"
                 [status]="status"
-                [isLoading]="isLoading()"
+                [isLoading]="isFirstLoading() && isLoading()"
                 [size]="size()"
                 [isHidden]="getHiddenGridStatus(status)"
                 [hasPriority]="hasPriority"

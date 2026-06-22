@@ -22,6 +22,7 @@ const initialState: AnimeRatesStoreInterface = {
     rawRates: [],
     isRawRatesLoading: true,
     isRatesLoading: true,
+    isFirstLoading: true,
     rates: [],
 
     isFiltersOpen: false,
@@ -73,6 +74,7 @@ const reducer = createReducer(
             ...state,
             rates: rates,
             isRatesLoading: false,
+            isFirstLoading: false,
         }),
     ),
     on(
