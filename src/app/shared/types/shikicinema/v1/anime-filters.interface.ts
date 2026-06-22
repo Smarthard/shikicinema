@@ -7,6 +7,7 @@ export interface AnimeQueryFiltersInterface {
     kinds?: string[];
     statuses?: string[];
     ageRatings?: string[];
+    season?: string;
     sort?: string;
     order?: SortOrderType;
 }

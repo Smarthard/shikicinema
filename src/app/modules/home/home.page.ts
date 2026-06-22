@@ -95,11 +95,7 @@ export class HomePage {
         }
     });
 
-    onFiltersChange(filters: AnimeQueryFiltersInterface): void {
-        this.store.dispatch(changeAnimeRatesFiltersAction({ filters }));
-    }
-
-    loadAnimeRatesEffect = effect(() => {
+    readonly loadAnimeRatesEffect = effect(() => {
         const userId = this.currentUserId();
 
         if (userId) {
@@ -107,7 +103,11 @@ export class HomePage {
         }
     });
 
-    setPageTitleEffect = rxEffect(this.pageTitle$, (title) => this.title.setTitle(title));
+    readonly setPageTitleEffect = rxEffect(this.pageTitle$, (title) => this.title.setTitle(title));
+
+    onFiltersChange(filters: AnimeQueryFiltersInterface): void {
+        this.store.dispatch(changeAnimeRatesFiltersAction({ filters }));
+    }
 
     toggleHiddenGridStatus(rateStatus: ExtendedUserRateStatusType): void {
         const status = this.hiddenGridMap.get(rateStatus) || false;

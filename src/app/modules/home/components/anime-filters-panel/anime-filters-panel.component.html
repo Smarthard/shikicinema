@@ -351,6 +351,65 @@
         </ion-checkbox>
     </ion-item>
 
+    <!-- Сезон -->
+    <ion-item
+        #seasonTrigger
+        id="season-trigger"
+        class="anime-filter-panel__item"
+        button
+    >
+        <ion-label>{{ 'HOME_MODULE.HOME_PAGE.FILTERS.SEASON' | transloco }}</ion-label>
+
+        <ion-note slot="end">
+            @if (filters().season) {
+                {{ 'HOME_MODULE.HOME_PAGE.FILTERS.SEASONS.' + (filters().season | uppercase) | transloco }}
+            }
+        </ion-note>
+    
+        <ion-popover
+            class="anime-filter-panel__popover"
+            trigger="season-trigger"
+            alignment="start"
+            side="bottom"
+            [keepContentsMounted]="true"
+            [dismissOnSelect]="true"
+        >
+            <ng-template>
+                <ion-list>
+                    <ion-item
+                        button
+                        [class.selected]="!filters().season"
+                        (click)="onSeasonChange('')"
+                    >
+                        <ion-label>
+                            {{ 'HOME_MODULE.HOME_PAGE.FILTERS.NOT_SELECTED_OPTION' | transloco }}
+                        </ion-label>
+
+                        @if (!filters().season) {
+                            <ion-icon name="checkmark" slot="end" />
+                        }
+                    </ion-item>
+
+                    @for (season of seasonOptions; track season) {
+                        <ion-item
+                            button
+                            [class.selected]="filters().season === season"
+                            (click)="onSeasonChange(season)"
+                        >
+                            <ion-label>
+                                {{ 'HOME_MODULE.HOME_PAGE.FILTERS.SEASONS.' + (season | uppercase) | transloco }}
+                            </ion-label>
+
+                            @if (filters().season === season) {
+                                <ion-icon name="checkmark" slot="end" />
+                            }
+                        </ion-item>
+                    }
+                </ion-list>
+            </ng-template>
+        </ion-popover>
+    </ion-item>
+
     <!-- Сбросить фильтры -->
     <ion-button
         color="primary"

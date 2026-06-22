@@ -188,6 +188,13 @@
                     "THEME": "Тематика",
                     "DEMOGRAPHIC": "Аудитория"
                 },
+                "SEASON": "Сезон",
+                "SEASONS": {
+                    "WINTER": "Зима",
+                    "SPRING": "Весна",
+                    "SUMMER": "Лето",
+                    "FALL": "Осень"
+                },
                 "EXTEND_YEARS": "Показать более ранние года",
                 "RESET_BTN": "Сбросить"
             }

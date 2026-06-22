@@ -188,6 +188,13 @@
                     "THEME": "Themes",
                     "DEMOGRAPHIC": "Audience"
                 },
+                "SEASON": "Season",
+                "SEASONS": {
+                    "WINTER": "Winter",
+                    "SPRING": "Spring",
+                    "SUMMER": "Summer",
+                    "FALL": "Fall"
+                },
                 "EXTEND_YEARS": "Show earlier years",
                 "RESET_BTN": "Reset"
             }

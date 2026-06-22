@@ -100,6 +100,8 @@ export class AnimeFilterPanelComponent implements OnInit {
 
     readonly currentLang = toSignal(this.transloco.langChanges$);
 
+    readonly seasonOptions = ['winter', 'spring', 'summer', 'fall'];
+
     readonly sortOptions = [
         'score',
         'name',
@@ -351,6 +353,10 @@ export class AnimeFilterPanelComponent implements OnInit {
         const newMin = extended ? 1900 : 1980;
         this.minYear.set(newMin);
         this.yearRange.update((r) => ({ ...r, lower: newMin }));
+    }
+
+    onSeasonChange(season: string): void {
+        this.filters.update((f) => ({ ...f, season: season || undefined }));
     }
 
     resetFilters(): void {
