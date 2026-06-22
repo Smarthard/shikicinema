@@ -29,20 +29,13 @@ import {
     UserInterface,
     UserRateTargetEnum,
 } from '@app/shared/types/shikimori';
-import { AnimeRatesMetadataGQLResponse, UserAnimeRatesGQLResponse } from '@app/shared/types/shikimori/graphql';
 import { FindAnimeQuery, UserAnimeRatesQuery } from '@app/shared/types/shikimori/queries';
 import { ResourceIdType } from '@app/shared/types';
 import { ShikimoriCredentials } from '@app/store/auth/types/auth-store.interface';
 import { environment } from '@app-env/environment';
-import {
-    mapAnimeRatesMetadataGQL,
-    mapAnimeRatesMetadataGQLQuery,
-    mapUserAnimeRatesGQL,
-    mapUserRatesGQLQuery,
-    toShikimoriCredentials,
-} from '@app/shared/types/shikimori/mappers';
 import { selectShikimoriDomain } from '@app/store/shikimori/selectors';
 import { setPaginationToParams } from '@app/shared/types/shikimori/helpers';
+import { toShikimoriCredentials } from '@app/shared/types/shikimori/mappers';
 
 
 @Injectable({
@@ -159,30 +152,6 @@ export class ShikimoriClient {
             take(1),
             switchMap(
                 (domain) => this.http.get<UserAnimeRate[]>(`${domain}/api/users/${userId}/anime_rates`, { params }),
-            ),
-        );
-    }
-
-    getUserAnimeRatesMetadataGQL(animeIds: ResourceIdType[]) {
-        const query = mapAnimeRatesMetadataGQLQuery(animeIds);
-
-        return this.shikimoriDomain$.pipe(
-            take(1),
-            switchMap(
-                (domain) => this.http.post<AnimeRatesMetadataGQLResponse>(`${domain}/api/graphql`, { query })
-                    .pipe(map(mapAnimeRatesMetadataGQL)),
-            ),
-        );
-    }
-
-    getUserAnimeRatesGQL(animeRatesQuery: UserAnimeRatesQuery): Observable<UserAnimeRate[]> {
-        const query = mapUserRatesGQLQuery(animeRatesQuery);
-
-        return this.shikimoriDomain$.pipe(
-            take(1),
-            switchMap(
-                (domain) => this.http.post<UserAnimeRatesGQLResponse>(`${domain}/api/graphql`, { query })
-                    .pipe(map(mapUserAnimeRatesGQL)),
             ),
         );
     }
