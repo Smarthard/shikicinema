@@ -7,6 +7,7 @@ import {
 import { Store } from '@ngrx/store';
 
 import { ResourceIdType } from '@app/shared/types';
+import { UserAnimeRate } from '@app/shared/types/shikimori';
 import { getAnimeRateName } from '@app/modules/home/utils';
 import { selectRates } from '@app/modules/home/store/anime-rates';
 import { selectRecentAnimes } from '@app/modules/home/store/recent-animes';
@@ -17,16 +18,22 @@ import { selectRecentAnimes } from '@app/modules/home/store/recent-animes';
     pure: true,
 })
 export class GetAnimeNamePipe implements PipeTransform {
-    readonly store = inject(Store);
-    readonly recent$ = this.store.select(selectRecentAnimes);
-    readonly rates$ = this.store.select(selectRates);
+    private readonly store = inject(Store);
+    private readonly recent$ = this.store.select(selectRecentAnimes);
+    private readonly rates$ = this.store.select(selectRates);
 
-    readonly allRates$ = combineLatest([this.recent$, this.rates$])
-        .pipe(map(([recent, rates]) => [...recent, ...rates]));
+    private readonly ratesMap$ = combineLatest([
+        this.recent$,
+        this.rates$,
+    ]).pipe(
+        map(([recent, rates]) => new Map(
+            [...recent, ...rates].map((rate) => [rate.anime.id, rate])),
+        ),
+    );
 
     transform(animeId: ResourceIdType, language: string): Observable<string> {
-        return this.allRates$.pipe(
-            map((rates) => rates?.find(({ anime }) => anime?.id === animeId)),
+        return this.ratesMap$.pipe(
+            map((ratesMap) => ratesMap.get(animeId) as UserAnimeRate),
             map((rate) => getAnimeRateName(rate, language)),
         );
     }

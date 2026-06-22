@@ -22,6 +22,13 @@
     animation-iteration-count: infinite;
     animation-name: loading;
     animation-timing-function: ease-in-out;
+
+    &.ng-animating,
+    &.ng-leave-active {
+        animation-play-state: paused !important;
+        animation-duration: 0s !important;
+        opacity: 0;
+    }
 }
 
 @keyframes flash-background {
@@ -45,10 +52,12 @@
     transition: transform var(--scale-in-duration) ease-in-out;
 }
 
-.scale:hover {
+.scale:hover,
+.scale:focus {
     transform: scale(var(--scale-factor));
 }
 
-.scale:not(:hover) {
+.scale:not(:hover),
+.scale:not(:focus) {
     transition: transform var(--scale-out-duration) ease-in-out;
 }
