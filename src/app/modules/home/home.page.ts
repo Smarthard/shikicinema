@@ -6,7 +6,7 @@ import {
     effect,
     inject,
 } from '@angular/core';
-import { IonContent } from '@ionic/angular/standalone';
+import { IonContent, IonModal, Platform } from '@ionic/angular/standalone';
 import { Store } from '@ngrx/store';
 import { Title } from '@angular/platform-browser';
 import { TranslocoService } from '@jsverse/transloco';
@@ -30,6 +30,7 @@ import {
     selectRawRates,
     selectUserRateSectionSize,
     selectUserRatesByStatus,
+    toggleAnimeFiltersAction,
 } from '@app/modules/home/store/anime-rates';
 import { selectAnimeStatusOrder } from '@app/store/settings/selectors/settings.selectors';
 import { selectRecentAnimes } from '@app/modules/home/store/recent-animes';
@@ -50,6 +51,7 @@ import {
         FooterDirective,
         AnimeRateSectionComponent,
         AnimeFilterPanelComponent,
+        IonModal,
     ],
     templateUrl: 'home.page.html',
     styleUrls: ['home.page.scss'],
@@ -61,6 +63,9 @@ export class HomePage {
     private readonly store = inject(Store);
     private readonly title = inject(Title);
     private readonly transloco = inject(TranslocoService);
+    private readonly platform = inject(Platform);
+
+    readonly isMobile = this.platform.is('android') || this.platform.is('iphone') || this.platform.is('ipad');
 
     readonly animeStatusOrder = this.store.selectSignal(selectAnimeStatusOrder);
     readonly currentUserId = this.store.selectSignal(selectShikimoriCurrentUserId);
@@ -119,5 +124,9 @@ export class HomePage {
 
     getHiddenGridStatus(rateStatus: ExtendedUserRateStatusType): boolean {
         return this.hiddenGridMap.get(rateStatus) || false;
+    }
+
+    onFiltersModalClose(): void {
+        this.store.dispatch(toggleAnimeFiltersAction());
     }
 }

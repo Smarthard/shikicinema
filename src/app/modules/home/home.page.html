@@ -3,7 +3,23 @@
     class="page-content ion-no-padding"
     appWithFooter
 >
-    @if (isFiltersOpen()) {
+    @defer(when isMobile && isFiltersOpen()) {
+        <ion-modal
+            [isOpen]="isFiltersOpen()"
+            [breakpoints]="[0, 0.65, 0.8]"
+            [initialBreakpoint]="0.65"
+            (didDismiss)="onFiltersModalClose()"
+        >
+            <ng-template>
+                <app-anime-filter-panel
+                    [filters]="filters()"
+                    (filterChange)="onFiltersChange($event)"
+                />
+            </ng-template>
+        </ion-modal>
+    }
+
+    @if (isFiltersOpen() && !isMobile) {
         <app-anime-filter-panel
             class="home-page__filters"
             [filters]="filters()"
@@ -13,7 +29,7 @@
 
     <div
         class="home-page__content"
-        [class.home-page__content--with-filters]="isFiltersOpen()"
+        [class.home-page__content--with-filters]="isFiltersOpen() && !isMobile"
     >
         @for (status of animeStatusOrder(); track status; let index = $index) {
             @let hasPriority = index <= 1;
