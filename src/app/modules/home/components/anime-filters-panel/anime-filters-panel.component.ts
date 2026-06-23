@@ -211,10 +211,22 @@ export class AnimeFilterPanelComponent implements OnInit {
     ));
 
     readonly onFiltersChangeEffect = effect(() => this.filterChange.emit(this.filters()));
-    readonly onStudioSearchEffect = effect(() => this.store.dispatch(loadStudiosAction({ name: this.studioSearch() })));
+    readonly onStudioSearchEffect = effect(() => {
+        const name = this.studioSearch();
+
+        if (name) {
+            this.store.dispatch(loadStudiosAction({ name }))
+        }
+    });
 
     ngOnInit(): void {
-        this.store.dispatch(loadGenresAction());
+        if (!this.genres().length) {
+            this.store.dispatch(loadGenresAction());
+        }
+
+        if (!this.studios().length) {
+            this.store.dispatch(loadStudiosAction({ name: '' }));
+        }
     }
 
     yearFormatter(value: number) {
