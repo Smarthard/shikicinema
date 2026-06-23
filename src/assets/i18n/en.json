@@ -14,9 +14,9 @@
                 "CM": "Commercial Message"
             },
             "ANIME_STATUSES": {
-                "ANONS": "planned",
-                "ONGOING": "airing",
-                "RELEASED": "released"
+                "ANONS": "Planned",
+                "ONGOING": "Airing",
+                "RELEASED": "Released"
             },
             "FRANCHISE_RELATION": {
                 "PREQUEL": "Prequel",
@@ -31,6 +31,22 @@
                 "CHARACTER": "Same Character",
                 "FRANCHISE": "Franchise",
                 "ADAPTATION": "Adaptation"
+            },
+            "AGE_RATINGS": {
+                "G": "G",
+                "PG": "PG",
+                "PG_13": "PG-13",
+                "R": "R",
+                "R_PLUS": "NC-17",
+                "RX": "RX"
+            },
+            "AGE_RATINGS_EXPLANATION": {
+                "G": "All ages admitted",
+                "PG": "Some material may not be suitable for children",
+                "PG_13": "Some material may be inappropriate for children under 13",
+                "R": "Under 17 requires accompanying parent or adult guardian",
+                "R_PLUS": "No one 17 and under admitted",
+                "RX": "Adults Only"
             }
         },
         "VIDEO": {
@@ -87,6 +103,9 @@
             },
             "UPLOAD_BUTTON": {
                 "ACTION_TEXT": "Upload"
+            },
+            "FILTERS_BUTTON": {
+                "ACTION_TEXT": "Filters"
             }
         },
         "FOOTER": {
@@ -142,6 +161,42 @@
                 "COMPLETED": "Completed",
                 "ON_HOLD": "On hold",
                 "DROPPED": "Dropped"
+            },
+            "SORT": {
+                "LABEL": "Sort",
+                "DEFAULT": "By default",
+                "NAME": "By name",
+                "SCORE": "By rating",
+                "AIRED_ON": "By date aired",
+                "USER_SCORE": "By user score",
+                "USER_CREATED": "By date added",
+                "USER_UPDATED": "By date updated"
+            },
+            "FILTERS": {
+                "SEARCH_GENRES": "Search by genre",
+                "NOT_SELECTED_OPTION": "Not selected",
+                "KIND": "Type",
+                "STATUS": "Status",
+                "AGE_RATING": "Age rating",
+                "GENRES": "Genres",
+                "STUDIOS": "Studio",
+                "YEAR_RANGE": "Year",
+                "SCORE_RANGE": "Rating",
+                "SEARCH_STUDIOS": "Search by studios",
+                "GENRE_KINDS": {
+                    "GENRE": "Genres",
+                    "THEME": "Themes",
+                    "DEMOGRAPHIC": "Audience"
+                },
+                "SEASON": "Season",
+                "SEASONS": {
+                    "WINTER": "Winter",
+                    "SPRING": "Spring",
+                    "SUMMER": "Summer",
+                    "FALL": "Fall"
+                },
+                "EXTEND_YEARS": "Show earlier years",
+                "RESET_BTN": "Reset"
             }
         }
     },

@@ -1,0 +1,421 @@
+<ion-list class="anime-filter-panel__list">
+    <!-- Сортировка -->
+    <ion-item
+        #sortTrigger
+        id="sort-trigger"
+        class="anime-filter-panel__item"
+        button
+    >
+        <ion-label>{{ 'HOME_MODULE.HOME_PAGE.SORT.LABEL' | transloco }}</ion-label>
+
+        <ion-note slot="end">
+            {{ 'HOME_MODULE.HOME_PAGE.SORT.' + (filters().sort | uppercase) | transloco }}
+        </ion-note>
+
+        <ion-popover
+            #sortPopover
+            class="anime-filter-panel__popover"
+            trigger="sort-trigger"
+            alignment="start"
+            side="bottom"
+            [keepContentsMounted]="true"
+            [dismissOnSelect]="true"
+        >
+            <ng-template>
+                <ion-list>
+                    @for (sort of sortOptions; track sort) {
+                        <ion-item
+                            button
+                            [class.selected]="filters().sort === sort"
+                            (click)="onSortChange(sort); sortPopover.dismiss()"
+                        >
+                            <ion-label>
+                                {{ 'HOME_MODULE.HOME_PAGE.SORT.' + (sort | uppercase) | transloco }}
+                            </ion-label>
+                            @if (filters().sort === sort) {
+                                <ion-icon name="checkmark" slot="end" />
+                            }
+                        </ion-item>
+                    }
+                </ion-list>
+            </ng-template>
+        </ion-popover>
+
+        <div slot="end" class="anime-filter-panel__order-wrapper">
+            <ion-button
+                class="anime-filter-panel__order-btn"
+                fill="clear"
+                (click)="toggleOrder($event)"
+            >
+                <ion-icon
+                    [name]="filters().order === 'DESC' ? 'arrow-down' : 'arrow-up'"
+                    slot="icon-only"
+                />
+            </ion-button>
+        </div>
+    </ion-item>
+
+    <!-- Тип аниме -->
+    <ion-item
+        #kindTrigger
+        id="kind-trigger"
+        class="anime-filter-panel__item"
+        button
+    >
+        <ion-label>{{ 'HOME_MODULE.HOME_PAGE.FILTERS.KIND' | transloco }}</ion-label>
+
+        <ion-note slot="end">
+            @if (selectedKindsCount()) {
+                {{ kindsPreviewNote() }}
+            }
+        </ion-note>
+
+        <ion-popover
+            class="anime-filter-panel__popover"
+            trigger="kind-trigger"
+            alignment="start"
+            side="bottom"
+            [keepContentsMounted]="true"
+        >
+            <ng-template>
+                <ion-list>
+                    @for (kind of kindOptions; track kind) {
+                        <ion-item (click)="toggleKind(kind)">
+                            <ion-checkbox
+                                slot="start"
+                                [checked]="filters().kinds?.includes(kind)"
+                            />
+                            <ion-label>
+                                {{ 'GLOBAL.SHIKIMORI.ANIME_KINDS.' + (kind | uppercase) | transloco }}
+                            </ion-label>
+                        </ion-item>
+                    }
+                </ion-list>
+            </ng-template>
+        </ion-popover>
+    </ion-item>
+
+    <!-- Статус -->
+    <ion-item
+        #statusTrigger
+        id="status-trigger"
+        class="anime-filter-panel__item"
+        button
+    >
+        <ion-label>{{ 'HOME_MODULE.HOME_PAGE.FILTERS.STATUS' | transloco }}</ion-label>
+
+        <ion-note slot="end">
+            @if (selectedStatusesCount()) {
+                {{ statusesPreviewNote() }}
+            }
+        </ion-note>
+
+        <ion-popover
+            class="anime-filter-panel__popover"
+            trigger="status-trigger"
+            alignment="start"
+            side="bottom"
+            [keepContentsMounted]="true"
+        >
+            <ng-template>
+                <ion-list>
+                    @for (status of statusOptions; track status) {
+                        <ion-item (click)="toggleStatus(status)">
+                            <ion-checkbox
+                                slot="start"
+                                [checked]="filters().statuses?.includes(status)"
+                            />
+                            <ion-label>
+                                {{ 'GLOBAL.SHIKIMORI.ANIME_STATUSES.' + (status | uppercase) | transloco }}
+                            </ion-label>
+                        </ion-item>
+                    }
+                </ion-list>
+            </ng-template>
+        </ion-popover>
+    </ion-item>
+
+    <!-- Возрастной рейтинг -->
+    <ion-item
+        #ageRatingTrigger
+        id="age-rating-trigger"
+        class="anime-filter-panel__item"
+        button
+    >
+        <ion-label>{{ 'HOME_MODULE.HOME_PAGE.FILTERS.AGE_RATING' | transloco }}</ion-label>
+
+        <ion-note slot="end">
+            @if (selectedAgeRatingsCount()) {
+                {{ ageRatingsPreviewNote() }}
+            }
+        </ion-note>
+
+        <ion-popover
+            class="anime-filter-panel__popover"
+            trigger="age-rating-trigger"
+            alignment="start"
+            side="bottom"
+            [keepContentsMounted]="true"
+        >
+            <ng-template>
+                <ion-list>
+                    @for (ageRating of ageRatingOptions; track ageRating) {
+                        <ion-item (click)="toggleAgeRating(ageRating)">
+                            <ion-checkbox
+                                slot="start"
+                                [checked]="filters().ageRatings?.includes(ageRating)"
+                            />
+                            <ion-label>
+                                {{ 'GLOBAL.SHIKIMORI.AGE_RATINGS.' + (ageRating | uppercase) | transloco }}
+                            </ion-label>
+
+                            <ion-note slot="end">
+                                {{ 'GLOBAL.SHIKIMORI.AGE_RATINGS_EXPLANATION.' + (ageRating | uppercase) | transloco }}
+                            </ion-note>
+                        </ion-item>
+                    }
+                </ion-list>
+            </ng-template>
+        </ion-popover>
+    </ion-item>
+
+    <!-- Жанры -->
+    <ion-item
+        #genresTrigger
+        id="genres-trigger"
+        class="anime-filter-panel__item"
+        button
+    >
+        <ion-label>{{ 'HOME_MODULE.HOME_PAGE.FILTERS.GENRES' | transloco }}</ion-label>
+
+        <ion-note slot="end">
+            @if (selectedGenresCount()) {
+                {{ genresPreviewNote() }}
+            }
+        </ion-note>
+
+        <ion-popover
+            class="anime-filter-panel__popover"
+            trigger="genres-trigger"
+            alignment="start"
+            side="bottom"
+            [keepContentsMounted]="true"
+        >
+            <ng-template>
+                <ion-toolbar>
+                    <ion-searchbar
+                        debounce="200"
+                        placeholder="{{ 'HOME_MODULE.HOME_PAGE.FILTERS.SEARCH_GENRES' | transloco }}"
+                        [value]="genreSearch()"
+                        (ionInput)="onGenreSearch($event)"
+                    />
+                </ion-toolbar>
+
+                <ion-content class="ion-padding">
+                    @if (isGenresLoading()) {
+                        <ion-spinner name="dots" />
+                    } @else {
+                        <ion-list>
+                            @for (group of genreGroups(); track group.kind) {
+                                <ion-list-header>
+                                    <ion-label color="primary">
+                                        {{ 'HOME_MODULE.HOME_PAGE.FILTERS.GENRE_KINDS.' + (group.kind | uppercase) | transloco }}
+                                    </ion-label>
+                                </ion-list-header>
+                                @for (genre of group.items; track genre.id) {
+                                    <ion-item (click)="toggleGenre(genre.id)">
+                                        <ion-checkbox
+                                            slot="start"
+                                            [checked]="filters().genres?.includes(genre.id)"
+                                        />
+                                        <ion-label>
+                                            {{ currentLang() === 'ru' ? genre.russian : genre.name }}
+                                        </ion-label>
+                                    </ion-item>
+                                }
+                            }
+                        </ion-list>
+                    }
+                </ion-content>
+            </ng-template>
+        </ion-popover>
+    </ion-item>
+
+    <!-- Студии -->
+    <ion-item
+        #studiosTrigger
+        id="studios-trigger"
+        class="anime-filter-panel__item"
+        button
+    >
+        <ion-label>{{ 'HOME_MODULE.HOME_PAGE.FILTERS.STUDIOS' | transloco }}</ion-label>
+
+        <ion-note slot="end">
+            @if (selectedStudiosCount()) {
+                {{ studiosPreviewNote() }}
+            }
+        </ion-note>
+
+        <ion-popover
+            class="anime-filter-panel__popover anime-filter-panel__popover--studios"
+            trigger="studios-trigger"
+            alignment="start"
+            side="bottom"
+            [keepContentsMounted]="true"
+        >
+            <ng-template>
+                <ion-toolbar>
+                    <ion-searchbar
+                        debounce="200"
+                        placeholder="{{ 'HOME_MODULE.HOME_PAGE.FILTERS.SEARCH_STUDIOS' | transloco }}"
+                        [value]="studioSearch()"
+                        (ionInput)="onStudioSearch($event)"
+                    />
+                </ion-toolbar>
+
+                <ion-content class="ion-padding">
+                    @if (isStudiosLoading()) {
+                        <ion-spinner name="dots" />
+                    } @else {
+                        <ion-list>
+                            @for (studio of allStudios(); track studio.id) {
+                                <ion-item (click)="toggleStudio(studio)">
+                                    <ion-checkbox
+                                        slot="start"
+                                        [checked]="filters().studios?.includes(studio.id)"
+                                    />
+                                    <ion-label>
+                                        {{ studio.name }}
+                                    </ion-label>
+                                </ion-item>
+                            }
+                        </ion-list>
+                    }
+                </ion-content>
+            </ng-template>
+        </ion-popover>
+    </ion-item>
+
+    <!-- Оценка -->
+    <ion-item class="anime-filter-panel__item">
+        <ion-range
+            class="anime-filter-panel__range"
+            pin="true"
+            ticks="true"
+            snaps="true"
+            dualKnobs="true"
+            debounce="1000"
+            color="warning"
+            min="0"
+            max="10"
+            step="0.5"
+            labelPlacement="stacked"
+            [label]="'HOME_MODULE.HOME_PAGE.FILTERS.SCORE_RANGE' | transloco"
+            [value]="scoreRange()"
+            [pinFormatter]="scoreFormatter"
+            (ionChange)="onScoreRangeChange($event)"
+        >
+            <ion-label slot="start">0</ion-label>
+            <ion-label slot="end">10</ion-label>
+        </ion-range>
+    </ion-item>
+
+    <!-- Год выхода -->
+    <ion-item class="anime-filter-panel__item anime-filter-panel__item--years-range">
+        <ion-range
+            class="anime-filter-panel__range"
+            pin="true"
+            [ticks]="!isExtendedYears()"
+            [snaps]="!isExtendedYears()"
+            dualKnobs="true"
+            debounce="1000"
+            labelPlacement="stacked"
+            [label]="'HOME_MODULE.HOME_PAGE.FILTERS.YEAR_RANGE' | transloco"
+            [min]="minYear()"
+            [max]="nextYear()"
+            [value]="yearRange()"
+            [pinFormatter]="yearFormatter"
+            (ionChange)="onYearRangeChange($event)"
+        >
+            <ion-label slot="start">{{ minYear() }}</ion-label>
+            <ion-label slot="end">{{ nextYear() }}</ion-label>
+        </ion-range>
+        
+        <!-- Расширить года -->
+        <ion-checkbox
+            labelPlacement="end"
+            [checked]="isExtendedYears()"
+            (ionChange)="toggleExtendedYears()"
+        >
+            {{ 'HOME_MODULE.HOME_PAGE.FILTERS.EXTEND_YEARS' | transloco }}
+        </ion-checkbox>
+    </ion-item>
+
+    <!-- Сезон -->
+    <ion-item
+        #seasonTrigger
+        id="season-trigger"
+        class="anime-filter-panel__item"
+        button
+    >
+        <ion-label>{{ 'HOME_MODULE.HOME_PAGE.FILTERS.SEASON' | transloco }}</ion-label>
+
+        <ion-note slot="end">
+            @if (filters().season) {
+                {{ 'HOME_MODULE.HOME_PAGE.FILTERS.SEASONS.' + (filters().season | uppercase) | transloco }}
+            }
+        </ion-note>
+    
+        <ion-popover
+            class="anime-filter-panel__popover"
+            trigger="season-trigger"
+            alignment="start"
+            side="bottom"
+            [keepContentsMounted]="true"
+            [dismissOnSelect]="true"
+        >
+            <ng-template>
+                <ion-list>
+                    <ion-item
+                        button
+                        [class.selected]="!filters().season"
+                        (click)="onSeasonChange('')"
+                    >
+                        <ion-label>
+                            {{ 'HOME_MODULE.HOME_PAGE.FILTERS.NOT_SELECTED_OPTION' | transloco }}
+                        </ion-label>
+
+                        @if (!filters().season) {
+                            <ion-icon name="checkmark" slot="end" />
+                        }
+                    </ion-item>
+
+                    @for (season of seasonOptions; track season) {
+                        <ion-item
+                            button
+                            [class.selected]="filters().season === season"
+                            (click)="onSeasonChange(season)"
+                        >
+                            <ion-label>
+                                {{ 'HOME_MODULE.HOME_PAGE.FILTERS.SEASONS.' + (season | uppercase) | transloco }}
+                            </ion-label>
+
+                            @if (filters().season === season) {
+                                <ion-icon name="checkmark" slot="end" />
+                            }
+                        </ion-item>
+                    }
+                </ion-list>
+            </ng-template>
+        </ion-popover>
+    </ion-item>
+
+    <!-- Сбросить фильтры -->
+    <ion-button
+        color="primary"
+        expand="block"
+        (click)="resetFilters()"
+    >
+        {{ 'HOME_MODULE.HOME_PAGE.FILTERS.RESET_BTN' | transloco }}
+    </ion-button>
+</ion-list>

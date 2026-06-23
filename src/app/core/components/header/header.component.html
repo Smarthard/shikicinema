@@ -19,6 +19,14 @@
                 />
             }
 
+            @if (isAnimeListPage()) {
+                <app-filters-button
+                    class="toolbar__filters-btn"
+                    fill="clear"
+                    size="large"
+                />
+            }
+
             <div
                 id="menu-trigger"
                 class="toolbar__menu-btn user-item"

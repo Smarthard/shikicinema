@@ -1,4 +1,4 @@
-import { AsyncPipe, SlicePipe, UpperCasePipe } from '@angular/common';
+import { AsyncPipe, UpperCasePipe } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -6,25 +6,31 @@ import {
     effect,
     inject,
 } from '@angular/core';
-import { IonContent } from '@ionic/angular/standalone';
+import { IonContent, IonModal, Platform } from '@ionic/angular/standalone';
 import { Store } from '@ngrx/store';
 import { Title } from '@angular/platform-browser';
 import { TranslocoService } from '@jsverse/transloco';
 import { rxEffect } from 'ngxtension/rx-effect';
 import { switchMap } from 'rxjs/operators';
 
+import { AnimeFilterPanelComponent } from '@app/modules/home/components/anime-filters-panel';
+import { AnimeQueryFiltersInterface } from '@app/shared/types/shikicinema/v1';
 import { AnimeRateSectionComponent } from '@app/modules/home/components/anime-rate-section';
 import { ExtendedUserRateStatusType } from '@app/modules/home/types';
 import { FooterDirective } from '@app/shared/directives/footer.directive';
 import {
-    SortRatesByDateVisitedPipe,
-    SortRatesByUserScorePipe,
-} from '@app/modules/home/pipes';
-import {
+    changeAnimeRatesFiltersAction,
+    getSortedRatesAction,
     loadAllUserAnimeRatesAction,
+    selectIsFiltersOpen,
+    selectIsFirstLoading,
+    selectIsRawRatesLoading,
     selectIsUserRateSectionLoading,
+    selectRatesFilters,
+    selectRawRates,
     selectUserRateSectionSize,
     selectUserRatesByStatus,
+    toggleAnimeFiltersAction,
 } from '@app/modules/home/store/anime-rates';
 import { selectAnimeStatusOrder } from '@app/store/settings/selectors/settings.selectors';
 import { selectRecentAnimes } from '@app/modules/home/store/recent-animes';
@@ -41,12 +47,11 @@ import {
     imports: [
         AsyncPipe,
         UpperCasePipe,
-        SlicePipe,
         IonContent,
         FooterDirective,
         AnimeRateSectionComponent,
-        SortRatesByUserScorePipe,
-        SortRatesByDateVisitedPipe,
+        AnimeFilterPanelComponent,
+        IonModal,
     ],
     templateUrl: 'home.page.html',
     styleUrls: ['home.page.scss'],
@@ -58,10 +63,20 @@ export class HomePage {
     private readonly store = inject(Store);
     private readonly title = inject(Title);
     private readonly transloco = inject(TranslocoService);
+    private readonly platform = inject(Platform);
+
+    readonly isMobile = this.platform.is('android') || this.platform.is('iphone') || this.platform.is('ipad');
 
     readonly animeStatusOrder = this.store.selectSignal(selectAnimeStatusOrder);
     readonly currentUserId = this.store.selectSignal(selectShikimoriCurrentUserId);
     readonly recent = this.store.selectSignal(selectRecentAnimes);
+
+    readonly rawRates = this.store.selectSignal(selectRawRates);
+    readonly isFirstLoading = this.store.selectSignal(selectIsFirstLoading);
+    readonly isRawRatesLoading = this.store.selectSignal(selectIsRawRatesLoading);
+
+    readonly isFiltersOpen = this.store.selectSignal(selectIsFiltersOpen);
+    readonly filters = this.store.selectSignal(selectRatesFilters);
 
     readonly isSectionLoading = (section: ExtendedUserRateStatusType) =>
         this.store.selectSignal(selectIsUserRateSectionLoading(section));
@@ -78,7 +93,16 @@ export class HomePage {
 
     readonly hiddenGridMap = new Map<ExtendedUserRateStatusType, boolean>();
 
-    loadAnimeRatesEffect = effect(() => {
+    readonly filtersChangeEffect = effect(() => {
+        if (!this.isRawRatesLoading() && this.currentUserId()) {
+            const rates = this.rawRates();
+            const filters = this.filters();
+
+            this.store.dispatch(getSortedRatesAction({ rates, filters }));
+        }
+    });
+
+    readonly loadAnimeRatesEffect = effect(() => {
         const userId = this.currentUserId();
 
         if (userId) {
@@ -86,7 +110,11 @@ export class HomePage {
         }
     });
 
-    setPageTitleEffect = rxEffect(this.pageTitle$, (title) => this.title.setTitle(title));
+    readonly setPageTitleEffect = rxEffect(this.pageTitle$, (title) => this.title.setTitle(title));
+
+    onFiltersChange(filters: AnimeQueryFiltersInterface): void {
+        this.store.dispatch(changeAnimeRatesFiltersAction({ filters }));
+    }
 
     toggleHiddenGridStatus(rateStatus: ExtendedUserRateStatusType): void {
         const status = this.hiddenGridMap.get(rateStatus) || false;
@@ -96,5 +124,9 @@ export class HomePage {
 
     getHiddenGridStatus(rateStatus: ExtendedUserRateStatusType): boolean {
         return this.hiddenGridMap.get(rateStatus) || false;
+    }
+
+    onFiltersModalClose(): void {
+        this.store.dispatch(toggleAnimeFiltersAction());
     }
 }

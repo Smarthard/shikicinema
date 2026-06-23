@@ -29,4 +29,7 @@ export {
     funnelOutline,
     expandOutline,
     contractOutline,
+    arrowUp,
+    arrowDown,
+    checkmark,
 } from 'ionicons/icons';

@@ -1,6 +1,6 @@
-import { AnimeBriefInfoInterface } from '@app/shared/types/shikimori/anime-brief-info.interface';
+import { ShikicinemaAnime } from '@app/shared/types/shikicinema/v1';
 
 export interface AnimeCacheEntity {
-    anime: AnimeBriefInfoInterface;
+    anime: ShikicinemaAnime;
     ttl: string;
 };

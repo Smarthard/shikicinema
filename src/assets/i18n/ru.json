@@ -14,9 +14,9 @@
                 "CM": "Реклама"
             },
             "ANIME_STATUSES": {
-                "ANONS": "анонс",
-                "ONGOING": "онгоинг",
-                "RELEASED": "вышло"
+                "ANONS": "Анонсировано",
+                "ONGOING": "Сейчас выходит",
+                "RELEASED": "Вышло"
             },
             "FRANCHISE_RELATION": {
                 "PREQUEL": "Приквел",
@@ -31,6 +31,22 @@
                 "CHARACTER": "Общий персонаж",
                 "FRANCHISE": "Франшиза",
                 "ADAPTATION": "Адапатация"
+            },
+            "AGE_RATINGS": {
+                "G": "G",
+                "PG": "PG",
+                "PG_13": "PG-13",
+                "R": "R",
+                "R_PLUS": "NC-17",
+                "RX": "RX"
+            },
+            "AGE_RATINGS_EXPLANATION": {
+                "G": "Без ограничений",
+                "PG": "Рекомендуется присутствие родителей",
+                "PG_13": "Детям до 13 лет не рекомендуется",
+                "R": "До 17 лет обязательно присутствие взрослого",
+                "R_PLUS": "Лицам до 18 лет запрещено",
+                "RX": "Только для взрослых"
             }
         },
         "VIDEO": {
@@ -87,6 +103,9 @@
             },
             "UPLOAD_BUTTON": {
                 "ACTION_TEXT": "Добавить"
+            },
+            "FILTERS_BUTTON": {
+                "ACTION_TEXT": "Фильтры"
             }
         },
         "FOOTER": {
@@ -142,6 +161,42 @@
                 "COMPLETED": "Просмотрено",
                 "ON_HOLD": "Отложено",
                 "DROPPED": "Брошено"
+            },
+            "SORT": {
+                "LABEL": "Сортировка",
+                "DEFAULT": "По умолчанию",
+                "NAME": "По названию",
+                "SCORE": "По рейтингу",
+                "AIRED_ON": "По дате выхода",
+                "USER_SCORE": "По оценке",
+                "USER_CREATED": "По дате добавления",
+                "USER_UPDATED": "По дате обновления"
+            },
+            "FILTERS": {
+                "SEARCH_GENRES": "Поиск по жанрам",
+                "NOT_SELECTED_OPTION": "Не выбрано",
+                "KIND": "Тип",
+                "STATUS": "Статус",
+                "AGE_RATING": "Возрастной рейтинг",
+                "GENRES": "Жанры",
+                "STUDIOS": "Студия",
+                "YEAR_RANGE": "Года",
+                "SCORE_RANGE": "Рейтинг",
+                "SEARCH_STUDIOS": "Поиск по студиям",
+                "GENRE_KINDS": {
+                    "GENRE": "Жанр",
+                    "THEME": "Тематика",
+                    "DEMOGRAPHIC": "Аудитория"
+                },
+                "SEASON": "Сезон",
+                "SEASONS": {
+                    "WINTER": "Зима",
+                    "SPRING": "Весна",
+                    "SUMMER": "Лето",
+                    "FALL": "Осень"
+                },
+                "EXTEND_YEARS": "Показать более ранние года",
+                "RESET_BTN": "Сбросить"
             }
         }
     },

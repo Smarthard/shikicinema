@@ -1,14 +1,15 @@
+import { ShikicinemaAnime } from '@app/shared/types/shikicinema/v1';
 import {
-    AnimeBriefInfoInterface,
     UserAnimeRate,
     UserRateStatusType,
     UserRateTargetEnum,
 } from '@app/shared/types/shikimori';
+import { getShikicinemaAnimeTitle } from '@app/shared/utils/get-shikicinema-anime-title.function';
 
 export function animeToUserAnimeRate(
-    anime: AnimeBriefInfoInterface,
+    anime: ShikicinemaAnime,
     watchedEpisode = 0,
-    visited: string = null,
+    visited: string | null = null,
 ): UserAnimeRate {
     return {
         id: -1,
@@ -30,16 +31,16 @@ export function animeToUserAnimeRate(
             episodes_aired: anime.episodes_aired,
             aired_on: anime.aired_on,
             released_on: anime.released_on,
-            image: anime.image,
+            image: null,
             kind: anime.kind,
-            name: anime.name,
-            score: anime.score,
+            name: getShikicinemaAnimeTitle(anime.titles, 'en'),
+            score: `${anime.score}`,
             status: anime.status,
-            url: anime.url,
+            url: `https://shikimori.io/animes/${anime.id}`,
             // TODO: заменить костыли на велосипеды
-            japanese: anime.japanese as never,
-            english: anime.english as never,
-            russian: anime.russian as never,
+            japanese: getShikicinemaAnimeTitle(anime.titles, 'jp') as never,
+            english: getShikicinemaAnimeTitle(anime.titles, 'en') as never,
+            russian: getShikicinemaAnimeTitle(anime.titles, 'ru') as never,
         },
         user_id: null,
     };

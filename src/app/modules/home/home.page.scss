@@ -2,6 +2,31 @@
 
 .home-page {
 
+    &__filters {
+        position: fixed;
+        top: var(--shc-header-height);
+        right: 0;
+        bottom: 0;
+        width: 30%;
+        min-width: 20rem;
+        max-width: 30%;
+        overflow-y: auto;
+        z-index: 1;
+        background: var(--ion-item-background);
+        padding: 1rem;
+    }
+
+    &__content {
+        &--with-filters {
+            margin-right: 30%;
+
+            .home-page__anime-rates {
+                margin-left: 1rem;
+                margin-right: 1rem;
+            }
+        }
+    }
+
     &__anime-rates {
         display: flex;
         flex-direction: column;

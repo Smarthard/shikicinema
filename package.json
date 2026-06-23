@@ -1,6 +1,6 @@
 {
   "name": "shikicinema",
-  "version": "0.9.18",
+  "version": "0.9.19",
   "description": "Returns video player on Shikimori",
   "main": "src/shikicinema.js",
   "engines": {
@@ -27,7 +27,6 @@
     "tsx": "tsx",
     "npx": "npx",
     "ionic": "ionic",
-    "webpack-bundle-analyzer": "webpack-bundle-analyzer",
     "start": "ionic serve",
     "start:native": "npm-run-all -s 'ionic cap sync' 'npx cap sync @capacitor-community/electron' 'npx cap open @capacitor-community/electron'",
     "build": "ionic build --c=development",

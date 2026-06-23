@@ -1,8 +1,8 @@
 import { addDays, addHours } from 'date-fns';
 
-import { AnimeBriefInfoInterface } from '@app/shared/types/shikimori/anime-brief-info.interface';
+import { ShikicinemaAnime } from '@app/shared/types/shikicinema/v1';
 
-export function getAnimeCacheTtl(anime: AnimeBriefInfoInterface): string {
+export function getAnimeCacheTtl(anime: ShikicinemaAnime): string {
     const now = new Date();
 
     return anime?.status !== 'released'

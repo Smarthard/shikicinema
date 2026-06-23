@@ -29,6 +29,7 @@ import { Store } from '@ngrx/store';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 
 import { B64encodePipe } from '@app/shared/pipes/base64/b64encode.pipe';
+import { FiltersButtonComponent } from '@app/core/components/filters-button';
 import { GetShikimoriPagePipe } from '@app/shared/pipes/get-shikimori-page/get-shikimori-page.pipe';
 import { ResultOpenTarget, SearchbarResult } from '@app/shared/types/searchbar.types';
 import { SearchbarResultsComponent } from '@app/core/components/searchbar-results/searchbar-results.component';
@@ -79,6 +80,7 @@ import { updateLanguageAction, updateThemeAction } from '@app-root/app/store/set
         SearchbarResultsComponent,
         NgTemplateOutlet,
         UploadButtonComponent,
+        FiltersButtonComponent,
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
@@ -102,6 +104,7 @@ export class HeaderComponent {
     readonly availableLangs = this.transloco.getAvailableLangs() as string[];
 
     readonly isPlayerPage = isActive('/player', this.router);
+    readonly isAnimeListPage = isActive('/home', this.router);
 
     readonly isAnimeListPopoverOpen = signal(false);
     readonly isSearchingInCyrillic = signal(false);

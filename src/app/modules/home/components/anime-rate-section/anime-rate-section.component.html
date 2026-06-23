@@ -1,7 +1,6 @@
 <div class="anime-rate-section__label">
     <ion-text class="anime-rate-section__text">
         {{ label() | transloco | uppercase }}
-
         @if (!isLoading()) {
             <span class="anime-rate-section__counter">({{ ratesCount() }})</span>
         }
@@ -14,7 +13,6 @@
         (click)="onToggleHidden()"
     >
         <ion-icon
-            class="anime-rate-section__icon"
             slot="icon-only"
             [name]="isHidden() ? 'chevron-down' : 'chevron-up'"
         />
