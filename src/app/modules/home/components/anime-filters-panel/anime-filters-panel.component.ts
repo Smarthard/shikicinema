@@ -41,6 +41,7 @@ import {
     AnimeQueryFiltersInterface,
     ShikicinemaGenreKindEnum,
     ShikicinemaStudio,
+    SortOrderType,
 } from '@app/shared/types/shikicinema/v1';
 import { ResourceIdType } from '@app/shared/types';
 import { formatPreviewNote, getGenreName } from '@app/modules/home/utils';
@@ -221,7 +222,9 @@ export class AnimeFilterPanelComponent implements OnInit {
     }
 
     onSortChange(sort: string): void {
-        this.filters.update((f) => ({ ...f, sort }));
+        const order: SortOrderType = sort === 'user_score' ? 'DESC' : 'ASC';
+
+        this.filters.update((f) => ({ ...f, sort, order }));
     }
 
     toggleOrder(event: PointerEvent): void {
