@@ -18,6 +18,9 @@
           "required": ["none"],
           "optional": ["technicalAndInteraction"]
         }
+      },
+      "gecko_android": {
+        "strict_min_version": "120.0"
       }
     },
 
@@ -59,8 +62,7 @@
       "https://shikimori.io/*",
       "https://shiki.one/*",
       "https://smarthard.net/*",
-      "https://kodikapi.com/*",
-      "https://smotret-anime.online/*",
+      "https://kodik-api.com/*",
       "storage",
       "unlimitedStorage",
       "tabs"
