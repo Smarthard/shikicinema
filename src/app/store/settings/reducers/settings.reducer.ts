@@ -1,4 +1,4 @@
-import { createReducer, on } from '@ngrx/store';
+import { Action, createReducer, on } from '@ngrx/store';
 
 import { DEFAULT_ANIME_STATUS_ORDER } from '@app/shared/config/default-anime-status-order.config';
 import { SettingsStoreInterface } from '@app/store/settings/types/settings-store.interface';
@@ -93,6 +93,6 @@ const reducer = createReducer(
     ),
 );
 
-export function settingsReducer(state, action) {
+export function settingsReducer(state: SettingsStoreInterface | undefined, action: Action) {
     return reducer(state, action);
 }

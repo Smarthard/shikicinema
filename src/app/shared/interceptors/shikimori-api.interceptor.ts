@@ -32,7 +32,7 @@ export const shikimoriApiInterceptor: HttpInterceptorFn = (request, next) => {
     const store = inject(Store);
 
     let isRefreshing = false;
-    let refreshTokenSubject$: BehaviorSubject<string> = null;
+    let refreshTokenSubject$: BehaviorSubject<string>;
 
     function handleUnauthorized(request: HttpRequest<unknown>, next: HttpHandlerFn) {
         if (isRefreshing) {
@@ -46,7 +46,7 @@ export const shikimoriApiInterceptor: HttpInterceptorFn = (request, next) => {
         }
 
         isRefreshing = true;
-        refreshTokenSubject$ = new BehaviorSubject<string>(null);
+        refreshTokenSubject$ = new BehaviorSubject<string>('');
 
         const { shikimoriRefreshToken } = persistenceService.getItem<AuthStoreInterface>('auth');
 
@@ -61,7 +61,7 @@ export const shikimoriApiInterceptor: HttpInterceptorFn = (request, next) => {
             }),
             catchError((err: unknown) => {
                 isRefreshing = false;
-                refreshTokenSubject$.next(null);
+                refreshTokenSubject$.next('');
                 refreshTokenSubject$.complete();
                 store.dispatch(logoutShikimoriAction());
 

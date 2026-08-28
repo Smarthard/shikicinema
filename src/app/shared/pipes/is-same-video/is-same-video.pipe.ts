@@ -8,7 +8,7 @@ import { VideoInfoInterface } from '@app/modules/player/types';
     standalone: true,
 })
 export class IsSameVideoPipe implements PipeTransform {
-    transform(a: VideoInfoInterface, b: VideoInfoInterface): boolean {
+    transform(a?: VideoInfoInterface, b?: VideoInfoInterface): boolean {
         return !!a && !!b && a.url === b.url;
     }
 }

@@ -4,17 +4,19 @@
     @for (rate of userAnimeRates(); track trackById($index, rate)) {
         @let animeId = rate?.anime?.id;
 
-        <app-card-grid-item
-            class="anime-grid__item"
-            height="100%"
-            width="auto"
-            [link]="animeId | getPlayerLink"
-            [imageUrl]="animeId | getAnimePoster: isHiRes(): isSupportsAvif()"
-            [name]="animeId | getAnimeName: currentLang() | async"
-            [kind]="animeId | getAnimeKind | async"
-            [airedDate]="animeId | getAnimeReleaseDate | async"
-            [hasPriority]="hasPriority()"
-        />
+        @if (animeId) {
+            <app-card-grid-item
+                class="anime-grid__item"
+                height="100%"
+                width="auto"
+                [link]="animeId | getPlayerLink"
+                [imageUrl]="animeId | getAnimePoster: isHiRes(): isSupportsAvif()"
+                [name]="animeId | getAnimeName: currentLang() | async"
+                [kind]="animeId | getAnimeKind | async"
+                [airedDate]="animeId | getAnimeReleaseDate | async"
+                [hasPriority]="hasPriority()"
+            />
+        }
     }
 } @else {
     <ng-container [ngTemplateOutlet]="skeletonTemplate" />

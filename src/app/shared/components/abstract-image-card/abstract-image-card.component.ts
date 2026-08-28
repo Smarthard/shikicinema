@@ -14,15 +14,15 @@ import {
     standalone: true,
 })
 export class AbstractImageCardComponent {
-    imageUrl = input<string>();
+    imageUrl = input<string>('#');
 
-    name = input<string>();
+    name = input<string | null>();
 
-    height = input<string>();
+    height = input.required<string>();
 
-    width = input<string>();
+    width = input.required<string>();
 
-    backgroundSize = input<string>();
+    backgroundSize = input.required<string>();
 
     imageLoad = output<HTMLImageElement>();
 

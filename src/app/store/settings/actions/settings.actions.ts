@@ -12,7 +12,7 @@ export const updateSettingsAction = createAction(
 
 export const updatePlayerPreferencesAction = createAction(
     '[Settings] Update user preferences',
-    props<{ animeId: ResourceIdType, author: string, kind: VideoKindEnum, domain: string }>(),
+    props<{ animeId: number | string, author: string, kind: VideoKindEnum, domain: string }>(),
 );
 
 export const resetSettingsAction = createAction(

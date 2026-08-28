@@ -3,10 +3,10 @@ import { UserBriefInfoInterface } from '@app/shared/types/shikimori/user-brief-i
 
 export interface ShikimoriStoreInterface {
     isCurrentUserLoading: boolean;
-    currentUser: UserBriefInfoInterface;
+    currentUser: UserBriefInfoInterface | null;
 
     isAnimeSearchLoading: boolean;
-    foundAnimes: AnimeBriefInfoInterface[] | null;
+    foundAnimes: AnimeBriefInfoInterface[];
 
     shikimoriDomain: string;
 

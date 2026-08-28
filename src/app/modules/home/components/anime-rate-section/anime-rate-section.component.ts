@@ -10,7 +10,7 @@ import {
     IonButton,
     IonIcon,
     IonText,
-} from '@ionic/angular/standalone';
+} from '@ionic/angular';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { UpperCasePipe } from '@angular/common';
 

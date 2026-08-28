@@ -21,5 +21,5 @@ export class SkeletonBlockComponent {
     height = input.required<string>();
     width = input.required<string>();
 
-    borderRadius = input<string>(null);
+    borderRadius = input<string | null>(null);
 }

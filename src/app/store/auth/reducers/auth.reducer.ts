@@ -1,4 +1,4 @@
-import { createReducer, on } from '@ngrx/store';
+import { Action, createReducer, on } from '@ngrx/store';
 
 import AuthStoreInterface, { ShikimoriCredentials } from '@app/store/auth/types/auth-store.interface';
 import {
@@ -40,6 +40,6 @@ const reducer = createReducer(
     ),
 );
 
-export function authReducer(state, action) {
+export function authReducer(state: ShikimoriCredentials | undefined, action: Action) {
     return reducer(state, action);
 }

@@ -17,7 +17,7 @@ import {
     IonTitle,
     IonToolbar,
     ModalController,
-} from '@ionic/angular/standalone';
+} from '@ionic/angular';
 import { TranslocoPipe } from '@jsverse/transloco';
 
 @Component({

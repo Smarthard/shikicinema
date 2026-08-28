@@ -38,7 +38,7 @@
 
             <app-anime-rate-section
                 class="home-page__anime-rates"
-                [rates]="userRatesBySection(status) | async"
+                [rates]="(userRatesBySection(status) | async) ?? []"
                 [label]="'HOME_MODULE.HOME_PAGE.GRIDS.' + (status | uppercase)"
                 [status]="status"
                 [isLoading]="isFirstLoading() && isLoading()"

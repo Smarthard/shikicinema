@@ -7,7 +7,7 @@ import {
     computed,
     inject,
 } from '@angular/core';
-import { IonContent, IonSpinner } from '@ionic/angular/standalone';
+import { IonContent, IonSpinner } from '@ionic/angular';
 import { Location } from '@angular/common';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { take, tap } from 'rxjs/operators';

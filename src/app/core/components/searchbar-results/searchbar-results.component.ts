@@ -1,9 +1,4 @@
-import {
-    AsyncPipe,
-    DatePipe,
-    NgTemplateOutlet,
-    UpperCasePipe,
-} from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -13,24 +8,20 @@ import {
     output,
 } from '@angular/core';
 import {
-    IonButton,
-    IonIcon,
     IonItem,
     IonLabel,
     IonList,
     IonNote,
     IonText,
-} from '@ionic/angular/standalone';
+} from '@ionic/angular';
 import { RepeatPipe } from 'ngxtension/repeat-pipe';
 import { TranslocoPipe } from '@jsverse/transloco';
 
-import { GetShikimoriPagePipe } from '@app/shared/pipes/get-shikimori-page/get-shikimori-page.pipe';
-import { ImageCardComponent } from '@app/shared/components/image-card/image-card.component';
 import { ResultOpenTarget, SearchbarResult } from '@app/shared/types/searchbar.types';
-import { ShikimoriMediaNamePipe } from '@app/shared/pipes/shikimori-media-name/shikimori-media-name.pipe';
 import { SkeletonBlockComponent } from '@app/shared/components/skeleton-block/skeleton-block.component';
 import { provideShikimoriImageLoader } from '@app/shared/providers/shikimori-image-loader.provider';
 import { trackById } from '@app/shared/utils/common-ngfor-tracking';
+import { SearchbarResultItemComponent } from '@app/core/components/searchbar-result-item/searchbar-result-item.component';
 
 @Component({
     selector: 'app-searchbar-results',
@@ -42,44 +33,35 @@ import { trackById } from '@app/shared/utils/common-ngfor-tracking';
         IonLabel,
         IonNote,
         IonText,
-        IonButton,
-        IonIcon,
-        AsyncPipe,
-        DatePipe,
-        UpperCasePipe,
         TranslocoPipe,
-        ImageCardComponent,
-        SkeletonBlockComponent,
-        ShikimoriMediaNamePipe,
-        GetShikimoriPagePipe,
         NgTemplateOutlet,
         RepeatPipe,
+        SearchbarResultItemComponent,
+        SkeletonBlockComponent,
     ],
     providers: [
         provideShikimoriImageLoader(96),
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
+    host: {
+        class: 'searchbar-results'
+    },
 })
 export class SearchbarResultsComponent {
     readonly trackById = trackById;
 
-    results = input<SearchbarResult[]>();
+    results = input.required<SearchbarResult[]>();
+    originalNameFirst = input.required<boolean>();
 
-    isLoading = input<boolean>();
-
-    originalNameFirst = input<boolean>();
+    isLoading = input<boolean>(true);
 
     openResult = output<[SearchbarResult, ResultOpenTarget]>();
 
-    protected readonly firstMediaName = computed(() => this.originalNameFirst() ? 'original' : 'russian');
-    protected readonly secondMediaName = computed(() => !this.originalNameFirst() ? 'original' : 'russian');
     protected readonly isNothingFound = computed(() => !this.isLoading() && this.results().length === 0);
     protected readonly hasSearchResults = computed(() => !this.isLoading() && this.results().length > 0);
 
-    onResultClick($event: Event, result: SearchbarResult, target: ResultOpenTarget): void {
-        $event.stopPropagation();
-        $event.preventDefault();
-        this.openResult.emit([result, target]);
+    onResultClick(clickEvent: [SearchbarResult, ResultOpenTarget]): void {
+        this.openResult.emit(clickEvent);
     }
 }

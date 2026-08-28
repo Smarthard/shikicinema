@@ -14,7 +14,7 @@ import {
     ReactiveFormsModule,
     Validators,
 } from '@angular/forms';
-import { IonButton, IonIcon, IonTextarea } from '@ionic/angular/standalone';
+import { IonButton, IonIcon, IonTextarea } from '@ionic/angular';
 import { TranslocoPipe } from '@jsverse/transloco';
 
 import { Comment } from '@app/shared/types/shikimori/comment';
@@ -43,7 +43,7 @@ export class UserCommentFormComponent {
     @HostBinding('class.user-comment-form')
     protected userCommentFormClass = true;
 
-    comment = new FormControl('', [
+    comment = new FormControl<string>('', [
         Validators.required,
         NoWhitespacesValidator(),
     ]);
@@ -67,7 +67,7 @@ export class UserCommentFormComponent {
     editCommentEffect = effect(() => {
         if (this.isEditMode()) {
             const shikimoriCodeComment = this.editComment()?.body;
-            this.comment.setValue(shikimoriCodeComment);
+            this.comment.setValue(shikimoriCodeComment ?? '');
         }
     });
 
@@ -77,8 +77,10 @@ export class UserCommentFormComponent {
     }
 
     onSendEdited(comment: string): void {
+        const editComment = this.editComment();
+        if (!editComment) return;
         const edittedComment = {
-            ...this.editComment(),
+            ...editComment,
             body: comment,
         };
 
@@ -91,7 +93,10 @@ export class UserCommentFormComponent {
     }
 
     onHighlightEditComment(): void {
-        this.highlightEdit.emit(this.editComment().id);
+        const comment = this.editComment();
+        if (comment?.id) {
+            this.highlightEdit.emit(comment.id);
+        }
     }
 
     onCancelEdit(): void {

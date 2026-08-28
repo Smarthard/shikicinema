@@ -1,14 +1,15 @@
-import { AsyncPipe, UpperCasePipe } from '@angular/common';
-import { BehaviorSubject, first, tap } from 'rxjs';
+import { UpperCasePipe } from '@angular/common';
+import { first, tap } from 'rxjs';
 import {
     ChangeDetectionStrategy,
     Component,
     DestroyRef,
-    HostBinding,
+    Injector,
     OnInit,
     ViewEncapsulation,
     computed,
     inject,
+    signal,
 } from '@angular/core';
 import {
     FormControl,
@@ -34,7 +35,7 @@ import {
     IonTextarea,
     IonToggle,
     ItemReorderEventDetail,
-} from '@ionic/angular/standalone';
+} from '@ionic/angular';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Title } from '@angular/platform-browser';
@@ -44,7 +45,6 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DEFAULT_ANIME_STATUS_ORDER } from '@app/shared/config/default-anime-status-order.config';
 import { DEFAULT_SHIKIMORI_DOMAIN_TOKEN, SHIKIMORI_DOMAINS } from '@app/core/providers/shikimori-domain';
 import { FooterDirective } from '@app/shared/directives/footer.directive';
-import { GetShikimoriPagePipe } from '@app/shared/pipes/get-shikimori-page/get-shikimori-page.pipe';
 import { PersistenceService } from '@app/shared/services/persistence.service';
 import { PlayerKindDisplayMode } from '@app/store/settings/types/player-kind-display-mode.type';
 import { PlayerModeType } from '@app/store/settings/types/player-mode.type';
@@ -52,6 +52,7 @@ import { ProfileInfoComponent } from '@app/modules/settings/components/profile-i
 import { SettingsGroupComponent } from '@app/modules/settings/components/settings-group/settings-group.component';
 import { ThemeSettingsType } from '@app/store/settings/types/theme-settings.type';
 import { ToHumanReadableBytesPipe } from '@app/shared/pipes/to-human-readable-bytes/to-human-readable-bytes.pipe';
+import { SettingsFormInterface } from '@app/modules/settings/utils/settings-form.interface';
 import { authShikimoriAction, logoutShikimoriAction } from '@app/store/auth/actions/auth.actions';
 import { getDomain } from '@app/shared/utils/get-domain.function';
 import { mapAnimeStatusOrderToFormArray, mapSettinsFormToState } from '@app/modules/settings/utils';
@@ -66,16 +67,15 @@ import {
 import { updateSettingsAction } from '@app/store/settings/actions/settings.actions';
 import { updateShikimoriDomainAction } from '@app/store/shikimori/actions';
 import { urlValidator } from '@app/shared/validators';
+import { injectShikimoriDomain } from '@app/shared/utils/inject-shikimori-domain.function';
 
 
 @Component({
     selector: 'app-settings',
     standalone: true,
     imports: [
-        AsyncPipe,
         UpperCasePipe,
         TranslocoPipe,
-        GetShikimoriPagePipe,
         FormsModule,
         ReactiveFormsModule,
         IonContent,
@@ -102,11 +102,12 @@ import { urlValidator } from '@app/shared/validators';
     styleUrl: 'settings.page.scss',
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        class: 'settings-page'
+    }
 })
 export class SettingsPage implements OnInit {
-    @HostBinding('class.settings-page')
-    protected settingsPageClass = true;
-
+    private readonly injector = inject(Injector);
     private readonly transloco = inject(TranslocoService);
     private readonly title = inject(Title);
     private readonly store = inject(Store);
@@ -121,6 +122,8 @@ export class SettingsPage implements OnInit {
     readonly isShikimoriAuthenticated = this.store.selectSignal(selectIsAuthenticated);
     readonly shikimoriAvatarImg = this.store.selectSignal(selectShikimoriCurrentUserAvatarHiRes);
     readonly shikimoriNickname = this.store.selectSignal(selectShikimoriCurrentUserNickname);
+
+    readonly shikimoriFavicon = computed(() => injectShikimoriDomain('/favicon.ico', this.injector));
 
     readonly hasLastVisitedPage = computed(() => {
         const page = this.lastVisitedPage();
@@ -141,7 +144,7 @@ export class SettingsPage implements OnInit {
         shikimoriDomain: new FormControl<string>(this.defaultShikimoriDomain),
         useCustomAnimeStatusOrder: new FormControl<boolean>(false),
         userAnimeStatusOrder: mapAnimeStatusOrderToFormArray(DEFAULT_ANIME_STATUS_ORDER),
-        filterPlayerDomains: new FormControl([]),
+        filterPlayerDomains: new FormControl<string[]>([]),
     });
 
     readonly themeCtrl = this.settingsForm?.get('theme');
@@ -151,11 +154,11 @@ export class SettingsPage implements OnInit {
     readonly useCustomAnimeStatusOrder = this.settingsForm?.get('useCustomAnimeStatusOrder');
     readonly userAnimeStatusOrderCtrl = this.settingsForm?.get('userAnimeStatusOrder');
     readonly filterPlayerDomainsCtrl = this.settingsForm?.get('filterPlayerDomains');
-    readonly addFilterDomainCtrl = new FormControl('', [urlValidator()]);
+    readonly addFilterDomainCtrl = new FormControl<string>('', [urlValidator()]);
 
-    readonly localStorageLimit = this.persistenceService.getMaxByxes();
-    readonly localStorageUsage$ = new BehaviorSubject(this.persistenceService.getUsedBytes());
-    readonly localStorageCache$ = new BehaviorSubject(this.persistenceService.getCacheBytes());
+    readonly localStorageLimit = computed(() => this.persistenceService.getMaxByxes());
+    readonly localStorageUsage = computed(() => this.persistenceService.getUsedBytes());
+    readonly localStorageCache = signal(this.persistenceService.getCacheBytes());
 
     initPageTitle(): void {
         this.transloco.selectTranslate<string>('SETTINGS_MODULE.SETTINGS_PAGE.PAGE_TITLE')
@@ -173,7 +176,7 @@ export class SettingsPage implements OnInit {
         this.store.select(selectShikimoriDomain)
             .pipe(
                 first(Boolean),
-                tap((domain) => this.shikimoriDomainCtrl.patchValue(domain)),
+                tap((domain) => this.shikimoriDomainCtrl?.patchValue(domain)),
                 takeUntilDestroyed(this.destroyRef),
             )
             .subscribe();
@@ -184,10 +187,11 @@ export class SettingsPage implements OnInit {
             .pipe(
                 takeUntilDestroyed(this.destroyRef),
                 tap((form) => {
-                    if (this.settingsForm.valid) {
-                        const domain = this.shikimoriDomainCtrl.value;
+                    const domain = this.shikimoriDomainCtrl?.value;
+                    const isValid = this.settingsForm.valid;
 
-                        this.store.dispatch(updateSettingsAction({ config: mapSettinsFormToState(form) }));
+                    if (domain && isValid) {
+                        this.store.dispatch(updateSettingsAction({ config: mapSettinsFormToState(form as Partial<SettingsFormInterface>) }));
                         this.store.dispatch(updateShikimoriDomainAction({ domain }));
                     };
                 }),
@@ -211,7 +215,7 @@ export class SettingsPage implements OnInit {
 
     clearCache(): void {
         this.store.dispatch(resetCacheAction());
-        this.localStorageCache$.next(this.persistenceService.getCacheBytes());
+        this.localStorageCache.set(this.persistenceService.getCacheBytes());
     }
 
     goToLastPage(): void {
@@ -219,32 +223,39 @@ export class SettingsPage implements OnInit {
     }
 
     reorderAnimeStatusSections(event: CustomEvent<ItemReorderEventDetail>): void {
-        const newAnimeStatusOrder = [...this.userAnimeStatusOrderCtrl.value];
-        const itemToMove = newAnimeStatusOrder.splice(event.detail.from, 1)[0];
+        const userAnimeStatusOrder = this.userAnimeStatusOrderCtrl?.value;
 
-        newAnimeStatusOrder.splice(event.detail.to, 0, itemToMove);
+        if (userAnimeStatusOrder?.length) {
+            const newAnimeStatusOrder = [...userAnimeStatusOrder];
+            const itemToMove = newAnimeStatusOrder.splice(event.detail.from, 1)[0];
 
-        this.userAnimeStatusOrderCtrl.patchValue(newAnimeStatusOrder);
+            newAnimeStatusOrder.splice(event.detail.to, 0, itemToMove);
 
-        event.detail.complete(true);
+            this.userAnimeStatusOrderCtrl?.patchValue(newAnimeStatusOrder);
+
+            event.detail.complete(true);
+        }
     }
 
     addNewDomainFilter(): void {
         if (this.addFilterDomainCtrl.valid) {
             const { value: rawDomain } = this.addFilterDomainCtrl;
+
+            if (!rawDomain) return;
+
             const newDomain = getDomain(rawDomain);
-            const { value: oldDomains } = this.filterPlayerDomainsCtrl;
+            const oldDomains = this.filterPlayerDomainsCtrl?.value ?? [];
             const newFilters = [...new Set([...oldDomains, newDomain])];
 
-            this.filterPlayerDomainsCtrl.setValue(newFilters);
+            this.filterPlayerDomainsCtrl?.setValue(newFilters);
             this.addFilterDomainCtrl.reset();
         }
     }
 
     deleteDomainFilter(domain: string): void {
-        const { value: domains } = this.filterPlayerDomainsCtrl;
+        const domains = this.filterPlayerDomainsCtrl?.value;
         const newDomains = (domains || [])?.filter((d) => d !== domain);
 
-        this.filterPlayerDomainsCtrl.setValue(newDomains);
+        this.filterPlayerDomainsCtrl?.setValue(newDomains);
     }
 }

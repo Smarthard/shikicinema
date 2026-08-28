@@ -13,7 +13,7 @@ function toHttps(url: string): string {
 
 export const kodikVideoMapper: VideoMapperFn<KodikApiResponse<KodikAnimeInfo>> = ({ results }) => results.flatMap(
     ({ seasons, translation, quality: kodikQuality, link }) => {
-        const author = translation?.title || null;
+        const author = translation?.title || undefined;
         const kind = mapKodikKind(translation?.type);
         const uploader = KODIK_UPLOADER;
         const quality = mapKodikQuality(kodikQuality);
@@ -23,13 +23,13 @@ export const kodikVideoMapper: VideoMapperFn<KodikApiResponse<KodikAnimeInfo>> =
             const seasonIndex = Object.keys(seasons)?.filter((season) => Number(season) > 0)?.[0];
             const episodesObj = seasons?.[seasonIndex]?.episodes || {} as KodikEpisodes;
 
-            for (const [episode, url] of Object.entries<string>(episodesObj)) {
+            for (const [episode, url] of Object.entries(episodesObj)) {
                 episodes.push({
                     quality,
                     author,
                     kind,
                     uploader,
-                    url: toHttps(url),
+                    url: toHttps(url as string),
                     episode: Number(episode),
                     urlType: 'iframe',
                     language: 'ru',

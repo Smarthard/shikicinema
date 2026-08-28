@@ -2,7 +2,6 @@
 {
     "compileOnSave": false,
     "compilerOptions": {
-      "baseUrl": "./",
       "outDir": "./dist/out-tsc",
       "sourceMap": true,
       "esModuleInterop": true,
@@ -13,21 +12,23 @@
       "target": "es2022",
       "module": "es2022",
       "skipLibCheck": true,
+      "types": ["chrome", "node"],
+      "typeRoots": ["node_modules/@types"],
       "paths": {
         "@app-env/*": [
-          "<rootDir>/../src/environments/*"
+          "./src/environments/*"
         ],
         "@app/*": [
-          "<rootDir>/../src/app/*"
+          "./src/app/*"
         ],
         "@app-e2e/*": [
-          "<rootDir>/../e2e/*"
+          "./e2e/*"
         ],
         "@app-electron/*": [
-          "<rootDir>/../electron/*"
+          "./electron/*"
         ],
         "@app-root/*": [
-          "<rootDir>/../src/*"
+          "./src/*"
         ]
       }
     },
@@ -36,6 +37,5 @@
         "strictInjectionParameters": true,
         "strictInputAccessModifiers": true,
         "strictTemplates": true,
-        "useDefineForClassFields": false,
     }
 }

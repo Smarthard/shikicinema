@@ -13,7 +13,7 @@ export class PersistenceService {
     getItem<T>(key: string): T {
         const json = localStorage.getItem(key);
 
-        return JSON.parse(json) as T;
+        return JSON.parse(json ?? 'null') as T;
     }
 
     setItem<T>(key: string, value: T): void {
@@ -33,7 +33,7 @@ export class PersistenceService {
     }
 
     getCacheBytes(): number {
-        return new Blob([localStorage.getItem('cache')]).size;
+        return new Blob([localStorage.getItem('cache') ?? '']).size;
     }
 
     // не забываем, что setItem синхронный - и эта функция довольно жестко блочит отрисовку странички без кэша

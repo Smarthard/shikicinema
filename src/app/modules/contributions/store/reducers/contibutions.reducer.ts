@@ -1,4 +1,4 @@
-import { createReducer, on } from '@ngrx/store';
+import { Action, createReducer, on } from '@ngrx/store';
 
 import ContributionsStoreInterface from '@app/modules/contributions/store/types/contributions-store.interface';
 import {
@@ -49,6 +49,6 @@ const reducer = createReducer(
     ),
 );
 
-export function contibutionsReducer(state, action) {
+export function contibutionsReducer(state: ContributionsStoreInterface, action: Action) {
     return reducer(state, action);
 }

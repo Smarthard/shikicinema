@@ -14,7 +14,7 @@ import {
     IonIcon,
     IonInput,
     IonItem,
-} from '@ionic/angular/standalone';
+} from '@ionic/angular';
 import { NgTemplateOutlet } from '@angular/common';
 
 import { AnimeBriefInfoInterface } from '@app/shared/types/shikimori/anime-brief-info.interface';
@@ -50,15 +50,15 @@ export class ControlPanelComponent {
     private readonly _episodeInputEl = viewChild<IonInput>('episodeInputEl');
 
     selected = input.required<number>();
+    anime = input.required<AnimeBriefInfoInterface>();
 
-    maxEpisode = input<number>(1);
     userRate = input<UserAnimeRate>();
-    anime = input<AnimeBriefInfoInterface>();
+    maxEpisode = input<number>(1);
     isLoading = input(true);
     isWatched = input(false);
-    showSidePanel = input(false);
+    showSidePanel = input<boolean>();
     isRewatching = input(false);
-    isMinified = input(false);
+    isMinified = input<boolean>();
     playerMode = input<PlayerModeType>('compact');
 
     selection = output<number>();
@@ -67,12 +67,16 @@ export class ControlPanelComponent {
     uploaded = output<VideoInfoInterface>();
     togglePlayerMode = output<void>();
 
-    maxAiredEpisode = computed(() => getLastAiredEpisode(this.anime()));
+    maxAiredEpisode = computed(() => {
+        const anime = this.anime();
+
+        return anime?.id ? getLastAiredEpisode(anime) : 0;
+    });
     maxWatchedEpisode = computed(() => this.userRate()?.episodes || 0);
     changePlayerModeIcon = computed(() => this.playerMode() === 'full' ? 'contract-outline' : 'expand-outline');
     showVideoSelectionBtn = computed(() => this.isMinified() || this.playerMode() === 'full');
 
-    private adjustEpisode(episode): number {
+    private adjustEpisode(episode: number): number {
         return adjustEpisode(episode, this.selected(), this.maxEpisode());
     }
 
@@ -83,11 +87,18 @@ export class ControlPanelComponent {
     }
 
     onEpisodeInput(event: InputCustomEvent): void {
-        const { value } = event?.target;
-        const episode = this.adjustEpisode(value);
+        const target = event?.target;
+        const value = (target as unknown as IonInput)?.value;
+        const episode = Number(value);
 
-        this._episodeInputEl().value = episode;
-        this.onEpisodeChange(episode);
+        if (!Number.isNaN(episode)) {
+            const episodeInputEl = this._episodeInputEl();
+
+            if (episodeInputEl) {
+                episodeInputEl.value = String(this.adjustEpisode(episode));
+            }
+            this.onEpisodeChange(episode);
+        }
     }
 
     onEpisodeChange(episode: number): void {

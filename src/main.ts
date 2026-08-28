@@ -6,7 +6,7 @@ import {
     withFetch,
     withInterceptors,
 } from '@angular/common/http';
-import { provideIonicAngular } from '@ionic/angular/standalone';
+import { provideIonicAngular } from '@ionic/angular';
 import { provideScrollbarPolyfill } from 'ngx-scrollbar';
 
 import { AppComponent } from '@app/app.component';

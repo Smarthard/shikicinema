@@ -1,9 +1,13 @@
-import { FormControl } from '@angular/forms';
+import { AbstractControl, ValidationErrors } from '@angular/forms';
 
-export function urlValidator() {
-    return (control: FormControl<string>) => {
+export function urlValidator(): (control: AbstractControl) => ValidationErrors | null {
+    return (control: AbstractControl) => {
+        const value = control.value;
+
+        if (!value) return null;
+
         try {
-            new URL(control?.value);
+            new URL(value);
         } catch (_e) {
             return { isNotUrl: true };
         }

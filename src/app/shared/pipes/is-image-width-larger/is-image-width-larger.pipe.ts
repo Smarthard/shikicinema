@@ -6,7 +6,7 @@ import { Pipe, PipeTransform } from '@angular/core';
     standalone: true,
 })
 export class IsImageWidthLargerPipe implements PipeTransform {
-    transform(image: HTMLImageElement = null): boolean {
+    transform(image?: HTMLImageElement | null): boolean {
         const { naturalWidth: width = 0, naturalHeight: height = 0 } = image || {};
 
         return width > height;

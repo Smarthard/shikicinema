@@ -4,10 +4,17 @@ export function cutUrlFromText(text: string) {
     return urlRegex.test(text)
         ? (() => {
             /* IIFE потому что не было смысла выносить это в отдельную функцию */
-            let [link] = `${text}`.match(urlRegex);
+            const match = `${text}`.match(urlRegex);
+            const [link] = match || [];
+
+            if (!link) {
+                return text;
+            }
 
             if (link.startsWith('//')) {
-                link = link.replace(/^\/\//, 'https://');
+                const fixedLink = link.replace(/^\/\//, 'https://');
+
+                return fixedLink;
             }
 
             return link;

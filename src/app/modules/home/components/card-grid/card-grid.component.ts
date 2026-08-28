@@ -8,7 +8,7 @@ import {
     signal,
 } from '@angular/core';
 import { RepeatPipe } from 'ngxtension/repeat-pipe';
-import { TranslocoService } from '@jsverse/transloco';
+import { TranslocoService, getBrowserLang } from '@jsverse/transloco';
 import { toSignal } from '@angular/core/rxjs-interop';
 
 import { CardGridItemComponent } from '@app/modules/home/components/card-grid-item/card-grid-item.component';
@@ -54,7 +54,7 @@ export class CardGridComponent {
     readonly trackById = trackById;
 
     readonly isSupportsAvif = toSignal(inject(IS_SUPPORTS_AVIF));
-    readonly currentLang = toSignal(this._transloco.langChanges$);
+    readonly currentLang = toSignal(this._transloco.langChanges$, { initialValue: this._transloco.getDefaultLang() });
 
     // TODO: добавить подключение настройки для экономия трафика
     readonly isHiRes = signal(true);

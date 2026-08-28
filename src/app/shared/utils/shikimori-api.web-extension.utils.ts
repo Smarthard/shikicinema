@@ -8,14 +8,14 @@ export function getAuthorizationCode(shikimoriDomain: string, shikimoriOAuthClie
 
         chrome.tabs.query({ active: true }, ([selectedTab]) =>
             chrome.tabs.create({ active: true, url: codeUrl.toString() }, (authCodeTab) => {
-                const onRemove = (tabId) => {
+                const onRemove = (tabId: number) => {
                     if (tabId === authCodeTab.id) {
                         reject(new Error('tab-removed'));
                         removeListeners();
                     }
                 };
 
-                const onUpdate = (tabId, changeInfo) => {
+                const onUpdate = (tabId: number, changeInfo: chrome.tabs.UpdateProperties) => {
                     const isUrlNoTChanged = !changeInfo.url;
                     const isShouldSignIn = changeInfo?.url?.toString()?.includes('sign_in');
 
@@ -23,7 +23,7 @@ export function getAuthorizationCode(shikimoriDomain: string, shikimoriOAuthClie
                         return;
                     }
 
-                    const tabUrl = new URL(changeInfo.url);
+                    const tabUrl = new URL(changeInfo.url as string);
                     const error = tabUrl.searchParams.get('error');
                     const message = tabUrl.searchParams.get('error_description');
                     const code = tabUrl.toString().split('authorize/')[1];
@@ -37,16 +37,16 @@ export function getAuthorizationCode(shikimoriDomain: string, shikimoriOAuthClie
                     }
 
                     if (error || message || !code) {
-                        reject(new Error(error || message));
+                        reject(new Error(error || message as string));
                     } else {
                         resolve(code);
                     }
 
                     removeListeners();
                     chrome.tabs.update(
-                        selectedTab.id,
+                        selectedTab.id as number,
                         { active: true },
-                        () => chrome.tabs.remove(authCodeTab.id),
+                        () => chrome.tabs.remove(authCodeTab.id as number),
                     );
                 };
 

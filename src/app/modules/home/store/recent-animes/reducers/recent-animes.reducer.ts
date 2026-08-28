@@ -1,4 +1,4 @@
-import { createReducer, on } from '@ngrx/store';
+import { Action, createReducer, on } from '@ngrx/store';
 
 import RecentAnimesStoreInterface from '@app/modules/home/store/recent-animes/types/recent-animes-store.interface';
 import { visitAnimePageAction } from '@app/modules/home/store/recent-animes/actions/recent-animes.actions';
@@ -24,6 +24,6 @@ const reducer = createReducer(
     ),
 );
 
-export function recentAnimesReducer(state, action) {
+export function recentAnimesReducer(state: RecentAnimesStoreInterface | undefined, action: Action) {
     return reducer(state, action);
 }

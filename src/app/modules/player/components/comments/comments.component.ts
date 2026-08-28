@@ -18,7 +18,7 @@ import {
     IonSpinner,
     ModalController,
     ToastController,
-} from '@ionic/angular/standalone';
+} from '@ionic/angular';
 import { NgTemplateOutlet } from '@angular/common';
 import { RepeatPipe } from 'ngxtension/repeat-pipe';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
@@ -94,7 +94,7 @@ export class CommentsComponent {
             ? 20
             : this.isLoading()
                 ? 20
-                : this.comments().length,
+                : this.comments()?.length ?? 0,
     );
 
     readonly trackById = trackById;

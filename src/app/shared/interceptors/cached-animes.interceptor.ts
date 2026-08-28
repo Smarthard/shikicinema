@@ -1,7 +1,7 @@
 import { Actions, ofType } from '@ngrx/effects';
 import { HttpInterceptorFn, HttpResponse } from '@angular/common/http';
+import { Store } from '@ngrx/store';
 import {
-    Observable,
     catchError,
     combineLatestWith,
     first,
@@ -14,10 +14,8 @@ import {
     tap,
     timeout,
 } from 'rxjs';
-import { Store } from '@ngrx/store';
 import { inject } from '@angular/core';
 
-import { UserAnimeRate } from '@app/shared/types/shikimori/user-anime-rate';
 import {
     getUserRateAction,
     getUserRateFailureAction,
@@ -35,7 +33,7 @@ export const cachedAnimeInterceptor: HttpInterceptorFn = (request, next) => {
 
         const animeFromCache$ = store.select(selectCachedAnimeById(animeId));
 
-        const userRate$: Observable<UserAnimeRate> = actions$.pipe(
+        const userRate$ = actions$.pipe(
             ofType(getUserRateSuccessAction, getUserRateFailureAction),
             take(1),
             map((action) => action.type === getUserRateSuccessAction.type

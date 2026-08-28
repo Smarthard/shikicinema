@@ -1,4 +1,4 @@
-import { createReducer, on } from '@ngrx/store';
+import { Action, createReducer, on } from '@ngrx/store';
 
 import { ShikicinemaStoreInterface } from '@app/store/shikicinema/types/shikicinema-store.interface';
 import {
@@ -48,6 +48,6 @@ const reducer = createReducer(
     ),
 );
 
-export function shikicinemaReducer(state, action) {
+export function shikicinemaReducer(state: ShikicinemaStoreInterface | undefined, action: Action) {
     return reducer(state, action);
 }

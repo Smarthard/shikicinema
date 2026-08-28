@@ -1,4 +1,4 @@
-import { createReducer, on } from '@ngrx/store';
+import { Action, createReducer, on } from '@ngrx/store';
 
 import { CacheStoreInterface } from '@app/store/cache/types';
 import { WELL_KNOWN_UPLOADERS_MAP } from '@app/shared/config/well-known-uploaders.config';
@@ -109,6 +109,6 @@ const reducer = createReducer(
     ),
 );
 
-export function cacheReducer(state, action) {
+export function cacheReducer(state: CacheStoreInterface | undefined, action: Action) {
     return reducer(state, action);
 }

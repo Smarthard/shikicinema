@@ -14,7 +14,7 @@ export function isSupportsAvif(): Observable<boolean> {
             image.src = '/assets/1x1.avif';
         }).catch(() => false),
     ).pipe(
-        startWith(undefined),
+        startWith(false),
         shareReplay(1),
     );
 }

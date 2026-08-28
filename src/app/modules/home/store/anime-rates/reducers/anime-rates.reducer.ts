@@ -1,4 +1,4 @@
-import { createReducer, on } from '@ngrx/store';
+import { Action, createReducer, on } from '@ngrx/store';
 
 import { AnimeRatesStoreInterface } from '@app/modules/home/store/anime-rates/types';
 import {
@@ -139,6 +139,6 @@ const reducer = createReducer(
     ),
 );
 
-export function animeRatesReducer(state, action) {
+export function animeRatesReducer(state: AnimeRatesStoreInterface, action: Action) {
     return reducer(state, action);
 }

@@ -10,63 +10,11 @@
 
         @if (hasSearchResults()) {
             @for (result of results(); track trackById($index, result)) {
-                <ion-item
-                    class="anime-search-list-item"
-                    button="true"
-                    (click)="onResultClick($event, result, 'internal')"
-                    (keydown.enter)="onResultClick($event, result, 'internal')"
-                    (keydown.space)="onResultClick($event, result, 'internal')"
-                >
-                    <app-image-card
-                        class="anime-search-list-item__image"
-                        [imageUrl]="result.image.original | getShikimoriPage | async"
-                        [name]="result.name"
-                    />
-
-                    <div class="anime-search-list-item__info anime-info">
-                        <ion-label class="anime-info__title text-ellipsis">
-                            @let firstName = result | shikimoriMediaName: firstMediaName();
-                            @let secondName = result | shikimoriMediaName: secondMediaName();
-
-                            <span [title]="firstName">
-                                {{ firstName }}
-                            </span>
-
-                            @if (secondName) {
-                                <span [title]="secondName">
-                                    {{ secondName }}
-                                </span>
-                            }
-                        </ion-label>
-
-                        @if (result.kind) {
-                            <ion-note class="anime-info__kind">
-                                {{ 'GLOBAL.SHIKIMORI.ANIME_KINDS.' + (result.kind | uppercase) | transloco }}
-                            </ion-note>
-                        }
-
-                        @if (result.aired_on) {
-                            <ion-text class="anime-info__year">
-                                {{ 'GLOBAL.COMMON.DATES.YEAR' | transloco: { year: (result.aired_on | date: 'yyyy') } }}
-                            </ion-text>
-                        }
-
-                        <ion-text class="anime-info__status anime-info__status--{{ result.status }}">
-                            {{ 'GLOBAL.SHIKIMORI.ANIME_STATUSES.' + (result.status | uppercase) | transloco }}
-                        </ion-text>
-                    </div>
-
-                    <ion-button
-                        expand="block"
-                        fill="solid"
-                        size="small"
-                        (click)="onResultClick($event, result, 'external')"
-                        (keydown.enter)="onResultClick($event, result, 'external')"
-                        (keydown.space)="onResultClick($event, result, 'external')"
-                    >
-                        <ion-icon icon="open-outline" />
-                    </ion-button>
-                </ion-item>
+                <app-searchbar-result-item
+                    [item]="result"
+                    [isOriginalNameFirst]="originalNameFirst()"
+                    (open)="onResultClick($event)"
+                />
             }
         }
     </ion-list>

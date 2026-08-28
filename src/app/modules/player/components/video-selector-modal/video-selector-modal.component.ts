@@ -14,7 +14,7 @@ import {
     IonTitle,
     IonToolbar,
     ModalController,
-} from '@ionic/angular/standalone';
+} from '@ionic/angular';
 import { Store } from '@ngrx/store';
 import { TranslocoPipe } from '@jsverse/transloco';
 
@@ -68,7 +68,7 @@ export class VideoSelectorModalComponent extends IonModal {
             const { author, kind, url } = currentVideo;
             const domain = getDomain(url);
 
-            this.store.dispatch(updatePlayerPreferencesAction({ animeId, author, kind, domain }));
+            this.store.dispatch(updatePlayerPreferencesAction({ animeId, author: author ?? '', kind, domain }));
         }
     }
 

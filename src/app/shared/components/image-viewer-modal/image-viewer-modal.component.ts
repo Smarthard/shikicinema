@@ -2,10 +2,10 @@ import {
     ChangeDetectionStrategy,
     Component,
     HostBinding,
-    Input,
     ViewEncapsulation,
+    input,
 } from '@angular/core';
-import { IonImg, IonModal } from '@ionic/angular/standalone';
+import { IonImg, IonModal } from '@ionic/angular';
 
 @Component({
     selector: 'app-image-viewer-modal',
@@ -20,5 +20,5 @@ export class ImageViewerModalComponent extends IonModal {
     @HostBinding('class.image-viewer-modal')
     protected imageViewerModalClass = true;
 
-    @Input() imageSrc: string;
+    imageSrc = input<string>();
 }

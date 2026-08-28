@@ -24,10 +24,10 @@ export class GetAnimeKindPipe implements PipeTransform {
     readonly allRates$ = combineLatest([this.recent$, this.rates$])
         .pipe(map(([recent, rates]) => [...recent, ...rates]));
 
-    transform(animeId: ResourceIdType): Observable<AnimeKindType> {
+    transform(animeId: ResourceIdType): Observable<AnimeKindType | undefined> {
         return this.allRates$.pipe(
             map((rates) => rates?.find(({ anime }) => anime?.id === animeId)),
-            map((rate) => rate?.anime?.kind),
+            map((rate) => rate?.anime?.kind ?? undefined),
         );
     }
 }

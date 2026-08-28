@@ -1,7 +1,6 @@
 import {
     ChangeDetectionStrategy,
     Component,
-    HostBinding,
     ViewEncapsulation,
     input,
 } from '@angular/core';
@@ -30,13 +29,14 @@ import { SkeletonBlockComponent } from '@app/shared/components/skeleton-block/sk
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
+    host: {
+        class: 'card-grid-item',
+    }
 })
 export class CardGridItemComponent extends AbstractImageCardComponent {
-    @HostBinding('class.card-grid-item')
-    protected cardGridItemClass = true;
-
-    kind = input<AnimeKindType>();
-    airedDate = input<string | Date>();
+    kind = input<AnimeKindType | null>();
+    airedDate = input<string | Date | null>();
     link = input('#');
     hasPriority = input(false);
+    override backgroundSize = input<string>('cover');
 }

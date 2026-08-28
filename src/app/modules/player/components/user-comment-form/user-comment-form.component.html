@@ -1,32 +1,35 @@
 @if (isEditMode()) {
     <div class="user-comment-form__edit">
         <div class="user-comment-form__edit-wrap">
-            <div class="user-comment-form__edit-comment">
-                <img
-                    class="user-comment-form__edit-user"
-                    [src]="editComment().user.image.x64 || editComment().user.avatar"
-                    [alt]="editComment().user.name">
+            @let ec = editComment();
+            @if (ec) {
+                <div class="user-comment-form__edit-comment">
+                    <img
+                        class="user-comment-form__edit-user"
+                        [src]="ec.user?.image?.x64 || ec.user?.avatar || ''"
+                        [alt]="ec.user?.name || ''">
 
-                <span
-                    class="user-comment-form__edit-text text-ellipsis"
+                    <span
+                        class="user-comment-form__edit-text text-ellipsis"
+                        tabindex="0"
+                        (click)="onHighlightEditComment()"
+                        (keydown.enter)="onHighlightEditComment()"
+                        (keydown.space)="onHighlightEditComment()"
+                        [innerHTML]="ec | processShikimoriHtml">
+                    </span>
+                </div>
+
+                <ion-icon
+                    class="user-comment-form__edit-cancel shc-interactive"
+                    name="close-outline"
+                    color="danger"
                     tabindex="0"
-                    (click)="onHighlightEditComment()"
-                    (keydown.enter)="onHighlightEditComment()"
-                    (keydown.space)="onHighlightEditComment()"
-                    [innerHTML]="editComment() | processShikimoriHtml">
-                </span>
-            </div>
-
-            <ion-icon
-                class="user-comment-form__edit-cancel shc-interactive"
-                name="close-outline"
-                color="danger"
-                tabindex="0"
-                [title]="'PLAYER_MODULE.PLAYER_PAGE.USER_COMMENT_FORM.EDIT_CANCEL_BTN' | transloco"
-                (click)="onCancelEdit()"
-                (keydown.enter)="onCancelEdit()"
-                (keydown.space)="onCancelEdit()"
-            />
+                    [title]="'PLAYER_MODULE.PLAYER_PAGE.USER_COMMENT_FORM.EDIT_CANCEL_BTN' | transloco"
+                    (click)="onCancelEdit()"
+                    (keydown.enter)="onCancelEdit()"
+                    (keydown.space)="onCancelEdit()"
+                />
+            }
         </div>
     </div>
 }
@@ -46,8 +49,8 @@
             slot="end"
             aria-label="send"
             (click)="isEditMode()
-                ? onSendEdited(comment.value)
-                : onSend(comment.value)"
+                ? onSendEdited(comment.value ?? '')
+                : onSend(comment.value ?? '')"
             [disabled]="comment.invalid || !isAuthorized()"
         >
             <ion-icon slot="icon-only" name="send" aria-hidden="true" />

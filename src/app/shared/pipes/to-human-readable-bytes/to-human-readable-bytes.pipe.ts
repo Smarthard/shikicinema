@@ -9,7 +9,7 @@ import { reverseHumanBytesMap } from '@app/shared/config/reverse-human-bytes.map
     standalone: true,
 })
 export class ToHumanReadableBytesPipe implements PipeTransform {
-    transform(bytes: number, isSIUnits = false, capBy: Bytes | BytesSI = undefined): unknown {
+    transform(bytes: number, isSIUnits?: boolean, capBy?: Bytes | BytesSI): unknown {
         const maxPower = reverseHumanBytesMap.get(capBy);
 
         return bytesToHumanReadable(bytes, isSIUnits, maxPower);

@@ -6,9 +6,9 @@ import { isEmptyObject } from '@app/shared/utils/object-utils';
 
 
 export function loggerMetaReducer(reducer: ActionReducer<AppStoreInterface>): ActionReducer<AppStoreInterface> {
-    return (state: AppStoreInterface, action: Action): AppStoreInterface => {
+    return (state: AppStoreInterface | undefined, action: Action): AppStoreInterface => {
         const result = reducer(state, action);
-        const stateDiff = diff(state, result);
+        const stateDiff = state ? diff(state, result) : null;
         const isNgrxAction = /\@ngrx/i.test(action.type);
 
         if (!isNgrxAction) {

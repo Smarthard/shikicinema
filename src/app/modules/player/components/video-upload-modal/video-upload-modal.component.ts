@@ -25,7 +25,7 @@ import {
     IonSelect,
     IonSelectOption,
     ModalController,
-} from '@ionic/angular/standalone';
+} from '@ionic/angular';
 import { Store } from '@ngrx/store';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 
@@ -126,7 +126,7 @@ export class VideoUploadModalComponent extends IonModal implements OnInit {
         this.uploadForm.episode().value.set(this.episode());
 
         if (this.previousForm()) {
-            this.uploadForm().controlValue.set(this.previousForm());
+            this.uploadForm().controlValue.set(this.previousForm()!);
         }
     }
 
@@ -150,7 +150,7 @@ export class VideoUploadModalComponent extends IonModal implements OnInit {
     }
 
     cutUrlFromClipboard(event: ClipboardEvent): void {
-        const clipboardText = event.clipboardData.getData('text');
+        const clipboardText = event.clipboardData?.getData('text') ?? '';
         const clipboardUrl = cutUrlFromText(clipboardText);
 
         // вставку текста без обработки отменяем

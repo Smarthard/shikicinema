@@ -8,7 +8,7 @@ import {
     output,
 } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { ToastController } from '@ionic/angular/standalone';
+import { ToastController } from '@ionic/angular';
 import { TranslocoService } from '@jsverse/transloco';
 import { explicitEffect } from 'ngxtension/explicit-effect';
 

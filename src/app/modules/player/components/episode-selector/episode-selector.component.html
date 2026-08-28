@@ -6,11 +6,11 @@
     <div class="episode-selector__wrapper">
         @for (i of maxEpisode() | repeat; track $index) {
             @let episode = i + 1;
-            @let isNotAired = episode > maxAiredEpisode();
+            @let isNotAired = episode > (maxAiredEpisode() ?? 0);
 
             <app-episode-selector-item
                 [episode]="episode"
-                [isWatched]="episode <= maxWatchedEpisode()"
+                [isWatched]="episode <= (maxWatchedEpisode() ?? 0)"
                 [isSelected]="episode === selected()"
                 [isNotAired]="isNotAired"
                 [ngxTippy]="isNotAired ? notAiredText() : null"

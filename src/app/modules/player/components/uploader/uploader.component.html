@@ -3,7 +3,7 @@
         <app-image-card
             class="uploader__avatar"
             [imageUrl]="avatar()"
-            [name]="name()"
+            [name]="name() ?? ''"
         />
     </a>
 
@@ -11,9 +11,9 @@
         <a [href]="link()">
             <span class="uploader__name">
                     @if (id() | isWellKnownUploader) {
-                        {{ name() | transloco }}
+                        {{ name() ?? '' | transloco }}
                     } @else {
-                        {{ name() }}
+                        {{ name() ?? '' }}
                     }
             </span>
         </a>
@@ -33,15 +33,15 @@
     <app-image-card
         class="uploader__avatar"
         [imageUrl]="avatar()"
-        [name]="name()"
+        [name]="name() ?? ''"
     />
 
     <div class="uploader__info">
         <span class="uploader__name">
                 @if (id() | isWellKnownUploader) {
-                    {{ name() | transloco }}
+                    {{ name() ?? '' | transloco }}
                 } @else {
-                    {{ name() }}
+                    {{ name() ?? '' }}
                 }
         </span>
 

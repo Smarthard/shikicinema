@@ -10,7 +10,7 @@ import {
     inject,
 } from '@angular/core';
 
-import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
+import { IonApp, IonRouterOutlet } from '@ionic/angular';
 import { Store } from '@ngrx/store';
 import { TranslocoService, getBrowserLang } from '@jsverse/transloco';
 import { addHours, compareAsc } from 'date-fns';
@@ -81,7 +81,7 @@ export class AppComponent implements OnInit {
         this.store.select(selectLanguage).pipe(
             tap((storedLanguage) => {
                 const availableLangs = this.transloco.getAvailableLangs() as string[];
-                const browserLang = getBrowserLang();
+                const browserLang = getBrowserLang() ?? 'en';
                 const defaultLang = availableLangs.includes(browserLang)
                     ? browserLang
                     : 'en';

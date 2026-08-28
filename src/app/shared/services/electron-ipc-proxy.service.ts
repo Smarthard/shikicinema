@@ -28,7 +28,7 @@ export class ElectronIpcProxyService implements IpcApiInterface {
         return this.#electronApi.getShikimoriAuthCode(codeUrl.toString());
     }
 
-    openInBrowser(url: string, target: string): void {
+    openInBrowser(url: string, target: string = '_blank'): void {
         this.#electronApi.openInBrowser(url, target);
     }
 }

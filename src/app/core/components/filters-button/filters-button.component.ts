@@ -4,7 +4,7 @@ import {
     ViewEncapsulation,
     inject,
 } from '@angular/core';
-import { IonIcon } from '@ionic/angular/standalone';
+import { IonIcon } from '@ionic/angular';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { toggleAnimeFiltersAction } from '@app/modules/home/store/anime-rates';
 
