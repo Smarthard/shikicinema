@@ -72,7 +72,7 @@ export class CommentComponent {
         const target = event.target as HTMLElement;
 
         switch (true) {
-            case target instanceof HTMLAnchorElement:
+            case target instanceof HTMLAnchorElement: {
                 const isMention = target.classList.contains('b-mention');
                 const isImage = target.className.includes('image');
                 const href = target.getAttribute('href') ?? '';
@@ -93,7 +93,8 @@ export class CommentComponent {
                 }
 
                 break;
-            default:
+            }
+            default: {
                 const isSpoiler = target.className.includes('spoiler');
 
                 if (isSpoiler) {
@@ -102,6 +103,7 @@ export class CommentComponent {
                 }
 
                 break;
+            }
         }
     }
 }

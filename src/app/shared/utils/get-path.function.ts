@@ -1,5 +1,5 @@
 export function getPath(url: string): string {
-    let path = url;
+    let path: string;
 
     try {
         const toUrl = url?.startsWith('/')

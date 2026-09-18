@@ -6,5 +6,4 @@ export interface ShikimoriCredentials {
     scopes: string[];
 }
 
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export default interface AuthStoreInterface extends ShikimoriCredentials {}
+export type AuthStoreInterface = ShikimoriCredentials;

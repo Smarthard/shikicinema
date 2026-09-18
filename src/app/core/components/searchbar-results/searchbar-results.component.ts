@@ -21,7 +21,7 @@ import { ResultOpenTarget, SearchbarResult } from '@app/shared/types/searchbar.t
 import { SkeletonBlockComponent } from '@app/shared/components/skeleton-block/skeleton-block.component';
 import { provideShikimoriImageLoader } from '@app/shared/providers/shikimori-image-loader.provider';
 import { trackById } from '@app/shared/utils/common-ngfor-tracking';
-import { SearchbarResultItemComponent } from '@app/core/components/searchbar-result-item/searchbar-result-item.component';
+import { SearchbarResultItemComponent } from '@app/core/components/searchbar-result-item';
 
 @Component({
     selector: 'app-searchbar-results',

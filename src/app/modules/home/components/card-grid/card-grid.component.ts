@@ -8,7 +8,7 @@ import {
     signal,
 } from '@angular/core';
 import { RepeatPipe } from 'ngxtension/repeat-pipe';
-import { TranslocoService, getBrowserLang } from '@jsverse/transloco';
+import { TranslocoService } from '@jsverse/transloco';
 import { toSignal } from '@angular/core/rxjs-interop';
 
 import { CardGridItemComponent } from '@app/modules/home/components/card-grid-item/card-grid-item.component';

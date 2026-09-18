@@ -191,7 +191,9 @@ export class SettingsPage implements OnInit {
                     const isValid = this.settingsForm.valid;
 
                     if (domain && isValid) {
-                        this.store.dispatch(updateSettingsAction({ config: mapSettinsFormToState(form as Partial<SettingsFormInterface>) }));
+                        const config = mapSettinsFormToState(form as Partial<SettingsFormInterface>);
+
+                        this.store.dispatch(updateSettingsAction({ config }));
                         this.store.dispatch(updateShikimoriDomainAction({ domain }));
                     };
                 }),

@@ -72,7 +72,6 @@ export class VideoSelectorComponent {
         const defaultAuthorName = this.defaultAuthorName();
         const authors = this.videos()
             ?.map(({ author }) => author)
-            ?.filter((author): author is string => author != null)
             ?.map((author) => cleanAuthorName(author, defaultAuthorName))
             ?.sort();
 

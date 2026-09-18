@@ -19,7 +19,7 @@ import {
 } from 'rxjs/operators';
 import { inject } from '@angular/core';
 
-import AuthStoreInterface, { ShikimoriCredentials } from '@app/store/auth/types/auth-store.interface';
+import { AuthStoreInterface, ShikimoriCredentials } from '@app/store/auth/types/auth-store.interface';
 import { PersistenceService } from '@app/shared/services/persistence.service';
 import { ShikimoriClient } from '@app/shared/services/shikimori-client.service';
 import { attachAccessToken } from '@app/shared/utils/attach-access-token.function';

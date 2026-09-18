@@ -18,7 +18,7 @@ import {
 import { inject } from '@angular/core';
 import { throwError } from 'rxjs';
 
-import AuthStoreInterface from '@app/store/auth/types/auth-store.interface';
+import { AuthStoreInterface } from '@app/store/auth/types/auth-store.interface';
 import { PersistenceService } from '@app/shared/services/persistence.service';
 import { ShikicinemaStoreInterface } from '@app/store/shikicinema/types/shikicinema-store.interface';
 import { attachAccessToken } from '@app/shared/utils/attach-access-token.function';

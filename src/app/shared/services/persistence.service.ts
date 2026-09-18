@@ -40,6 +40,7 @@ export class PersistenceService {
     getMaxByxes(): number {
         const step = 500;
         const cached = this.getItem<number>(PersistenceService.MAX_LOCALSTORAGE_SIZE_KEY);
+        let maxSize: number;
         let i = 0;
 
         if (cached) {
@@ -53,10 +54,11 @@ export class PersistenceService {
         } catch (_e) {
             this.removeItem('test');
         } finally {
-            const maxSize = i - step;
+            maxSize = i - step;
 
             this.setItem(PersistenceService.MAX_LOCALSTORAGE_SIZE_KEY, maxSize * 1024);
-            return maxSize * 1024;
         }
+
+        return maxSize * 1024;
     }
 }

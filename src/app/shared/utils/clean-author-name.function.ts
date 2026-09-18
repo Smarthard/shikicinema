@@ -6,7 +6,7 @@ import { PreferencesValueType } from '@app/store/settings/types';
  * @param {String} defaultAuthor author name if original cannot be shown
  * @return {String} cleaned author name
  */
-export function cleanAuthorName(author: PreferencesValueType<string>, defaultAuthor = ''): string {
+export function cleanAuthorName(author?: PreferencesValueType<string>, defaultAuthor = ''): string {
     if (typeof author === 'string') {
         const [, resolvedAuthor] = /(.*?)(\s\(.*\))?$/.exec(author) ?? [];
 

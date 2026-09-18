@@ -14,7 +14,6 @@ export class ElectronIpcProxyService implements IpcApiInterface {
     private readonly shikimoriDomain$ = this.store.select(selectShikimoriDomain);
 
     constructor() {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         this.#electronApi = (window as any).electron;
     }
 

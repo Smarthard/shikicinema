@@ -1,6 +1,5 @@
 import { createAction, props } from '@ngrx/store';
 
-import { ResourceIdType } from '@app/shared/types';
 import { SettingsStoreInterface } from '@app/store/settings/types/settings-store.interface';
 import { VideoKindEnum } from '@app/modules/player/types/video-kind.enum';
 

@@ -27,7 +27,6 @@ import { TranslocoService } from '@jsverse/transloco';
 import {
     debounceTime,
     map,
-    startWith,
     take,
     tap,
 } from 'rxjs/operators';

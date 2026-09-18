@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 import { UserAnimeRate } from '@app/shared/types/shikimori/user-anime-rate';
 
 export function toUserRatesUpdate({

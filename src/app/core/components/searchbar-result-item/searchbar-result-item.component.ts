@@ -6,6 +6,7 @@ import {
     input,
     output,
     ViewEncapsulation,
+    Injector,
 } from '@angular/core';
 import {
     IonButton,
@@ -22,7 +23,6 @@ import { ShikimoriMediaNamePipe } from '@app/shared/pipes/shikimori-media-name/s
 import { AnimeBriefInfoInterface } from '@app/shared/types/shikimori';
 import { injectShikimoriDomain } from '@app/shared/utils/inject-shikimori-domain.function';
 import { ResultOpenTarget, SearchbarResult } from '@app/shared/types';
-import { Injector } from '@angular/core';
 
 @Component({
     selector: 'app-searchbar-result-item',

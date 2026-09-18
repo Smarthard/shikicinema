@@ -19,7 +19,7 @@ export const smarthardNetImageLoader = (): ImageLoader => {
         }
 
         const { isPlaceholder = false } = config;
-        const [imagePath, extension] = path?.split('.');
+        const [imagePath, extension] = path.split('.');
         const extensionPath = isPlaceholder
             ? '-placeholder.jpeg'
             : `.${extension}`;

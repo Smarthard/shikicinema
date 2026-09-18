@@ -9,7 +9,7 @@ export function loggerMetaReducer(reducer: ActionReducer<AppStoreInterface>): Ac
     return (state: AppStoreInterface | undefined, action: Action): AppStoreInterface => {
         const result = reducer(state, action);
         const stateDiff = state ? diff(state, result) : null;
-        const isNgrxAction = /\@ngrx/i.test(action.type);
+        const isNgrxAction = /@ngrx/i.test(action.type);
 
         if (!isNgrxAction) {
             console.groupCollapsed(action.type);
