@@ -13,7 +13,7 @@ import {
     IonButton,
     IonIcon,
     IonText,
-} from '@ionic/angular/standalone';
+} from '@ionic/angular';
 import { NgScrollbar } from 'ngx-scrollbar';
 import { SignalSet } from 'ngxtension/collections';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
@@ -54,9 +54,10 @@ export class VideoSelectorComponent {
 
     readonly defaultAuthorName = toSignal<string>(this.transloco.selectTranslate('GLOBAL.VIDEO.AUTHORS.DEFAULT_NAME'));
 
+    kindDisplayMode = input.required<PlayerKindDisplayMode>();
+    videos = input.required<VideoInfoInterface[]>();
+
     selected = input<VideoInfoInterface>();
-    videos = input<VideoInfoInterface[]>();
-    kindDisplayMode = input<PlayerKindDisplayMode>();
     warnAvailability = input<string[]>([]);
     hasUnfilteredVideos = input<boolean>(false);
 
@@ -80,10 +81,11 @@ export class VideoSelectorComponent {
     constructor() {
         afterEveryRender({
             mixedReadWrite: () => {
-                if (this.selected()) {
-                    this.videos()
+                const selected = this.selected();
+
+                if (selected) {
                     const defaultAuthorName = this.defaultAuthorName();
-                    const cleaned = cleanAuthorName(this.selected().author, defaultAuthorName);
+                    const cleaned = cleanAuthorName(selected.author ?? '', defaultAuthorName);
 
                     this._openedByDefaultAuthors.add(cleaned);
                 }

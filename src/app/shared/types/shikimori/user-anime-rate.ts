@@ -61,9 +61,9 @@ interface UserFullRate<T> {
     volumes: number | null;
     text_html: string | null;
     rewatches: number;
-    created_at: string | null;
-    updated_at: string | null;
-    user_id: ResourceIdType;
+    created_at: string;
+    updated_at: string;
+    user_id: number | string | null;
     target_id: ResourceIdType;
     target_type: UserRateTargetEnum;
     anime: T;

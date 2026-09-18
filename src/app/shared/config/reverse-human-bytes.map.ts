@@ -1,4 +1,4 @@
-export const reverseHumanBytesMap = new Map<string, number>([
+export const reverseHumanBytesMap = new Map<string | null | undefined, number>([
     [undefined, -1],
     [null, -1],
 

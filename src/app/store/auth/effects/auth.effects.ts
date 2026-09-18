@@ -6,7 +6,7 @@ import {
 } from '@ngrx/effects';
 import { Injectable, inject } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { ToastController } from '@ionic/angular/standalone';
+import { ToastController } from '@ionic/angular';
 import { TranslocoService } from '@jsverse/transloco';
 import {
     catchError,
@@ -75,14 +75,18 @@ export class AuthEffects {
         delay(1000),
         concatLatestFrom(() => this.store.select(selectShikimoriCurrentUser)),
         tap(async ([, user]) => {
-            const toast = await this.toast.create({
-                id: 'shikimori-auth-success',
-                color: 'success',
-                message: this.translate.translate('GLOBAL.AUTH.SHIKIMORI.LOGIN.SUCCESS', { nickname: user.nickname }),
-                duration: 1000,
-            });
+            const { nickname = null } = user;
 
-            await toast.present();
+            if (nickname) {
+                const toast = await this.toast.create({
+                    id: 'shikimori-auth-success',
+                    color: 'success',
+                    message: this.translate.translate('GLOBAL.AUTH.SHIKIMORI.LOGIN.SUCCESS', { nickname }),
+                    duration: 1000,
+                });
+
+                await toast.present();
+            }
         }),
     ), { dispatch: false });
 

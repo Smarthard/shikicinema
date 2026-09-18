@@ -1,9 +1,9 @@
 <h3 class="settings-group__title ion-text">
-    @if (icon) {
-        <ion-icon [name]="icon" />
+    @if (icon()) {
+        <ion-icon [name]="icon()" />
     }
 
-    {{ title }}
+    {{ title() }}
 </h3>
 
 <div class="settings-group__content">

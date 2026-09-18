@@ -7,7 +7,7 @@ import {
     input,
     output,
 } from '@angular/core';
-import { IonButton, IonIcon } from '@ionic/angular/standalone';
+import { IonButton, IonIcon } from '@ionic/angular';
 import { RouterLink } from '@angular/router';
 import { Store } from '@ngrx/store';
 
@@ -49,7 +49,7 @@ export class SidePanelComponent {
     readonly video = input<VideoInfoInterface>();
 
     readonly isLoading = input(true);
-    readonly isMinified = input(false);
+    readonly isMinified = input<boolean>();
     readonly isDomainFiltersActive = input(true);
 
     readonly filtersToggle = output<boolean>();

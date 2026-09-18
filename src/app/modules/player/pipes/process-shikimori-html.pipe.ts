@@ -47,7 +47,13 @@ export class ProcessShikimoriHtmlPipe implements PipeTransform {
         // вставки с видео заменяем с картинок на iframe'ы
         for (const video of Array.from(processedHtml.querySelectorAll('.video-link'))) {
             const parent = video.parentElement;
-            const src = new URL(video.getAttribute('data-href'));
+            const dataHref = video.getAttribute('data-href');
+
+            if (!parent || !dataHref) {
+                continue;
+            }
+
+            const src = new URL(dataHref);
 
             src.searchParams.delete('autoplay');
             src.searchParams.delete('autostart');

@@ -19,7 +19,7 @@ import {
     IonContent,
     ModalController,
     Platform,
-} from '@ionic/angular/standalone';
+} from '@ionic/angular';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Title } from '@angular/platform-browser';
@@ -174,7 +174,12 @@ export class PlayerPage implements OnInit {
     lastAiredEpisode = computed(() => getLastAiredEpisode(this.anime()));
     maxVideosEpisode = computed(() => getMaxEpisodeFromVideos(this.videos()));
     maxEpisode = computed(() => getMaxEpisode(this.anime(), this.maxVideosEpisode()));
-    animeName = computed(() => getAnimeName(this.anime(), this.userSelectedLanguage()));
+    animeName = computed(() => {
+        const anime = this.anime();
+        const language = this.userSelectedLanguage();
+
+        return anime && language ? getAnimeName(anime, language) : '';
+    });
     isWatched = computed(() => isEpisodeWatched(this.episodeQ(), this.userRate()));
     isRewatching = computed(() => this.userRate()?.status === 'rewatching');
 
@@ -188,11 +193,11 @@ export class PlayerPage implements OnInit {
         return isCurrentEpisodeNotAired ? nextEpisodeAt : null;
     });
 
-    currentVideo = signal<VideoInfoInterface>(null);
-    currentKind = signal<VideoKindEnum>(null);
+    currentVideo = signal<VideoInfoInterface | undefined>(undefined);
+    currentKind = signal<VideoKindEnum>(VideoKindEnum.DUBBING);
     isOrientationPortrait = signal<boolean>(false);
-    editComment = signal<Comment>(null);
-    highlightComment = signal<ResourceIdType>(null);
+    editComment = signal<Comment | undefined>(undefined);
+    highlightComment = signal<ResourceIdType | undefined>(undefined);
 
     readonly animeChangeEffect = effect(() => {
         const animeId = this.animeIdQ();
@@ -222,7 +227,7 @@ export class PlayerPage implements OnInit {
     ngOnInit(): void {
         this.actions$.pipe(
             ofType(watchAnimeSuccessAction),
-            tap(({ userRate }) => this.onEpisodeChange(userRate.episodes + 1)),
+            tap(({ userRate }) => this.onEpisodeChange((userRate.episodes ?? 0) + 1)),
             takeUntilDestroyed(this.destroyRef),
         ).subscribe();
 
@@ -243,9 +248,9 @@ export class PlayerPage implements OnInit {
 
     private updateUserPreferences(): void {
         const currentVideo = this.currentVideo();
+        const anime = this.anime();
 
-        if (currentVideo) {
-            const anime = this.anime();
+        if (currentVideo && anime && currentVideo.author) {
             const { author, kind, url } = currentVideo;
             const domain = getDomain(url);
 
@@ -265,10 +270,12 @@ export class PlayerPage implements OnInit {
         this.title.setTitle(title);
     }
 
-    onVideoChange(video: VideoInfoInterface, isShouldUpdatePref = true): void {
+    onVideoChange(video?: VideoInfoInterface, isShouldUpdatePref = true): void {
         this.currentVideo.set(video);
 
-        this.onKindChange(video?.kind);
+        if (video?.kind) {
+            this.onKindChange(video.kind);
+        }
 
         if (isShouldUpdatePref) {
             void this.updateUserPreferences();
@@ -323,7 +330,7 @@ export class PlayerPage implements OnInit {
         const anime = this.anime();
         const userRate = this.userRate();
         const isRewarch = this.isRewatching() || userRate?.status === 'completed';
-        const isLastEpisodeWatched = userRate?.episodes >= this.maxEpisode();
+        const isLastEpisodeWatched = (userRate?.episodes ?? 0) >= this.maxEpisode();
         const watchedEpisode = isLastEpisodeWatched
             ? episode
             : isUnwatch ? episode - 1 : episode;
@@ -396,7 +403,7 @@ export class PlayerPage implements OnInit {
         this.actions$.pipe(
             ofType(editCommentSuccessAction),
             take(1),
-            tap(() => this.editComment.set(null)),
+            tap(() => this.editComment.set(undefined)),
             takeUntilDestroyed(this.destroyRef),
         ).subscribe();
     }
@@ -418,13 +425,13 @@ export class PlayerPage implements OnInit {
         // сбрасываем, чтобы повторная подсветка работала
         timer(1000).pipe(
             take(1),
-            tap(() => this.highlightComment.set(null)),
+            tap(() => this.highlightComment.set(undefined)),
             takeUntilDestroyed(this.destroyRef),
         ).subscribe();
     }
 
     onCancelCommentEdit(): void {
-        this.editComment.set(null);
+        this.editComment.set(undefined);
     }
 
     setDomainFilters(isEnabled: boolean): void {

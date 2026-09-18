@@ -1,6 +1,7 @@
-import { createReducer, on } from '@ngrx/store';
+import { Action, createReducer, on } from '@ngrx/store';
 
 import { ShikimoriStoreInterface } from '@app/store/shikimori/types/shikimori-store.interface';
+import { environment } from '@app-env/environment';
 import {
     findAnimeAction,
     findAnimeFailureAction,
@@ -17,8 +18,8 @@ const initialState: ShikimoriStoreInterface = {
     isCurrentUserLoading: false,
     currentUser: null,
     isAnimeSearchLoading: false,
-    foundAnimes: null,
-    shikimoriDomain: null,
+    foundAnimes: [],
+    shikimoriDomain: environment.shikimori.apiURI,
     errors: null,
 };
 
@@ -57,7 +58,7 @@ const reducer = createReducer(
         resetFoundAnimeAction,
         (state) => ({
             ...state,
-            foundAnimes: null,
+            foundAnimes: [],
         }),
     ),
     on(
@@ -99,6 +100,6 @@ const reducer = createReducer(
     ),
 );
 
-export function shikimoriReducer(state, action) {
+export function shikimoriReducer(state: ShikimoriStoreInterface | undefined, action: Action) {
     return reducer(state, action);
 }

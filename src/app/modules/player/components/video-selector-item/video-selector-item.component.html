@@ -4,7 +4,7 @@
         <ion-item slot="header"
                 class="author-accordion__item">
             <ion-label class="author-accordion__header"
-                    [color]="selected()?.author | isSameAuthor: author() | getColorForSelectable">
+                    [color]="(selected()?.author ?? '') | isSameAuthor: author() | getColorForSelectable">
                 <span class="author text-ellipsis">{{ author() }}</span>
 
                 @if (!isAvailableForAllEpisodes()) {

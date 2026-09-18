@@ -5,7 +5,7 @@ import {
     inject,
     output,
 } from '@angular/core';
-import { IonIcon, ModalController } from '@ionic/angular/standalone';
+import { IonIcon, ModalController } from '@ionic/angular';
 import { TranslocoPipe } from '@jsverse/transloco';
 
 import { Store } from '@ngrx/store';

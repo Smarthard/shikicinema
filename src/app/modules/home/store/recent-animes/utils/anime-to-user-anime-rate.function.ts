@@ -9,7 +9,7 @@ import { getShikicinemaAnimeTitle } from '@app/shared/utils/get-shikicinema-anim
 export function animeToUserAnimeRate(
     anime: ShikicinemaAnime,
     watchedEpisode = 0,
-    visited: string | null = null,
+    visited: string = new Date().toISOString(),
 ): UserAnimeRate {
     return {
         id: -1,

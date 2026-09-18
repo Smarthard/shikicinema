@@ -1,4 +1,3 @@
-/* eslint-disable no-multi-spaces */
 /* eslint-disable no-inline-comments */
 
 export enum ReadableNumberSuffixes {

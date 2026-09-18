@@ -1,12 +1,13 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 
 import { ShikimoriStoreInterface } from '@app/store/shikimori/types/shikimori-store.interface';
+import { UserBriefInfoInterface } from '@app/shared/types/shikimori';
 
 export const selectShikimori = createFeatureSelector<ShikimoriStoreInterface>('shikimori');
 
 export const selectShikimoriCurrentUser = createSelector(
     selectShikimori,
-    (state) => state.currentUser,
+    ({ currentUser }) => currentUser ?? {} as UserBriefInfoInterface,
 );
 
 export const selectIsShikimoriCurrentUserLoading = createSelector(
@@ -21,7 +22,7 @@ export const selectShikimoriAnimeSearchLoading = createSelector(
 
 export const selectShikimoriFoundAnimes = createSelector(
     selectShikimori,
-    (state) => state.foundAnimes,
+    ({ foundAnimes }) => foundAnimes,
 );
 
 export const selectShikimoriCurrentUserId = createSelector(
@@ -51,5 +52,5 @@ export const selectShikimoriCurrentUserProfileLink = createSelector(
 
 export const selectShikimoriDomain = createSelector(
     selectShikimori,
-    (state) => state.shikimoriDomain,
+    ({ shikimoriDomain }) => shikimoriDomain,
 );

@@ -13,7 +13,7 @@ import {
     IonButton,
     IonIcon,
     IonPopover,
-} from '@ionic/angular/standalone';
+} from '@ionic/angular';
 import { TranslocoPipe } from '@jsverse/transloco';
 
 import { Comment } from '@app/shared/types/shikimori/comment';
@@ -47,7 +47,7 @@ export class CommentComponent {
 
     private readonly _renderer = inject(Renderer2);
 
-    comment = input<Comment>();
+    comment = input.required<Comment>();
 
     openReply = output<string>();
     toggleSpoiler = output<HTMLElement>();
@@ -72,15 +72,19 @@ export class CommentComponent {
         const target = event.target as HTMLElement;
 
         switch (true) {
-            case target instanceof HTMLAnchorElement:
+            case target instanceof HTMLAnchorElement: {
                 const isMention = target.classList.contains('b-mention');
                 const isImage = target.className.includes('image');
                 const href = target.getAttribute('href') ?? '';
 
                 if (isMention) {
                     event.preventDefault();
-                    const [commentId] = /([\d]+)/.exec(href);
-                    this.openReply.emit(commentId);
+
+                    const [commentId] = /([\d]+)/.exec(href) ?? [];
+
+                    if (commentId) {
+                        this.openReply.emit(commentId);
+                    }
                 }
 
                 if (isImage) {
@@ -89,7 +93,8 @@ export class CommentComponent {
                 }
 
                 break;
-            default:
+            }
+            default: {
                 const isSpoiler = target.className.includes('spoiler');
 
                 if (isSpoiler) {
@@ -98,6 +103,7 @@ export class CommentComponent {
                 }
 
                 break;
+            }
         }
     }
 }

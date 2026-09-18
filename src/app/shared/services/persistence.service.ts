@@ -13,7 +13,7 @@ export class PersistenceService {
     getItem<T>(key: string): T {
         const json = localStorage.getItem(key);
 
-        return JSON.parse(json) as T;
+        return JSON.parse(json ?? 'null') as T;
     }
 
     setItem<T>(key: string, value: T): void {
@@ -33,13 +33,14 @@ export class PersistenceService {
     }
 
     getCacheBytes(): number {
-        return new Blob([localStorage.getItem('cache')]).size;
+        return new Blob([localStorage.getItem('cache') ?? '']).size;
     }
 
     // не забываем, что setItem синхронный - и эта функция довольно жестко блочит отрисовку странички без кэша
     getMaxByxes(): number {
         const step = 500;
         const cached = this.getItem<number>(PersistenceService.MAX_LOCALSTORAGE_SIZE_KEY);
+        let maxSize: number;
         let i = 0;
 
         if (cached) {
@@ -53,10 +54,11 @@ export class PersistenceService {
         } catch (_e) {
             this.removeItem('test');
         } finally {
-            const maxSize = i - step;
+            maxSize = i - step;
 
             this.setItem(PersistenceService.MAX_LOCALSTORAGE_SIZE_KEY, maxSize * 1024);
-            return maxSize * 1024;
         }
+
+        return maxSize * 1024;
     }
 }

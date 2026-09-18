@@ -31,10 +31,10 @@ export class GetAnimeNamePipe implements PipeTransform {
         ),
     );
 
-    transform(animeId: ResourceIdType, language: string): Observable<string> {
+    transform(animeId: ResourceIdType, language: string): Observable<string | undefined> {
         return this.ratesMap$.pipe(
-            map((ratesMap) => ratesMap.get(animeId) as UserAnimeRate),
-            map((rate) => getAnimeRateName(rate, language)),
+            map((ratesMap) => ratesMap.get(animeId) as UserAnimeRate | undefined),
+            map((rate) => rate ? getAnimeRateName(rate, language) : undefined),
         );
     }
 }

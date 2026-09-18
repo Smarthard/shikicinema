@@ -1,8 +1,10 @@
-import { AsyncPipe, NgTemplateOutlet, UpperCasePipe } from '@angular/common';
+import { NgTemplateOutlet, UpperCasePipe } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
+    Injector,
     ViewEncapsulation,
+    computed,
     inject,
     signal,
 } from '@angular/core';
@@ -18,7 +20,7 @@ import {
     IonText,
     IonToggle,
     IonToolbar,
-} from '@ionic/angular/standalone';
+} from '@ionic/angular';
 import {
     NavigationExtras,
     Router,
@@ -30,10 +32,8 @@ import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 
 import { B64encodePipe } from '@app/shared/pipes/base64/b64encode.pipe';
 import { FiltersButtonComponent } from '@app/core/components/filters-button';
-import { GetShikimoriPagePipe } from '@app/shared/pipes/get-shikimori-page/get-shikimori-page.pipe';
 import { ResultOpenTarget, SearchbarResult } from '@app/shared/types/searchbar.types';
 import { SearchbarResultsComponent } from '@app/core/components/searchbar-results/searchbar-results.component';
-import { ShikimoriAnimeLinkPipe } from '@app/shared/pipes/shikimori-anime-link/shikimori-anime-link.pipe';
 import { UploadButtonComponent } from '@app/core/components/upload-button';
 import { authShikimoriAction, logoutShikimoriAction } from '@app/store/auth/actions/auth.actions';
 import {
@@ -53,13 +53,14 @@ import {
 import { selectTheme } from '@app/store/settings/selectors/settings.selectors';
 import { toBase64 } from '@app/shared/utils/base64-utils';
 import { updateLanguageAction, updateThemeAction } from '@app-root/app/store/settings/actions/settings.actions';
+import { injectShikimoriDomain } from '@app/shared/utils/inject-shikimori-domain.function';
+import { getShikimoriAnimeLink } from '@app/shared/utils/get-shikimori-anime-link.function';
 
 @Component({
     selector: 'app-header',
     templateUrl: './header.component.html',
     styleUrls: ['./header.component.scss'],
     imports: [
-        AsyncPipe,
         IonHeader,
         IonToolbar,
         IonSearchbar,
@@ -75,8 +76,6 @@ import { updateLanguageAction, updateThemeAction } from '@app-root/app/store/set
         UpperCasePipe,
         TranslocoPipe,
         B64encodePipe,
-        ShikimoriAnimeLinkPipe,
-        GetShikimoriPagePipe,
         SearchbarResultsComponent,
         NgTemplateOutlet,
         UploadButtonComponent,
@@ -86,6 +85,7 @@ import { updateLanguageAction, updateThemeAction } from '@app-root/app/store/set
     encapsulation: ViewEncapsulation.None,
 })
 export class HeaderComponent {
+    private readonly injector = inject(Injector);
     private readonly store = inject(Store);
     private readonly router = inject(Router);
     private readonly transloco = inject(TranslocoService);
@@ -109,6 +109,8 @@ export class HeaderComponent {
     readonly isAnimeListPopoverOpen = signal(false);
     readonly isSearchingInCyrillic = signal(false);
 
+    readonly animeLink = computed(() => injectShikimoriDomain(getShikimoriAnimeLink(this.anime()?.id), this.injector));
+
     toShikimoriProfilePage(): void {
         if (this.profileLink()) {
             // TODO: для native-app это не нужно
@@ -124,7 +126,7 @@ export class HeaderComponent {
         this.store.dispatch(logoutShikimoriAction());
     }
 
-    onAnimeSearch(evt): void {
+    onAnimeSearch(evt: CustomEvent): void {
         const searchStr = evt?.detail?.value;
         const action = searchStr ? findAnimeAction({ searchStr }) : resetFoundAnimeAction();
 

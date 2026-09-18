@@ -6,7 +6,7 @@ import {
     effect,
     inject,
 } from '@angular/core';
-import { IonContent, IonModal, Platform } from '@ionic/angular/standalone';
+import { IonContent, IonModal, Platform } from '@ionic/angular';
 import { Store } from '@ngrx/store';
 import { Title } from '@angular/platform-browser';
 import { TranslocoService } from '@jsverse/transloco';

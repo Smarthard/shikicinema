@@ -19,7 +19,7 @@ import {
 } from 'rxjs/operators';
 import { inject } from '@angular/core';
 
-import AuthStoreInterface, { ShikimoriCredentials } from '@app/store/auth/types/auth-store.interface';
+import { AuthStoreInterface, ShikimoriCredentials } from '@app/store/auth/types/auth-store.interface';
 import { PersistenceService } from '@app/shared/services/persistence.service';
 import { ShikimoriClient } from '@app/shared/services/shikimori-client.service';
 import { attachAccessToken } from '@app/shared/utils/attach-access-token.function';
@@ -32,7 +32,7 @@ export const shikimoriApiInterceptor: HttpInterceptorFn = (request, next) => {
     const store = inject(Store);
 
     let isRefreshing = false;
-    let refreshTokenSubject$: BehaviorSubject<string> = null;
+    let refreshTokenSubject$: BehaviorSubject<string>;
 
     function handleUnauthorized(request: HttpRequest<unknown>, next: HttpHandlerFn) {
         if (isRefreshing) {
@@ -46,7 +46,7 @@ export const shikimoriApiInterceptor: HttpInterceptorFn = (request, next) => {
         }
 
         isRefreshing = true;
-        refreshTokenSubject$ = new BehaviorSubject<string>(null);
+        refreshTokenSubject$ = new BehaviorSubject<string>('');
 
         const { shikimoriRefreshToken } = persistenceService.getItem<AuthStoreInterface>('auth');
 
@@ -61,7 +61,7 @@ export const shikimoriApiInterceptor: HttpInterceptorFn = (request, next) => {
             }),
             catchError((err: unknown) => {
                 isRefreshing = false;
-                refreshTokenSubject$.next(null);
+                refreshTokenSubject$.next('');
                 refreshTokenSubject$.complete();
                 store.dispatch(logoutShikimoriAction());
 
@@ -98,11 +98,15 @@ export const shikimoriApiInterceptor: HttpInterceptorFn = (request, next) => {
                 error.status === HttpStatusCode.Unauthorized &&
                 shikimoriBearerToken;
 
+            const isGenericForbiddenReq = error instanceof HttpErrorResponse &&
+                error.status === HttpStatusCode.Forbidden &&
+                shikimoriBearerToken;
+
             const isTokensManuallyDeleted = error instanceof HttpErrorResponse &&
                 error.status === HttpStatusCode.Unauthorized &&
                 !shikimoriBearerToken;
 
-            if (isSendCommentReq || isGenericUnauthorizedReq) {
+            if (isSendCommentReq || isGenericUnauthorizedReq || isGenericForbiddenReq) {
                 return handleUnauthorized(request, next);
             }
 

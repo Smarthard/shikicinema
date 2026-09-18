@@ -65,7 +65,7 @@ export const shikimoriImageLoader = (): ImageLoader => {
         }
 
         const [, system, resource, resolution, resourceId] = path.split('/');
-        const width = getImageWidth(resource, config?.width, resolution);
+        const width = getImageWidth(resource, config?.width ?? 'original', resolution);
 
         return `${domain}/${system}/${resource}/${width}/${resourceId}`;
     };

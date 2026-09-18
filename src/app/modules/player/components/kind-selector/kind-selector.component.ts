@@ -5,7 +5,7 @@ import {
     input,
     output,
 } from '@angular/core';
-import { IonLabel, IonSegment, IonSegmentButton } from '@ionic/angular/standalone';
+import { IonLabel, IonSegment, IonSegmentButton } from '@ionic/angular';
 import { TranslocoPipe } from '@jsverse/transloco';
 
 import { VideoKindEnum } from '@app/modules/player/types/video-kind.enum';

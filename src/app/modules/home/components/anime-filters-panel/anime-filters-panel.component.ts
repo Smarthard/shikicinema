@@ -26,7 +26,7 @@ import {
     IonSearchbar,
     IonSpinner,
     IonToolbar,
-} from '@ionic/angular/standalone';
+} from '@ionic/angular';
 import {
     IonRangeCustomEvent,
     IonSearchbarCustomEvent,

@@ -23,12 +23,12 @@ export class GetAnimeReleaseDatePipe implements PipeTransform {
     readonly allRates$ = combineLatest([this.recent$, this.rates$])
         .pipe(map(([recent, rates]) => [...recent, ...rates]));
 
-    transform(animeId: ResourceIdType): Observable<string> {
+    transform(animeId: ResourceIdType): Observable<string | undefined> {
         return this.allRates$.pipe(map((rates) => {
             const rate = rates?.find(({ anime }) => anime?.id === animeId);
             const date = rate?.anime?.aired_on || rate?.anime?.released_on;
 
-            return date ? new Date(date)?.toISOString() : null;
+            return date ? new Date(date)?.toISOString() : undefined;
         }));
     }
 }

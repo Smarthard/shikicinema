@@ -8,7 +8,6 @@ interface HumanReadableLongNumber {
 
 export function longNumberToHumanReadable(number: number): HumanReadableLongNumber {
     let suffix = ReadableNumberSuffixes.NONE;
-    let value = 0;
 
     if (number === 0) {
         return {
@@ -19,7 +18,7 @@ export function longNumberToHumanReadable(number: number): HumanReadableLongNumb
 
     const powerOfThousands = Math.floor(Math.log(Math.abs(number)) / Math.log(1000));
 
-    value = Math.floor(number / Math.pow(1000, powerOfThousands));
+    const value = Math.floor(number / Math.pow(1000, powerOfThousands));
     suffix = humanPowersOfThousandsMap.get(powerOfThousands) || ReadableNumberSuffixes.NONE;
 
     return {

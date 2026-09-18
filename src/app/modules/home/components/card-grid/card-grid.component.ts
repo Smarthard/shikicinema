@@ -54,7 +54,7 @@ export class CardGridComponent {
     readonly trackById = trackById;
 
     readonly isSupportsAvif = toSignal(inject(IS_SUPPORTS_AVIF));
-    readonly currentLang = toSignal(this._transloco.langChanges$);
+    readonly currentLang = toSignal(this._transloco.langChanges$, { initialValue: this._transloco.getDefaultLang() });
 
     // TODO: добавить подключение настройки для экономия трафика
     readonly isHiRes = signal(true);

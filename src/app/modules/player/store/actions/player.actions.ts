@@ -64,7 +64,7 @@ export const getUserRateAction = createAction(
 
 export const getUserRateSuccessAction = createAction(
     '[Player] get user rate by id success',
-    props<{ userRate: UserAnimeRate, animeId: ResourceIdType }>(),
+    props<{ userRate: UserAnimeRate | null, animeId: ResourceIdType }>(),
 );
 
 export const getUserRateFailureAction = createAction(

@@ -7,6 +7,6 @@ export function getMaxEpisodeFromVideos(videos: VideoInfoInterface[]): number {
     ].sort(byDesc);
 
     return episodes.length > 0
-        ? episodes.at(0)
+        ? episodes?.[0]
         : -1;
 }

@@ -12,7 +12,7 @@ import {
     IonIcon,
     IonItem,
     IonLabel,
-} from '@ionic/angular/standalone';
+} from '@ionic/angular';
 import { NgxTippyModule } from 'ngx-tippy-wrapper';
 import { TranslocoService } from '@jsverse/transloco';
 import { UpperCasePipe } from '@angular/common';
@@ -59,7 +59,7 @@ export class VideoSelectorItemComponent {
     );
 
     author = input.required<string>();
-    selected = input.required<VideoInfoInterface>();
+    selected = input<VideoInfoInterface>();
     videos = input.required<VideoInfoInterface[]>();
     kindDisplayMode = input.required<PlayerKindDisplayMode>();
     isAvailableForAllEpisodes = input<boolean>();

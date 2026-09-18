@@ -15,7 +15,7 @@ import {
     IonGrid,
     IonRow,
     IonText,
-} from '@ionic/angular/standalone';
+} from '@ionic/angular';
 import {
     Observable,
     debounceTime,
@@ -77,9 +77,9 @@ export class ContributionsPage implements OnInit {
     readonly trackById = trackById;
     readonly shikimoriDomain = this.store.selectSignal(selectShikimoriDomain);
 
-    uploaderName$: Observable<string>;
-    uploaderId$: Observable<ResourceIdType>;
-    contributions$: Observable<ShikivideosInterface[]>;
+    uploaderName$!: Observable<string>;
+    uploaderId$!: Observable<ResourceIdType | null>;
+    contributions$!: Observable<ShikivideosInterface[]>;
 
     ngOnInit(): void {
         this.uploaderId$ = this.store.select(selectUploaderId);

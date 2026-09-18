@@ -12,9 +12,9 @@ export const skipWatchedEpisodesGuard: CanActivateChildFn = (route) => {
     const animeId = route.paramMap.get('animeId');
     const hasEpisode = !!route.paramMap.get('episode');
 
-    if (hasEpisode) {
+    if (hasEpisode && animeId) {
         return true;
-    } else {
+    } else if (animeId) {
         const store = inject(Store);
         const router = inject(Router);
 
@@ -26,4 +26,6 @@ export const skipWatchedEpisodesGuard: CanActivateChildFn = (route) => {
             map((episode) => router.createUrlTree(['/player', animeId, episode])),
         );
     }
+
+    return false;
 };

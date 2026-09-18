@@ -4,7 +4,7 @@ import {
     ofType,
 } from '@ngrx/effects';
 import { Injectable, inject } from '@angular/core';
-import { ToastController } from '@ionic/angular/standalone';
+import { ToastController } from '@ionic/angular';
 import { TranslocoService } from '@jsverse/transloco';
 import {
     catchError,

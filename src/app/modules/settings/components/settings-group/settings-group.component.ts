@@ -1,11 +1,10 @@
 import {
     ChangeDetectionStrategy,
     Component,
-    HostBinding,
-    Input,
+    input,
     ViewEncapsulation,
 } from '@angular/core';
-import { IonIcon } from '@ionic/angular/standalone';
+import { IonIcon } from '@ionic/angular';
 
 @Component({
     selector: 'app-settings-group',
@@ -17,14 +16,12 @@ import { IonIcon } from '@ionic/angular/standalone';
     styleUrl: './settings-group.component.scss',
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        class: 'settings-group',
+    }
 })
 export class SettingsGroupComponent {
-    @HostBinding('class.settings-group')
-    protected settingsGroupClass = true;
+    title = input.required<string>();
 
-    @Input({ required: true })
-    title: string;
-
-    @Input({ required: false })
-    icon: string;
+    icon = input<string>();
 }

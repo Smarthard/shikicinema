@@ -8,7 +8,7 @@ import { toBase64 } from '@app/shared/utils/base64-utils';
     standalone: true,
 })
 export class B64encodePipe implements PipeTransform {
-    transform(value: string): unknown {
+    transform(value?: string | null): unknown {
         return toBase64(value);
     }
 }

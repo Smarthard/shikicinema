@@ -17,11 +17,11 @@ export class SwipeDirective {
     swipeCoord = [0, 0];
     swipeTime = new Date().getTime();
 
-    @HostListener('touchstart', ['$event']) onSwipeStart($event) {
+    @HostListener('touchstart', ['$event']) onSwipeStart($event: any) {
         this.onSwipe($event, 'start');
     }
 
-    @HostListener('touchend', ['$event']) onSwipeEnd($event) {
+    @HostListener('touchend', ['$event']) onSwipeEnd($event: any) {
         this.onSwipe($event, 'end');
     }
 

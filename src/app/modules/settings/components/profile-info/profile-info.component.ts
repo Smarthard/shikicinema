@@ -1,13 +1,11 @@
 import {
     ChangeDetectionStrategy,
     Component,
-    EventEmitter,
-    HostBinding,
-    Input,
-    Output,
+    input,
+    output,
     ViewEncapsulation,
 } from '@angular/core';
-import { IonButton, IonIcon } from '@ionic/angular/standalone';
+import { IonButton, IonIcon } from '@ionic/angular';
 
 import { TranslocoPipe } from '@jsverse/transloco';
 
@@ -23,29 +21,17 @@ import { TranslocoPipe } from '@jsverse/transloco';
     styleUrl: './profile-info.component.scss',
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        class: 'profile-info',
+    }
 })
 export class ProfileInfoComponent {
-    @HostBinding('class.profile-info')
-    protected settingsPageClass = true;
+    serviceName = input<string>();
+    serviceIcon = input<string>();
+    isAuthorized = input<boolean>();
+    avatar = input<string>();
+    nickname = input<string>();
 
-    @Input()
-    serviceName: string;
-
-    @Input()
-    serviceIcon: string;
-
-    @Input()
-    isAuthorized: boolean;
-
-    @Input()
-    avatar: string;
-
-    @Input()
-    nickname: string;
-
-    @Output()
-    login = new EventEmitter<void>();
-
-    @Output()
-    logout = new EventEmitter<void>();
+    login = output<void>();
+    logout = output<void>();
 }

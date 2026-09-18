@@ -11,7 +11,7 @@ import {
     IonItem,
     IonList,
     IonText,
-} from '@ionic/angular/standalone';
+} from '@ionic/angular';
 
 @Component({
     selector: 'app-modify-actions-popover',

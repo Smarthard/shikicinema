@@ -1,6 +1,5 @@
 import { createAction, props } from '@ngrx/store';
 
-import { ResourceIdType } from '@app/shared/types';
 import { SettingsStoreInterface } from '@app/store/settings/types/settings-store.interface';
 import { VideoKindEnum } from '@app/modules/player/types/video-kind.enum';
 
@@ -12,7 +11,7 @@ export const updateSettingsAction = createAction(
 
 export const updatePlayerPreferencesAction = createAction(
     '[Settings] Update user preferences',
-    props<{ animeId: ResourceIdType, author: string, kind: VideoKindEnum, domain: string }>(),
+    props<{ animeId: number | string, author: string, kind: VideoKindEnum, domain: string }>(),
 );
 
 export const resetSettingsAction = createAction(

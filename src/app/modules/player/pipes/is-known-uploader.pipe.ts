@@ -8,7 +8,7 @@ import { isWellKnownUploader } from '@app/modules/player/utils';
     standalone: true,
 })
 export class isWellKnownUploaderPipe implements PipeTransform {
-    transform(uploaderId: UploaderIdType): boolean {
+    transform(uploaderId?: UploaderIdType): boolean {
         return isWellKnownUploader(uploaderId);
     }
 }

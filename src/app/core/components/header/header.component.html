@@ -112,7 +112,7 @@
                     color="primary"
                     [routerLink]="[ '/external' ]"
                     [queryParams]="{
-                        link: (anime().id | shikimoriAnimeLink | getShikimoriPage | async | b64encode),
+                        link: animeLink() | b64encode,
                         target: '_self',
                     }"
                     [disabled]="!anime()?.id"
@@ -231,14 +231,14 @@
     #noUserMenuTemplate
 >
     <ion-content>
-        <ion-list> 
+        <ion-list>
             @if (isPlayerPage()) {
                 <ion-item
                     class="menu-item"
                     color="primary"
                     [routerLink]="[ '/external' ]"
                     [queryParams]="{
-                        link: (anime().id | shikimoriAnimeLink | getShikimoriPage | async | b64encode),
+                        link: animeLink() | b64encode,
                         target: '_self',
                     }"
                     [disabled]="!anime()?.id"
