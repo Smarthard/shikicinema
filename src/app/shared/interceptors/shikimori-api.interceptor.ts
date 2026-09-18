@@ -98,11 +98,15 @@ export const shikimoriApiInterceptor: HttpInterceptorFn = (request, next) => {
                 error.status === HttpStatusCode.Unauthorized &&
                 shikimoriBearerToken;
 
+            const isGenericForbiddenReq = error instanceof HttpErrorResponse &&
+                error.status === HttpStatusCode.Forbidden &&
+                shikimoriBearerToken;
+
             const isTokensManuallyDeleted = error instanceof HttpErrorResponse &&
                 error.status === HttpStatusCode.Unauthorized &&
                 !shikimoriBearerToken;
 
-            if (isSendCommentReq || isGenericUnauthorizedReq) {
+            if (isSendCommentReq || isGenericUnauthorizedReq || isGenericForbiddenReq) {
                 return handleUnauthorized(request, next);
             }
 
