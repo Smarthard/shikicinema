@@ -10,7 +10,7 @@ export function cleanAuthorName(author?: PreferencesValueType<string | null>, de
     if (typeof author === 'string') {
         const [, resolvedAuthor] = /(.*?)(\s\(.*\))?$/.exec(author) ?? [];
 
-        return resolvedAuthor ?? author;
+        return resolvedAuthor ?? author ?? defaultAuthor;
     } else {
         return defaultAuthor;
     }

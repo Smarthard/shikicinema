@@ -2,6 +2,7 @@ import {
     ChangeDetectionStrategy,
     Component,
     ViewEncapsulation,
+    computed,
     inject,
     input,
     output,
@@ -21,11 +22,10 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { GetColorForSelectablePipe } from '@app/shared/pipes/get-color-for-selectable/get-color-for-selectable.pipe';
 import { GetUrlDomainPipe } from '@app/shared/pipes/get-url-domain/get-url-domain.pipe';
 import { HasQualitiesPipe } from '@app/modules/player/pipes/has-qualities.pipe';
-import { IsSameAuthorPipe } from '@app/shared/pipes/is-same-author/is-same-author.pipe';
-import { IsSameVideoPipe } from '@app/shared/pipes/is-same-video/is-same-video.pipe';
 import { PlayerKindDisplayMode } from '@app/store/settings/types';
 import { SortByDomainPipe } from '@app/shared/pipes/sort-by-domain/sort-by-domain.pipe';
-import { VideoInfoInterface, VideoQualityEnum } from '@app/modules/player/types';
+import { VideoInfoInterface, VideoKindEnum, VideoQualityEnum } from '@app/modules/player/types';
+import { cleanAuthorName } from '@app/shared/utils/clean-author-name.function';
 
 @Component({
     selector: 'app-video-selector-item',
@@ -37,8 +37,6 @@ import { VideoInfoInterface, VideoQualityEnum } from '@app/modules/player/types'
         IonIcon,
         GetUrlDomainPipe,
         GetColorForSelectablePipe,
-        IsSameAuthorPipe,
-        IsSameVideoPipe,
         SortByDomainPipe,
         HasQualitiesPipe,
         UpperCasePipe,
@@ -59,9 +57,11 @@ export class VideoSelectorItemComponent {
     );
 
     author = input.required<string>();
-    selected = input<VideoInfoInterface>();
     videos = input.required<VideoInfoInterface[]>();
     kindDisplayMode = input.required<PlayerKindDisplayMode>();
+    kind = input.required<VideoKindEnum>();
+
+    selected = input<VideoInfoInterface>();
     isAvailableForAllEpisodes = input<boolean>();
     defaultAuthorName = input<string>();
 
@@ -71,5 +71,20 @@ export class VideoSelectorItemComponent {
     onOpenVideoInOtherTab(video: VideoInfoInterface): void {
         // TODO: заменить логику для native-app
         window.open(video.url);
+    }
+
+    isSameAuthor = computed(() => {
+        const defaultAuthor = this.defaultAuthorName();
+        const normalizedSelectedAuthor = cleanAuthorName(this.selected()?.author, defaultAuthor);
+        const normalizedAuthor = cleanAuthorName(this.author(), defaultAuthor);
+
+        const isMatchKind = this.selected()?.kind === this.kind();
+        const isMatchAuthor = normalizedSelectedAuthor === normalizedAuthor;
+
+        return isMatchKind && isMatchAuthor;
+    })
+
+    isSameUrl(url: string): boolean {
+        return this.selected()?.url === url;
     }
 }

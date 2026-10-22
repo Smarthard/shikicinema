@@ -11,6 +11,7 @@
                 [defaultAuthorName]="defaultAuthorName()"
                 [kindDisplayMode]="kindDisplayMode()"
                 [selected]="selected()"
+                [kind]="kind()"
                 [videos]="videos() | filterByAuthor: author: defaultAuthorName()"
                 [isAvailableForAllEpisodes]="!(warnAvailability() | includes: author)"
                 (toggleOpen)="onAuthorSectionToggle($event)"
