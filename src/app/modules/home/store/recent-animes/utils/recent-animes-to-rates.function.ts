@@ -1,5 +1,5 @@
 import { AnimeCacheType } from '@app/store/cache/types';
-import { RecentAnimePages } from '@app/store/settings/types';
+import { RecentAnimePages } from '@app/modules/home/store/recent-animes/types';
 import { UserAnimeRate } from '@app/shared/types/shikimori';
 import { animeToUserAnimeRate } from '@app/modules/home/store/recent-animes/utils/anime-to-user-anime-rate.function';
 

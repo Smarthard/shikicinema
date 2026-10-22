@@ -12,7 +12,7 @@ export interface VideoInfoInterface {
     urlType: 'iframe' | 'video';
     uploader?: UploaderIdType;
     kind: VideoKindEnum;
-    author?: string;
+    author?: string | null;
     quality: VideoQualityEnum;
     language: string;
 }

@@ -4,9 +4,8 @@ import { DEFAULT_ANIME_STATUS_ORDER } from '@app/shared/config/default-anime-sta
 import { ExtendedUserRateStatusType } from '@app/modules/home/types';
 import { ResourceIdType } from '@app/shared/types/resource-id.type';
 import { SettingsStoreInterface } from '@app/store/settings/types';
-import { cleanAuthorName } from '@app/shared/utils/clean-author-name.function';
-import { getMostPopularPreference } from '@app/shared/utils/get-most-popular-preference.function';
-import { mapPreferenceValue } from '@app/shared/utils/map-preference-value.function';
+import { getMostFrequentPreference } from '@app/shared/utils/get-most-frequent-preference.function';
+import { VideoKindEnum } from '@app/modules/player/types';
 
 export const selectSettings = createFeatureSelector<SettingsStoreInterface>('settings');
 
@@ -20,40 +19,49 @@ export const selectAvailableLanguages = createSelector(
     (state) => state.availableLangs,
 );
 
-export const selectAuthorPreferences = createSelector(
+export const selectPlayerPreferences = createSelector(
     selectSettings,
-    (state) => state.authorPreferences,
+    ({ playerPreferences }) => playerPreferences,
+);
+
+export const selectAllPlayerPreferences = createSelector(
+    selectPlayerPreferences,
+    (preferences) => Object.values(preferences ?? {})?.flat() ?? [],
+);
+
+export const selectPreferencesByAnimeId = (animeId: ResourceIdType) => createSelector( 
+    selectPlayerPreferences,
+    (preferences) => preferences?.[animeId]
 );
 
 export const selectAuthorPreferencesByAnime = (animeId: ResourceIdType) => createSelector(
-    selectAuthorPreferences,
-    (authorPreferences) => mapPreferenceValue(
-        authorPreferences[animeId] ?? getMostPopularPreference(authorPreferences, cleanAuthorName),
-    ),
-);
+    selectPreferencesByAnimeId(animeId),
+    selectAllPlayerPreferences,
+    (animePrefs, allPrefs) => {
+        const preferences = (animePrefs?.length ? animePrefs : allPrefs) ?? [];
 
-export const selectKindPreferences = createSelector(
-    selectSettings,
-    (state) => state.kindPreferences,
+        return getMostFrequentPreference<string>(preferences, 'author');
+    },
 );
 
 export const selectKindPreferencesByAnime = (animeId: ResourceIdType) => createSelector(
-    selectKindPreferences,
-    (kindPreferences) => mapPreferenceValue(
-        kindPreferences[animeId] ?? getMostPopularPreference(kindPreferences),
-    ),
-);
+    selectPreferencesByAnimeId(animeId),
+    selectAllPlayerPreferences,
+    (animePrefs, allPrefs) => {
+        const preferences = (animePrefs?.length ? animePrefs : allPrefs) ?? [];
 
-export const selectDomainPreferences = createSelector(
-    selectSettings,
-    (state) => state.domainPreferences,
+        return getMostFrequentPreference<VideoKindEnum>(preferences, 'kind');
+    },
 );
 
 export const selectDomainPreferencesByAnime = (animeId: ResourceIdType) => createSelector(
-    selectDomainPreferences,
-    (domainPreferences) => mapPreferenceValue(
-        domainPreferences[animeId] ?? getMostPopularPreference(domainPreferences),
-    ),
+    selectPreferencesByAnimeId(animeId),
+    selectAllPlayerPreferences,
+    (animePrefs, allPrefs) => {
+        const preferences = (animePrefs?.length ? animePrefs : allPrefs) ?? [];
+
+        return getMostFrequentPreference<string>(preferences, 'domain');
+    },
 );
 
 export const selectTheme = createSelector(

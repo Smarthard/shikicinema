@@ -1,15 +1,16 @@
+import { intersectionWith, isEqual } from 'lodash-es';
+
 import { NoPreferenceSymbol, PreferencesValueType } from '@app/store/settings/types';
-import { VideoInfoInterface } from '@app/modules/player/types';
+import { VideoInfoInterface, VideoKindEnum } from '@app/modules/player/types';
 import { cleanAuthorName } from '@app/shared/utils/clean-author-name.function';
 import { getDomain } from '@app/shared/utils/get-domain.function';
-import { intersection } from '@app/shared/utils/intersection.function';
 
 
 export function filterVideosByPreferences(
     videos: VideoInfoInterface[] | null,
     favAuthor: PreferencesValueType<string>,
     favDomain: PreferencesValueType<string>,
-    favKind: PreferencesValueType<string>,
+    favKind: PreferencesValueType<VideoKindEnum>,
 ): VideoInfoInterface[] | null {
     if (!videos) {
         return null;
@@ -28,14 +29,14 @@ export function filterVideosByPreferences(
     const byKind = videos.filter(({ kind }) => hasPreferences ? kind === favKind : false);
 
     // ищем пересечения (от лучшего к худшему по релевантности)
-    const bingo = intersection(byAuthor, byDomain, byKind);
+    const bingo = intersectionWith(byAuthor, byDomain, byKind, isEqual);
 
     if (bingo.length > 0) {
         return bingo;
     }
 
-    const sameAuthorKind = intersection(byAuthor, byKind);
-    const sameDomainKind = intersection(byDomain, byKind);
+    const sameAuthorKind = intersectionWith(byAuthor, byKind, isEqual);
+    const sameDomainKind = intersectionWith(byDomain, byKind, isEqual);
 
     switch (true) {
         case sameAuthorKind.length > 0: return sameAuthorKind;

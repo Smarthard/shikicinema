@@ -27,6 +27,7 @@ import {
     uploadVideoFailureAction,
     uploadVideoSuccessAction,
 } from '@app/store/shikicinema/actions/upload-video.action';
+import { VideoSourceEnum } from '@app/shared/types/video-source.enum';
 
 @Injectable()
 export class ShikicinemaEffects {
@@ -53,7 +54,11 @@ export class ShikicinemaEffects {
 
     uploadVideoSuccess$ = createEffect(() => this._actions$.pipe(
         ofType(uploadVideoSuccessAction),
-        map(({ video }) => addVideosAction({ animeId: `${video.anime_id}`, videos: [shikicinemaToVideo(video)] })),
+        map(({ video }) => addVideosAction({
+            animeId: `${video.anime_id}`,
+            videos: [shikicinemaToVideo(video)],
+            source: VideoSourceEnum.SHIKICINEMA,
+        })),
     ));
 
     getUploadTokenFailure$ = createEffect(() => this._actions$.pipe(

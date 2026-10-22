@@ -8,12 +8,13 @@ import { ShikimoriFranchise } from '@app/shared/types/shikimori';
 import { Topic } from '@app/shared/types/shikimori/topic';
 import { UserAnimeRate } from '@app/shared/types/shikimori/user-anime-rate';
 import { VideoInfoInterface } from '@app/modules/player/types';
+import { VideoSourceEnum } from '@app/shared/types/video-source.enum';
 
 // TODO: это надо распилить на разные файлы
 
 export const addVideosAction = createAction(
     '[Player] Add videos',
-    props<{ animeId: string, videos: VideoInfoInterface[] }>(),
+    props<{ animeId: string, source: VideoSourceEnum, videos: VideoInfoInterface[] }>(),
 );
 
 export const findVideosAction = createAction(

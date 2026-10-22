@@ -27,6 +27,7 @@ import { filterDuplicatedIds } from '@app/shared/utils/filter-duplicated-ids.fun
 const initialState: PlayerStoreInterface = {
     currentAnimeId: undefined,
     currentEpisode: undefined,
+    sources: {},
     videos: {},
     animeInfo: {},
     comments: {},
@@ -50,8 +51,15 @@ export const playerReducer = createReducer(initialState,
     ),
     on(
         addVideosAction,
-        (state, { animeId, videos }) => ({
+        (state, { animeId, videos, source }) => ({
             ...state,
+            sources: {
+                ...state.sources,
+                [animeId]: {
+                    ...state.sources?.[animeId],
+                    [source]: false,
+                }
+            },
             videos: {
                 ...state.videos,
                 [animeId]: [...state.videos[animeId] || [], ...videos],

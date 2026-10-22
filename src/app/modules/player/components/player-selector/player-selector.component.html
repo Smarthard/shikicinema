@@ -12,6 +12,6 @@
     [kindDisplayMode]="playerKindDisplayMode()"
     [warnAvailability]="availability()"
     [hasUnfilteredVideos]="hasUnfilteredVideos()"
-    (selection)="onVideoChange($event)"
+    (selection)="onVideoChange($event, true)"
     (disableFilters)="onDisableDomainFilters()"
 />

@@ -2,20 +2,24 @@ import { AnimeBriefInfoInterface } from '@app/shared/types/shikimori/anime-brief
 import { EpisodeCommentsInterface, VideoInfoInterface } from '@app/modules/player/types';
 import { ResourceIdType } from '@app/shared/types';
 import { ShikimoriFranchise } from '@app/shared/types/shikimori';
+import { SourceLoadingStatusInterface } from '@app/modules/player/store/types/sources-loading-status.type';
 
 export interface PlayerStoreInterface {
     currentAnimeId?: ResourceIdType;
     currentEpisode?: number;
+    sources: {
+        [animeId: ResourceIdType]: SourceLoadingStatusInterface;
+    }
     videos: {
-        [animeId: string]: VideoInfoInterface[];
+        [animeId: ResourceIdType]: VideoInfoInterface[];
     };
     animeInfo: {
-        [animeId: string]: AnimeBriefInfoInterface;
+        [animeId: ResourceIdType]: AnimeBriefInfoInterface;
     };
     comments: {
-        [animeId: string]: EpisodeCommentsInterface;
+        [animeId: ResourceIdType]: EpisodeCommentsInterface;
     };
     franchise: {
-        [animeId: string]: ShikimoriFranchise[];
+        [animeId: ResourceIdType]: ShikimoriFranchise[];
     };
 }

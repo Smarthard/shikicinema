@@ -13,7 +13,7 @@ export const selectPlayerVideos = (animeId: ResourceIdType) => createSelector(
 
 export const selectPlayerVideosLoading = (animeId: ResourceIdType) => createSelector(
     selectPlayer,
-    ({ videos }) => !videos[animeId],
+    ({ sources }) => sources?.[animeId]?.kodik || sources?.[animeId]?.shikicinema,
 );
 
 export const selectPlayerAnime = (animeId: ResourceIdType) => createSelector(
