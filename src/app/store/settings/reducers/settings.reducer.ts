@@ -12,10 +12,8 @@ import {
     updateThemeAction,
     visitPageAction,
 } from '@app/store/settings/actions/settings.actions';
-import { PlayerPreferenceEntry } from '@app/store/settings/types';
-import { getDomain } from '@app/shared/utils/get-domain.function';
-
-const MAX_PREFERENCES = 20;
+import { upsertPreference } from '@app/store/settings/utils/upsert-preference.function';
+import { mapVideoToPreference } from '@app/store/settings/utils/map-video-to-preference.function';
 
 const initialState: SettingsStoreInterface = {
     language: '',
@@ -48,42 +46,14 @@ const reducer = createReducer(
     on(
         updatePlayerPreferencesAction,
         (state, { animeId, video }) => {
-            const { url, kind, author } = video;
-            const domain = getDomain(url);
-            const allAnimePrefs = state.playerPreferences[animeId] ?? [];
-
-            const index = allAnimePrefs.findIndex(
-                (rec) => rec.author === author &&
-                       rec.kind === kind &&
-                       rec.domain === domain,
-            );
-            const oldPref = index >= 0 ? allAnimePrefs?.[index] : null;
-
-            let newEntries: PlayerPreferenceEntry[];
-
-            if (oldPref) {
-                newEntries = allAnimePrefs.map((p) =>
-                    p === oldPref
-                        ? { ...oldPref, watches: oldPref.watches + 1, lastWatchedAt: Date.now() }
-                        : p,
-                );
-            } else {
-                const newEntry: PlayerPreferenceEntry = {
-                    author,
-                    kind,
-                    domain,
-                    watches: 1,
-                    lastWatchedAt: Date.now(),
-                };
-
-                newEntries = [newEntry, ...allAnimePrefs].slice(0, MAX_PREFERENCES);
-            }
-
             return {
                 ...state,
                 playerPreferences: {
                     ...state.playerPreferences,
-                    [animeId]: newEntries,
+                    [animeId]: upsertPreference(
+                        state.playerPreferences[animeId] ?? [],
+                        mapVideoToPreference(video),
+                    ),
                 },
             };
         },
