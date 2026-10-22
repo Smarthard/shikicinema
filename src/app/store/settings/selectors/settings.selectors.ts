@@ -3,7 +3,7 @@ import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { DEFAULT_ANIME_STATUS_ORDER } from '@app/shared/config/default-anime-status-order.config';
 import { ExtendedUserRateStatusType } from '@app/modules/home/types';
 import { ResourceIdType } from '@app/shared/types/resource-id.type';
-import { SettingsStoreInterface } from '@app/store/settings/types';
+import { PreferencesValueType, SettingsStoreInterface } from '@app/store/settings/types';
 import { getMostFrequentPreference } from '@app/shared/utils/get-most-frequent-preference.function';
 import { VideoKindEnum } from '@app/modules/player/types';
 
@@ -38,9 +38,10 @@ export const selectAuthorPreferencesByAnime = (animeId: ResourceIdType) => creat
     selectPreferencesByAnimeId(animeId),
     selectAllPlayerPreferences,
     (animePrefs, allPrefs) => {
+        const latest = animePrefs?.[0]?.author as PreferencesValueType<string>;
         const preferences = (animePrefs?.length ? animePrefs : allPrefs) ?? [];
 
-        return getMostFrequentPreference<string>(preferences, 'author');
+        return latest ?? getMostFrequentPreference<string>(preferences, 'author');
     },
 );
 
@@ -48,19 +49,21 @@ export const selectKindPreferencesByAnime = (animeId: ResourceIdType) => createS
     selectPreferencesByAnimeId(animeId),
     selectAllPlayerPreferences,
     (animePrefs, allPrefs) => {
+        const latest = animePrefs?.[0]?.kind as PreferencesValueType<VideoKindEnum>;
         const preferences = (animePrefs?.length ? animePrefs : allPrefs) ?? [];
 
-        return getMostFrequentPreference<VideoKindEnum>(preferences, 'kind');
+        return latest ?? getMostFrequentPreference<VideoKindEnum>(preferences, 'kind');
     },
 );
 
-export const selectDomainPreferencesByAnime = (animeId: ResourceIdType) => createSelector(
+export const selectDomainPreferencesByAnime  = (animeId: ResourceIdType) => createSelector(
     selectPreferencesByAnimeId(animeId),
     selectAllPlayerPreferences,
     (animePrefs, allPrefs) => {
+        const latest = animePrefs?.[0]?.domain as PreferencesValueType<string>;
         const preferences = (animePrefs?.length ? animePrefs : allPrefs) ?? [];
 
-        return getMostFrequentPreference<string>(preferences, 'domain');
+        return latest ?? getMostFrequentPreference<string>(preferences, 'domain');
     },
 );
 
