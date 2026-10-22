@@ -12,6 +12,8 @@ import {
     updateThemeAction,
     visitPageAction,
 } from '@app/store/settings/actions/settings.actions';
+import { upsertPreference } from '@app/store/settings/utils/upsert-preference.function';
+import { mapVideoToPreference } from '@app/store/settings/utils/map-video-to-preference.function';
 
 const initialState: SettingsStoreInterface = {
     language: '',
@@ -21,9 +23,7 @@ const initialState: SettingsStoreInterface = {
     playerMode: 'compact',
     playerKindDisplayMode: 'special-only',
     availableLangs: defaultAvailableLangs,
-    authorPreferences: {},
-    kindPreferences: {},
-    domainPreferences: {},
+    playerPreferences: {},
     lastPage: '/home',
     useCustomAnimeStatusOrder: false,
     userAnimeStatusOrder: DEFAULT_ANIME_STATUS_ORDER,
@@ -45,21 +45,18 @@ const reducer = createReducer(
     ),
     on(
         updatePlayerPreferencesAction,
-        (state, { animeId, author, kind, domain }) => ({
-            ...state,
-            authorPreferences: {
-                ...state.authorPreferences,
-                [animeId]: author,
-            },
-            kindPreferences: {
-                ...state.kindPreferences,
-                [animeId]: kind,
-            },
-            domainPreferences: {
-                ...state.domainPreferences,
-                [animeId]: domain,
-            },
-        }),
+        (state, { animeId, video }) => {
+            return {
+                ...state,
+                playerPreferences: {
+                    ...state.playerPreferences,
+                    [animeId]: upsertPreference(
+                        state.playerPreferences[animeId] ?? [],
+                        mapVideoToPreference(video),
+                    ),
+                },
+            };
+        },
     ),
     on(
         updateThemeAction,

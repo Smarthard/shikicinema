@@ -62,7 +62,6 @@ import {
     watchAnimeSuccessAction,
 } from '@app/modules/player/store/actions';
 import { getAnimeName } from '@app/shared/utils/get-anime-name.function';
-import { getDomain } from '@app/shared/utils/get-domain.function';
 import {
     getLastAiredEpisode,
     getMaxEpisode,
@@ -247,14 +246,11 @@ export class PlayerPage implements OnInit {
     }
 
     private updateUserPreferences(): void {
-        const currentVideo = this.currentVideo();
+        const video = this.currentVideo();
         const anime = this.anime();
 
-        if (currentVideo && anime && currentVideo.author) {
-            const { author, kind, url } = currentVideo;
-            const domain = getDomain(url);
-
-            this.store.dispatch(updatePlayerPreferencesAction({ animeId: anime.id, author, kind, domain }));
+        if (video && anime) {
+            this.store.dispatch(updatePlayerPreferencesAction({ animeId: anime.id, video }));
         }
     }
 

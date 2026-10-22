@@ -67,6 +67,7 @@ import { selectShikimoriCurrentUser } from '@app/store/shikimori/selectors/shiki
 import { shikicinemaVideoMapper } from '@app/shared/types/shikicinema/v1';
 import { toVideoInfo } from '@app/shared/rxjs';
 import { visitAnimePageAction } from '@app/modules/home/store/recent-animes';
+import { VideoSourceEnum } from '@app/shared/types/video-source.enum';
 
 
 @Injectable()
@@ -85,11 +86,15 @@ export class PlayerEffects {
         filter(([, videos]) => !videos?.length),
         switchMap(
             ([{ animeId }]) => merge(
-                this.shikivideos.findAnimes(animeId).pipe(toVideoInfo(shikicinemaVideoMapper)),
-                this.kodik.findAnimes(animeId).pipe(toVideoInfo(kodikVideoMapper)),
-            ).pipe(
-                /* accumulating videos into storage */
-                map((videos) => addVideosAction({ animeId, videos })),
+                this.shikivideos.findAnimes(animeId).pipe(
+                    toVideoInfo(shikicinemaVideoMapper),
+                    map((videos) => addVideosAction({ animeId, videos, source: VideoSourceEnum.SHIKICINEMA })),
+                ),
+
+                this.kodik.findAnimes(animeId).pipe(
+                    toVideoInfo(kodikVideoMapper),
+                    map((videos) => addVideosAction({ animeId, videos, source: VideoSourceEnum.KODIK })),
+                ),
             ),
         ),
     ));

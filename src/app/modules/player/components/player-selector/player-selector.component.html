@@ -8,10 +8,11 @@
 <app-video-selector
     class="player-selector__video-selector"
     [videos]="episodeVideos() | filterByKind: kind()"
+    [kind]="kind()"
     [selected]="selectedVideo()"
     [kindDisplayMode]="playerKindDisplayMode()"
     [warnAvailability]="availability()"
     [hasUnfilteredVideos]="hasUnfilteredVideos()"
-    (selection)="onVideoChange($event)"
+    (selection)="onVideoChange($event, true)"
     (disableFilters)="onDisableDomainFilters()"
 />

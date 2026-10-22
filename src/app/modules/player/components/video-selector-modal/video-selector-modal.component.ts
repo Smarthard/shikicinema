@@ -21,7 +21,6 @@ import { TranslocoPipe } from '@jsverse/transloco';
 import { PlayerSelectorComponent } from '@app/modules/player/components/player-selector';
 import { ResourceIdType } from '@app/shared/types';
 import { VideoInfoInterface, VideoKindEnum } from '@app/modules/player/types';
-import { getDomain } from '@app/shared/utils/get-domain.function';
 import { updatePlayerPreferencesAction } from '@app/store/settings/actions/settings.actions';
 
 @Component({
@@ -61,14 +60,12 @@ export class VideoSelectorModalComponent extends IonModal {
     public videos!: Signal<VideoInfoInterface[]>;
 
     private updateUserPreferences(): void {
-        const currentVideo = this.selectedVideo();
+        const video = this.selectedVideo();
 
-        if (currentVideo) {
+        if (video) {
             const animeId = this.animeId();
-            const { author, kind, url } = currentVideo;
-            const domain = getDomain(url);
 
-            this.store.dispatch(updatePlayerPreferencesAction({ animeId, author: author ?? '', kind, domain }));
+            this.store.dispatch(updatePlayerPreferencesAction({ animeId, video }));
         }
     }
 

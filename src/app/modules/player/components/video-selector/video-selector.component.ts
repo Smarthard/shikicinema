@@ -22,7 +22,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { FilterByAuthorPipe } from '@app/shared/pipes/filter-by-author/filter-by-author.pipe';
 import { IncludesPipe } from '@app/shared/pipes/includes/includes.pipe';
 import { PlayerKindDisplayMode } from '@app/store/settings/types/player-kind-display-mode.type';
-import { VideoInfoInterface } from '@app/modules/player/types';
+import { VideoInfoInterface, VideoKindEnum } from '@app/modules/player/types';
 import { VideoSelectorItemComponent } from '@app/modules/player/components/video-selector-item';
 import { cleanAuthorName } from '@app/shared/utils/clean-author-name.function';
 
@@ -56,6 +56,7 @@ export class VideoSelectorComponent {
 
     kindDisplayMode = input.required<PlayerKindDisplayMode>();
     videos = input.required<VideoInfoInterface[]>();
+    kind = input.required<VideoKindEnum>();
 
     selected = input<VideoInfoInterface>();
     warnAvailability = input<string[]>([]);
@@ -66,12 +67,12 @@ export class VideoSelectorComponent {
 
     private readonly _openedByDefaultAuthors = new SignalSet<string>();
 
-    readonly openedAuthors = computed(() => [...this._openedByDefaultAuthors])
+    readonly openedAuthors = computed(() => [...this._openedByDefaultAuthors.values()])
 
     readonly authors = computed(() => {
         const defaultAuthorName = this.defaultAuthorName();
         const authors = this.videos()
-            ?.map(({ author }) => author)
+            ?.map(({ author }) => author ?? this.defaultAuthorName())
             ?.map((author) => cleanAuthorName(author, defaultAuthorName))
             ?.sort();
 
@@ -85,7 +86,7 @@ export class VideoSelectorComponent {
 
                 if (selected) {
                     const defaultAuthorName = this.defaultAuthorName();
-                    const cleaned = cleanAuthorName(selected.author ?? '', defaultAuthorName);
+                    const cleaned = cleanAuthorName(selected.author, defaultAuthorName);
 
                     this._openedByDefaultAuthors.add(cleaned);
                 }
@@ -98,12 +99,13 @@ export class VideoSelectorComponent {
     }
 
     onAuthorSectionToggle(author: string): void {
-        const isClosingClick = this._openedByDefaultAuthors.has(author);
+        const normalized = author ?? this.defaultAuthorName();
+        const isClosingClick = this._openedByDefaultAuthors.has(normalized);
 
         if (isClosingClick) {
-            this._openedByDefaultAuthors.delete(author);
+            this._openedByDefaultAuthors.delete(normalized);
         } else {
-            this._openedByDefaultAuthors.add(author);
+            this._openedByDefaultAuthors.add(normalized);
         }
     }
 }
